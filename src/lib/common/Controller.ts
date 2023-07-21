@@ -10,7 +10,7 @@ export function Controller(path: string): ClassDecorator {
 
         Reflect.defineMetadata(CONTROLLER_TOKEN, target.name, {});
 
-        const name = target.name;
+        const name = target.name + "_" + scanner.createUniqueKey();
         scanner.set(name, {
             path,
             target,
