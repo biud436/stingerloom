@@ -2,6 +2,7 @@ import { FastifyInstance, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 import database from "./lib/Database";
+import fastifyCookie from "@fastify/cookie";
 
 class ServerBootstrapApplication {
     private app!: FastifyInstance;
@@ -23,7 +24,11 @@ class ServerBootstrapApplication {
     }
 
     public async start(): Promise<void> {
-        this.handleGuards().handleRoute().createServer();
+        // prettier-ignore
+        this.handleGuards()
+            .applyMiddlewares()
+            .handleRoute()
+            .createServer();
 
         await this.connectDatabase();
     }
@@ -41,6 +46,15 @@ class ServerBootstrapApplication {
     private handleRoute(): this {
         this.app.register(import("./routes"), {
             prefix: "/api",
+        });
+
+        return this;
+    }
+
+    private applyMiddlewares(): this {
+        this.app.register(fastifyCookie, {
+            secret: process.env.COOKIE_SECRET,
+            hook: "onRequest",
         });
 
         return this;

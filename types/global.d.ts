@@ -7,6 +7,8 @@ declare global {
             DB_NAME: string;
             DB_USER: string;
             DB_PASSWORD: string;
+            SESSION_SECRET: string;
+            COOKIE_SECRET: string;
         }
     }
 }
