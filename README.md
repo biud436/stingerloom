@@ -1,6 +1,6 @@
 # Introduction
 
-This application is a simple application to show some data for testing purpose.
+공부 용도로 직접 바닥부터 만들어본 노드 서버 프레임워크입니다. 
 
 ## Installation
 
@@ -38,7 +38,7 @@ yarn start
 
 ## Usage
 
-`Controller` 데코레이터와 `Get` 데코레이터를 이용하여 간단하게 컨트롤러를 만들 수 있다.
+`Controller` 데코레이터와 `Get` 데코레이터를 이용하여 간단하게 컨트롤러를 만들 수 있습니다.
 
 ```ts
 @Controller("/post")
@@ -55,6 +55,6 @@ export class PostController {
 }
 ```
 
-컨트롤러를 만든 후, imports 변수에 추가해줘야 한다.
+컨트롤러를 만든 후, imports 변수에 추가해줘야 합니다.
 
-직접 프레임워크를 만들어보니 왜 Nest.js에서 모듈의 `controllers` 배열에 컨트롤러를 추가해줬는지 알 수 있었다.
+직접 프레임워크를 만들어보니 왜 Nest.js에서 모듈의 `controllers` 배열에 컨트롤러 클래스를 추가해줬는지 이해할 수 있었습니다.
