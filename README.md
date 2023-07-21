@@ -39,6 +39,7 @@ yarn start
 ## Usage
 
 ```ts
+@Controller("/")
 export class PostController {
     @Get("/post")
     public async getPost() {
