@@ -5,19 +5,21 @@ import { serializer } from "../utils/serializer";
 import { useJson } from "../lib/useJson";
 import { ReplyBuilder } from "../lib/ReplyBuilder";
 
-function home(fastify: FastifyInstance, _options = {}, done = () => {}): void {
-    fastify.get("/", async (_request, _reply) => {
-        const builder = new ReplyBuilder(_reply);
+const handler: FastifyFPHandler = async (_request, _reply) => {
+    const builder = new ReplyBuilder(_reply);
 
-        return builder
-            .json()
-            .statusOK()
-            .response(
-                serializer({
-                    name: os.cpus().map((cpu) => cpu.model),
-                }),
-            );
-    });
+    return builder
+        .json()
+        .statusOK()
+        .response(
+            serializer({
+                name: os.cpus().map((cpu) => cpu.model),
+            }),
+        );
+};
+
+function home(fastify: FastifyInstance, _options = {}, done = () => {}): void {
+    fastify.get("/", handler);
     fastify.get("/v1", v1);
 
     done();
