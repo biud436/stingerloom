@@ -32,4 +32,8 @@ export class ReplyBuilder {
         this._reply.code(401);
         return this;
     }
+
+    response<T>(data: T): T {
+        return data;
+    }
 }

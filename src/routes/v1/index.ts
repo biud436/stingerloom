@@ -3,10 +3,10 @@ import { useJson } from "../../lib/useJson";
 
 const v1: FastifyFPHandler = async (_request, _reply) => {
     const builder = new ReplyBuilder(_reply);
-    builder.json().statusOK();
-    return {
+
+    return builder.json().statusOK().response({
         name: "v1",
-    };
+    });
 };
 
 export default v1;

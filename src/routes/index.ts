@@ -8,11 +8,15 @@ import { ReplyBuilder } from "../lib/ReplyBuilder";
 function home(fastify: FastifyInstance, _options = {}, done = () => {}): void {
     fastify.get("/", async (_request, _reply) => {
         const builder = new ReplyBuilder(_reply);
-        builder.json().statusOK();
 
-        return serializer({
-            name: os.cpus().map((cpu) => cpu.model),
-        });
+        return builder
+            .json()
+            .statusOK()
+            .response(
+                serializer({
+                    name: os.cpus().map((cpu) => cpu.model),
+                }),
+            );
     });
     fastify.get("/v1", v1);
 
