@@ -5,17 +5,15 @@ import "reflect-metadata";
 import database from "./lib/Database";
 import fastifyCookie from "@fastify/cookie";
 import Container from "typedi";
-import {
-    ControllerMetadata,
-    ControllerScanner,
-} from "./lib/common/MetadataScanner";
+import { ControllerMetadata, ControllerScanner } from "./lib/MetadataScanner";
 
-import { ClazzType } from "./lib/common/RouterMapper";
+import { ClazzType } from "./lib/RouterMapper";
 import { PostController } from "./controllers/PostController";
 import path from "path";
+import { UserController } from "./controllers/UserController";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const imports = [PostController];
+const imports = [PostController, UserController];
 type HttpMethod = "get" | "post" | "patch" | "put" | "delete";
 
 class ServerBootstrapApplication {
@@ -44,11 +42,10 @@ class ServerBootstrapApplication {
             .applyMiddlewares()
             .handleRoute();
 
+        await this.connectDatabase();
         await this.registerControllers();
 
         this.createServer();
-
-        await this.connectDatabase();
     }
 
     private async registerControllers(): Promise<this> {
@@ -60,8 +57,11 @@ class ServerBootstrapApplication {
             const metadata = controller.value as ControllerMetadata;
 
             const TargetController = metadata.target as ClazzType<any>;
+            const injectParameters = metadata.repositoies;
+            const args = injectParameters;
 
-            this._controllers.push(new TargetController());
+            const targetController = new TargetController(...args);
+            this._controllers.push(targetController);
 
             const controllerPath = metadata.path;
 
@@ -74,7 +74,7 @@ class ServerBootstrapApplication {
 
                 handler(
                     path.posix.join(controllerPath, router.path),
-                    router.router as any,
+                    (router.router as any).bind(targetController),
                 );
             });
         }

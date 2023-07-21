@@ -20,6 +20,7 @@ export class User extends BaseEntity {
 
     @Column({
         nullable: false,
+        select: false,
     })
     password!: string;
 

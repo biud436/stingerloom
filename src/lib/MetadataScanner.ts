@@ -1,4 +1,5 @@
 import { Service } from "typedi";
+import { ObjectLiteral, Repository } from "typeorm";
 
 export type Metadata = {
     path: string;
@@ -11,6 +12,15 @@ export type ControllerMetadata = {
     path: string;
     target: unknown;
     routers: Metadata[];
+    repositoies: Repository<ObjectLiteral>[];
+};
+
+export type RepositoryMetadata = {
+    repository: Repository<ObjectLiteral>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    target: any;
+    propertyKey: string | symbol | undefined;
+    index: number;
 };
 
 @Service()
@@ -59,3 +69,6 @@ export class ControllerScanner extends MetadataScanner {
         }
     }
 }
+
+@Service()
+export class RepositoryScanner extends MetadataScanner {}
