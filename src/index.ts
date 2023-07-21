@@ -1,7 +1,7 @@
 import { FastifyInstance, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
-import database from "./database";
+import database from "./lib/Database";
 
 class ServerBootstrapApplication {
     private app!: FastifyInstance;

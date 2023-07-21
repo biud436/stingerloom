@@ -1,23 +1,8 @@
-import "reflect-metadata";
-import { DataSource, DataSourceOptions } from "typeorm";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import configService from "./lib/ConfigService";
+import { DataSource } from "typeorm";
 import Container, { Service } from "typedi";
-import { User } from "./entity/User";
+import { User } from "../entity/User";
 import bcrypt from "bcrypt";
-
-const option = <DataSourceOptions>{
-    type: "mariadb",
-    host: configService.get<string>("DB_HOST"),
-    port: configService.get<number>("DB_PORT"),
-    database: configService.get<string>("DB_NAME"),
-    password: configService.get<string>("DB_PASSWORD"),
-    username: configService.get<string>("DB_USER"),
-    entities: [__dirname + "/entity/*.ts"],
-    namingStrategy: new SnakeNamingStrategy(),
-    synchronize: true,
-    logging: true,
-};
+import { option } from "../config";
 
 @Service()
 class Database {
@@ -53,5 +38,4 @@ class Database {
         return await repository.save(user);
     }
 }
-
 export default Container.get(Database);
