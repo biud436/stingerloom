@@ -56,4 +56,5 @@ export class PostController {
 ```
 
 컨트롤러를 만든 후, imports 변수에 추가해줘야 한다.
-직접 프레임워크를 만들어보니, 왜 Nest.js에서 imports 배열이 필요한 지 알게 된 듯 하다.
+
+직접 프레임워크를 만들어보니 왜 Nest.js에서 모듈의 `controllers` 배열에 컨트롤러를 추가해줬는지 알 수 있었다.
