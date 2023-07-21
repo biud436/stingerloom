@@ -16,6 +16,7 @@ import path from "path";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController];
+type HttpMethod = "get" | "post" | "patch" | "put" | "delete";
 
 class ServerBootstrapApplication {
     private app!: FastifyInstance;
@@ -65,13 +66,16 @@ class ServerBootstrapApplication {
             const controllerPath = metadata.path;
 
             metadata.routers.forEach((router) => {
-                if (router.method === "GET") {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    this.app.get(
-                        path.posix.join(controllerPath, router.path),
-                        router.router as any,
-                    );
-                }
+                const targetMethod = router.method.toLowerCase();
+
+                const handler = this.app[targetMethod as HttpMethod].bind(
+                    this.app,
+                );
+
+                handler(
+                    path.posix.join(controllerPath, router.path),
+                    router.router as any,
+                );
             });
         }
 
