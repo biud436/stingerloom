@@ -26,6 +26,8 @@ DB_PORT=3306
 DB_NAME=test
 DB_USER=<your_db_user>
 DB_PASSWORD=<your_db_password>
+SESSION_SECRET=<your_session_secret>
+COOKIE_SECRET=<your_cookie_secret>
 ```
 
 and then next you can start this application with this command.
