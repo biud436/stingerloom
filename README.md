@@ -38,6 +38,8 @@ yarn start
 
 ## Usage
 
+`Controller` 데코레이터와 `Get` 데코레이터를 이용하여 간단하게 컨트롤러를 만들 수 있다.
+
 ```ts
 @Controller("/post")
 export class PostController {
@@ -52,3 +54,6 @@ export class PostController {
     }
 }
 ```
+
+컨트롤러를 만든 후, imports 변수에 추가해줘야 한다.
+직접 프레임워크를 만들어보니, 왜 Nest.js에서 imports 배열이 필요한 지 알게 된 듯 하다.
