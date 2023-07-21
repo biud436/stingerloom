@@ -33,6 +33,16 @@ export class ReplyBuilder {
         return this;
     }
 
+    statusForbidden(): this {
+        this._reply.code(403);
+        return this;
+    }
+
+    statusInternalServerError(): this {
+        this._reply.code(500);
+        return this;
+    }
+
     response<T>(data: T): T {
         return data;
     }
