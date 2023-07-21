@@ -42,6 +42,7 @@ yarn start
 -   typeorm
 -   typedi
 -   reflect-metadata
+-   mariadb
 
 ## 사용법
 
