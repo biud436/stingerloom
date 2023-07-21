@@ -16,7 +16,7 @@ or
 npm install
 ```
 
-and then next you can create a new file named `.env` due to configuration in the root directory. first you can copy the `.env.example` file and then rename it to `.env` and then you can change the value of the variable in the `.env` file.
+and then next you have to create a new file named `.env` due to database configuration in the root directory. First up, you copy the `.env.example` file and then rename it to `.env` and then you change the value of the variable in the `.env` file.
 
 ```bash
 # .env.example
