@@ -47,6 +47,7 @@ class ServerBootstrapApplication {
     }
 
     private createServer(): void {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         this.app.listen({ port: process.env.SERVER_PORT }, (err, _address) => {
             if (err) {
                 console.error(err);

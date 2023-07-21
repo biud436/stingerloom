@@ -1,8 +1,7 @@
-import { FastifyInstance, fastify } from "fastify";
+import { FastifyInstance } from "fastify";
 import v1 from "./v1";
 import os from "os";
 import { serializer } from "../utils/serializer";
-import { useJson } from "../lib/useJson";
 import { ReplyBuilder } from "../lib/ReplyBuilder";
 
 const handler: FastifyFPHandler = async (_request, _reply) => {
@@ -18,6 +17,7 @@ const handler: FastifyFPHandler = async (_request, _reply) => {
         );
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function home(fastify: FastifyInstance, _options = {}, done = () => {}): void {
     fastify.get("/", handler);
     fastify.get("/v1", v1);
