@@ -1,5 +1,7 @@
+import { useJson } from "../../lib/useJson";
+
 const v1: FastifyFPHandler = async (_request, _reply) => {
-    _reply.header("Content-Type", "application/json").code(200);
+    useJson(_reply).code(200);
     return {
         name: "v1",
     };
