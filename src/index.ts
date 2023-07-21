@@ -65,16 +65,16 @@ class ServerBootstrapApplication {
 
             const controllerPath = metadata.path;
 
-            metadata.routers.forEach((router) => {
-                const targetMethod = router.method.toLowerCase();
+            metadata.routers.forEach(({ method, path: routerPath, router }) => {
+                const targetMethod = method.toLowerCase();
 
                 const handler = this.app[targetMethod as HttpMethod].bind(
                     this.app,
                 );
 
                 handler(
-                    path.posix.join(controllerPath, router.path),
-                    (router.router as any).bind(targetController),
+                    path.posix.join(controllerPath, routerPath),
+                    (router as any).bind(targetController),
                 );
             });
         }

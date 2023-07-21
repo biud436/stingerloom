@@ -10,6 +10,8 @@ export function Controller(path: string): ClassDecorator {
         const metadataScanner = Container.get(MetadataScanner);
 
         const params = Reflect.getMetadata("design:paramtypes", target) || [];
+
+        // 리포지토리 주입을 위해 매개변수를 스캔합니다.
         const repositoies: Repository<ObjectLiteral>[] = [];
         params.forEach((param: any, index: number) => {
             const repository = Reflect.getMetadata(
@@ -22,6 +24,7 @@ export function Controller(path: string): ClassDecorator {
             }
         });
 
+        // 컨트롤러 메타데이터를 등록합니다.
         const name = target.name + "_" + scanner.createUniqueKey();
         scanner.set(name, {
             path,
