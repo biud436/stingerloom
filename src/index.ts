@@ -8,12 +8,11 @@ import Container from "typedi";
 import {
     ControllerMetadata,
     ControllerScanner,
-    Metadata,
-    MetadataScanner,
 } from "./lib/common/MetadataScanner";
 
 import { ClazzType } from "./lib/common/RouterMapper";
 import { PostController } from "./controllers/PostController";
+import path from "path";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController];
@@ -56,23 +55,18 @@ class ServerBootstrapApplication {
             const TargetController = metadata.target as ClazzType<any>;
 
             this._controllers.push(new TargetController());
-            console.log(this._controllers);
-        }
 
-        // const postController = new PostController();
+            const controllerPath = metadata.path;
 
-        const scanner = Container.get(MetadataScanner);
-        const routers = scanner.makeRouters();
-
-        let router: IteratorResult<Metadata>;
-        while ((router = routers.next())) {
-            if (router.done) break;
-            const metadata = router.value as Metadata;
-
-            if (metadata.method === "GET") {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                this.app.get(metadata.path, metadata.router as any);
-            }
+            metadata.routers.forEach((router) => {
+                if (router.method === "GET") {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    this.app.get(
+                        path.posix.join(controllerPath, router.path),
+                        router.router as any,
+                    );
+                }
+            });
         }
 
         this.createServer();

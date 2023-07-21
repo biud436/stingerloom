@@ -1,8 +1,8 @@
 import { Controller, Get } from "../lib/common/RouterMapper";
 
-@Controller("/")
+@Controller("/post")
 export class PostController {
-    @Get("/post")
+    @Get()
     public async getPost() {
         return "post 입니다.";
     }

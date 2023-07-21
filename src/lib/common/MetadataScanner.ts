@@ -10,6 +10,7 @@ export type Metadata = {
 export type ControllerMetadata = {
     path: string;
     target: unknown;
+    routers: Metadata[];
 };
 
 @Service()
@@ -27,6 +28,14 @@ export class MetadataScanner {
 
     public has(key: string): boolean {
         return this.mapper.has(key);
+    }
+
+    public allMetadata(): unknown[] {
+        return Array.from(this.mapper.values());
+    }
+
+    public clear(): void {
+        this.mapper.clear();
     }
 
     public createUniqueKey() {

@@ -11,31 +11,33 @@ export type ClazzType<T> = new (...args: any[]) => T;
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
         const scanner = Container.get(ControllerScanner);
-        const TOKEN = `${path}`;
+        const metadataScanner = Container.get(MetadataScanner);
 
-        Reflect.set(scanner, TOKEN, target);
-        Reflect.defineMetadata(CONTROLLER_TOKEN, TOKEN, target);
+        Reflect.defineMetadata(CONTROLLER_TOKEN, target.name, {});
+
+        console.log("Class 스캔 시작");
 
         const name = target.name;
         scanner.set(name, {
             path,
-            method: "GET",
             target,
-            router: target,
+            routers: metadataScanner.allMetadata(),
         });
+
+        metadataScanner.clear();
 
         return target;
     };
 }
 
-export function Get(path: string) {
+export function Get(path = "") {
     return function (
         target: any,
         propertyKey: string,
         descriptor: PropertyDescriptor,
     ) {
+        console.log("Method 스캔 시작");
         const scanner = Container.get(MetadataScanner);
-
         const uniqueKey = scanner.createUniqueKey();
         scanner.set(uniqueKey, {
             path,

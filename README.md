@@ -39,16 +39,16 @@ yarn start
 ## Usage
 
 ```ts
-@Controller("/")
+@Controller("/post")
 export class PostController {
-    @Get("/post")
+    @Get()
     public async getPost() {
         return "post 입니다.";
     }
 
     @Get("/wow")
     public async getWow() {
-        return "wow 입니다.";
+        return "wow";
     }
 }
 ```
