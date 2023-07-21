@@ -1,4 +1,5 @@
-import { Controller, Get } from "../lib/common/RouterMapper";
+import { Controller } from "../lib/common/Controller";
+import { Get } from "../lib/common/Get";
 
 @Controller("/post")
 export class PostController {

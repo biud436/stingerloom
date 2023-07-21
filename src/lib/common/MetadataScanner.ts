@@ -2,7 +2,7 @@ import { Service } from "typedi";
 
 export type Metadata = {
     path: string;
-    method: "GET" | "POST" | "PUT" | "DELETE";
+    method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     target: unknown;
     router: unknown;
 };
@@ -18,11 +18,11 @@ export class MetadataScanner {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected mapper: Map<string, any> = new Map();
 
-    public set(key: string, value: unknown): void {
+    public set<T>(key: string, value: T): void {
         this.mapper.set(key, value);
     }
 
-    public get(key: string): unknown {
+    public get<T>(key: string): T {
         return this.mapper.get(key);
     }
 
@@ -30,7 +30,7 @@ export class MetadataScanner {
         return this.mapper.has(key);
     }
 
-    public allMetadata(): unknown[] {
+    public allMetadata<T>(): T[] {
         return Array.from(this.mapper.values());
     }
 

@@ -43,8 +43,14 @@ class ServerBootstrapApplication {
             .applyMiddlewares()
             .handleRoute();
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        await this.registerControllers();
 
+        this.createServer();
+
+        await this.connectDatabase();
+    }
+
+    private async registerControllers(): Promise<this> {
         const controllerScanner = Container.get(ControllerScanner);
         const contollers = controllerScanner.makeControllers();
         let controller: IteratorResult<ControllerMetadata>;
@@ -69,9 +75,7 @@ class ServerBootstrapApplication {
             });
         }
 
-        this.createServer();
-
-        await this.connectDatabase();
+        return this;
     }
 
     private handleGuards(): this {
