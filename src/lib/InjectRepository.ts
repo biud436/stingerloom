@@ -5,6 +5,7 @@ import Database from "./Database";
 import { ClazzType } from "./RouterMapper";
 import { RepositoryScanner } from "./MetadataScanner";
 
+export const REPOSITORY_TOKEN = "repository";
 export function InjectRepository<T>(entity: ClazzType<T>): ParameterDecorator {
     const dataSource = Database.getDataSource();
 
@@ -14,6 +15,10 @@ export function InjectRepository<T>(entity: ClazzType<T>): ParameterDecorator {
         const params = Reflect.getMetadata("design:paramtypes", target);
         const injectParam = params[index];
 
-        Reflect.defineMetadata("repository", repository, injectParam.prototype);
+        Reflect.defineMetadata(
+            REPOSITORY_TOKEN,
+            repository,
+            injectParam.prototype,
+        );
     };
 }

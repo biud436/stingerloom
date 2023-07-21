@@ -3,6 +3,7 @@
 import Container from "typedi";
 import { ControllerScanner, MetadataScanner } from "./MetadataScanner";
 import { ObjectLiteral, Repository } from "typeorm";
+import { REPOSITORY_TOKEN } from "./InjectRepository";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
@@ -15,7 +16,7 @@ export function Controller(path: string): ClassDecorator {
         const repositoies: Repository<ObjectLiteral>[] = [];
         params.forEach((param: any, index: number) => {
             const repository = Reflect.getMetadata(
-                "repository",
+                REPOSITORY_TOKEN,
                 param.prototype,
             );
 
