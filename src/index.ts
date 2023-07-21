@@ -3,6 +3,9 @@ import "dotenv/config";
 import "reflect-metadata";
 import database from "./lib/Database";
 import fastifyCookie from "@fastify/cookie";
+import Container from "typedi";
+import { Metadata, MetadataScanner } from "./lib/common/MetadataScanner";
+import { PostController } from "./controllers/PostController";
 
 class ServerBootstrapApplication {
     private app!: FastifyInstance;
@@ -27,8 +30,26 @@ class ServerBootstrapApplication {
         // prettier-ignore
         this.handleGuards()
             .applyMiddlewares()
-            .handleRoute()
-            .createServer();
+            .handleRoute();
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const postController = new PostController();
+
+        const scanner = Container.get(MetadataScanner);
+        const routers = scanner.makeRouters();
+
+        let router: IteratorResult<Metadata>;
+        while ((router = routers.next())) {
+            if (router.done) break;
+            const metadata = router.value as Metadata;
+
+            if (metadata.method === "GET") {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                this.app.get(metadata.path, metadata.router as any);
+            }
+        }
+
+        this.createServer();
 
         await this.connectDatabase();
     }
