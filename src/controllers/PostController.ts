@@ -9,6 +9,6 @@ export class PostController {
 
     @Get("/wow")
     public async getWow() {
-        return "wow 입니다.";
+        return "wow";
     }
 }
