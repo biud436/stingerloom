@@ -2,7 +2,7 @@
 
 공부 용도로 직접 바닥부터 만들어본 노드 서버 프레임워크입니다. 
 
-## Installation
+## 설치 방법
 
 before starting this application, you must install dependencies as below in your terminal.
 
@@ -36,7 +36,16 @@ and then next you can start this application with this command.
 yarn start
 ```
 
-## Usage
+
+## 사용한 기술
+
+- fastify
+- typeorm
+- typedi
+- reflect-metadata
+
+
+## 사용법
 
 `Controller` 데코레이터와 `Get` 데코레이터를 이용하여 간단하게 컨트롤러를 만들 수 있습니다.
 
