@@ -7,10 +7,15 @@ export type Metadata = {
     router: unknown;
 };
 
+export type ControllerMetadata = {
+    path: string;
+    target: unknown;
+};
+
 @Service()
 export class MetadataScanner {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private mapper: Map<string, any> = new Map();
+    protected mapper: Map<string, any> = new Map();
 
     public set(key: string, value: unknown): void {
         this.mapper.set(key, value);
@@ -29,6 +34,16 @@ export class MetadataScanner {
     }
 
     public *makeRouters(): IterableIterator<Metadata> {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [_, value] of this.mapper) {
+            yield value;
+        }
+    }
+}
+
+@Service()
+export class ControllerScanner extends MetadataScanner {
+    public *makeControllers(): IterableIterator<ControllerMetadata> {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, value] of this.mapper) {
             yield value;

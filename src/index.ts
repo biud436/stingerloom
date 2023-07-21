@@ -1,15 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyInstance, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 import database from "./lib/Database";
 import fastifyCookie from "@fastify/cookie";
 import Container from "typedi";
-import { Metadata, MetadataScanner } from "./lib/common/MetadataScanner";
+import {
+    ControllerMetadata,
+    ControllerScanner,
+    Metadata,
+    MetadataScanner,
+} from "./lib/common/MetadataScanner";
+
+import { ClazzType } from "./lib/common/RouterMapper";
 import { PostController } from "./controllers/PostController";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const imports = [PostController];
 
 class ServerBootstrapApplication {
     private app!: FastifyInstance;
     private static INSTANCE: ServerBootstrapApplication;
+    private _controllers: ClazzType<any>[] = [];
 
     private constructor() {
         this.app = fastify({
@@ -33,7 +45,21 @@ class ServerBootstrapApplication {
             .handleRoute();
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const postController = new PostController();
+
+        const controllerScanner = Container.get(ControllerScanner);
+        const contollers = controllerScanner.makeControllers();
+        let controller: IteratorResult<ControllerMetadata>;
+        while ((controller = contollers.next())) {
+            if (controller.done) break;
+            const metadata = controller.value as ControllerMetadata;
+
+            const TargetController = metadata.target as ClazzType<any>;
+
+            this._controllers.push(new TargetController());
+            console.log(this._controllers);
+        }
+
+        // const postController = new PostController();
 
         const scanner = Container.get(MetadataScanner);
         const routers = scanner.makeRouters();
