@@ -20,6 +20,7 @@ import path from "path";
 import { UserController } from "./controllers/UserController";
 import { plainToClass } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
+import { ValidationHandler } from "./lib/ValidationHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController, UserController];
@@ -116,24 +117,13 @@ class ServerBootstrapApplication {
                                 return param.value;
                             });
 
-                            const bodyValidationResults = await Promise.all(
+                            const validationHandler = new ValidationHandler(
+                                res,
                                 bodyValidationActions,
                             );
 
-                            if (
-                                bodyValidationResults.some(
-                                    (result) => result.length > 0,
-                                )
-                            ) {
-                                res.status(400);
-
-                                return {
-                                    status: 400,
-                                    message: bodyValidationResults.map(
-                                        (result) =>
-                                            result.map((err) => err.toString()),
-                                    ),
-                                };
+                            if (await validationHandler.isError()) {
+                                return validationHandler.getResponse();
                             }
 
                             const result = (router as any).call(
