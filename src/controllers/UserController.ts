@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { User } from "../entity/User";
 import { Controller } from "../lib/Controller";
 import { Get } from "../lib/Get";
+import { Header } from "../lib/Header";
 import { InjectRepository } from "../lib/InjectRepository";
 import { Req } from "../lib/Req";
 import { FastifyRequest } from "fastify";
@@ -18,6 +19,7 @@ export class UserController {
         private readonly userRepository: Repository<User>,
     ) {}
 
+    @Header("Content-Type", "application/json")
     @Get()
     public async getUser(@Req() req: FastifyRequest) {
         const user = await this.userRepository.find();

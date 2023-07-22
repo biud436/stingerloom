@@ -21,6 +21,7 @@ import { UserController } from "./controllers/UserController";
 import { plainToClass } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
 import { ValidationHandler } from "./lib/ValidationHandler";
+import { HEADER_TOKEN } from "./lib/Header";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController, UserController];
@@ -116,6 +117,16 @@ class ServerBootstrapApplication {
 
                                 return param.value;
                             });
+
+                            // 헤더 구현
+                            const header = Reflect.getMetadata(
+                                HEADER_TOKEN,
+                                targetController,
+                                (router as any).name,
+                            );
+                            if (header) {
+                                res.header(header.key, header.value);
+                            }
 
                             const validationHandler = new ValidationHandler(
                                 res,

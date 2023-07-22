@@ -14,7 +14,7 @@ This is a node server framework made from scratch for study purposes.
 
 ## 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header` 데코레이터를 지원합니다.
 
 ### 기본 형태
 
@@ -39,6 +39,7 @@ export class UserController {
         private readonly userRepository: Repository<User>,
     ) {}
 
+    @Header("Content-Type", "application/json")
     @Get()
     public async getUser(@Req() req: FastifyRequest) {
         const user = await this.userRepository.find();
