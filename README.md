@@ -14,6 +14,8 @@ This is a node server framework made from scratch for study purposes.
 
 이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository` 데코레이터를 지원합니다.
 
+### 기본 형태
+
 ```ts
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
@@ -36,7 +38,11 @@ export class UserController {
 }
 ```
 
-단, 컨트롤러 데코레이터를 정상적으로 읽기 위해서는 imports 배열에 의존성을 추가해줘야 합니다. 현재 버전에서는 컨트롤러에서만 생성자에 매개변수 주입이 가능합니다.
+단, 컨트롤러 데코레이터를 정상적으로 읽기 위해서는 imports 배열에 의존성을 추가해줘야 합니다.
+
+### 제한 사항
+
+현재 버전에서는 컨트롤러 데코레이터가 마킹된 클래스에서만 생성자에 매개변수 주입이 가능하며, 서비스 레이어에서는 매개변수 주입이 아직 불가능합니다.
 
 ## Usage
 
