@@ -8,6 +8,7 @@ export type Metadata = {
     target: unknown;
     router: unknown;
     parameters: HttpRouterParameter[];
+    header?: Record<string, string>;
 };
 
 export type ControllerMetadata = {
@@ -48,6 +49,21 @@ export class MetadataScanner {
 
     public clear(): void {
         this.mapper.clear();
+    }
+
+    public findKeyByTarget(target: unknown): string {
+        const result: Metadata[] = [];
+        let key = "";
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        for (const [_, value] of this.mapper) {
+            if (value.target === target) {
+                result.push(value);
+                key = _;
+            }
+        }
+
+        return key;
     }
 
     public createUniqueKey() {
