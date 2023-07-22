@@ -1,8 +1,44 @@
 # Introduction
 
-공부 용도로 직접 바닥부터 만들어본 노드 서버 프레임워크입니다.
+This is a node server framework made from scratch for study purposes.
 
-## 설치 방법
+## 사용한 기술
+
+-   fastify
+-   typeorm
+-   typedi
+-   reflect-metadata
+-   mariadb
+
+## 사용법
+
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository` 데코레이터를 지원합니다.
+
+```ts
+import { Repository } from "typeorm";
+import { User } from "../entity/User";
+import { Controller } from "../lib/Controller";
+import { Get } from "../lib/Get";
+import { InjectRepository } from "../lib/InjectRepository";
+
+@Controller("/user")
+export class UserController {
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) {}
+
+    @Get()
+    public async getUser() {
+        const user = await this.userRepository.find();
+        return user;
+    }
+}
+```
+
+단, 컨트롤러 데코레이터를 정상적으로 읽기 위해서는 imports 배열에 의존성을 추가해줘야 합니다.
+
+## Usage
 
 before starting this application, you must install dependencies as below in your terminal.
 
@@ -35,39 +71,3 @@ and then next you can start this application with this command.
 ```bash
 yarn start
 ```
-
-## 사용한 기술
-
--   fastify
--   typeorm
--   typedi
--   reflect-metadata
--   mariadb
-
-## 사용법
-
-`Controller` 데코레이터, `Get` 데코레이터, `InjectRepository` 데코레이터를 이용하여 간단하게 컨트롤러를 만들 수 있습니다.
-
-```ts
-import { Repository } from "typeorm";
-import { User } from "../entity/User";
-import { Controller } from "../lib/Controller";
-import { Get } from "../lib/Get";
-import { InjectRepository } from "../lib/InjectRepository";
-
-@Controller("/user")
-export class UserController {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) {}
-
-    @Get()
-    public async getUser() {
-        const user = await this.userRepository.find();
-        return user;
-    }
-}
-```
-
-컨트롤러를 만든 후, imports 변수에 추가해줘야 합니다.
