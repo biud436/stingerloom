@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { ControllerScanner, MetadataScanner } from "./MetadataScanner";
+import { MetadataScanner } from "./MetadataScanner";
+import { ControllerScanner } from "./ControllerScanner";
 import { ObjectLiteral, Repository } from "typeorm";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
+import { createUniqueControllerKey } from "../utils/scanner";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
@@ -26,7 +28,7 @@ export function Controller(path: string): ClassDecorator {
         });
 
         // 컨트롤러 메타데이터를 등록합니다.
-        const name = target.name + "_" + scanner.createUniqueKey();
+        const name = createUniqueControllerKey(target.name, scanner);
         scanner.set(name, {
             path,
             target,

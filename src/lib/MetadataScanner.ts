@@ -59,16 +59,3 @@ export class MetadataScanner {
         }
     }
 }
-
-@Service()
-export class ControllerScanner extends MetadataScanner {
-    public *makeControllers(): IterableIterator<ControllerMetadata> {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [_, value] of this.mapper) {
-            yield value;
-        }
-    }
-}
-
-@Service()
-export class RepositoryScanner extends MetadataScanner {}

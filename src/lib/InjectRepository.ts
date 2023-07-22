@@ -3,7 +3,7 @@ import "reflect-metadata";
 import Container from "typedi";
 import Database from "./Database";
 import { ClazzType } from "./RouterMapper";
-import { RepositoryScanner } from "./MetadataScanner";
+import { RepositoryScanner } from "./RepositoryScanner";
 
 export const REPOSITORY_TOKEN = "repository";
 export function InjectRepository<T>(entity: ClazzType<T>): ParameterDecorator {

@@ -5,7 +5,8 @@ import "reflect-metadata";
 import database from "./lib/Database";
 import fastifyCookie from "@fastify/cookie";
 import Container from "typedi";
-import { ControllerMetadata, ControllerScanner } from "./lib/MetadataScanner";
+import { ControllerMetadata } from "./lib/MetadataScanner";
+import { ControllerScanner } from "./lib/ControllerScanner";
 
 import { ClazzType } from "./lib/RouterMapper";
 import { PostController } from "./controllers/PostController";
@@ -72,6 +73,7 @@ class ServerBootstrapApplication {
                     this.app,
                 );
 
+                // TODO: 이 부분을 router 프록시로 감싸줘야 Res, Req 데코레이터를 구현할 수 있을 듯 싶다.
                 handler(
                     path.posix.join(controllerPath, routerPath),
                     (router as any).bind(targetController),
