@@ -1,11 +1,13 @@
 import { Service } from "typedi";
 import { ObjectLiteral, Repository } from "typeorm";
+import { HttpRouterParameter } from "./HttpRouterParameter";
 
 export type Metadata = {
     path: string;
     method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     target: unknown;
     router: unknown;
+    parameters: HttpRouterParameter[];
 };
 
 export type ControllerMetadata = {
