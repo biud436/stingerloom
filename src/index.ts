@@ -19,6 +19,7 @@ import { PostController } from "./controllers/PostController";
 import path from "path";
 import { UserController } from "./controllers/UserController";
 import { plainToClass } from "class-transformer";
+import { ValidationError, validate } from "class-validator";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController, UserController];
@@ -81,34 +82,70 @@ class ServerBootstrapApplication {
                         this.app,
                     );
 
-                    const routerProxy: FastifyFPHandler = (
+                    const routerProxy: FastifyFPHandler = async (
                         _request,
                         _reply,
                     ) => {
-                        /**
-                         * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸준다.
-                         */
-                        const req = _request as FastifyRequest;
-                        const res = _reply as FastifyReply;
+                        try {
+                            /**
+                             * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸준다.
+                             */
+                            const req = _request as FastifyRequest;
+                            const res = _reply as FastifyReply;
 
-                        const args = parameters.map((param) => {
-                            if (param.isReq) {
-                                return req;
+                            const bodyValidationActions: Promise<
+                                ValidationError[]
+                            >[] = [];
+
+                            const args = parameters.map((param) => {
+                                if (param.isReq) {
+                                    return req;
+                                }
+
+                                if (param.body) {
+                                    const bodyData = plainToClass(
+                                        param.body.type,
+                                        req.body,
+                                    );
+                                    bodyValidationActions.push(
+                                        validate(bodyData),
+                                    );
+                                    return bodyData;
+                                }
+
+                                return param.value;
+                            });
+
+                            const bodyValidationResults = await Promise.all(
+                                bodyValidationActions,
+                            );
+
+                            if (
+                                bodyValidationResults.some(
+                                    (result) => result.length > 0,
+                                )
+                            ) {
+                                res.status(400);
+
+                                return {
+                                    status: 400,
+                                    message: bodyValidationResults.map(
+                                        (result) =>
+                                            result.map((err) => err.toString()),
+                                    ),
+                                };
                             }
 
-                            if (param.body) {
-                                return plainToClass(param.body.type, req.body);
-                            }
+                            const result = (router as any).call(
+                                targetController,
+                                ...args,
+                            );
 
-                            return param.value;
-                        });
-
-                        const result = (router as any).call(
-                            targetController,
-                            ...args,
-                        );
-
-                        return result;
+                            return result;
+                        } catch (err: any) {
+                            // TODO: Exception Filter가 여기에 들어갈 수 있음.
+                            console.error(err);
+                        }
                     };
 
                     handler(

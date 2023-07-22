@@ -9,6 +9,8 @@ This is a node server framework made from scratch for study purposes.
 -   typedi
 -   reflect-metadata
 -   mariadb
+-   class-transformer
+-   class-validator
 
 ## 사용법
 
