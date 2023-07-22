@@ -12,7 +12,7 @@ This is a node server framework made from scratch for study purposes.
 
 ## 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body` 데코레이터를 지원합니다.
 
 ### 기본 형태
 
@@ -26,6 +26,9 @@ import { Get } from "../lib/Get";
 import { InjectRepository } from "../lib/InjectRepository";
 import { Req } from "../lib/Req";
 import { FastifyRequest } from "fastify";
+import { Post } from "../lib/Post";
+import { Body } from "../lib/Body";
+import { CreateUserDto } from "./dto/CreateUserDto";
 
 @Controller("/user")
 export class UserController {
@@ -41,6 +44,12 @@ export class UserController {
             user,
             ip: req.ip,
         };
+    }
+
+    @Post()
+    public async create(@Body() createUserDto: CreateUserDto) {
+        const newUser = await this.userRepository.create(createUserDto);
+        return await this.userRepository.save(newUser);
     }
 }
 ```

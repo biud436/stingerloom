@@ -18,6 +18,7 @@ import { ClazzType } from "./lib/RouterMapper";
 import { PostController } from "./controllers/PostController";
 import path from "path";
 import { UserController } from "./controllers/UserController";
+import { plainToClass } from "class-transformer";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController, UserController];
@@ -93,6 +94,10 @@ class ServerBootstrapApplication {
                         const args = parameters.map((param) => {
                             if (param.isReq) {
                                 return req;
+                            }
+
+                            if (param.body) {
+                                return plainToClass(param.body.type, req.body);
                             }
 
                             return param.value;

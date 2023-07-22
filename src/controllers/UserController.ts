@@ -7,6 +7,9 @@ import { Get } from "../lib/Get";
 import { InjectRepository } from "../lib/InjectRepository";
 import { Req } from "../lib/Req";
 import { FastifyRequest } from "fastify";
+import { Post } from "../lib/Post";
+import { Body } from "../lib/Body";
+import { CreateUserDto } from "./dto/CreateUserDto";
 
 @Controller("/user")
 export class UserController {
@@ -22,5 +25,11 @@ export class UserController {
             user,
             ip: req.ip,
         };
+    }
+
+    @Post()
+    public async create(@Body() createUserDto: CreateUserDto) {
+        const newUser = await this.userRepository.create(createUserDto);
+        return await this.userRepository.save(newUser);
     }
 }
