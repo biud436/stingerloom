@@ -19,6 +19,8 @@ export function Get(path = "") {
         // 메소드 메타데이터를 등록합니다.
         const scanner = Container.get(MetadataScanner);
         const uniqueKey = scanner.createUniqueKey();
+
+        // TODO: Get, Post, Put, Delete, Patch 데코레이터는 가장 먼저 실행되어야 하는데, 이것을 어떻게 구현할 것인가?
         scanner.set<Metadata>(uniqueKey, {
             path,
             method: "GET",
