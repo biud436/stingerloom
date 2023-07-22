@@ -6,6 +6,7 @@ import { Controller } from "../lib/Controller";
 import { Get } from "../lib/Get";
 import { InjectRepository } from "../lib/InjectRepository";
 import { Req } from "../lib/Req";
+import { FastifyRequest } from "fastify";
 
 @Controller("/user")
 export class UserController {
@@ -15,8 +16,11 @@ export class UserController {
     ) {}
 
     @Get()
-    public async getUser(@Req() req: any) {
+    public async getUser(@Req() req: FastifyRequest) {
         const user = await this.userRepository.find();
-        return user;
+        return {
+            user,
+            ip: req.ip,
+        };
     }
 }

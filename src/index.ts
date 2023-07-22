@@ -72,30 +72,46 @@ class ServerBootstrapApplication {
 
             const controllerPath = metadata.path;
 
-            metadata.routers.forEach(({ method, path: routerPath, router }) => {
-                const targetMethod = method.toLowerCase();
+            metadata.routers.forEach(
+                ({ method, path: routerPath, router, parameters }) => {
+                    const targetMethod = method.toLowerCase();
 
-                const handler = this.app[targetMethod as HttpMethod].bind(
-                    this.app,
-                );
+                    const handler = this.app[targetMethod as HttpMethod].bind(
+                        this.app,
+                    );
 
-                const routerProxy: FastifyFPHandler = (_request, _reply) => {
-                    /**
-                     * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸준다.
-                     */
-                    const req = _request as FastifyRequest;
-                    const res = _reply as FastifyReply;
+                    const routerProxy: FastifyFPHandler = (
+                        _request,
+                        _reply,
+                    ) => {
+                        /**
+                         * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸준다.
+                         */
+                        const req = _request as FastifyRequest;
+                        const res = _reply as FastifyReply;
 
-                    const result = (router as any).call(targetController);
+                        const args = parameters.map((param) => {
+                            if (param.isReq) {
+                                return req;
+                            }
 
-                    return result;
-                };
+                            return param.value;
+                        });
 
-                handler(
-                    path.posix.join(controllerPath, routerPath),
-                    routerProxy,
-                );
-            });
+                        const result = (router as any).call(
+                            targetController,
+                            ...args,
+                        );
+
+                        return result;
+                    };
+
+                    handler(
+                        path.posix.join(controllerPath, routerPath),
+                        routerProxy,
+                    );
+                },
+            );
         }
 
         return this;
