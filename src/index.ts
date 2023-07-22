@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FastifyInstance, fastify } from "fastify";
+import {
+    FastifyInstance,
+    FastifyReply,
+    FastifyRequest,
+    fastify,
+} from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 import database from "./lib/Database";
@@ -73,10 +79,21 @@ class ServerBootstrapApplication {
                     this.app,
                 );
 
-                // TODO: 이 부분을 router 프록시로 감싸줘야 Res, Req 데코레이터를 구현할 수 있을 듯 싶다.
+                const routerProxy: FastifyFPHandler = (_request, _reply) => {
+                    /**
+                     * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸준다.
+                     */
+                    const req = _request as FastifyRequest;
+                    const res = _reply as FastifyReply;
+
+                    const result = (router as any).call(targetController);
+
+                    return result;
+                };
+
                 handler(
                     path.posix.join(controllerPath, routerPath),
-                    (router as any).bind(targetController),
+                    routerProxy,
                 );
             });
         }
