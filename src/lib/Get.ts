@@ -23,7 +23,7 @@ export function Get(path = "") {
         // TODO: Get, Post, Put, Delete, Patch 데코레이터는 가장 먼저 실행되어야 하는데, 이것을 어떻게 구현할 것인가?
         scanner.set<Metadata>(uniqueKey, {
             path,
-            method: "GET",
+            method: "GET", // Header 데코레이터의 경우, method를 알 수 없다. 즉, 스캐너는 HTTP Method에 의존성이 있으면 안된다.
             target,
             router: descriptor.value,
             parameters,
