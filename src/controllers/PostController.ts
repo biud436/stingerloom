@@ -2,7 +2,7 @@ import { Controller } from "../lib/Controller";
 import { Get } from "../lib/Get";
 
 /**
- * PostController
+ * @class PostController
  */
 @Controller("/post")
 export class PostController {

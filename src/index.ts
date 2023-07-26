@@ -97,6 +97,31 @@ class ServerBootstrapApplication {
                 }
             }
         });
+
+        function visitNode(node: ts.Node) {
+            switch (node.kind) {
+                case ts.SyntaxKind.ClassDeclaration:
+                    {
+                        const classDeclaration = node as ts.ClassDeclaration;
+                        const className =
+                            classDeclaration.name?.getText(sourceFile);
+                        console.log(className);
+                    }
+                    break;
+                case ts.SyntaxKind.MethodDeclaration:
+                    {
+                        const methodDeclaration = node as ts.MethodDeclaration;
+                        const methodName =
+                            methodDeclaration.name?.getText(sourceFile);
+                        console.log(methodName);
+                    }
+                    break;
+            }
+
+            ts.forEachChild(node, visitNode);
+        }
+
+        visitNode(sourceFile!);
     }
 
     private async registerControllers(): Promise<this> {
