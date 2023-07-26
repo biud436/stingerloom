@@ -22,7 +22,8 @@ import { plainToClass } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
 import { ValidationHandler } from "./lib/ValidationHandler";
 import { HEADER_TOKEN } from "./lib/Header";
-
+import ts, { Identifier, MethodDeclaration, MethodSignature } from "typescript";
+import fs from "fs";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const imports = [PostController, UserController];
 type HttpMethod = "get" | "post" | "patch" | "put" | "delete";
@@ -55,8 +56,47 @@ class ServerBootstrapApplication {
 
         await this.connectDatabase();
         await this.registerControllers();
+        await this.readJsDoc();
 
         this.createServer();
+    }
+
+    public async readJsDoc() {
+        const targetPath = path.join(__dirname, "controllers");
+
+        const files = fs.readdirSync(targetPath);
+
+        const program = ts.createProgram(
+            files.map((file) => path.join(targetPath, file)),
+            {},
+        );
+
+        const sourceFile = program.getSourceFile(
+            "./src/controllers/PostController.ts",
+        );
+
+        ts.forEachChild(sourceFile!, (node) => {
+            if (ts.isClassDeclaration(node)) {
+                const name = node.name?.escapedText;
+
+                if (name === "PostController") {
+                    ts.forEachChild(node, (node) => {
+                        console.log(node);
+                        if (ts.isMethodDeclaration(node)) {
+                            console.log((node.name as Identifier).escapedText);
+
+                            console.log((node as any).jsDoc[0].comment);
+
+                            node.getChildren(sourceFile).forEach((child) => {
+                                if (child.kind === ts.SyntaxKind.JSDoc) {
+                                    console.log(child.getText(sourceFile));
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private async registerControllers(): Promise<this> {
