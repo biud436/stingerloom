@@ -81,10 +81,7 @@ class ServerBootstrapApplication {
 
                 if (name === "PostController") {
                     ts.forEachChild(node, (node) => {
-                        console.log(node);
                         if (ts.isMethodDeclaration(node)) {
-                            console.log((node.name as Identifier).escapedText);
-
                             console.log((node as any).jsDoc[0].comment);
 
                             node.getChildren(sourceFile).forEach((child) => {
@@ -114,6 +111,14 @@ class ServerBootstrapApplication {
                         const methodName =
                             methodDeclaration.name?.getText(sourceFile);
                         console.log(methodName);
+                    }
+                    break;
+                case ts.SyntaxKind.Decorator:
+                    {
+                        const decorator = node as ts.Decorator;
+                        const decoratorName =
+                            decorator.expression.getText(sourceFile);
+                        console.log(decoratorName);
                     }
                     break;
             }
