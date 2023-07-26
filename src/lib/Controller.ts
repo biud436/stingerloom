@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { MetadataScanner } from "./MetadataScanner";
+import { DynamicClassWrapper, MetadataScanner } from "./MetadataScanner";
 import { ControllerScanner } from "./ControllerScanner";
-import { ObjectLiteral, Repository } from "typeorm";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
 import { createUniqueControllerKey } from "../utils/scanner";
 
@@ -15,7 +14,7 @@ export function Controller(path: string): ClassDecorator {
         const params = Reflect.getMetadata("design:paramtypes", target) || [];
 
         // 리포지토리 주입을 위해 매개변수를 스캔합니다.
-        const repositoies: Repository<ObjectLiteral>[] = [];
+        const repositoies: DynamicClassWrapper<any>[] = [];
         params.forEach((param: any, index: number) => {
             const repository = Reflect.getMetadata(
                 REPOSITORY_TOKEN,

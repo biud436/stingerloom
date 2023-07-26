@@ -69,7 +69,7 @@ class ServerBootstrapApplication {
 
             const TargetController = metadata.target as ClazzType<any>;
             const injectParameters = metadata.repositoies;
-            const args = injectParameters;
+            const args = injectParameters as any;
 
             const targetController = new TargetController(...args);
             this._controllers.push(targetController);

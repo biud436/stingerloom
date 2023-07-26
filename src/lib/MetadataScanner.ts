@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
 import { ObjectLiteral, Repository } from "typeorm";
 import { HttpRouterParameter } from "./HttpRouterParameter";
+
+export type DynamicClassWrapper<T> = {
+    new (...args: any[]): T;
+};
 
 export type Metadata = {
     path: string;
@@ -11,16 +18,15 @@ export type Metadata = {
     header?: Record<string, string>;
 };
 
-export type ControllerMetadata = {
+export type ControllerMetadata<T = any> = {
     path: string;
     target: unknown;
     routers: Metadata[];
-    repositoies: Repository<ObjectLiteral>[];
+    repositoies: DynamicClassWrapper<T>;
 };
 
 export type RepositoryMetadata = {
     repository: Repository<ObjectLiteral>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     target: any;
     propertyKey: string | symbol | undefined;
     index: number;
@@ -28,7 +34,6 @@ export type RepositoryMetadata = {
 
 @Service()
 export class MetadataScanner {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected mapper: Map<string, any> = new Map();
 
     public set<T>(key: string, value: T): void {
@@ -51,11 +56,13 @@ export class MetadataScanner {
         this.mapper.clear();
     }
 
+    /**
+     * @deprecated
+     */
     public findKeyByTarget(target: unknown): string {
         const result: Metadata[] = [];
         let key = "";
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, value] of this.mapper) {
             if (value.target === target) {
                 result.push(value);
@@ -71,7 +78,6 @@ export class MetadataScanner {
     }
 
     public *makeRouters(): IterableIterator<Metadata> {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_, value] of this.mapper) {
             yield value;
         }
