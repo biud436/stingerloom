@@ -1,15 +1,16 @@
-import { DataSource, DataSourceOptions } from "typeorm";
+import { DataSourceOptions } from "typeorm";
 
 import { IFactory } from "./IFactory";
 import { DatabaseContext } from "./DatabaseContext";
+import { DBConnection } from "./DBConnection";
 
-class DatabaseFactory implements IFactory<DataSource> {
+export type DBConnectionOption = DataSourceOptions;
+
+class DatabaseFactory implements IFactory<DBConnection> {
     protected option = DatabaseContext.getConfig();
 
-    constructor() {}
-
-    public create(): DataSource {
-        return new DataSource(this.option as DataSourceOptions);
+    public create(): DBConnection {
+        return new DBConnection(this.option as DBConnectionOption);
     }
 }
 
