@@ -2,14 +2,14 @@ import { DataSource } from "typeorm";
 import Container, { Service } from "typedi";
 import { User } from "../entity/User";
 import bcrypt from "bcrypt";
-import { option } from "../config";
+import { databaseFactory } from "../factory/DatabaseFactory";
 
 @Service()
 class Database {
     private dataSource: DataSource;
 
     constructor() {
-        this.dataSource = new DataSource(option);
+        this.dataSource = databaseFactory.create();
     }
 
     public async start() {

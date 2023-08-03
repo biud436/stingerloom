@@ -269,7 +269,6 @@ class ServerBootstrapApplication {
     private async connectDatabase(): Promise<void> {
         await database.start();
         const user = await database.echoUser();
-        console.log(user);
     }
 }
 
