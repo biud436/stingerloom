@@ -1,5 +1,5 @@
 import { option as databaseOption } from "../config";
-import { DBConnectionOption } from "./DatabaseFactory";
+import { DBConnectionOption } from "./DBConnectionOption";
 
 export class DatabaseContext {
     public static getConfig(): DBConnectionOption {

@@ -1,10 +1,7 @@
-import { DataSourceOptions } from "typeorm";
-
 import { IFactory } from "./IFactory";
 import { DatabaseContext } from "./DatabaseContext";
 import { DBConnection } from "./DBConnection";
-
-export type DBConnectionOption = DataSourceOptions;
+import { DBConnectionOption } from "./DBConnectionOption";
 
 class DatabaseFactory implements IFactory<DBConnection> {
     protected option = DatabaseContext.getConfig();
