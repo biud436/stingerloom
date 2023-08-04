@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
 import { MetadataScanner, ControllerMetadata } from "./MetadataScanner";
 
