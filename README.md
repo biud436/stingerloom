@@ -46,7 +46,7 @@ export class UserController {
 }
 ```
 
-### Exception Filter
+### Exception Filter와 실행 컨텍스트
 
 Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스에 해당하는 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
 `@BeforeCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행되기 전에 실행되고, `@AfterCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행된 후에 실행됩니다.
@@ -83,7 +83,7 @@ export class InternalErrorFilter implements Filter {
 
 ![image](https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770)
 
-`BeforeCatch -> Catch -> AfterCatch` 순으로 실행됩니다.
+예외 메소드는 `BeforeCatch -> Catch -> AfterCatch` 순으로 실행됩니다. 다만 각 예외 컨텍스트는 일회성입니다. 따라서 `@BeforeCatch`에서 저장한 데이터는 `@Catch`에서 사용할 수 없습니다. `@Catch`에 저장된 데이터도 `@AfterCatch`에서 사용할 수 없습니다.
 
 ### 제한 사항
 
