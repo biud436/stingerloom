@@ -12,7 +12,7 @@ export function ExceptionFilter<T extends Error = Error>(
         const scanner = Container.get(ExceptionScanner);
         const metadataScanner = Container.get(ErrorMetadataScanner);
 
-        const name = createUniqueExceptionKey(target.name, scanner);
+        const name = createUniqueExceptionKey(errorClazz.name, scanner);
 
         scanner.set(name, <ExceptionMetadata>{
             target,

@@ -24,8 +24,11 @@ import { ValidationHandler } from "./lib/ValidationHandler";
 import { HEADER_TOKEN } from "./lib/Header";
 import ts, { Identifier, MethodDeclaration, MethodSignature } from "typescript";
 import fs from "fs";
+import { ExceptionScanner } from "./lib/ExceptionScanner";
+import { InternalServerException } from "./lib/error/InternalServerException";
+import { InternalErrorFilter } from "./example/exceptions/InternalErrorFilter";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const imports = [PostController, UserController];
+const imports = [PostController, UserController, InternalErrorFilter];
 type HttpMethod = "get" | "post" | "patch" | "put" | "delete";
 
 class ServerBootstrapApplication {
@@ -35,7 +38,7 @@ class ServerBootstrapApplication {
 
     private constructor() {
         this.app = fastify({
-            logger: true,
+            logger: false,
         });
     }
 
@@ -142,9 +145,15 @@ class ServerBootstrapApplication {
      * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.
      */
     private async registerControllers(): Promise<this> {
+        // Controller 스캐너 생성
         const controllerScanner = Container.get(ControllerScanner);
         const contollers = controllerScanner.makeControllers();
         let controller: IteratorResult<ControllerMetadata>;
+
+        // Exception 스캐너 생성
+        const exceptionScanner = Container.get(ExceptionScanner);
+
+        // Controller 스캔 시작
         while ((controller = contollers.next())) {
             if (controller.done) break;
             const metadata = controller.value as ControllerMetadata;
@@ -158,6 +167,7 @@ class ServerBootstrapApplication {
 
             const controllerPath = metadata.path;
 
+            // 라우터 스캔 시작
             metadata.routers.forEach(
                 ({ method, path: routerPath, router, parameters }) => {
                     const targetMethod = method.toLowerCase();
@@ -170,65 +180,58 @@ class ServerBootstrapApplication {
                         _request,
                         _reply,
                     ) => {
-                        try {
-                            /**
-                             * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸준다.
-                             */
-                            const req = _request as FastifyRequest;
-                            const res = _reply as FastifyReply;
+                        /**
+                         * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸줍니다.
+                         */
+                        const req = _request as FastifyRequest;
+                        const res = _reply as FastifyReply;
 
-                            const bodyValidationActions: Promise<
-                                ValidationError[]
-                            >[] = [];
+                        const bodyValidationActions: Promise<
+                            ValidationError[]
+                        >[] = [];
 
-                            const args = parameters.map((param) => {
-                                if (param.isReq) {
-                                    return req;
-                                }
-
-                                if (param.body) {
-                                    const bodyData = plainToClass(
-                                        param.body.type,
-                                        req.body,
-                                    );
-                                    bodyValidationActions.push(
-                                        validate(bodyData),
-                                    );
-                                    return bodyData;
-                                }
-
-                                return param.value;
-                            });
-
-                            // 헤더 구현
-                            const header = Reflect.getMetadata(
-                                HEADER_TOKEN,
-                                targetController,
-                                (router as any).name,
-                            );
-                            if (header) {
-                                res.header(header.key, header.value);
+                        const args = parameters.map((param) => {
+                            if (param.isReq) {
+                                return req;
                             }
 
-                            const validationHandler = new ValidationHandler(
-                                res,
-                                bodyValidationActions,
-                            );
-
-                            if (await validationHandler.isError()) {
-                                return validationHandler.getResponse();
+                            if (param.body) {
+                                const bodyData = plainToClass(
+                                    param.body.type,
+                                    req.body,
+                                );
+                                bodyValidationActions.push(validate(bodyData));
+                                return bodyData;
                             }
 
-                            const result = (router as any).call(
-                                targetController,
-                                ...args,
-                            );
+                            return param.value;
+                        });
 
-                            return result;
-                        } catch (err: any) {
-                            // TODO: Exception Filter가 여기에 들어갈 수 있음.
-                            console.error(err);
+                        // 헤더 구현
+                        const header = Reflect.getMetadata(
+                            HEADER_TOKEN,
+                            targetController,
+                            (router as any).name,
+                        );
+                        if (header) {
+                            res.header(header.key, header.value);
                         }
+
+                        const validationHandler = new ValidationHandler(
+                            res,
+                            bodyValidationActions,
+                        );
+
+                        if (await validationHandler.isError()) {
+                            return validationHandler.getResponse();
+                        }
+
+                        const result = (router as any).call(
+                            targetController,
+                            ...args,
+                        );
+
+                        return result;
                     };
 
                     handler(
@@ -238,6 +241,26 @@ class ServerBootstrapApplication {
                 },
             );
         }
+
+        this.app.setErrorHandler((err, _request, _reply) => {
+            let errorData = null;
+
+            for (const {
+                exception,
+                handlers,
+            } of exceptionScanner.makeExceptions()) {
+                if (err.name === exception.name) {
+                    const catcher = handlers[0];
+                    errorData = (catcher.handler as any).call(this, err);
+                }
+            }
+
+            if (!errorData) {
+                errorData = err;
+            }
+
+            _reply.status(errorData.status || 500).send(errorData);
+        });
 
         return this;
     }

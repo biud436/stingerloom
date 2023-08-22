@@ -14,9 +14,11 @@ This is a node server framework made from scratch for study purposes.
 
 ## 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch` 데코레이터를 지원합니다.
 
-### 기본 형태
+### Controller
+
+Controller는 다음과 같이 정의할 수 있습니다. 상단에 `@Controller` 데코레이터를 붙이고 데코레이터의 인자로는 해당 컨트롤러의 기본 경로를 지정합니다. 이후에는 해당 컨트롤러의 메소드를 정의하면 됩니다.
 
 ```ts
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -57,7 +59,24 @@ export class UserController {
 }
 ```
 
-단, 컨트롤러 데코레이터를 정상적으로 읽기 위해서는 imports 배열에 의존성을 추가해줘야 합니다.
+### Exception Filter
+
+Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스의 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
+
+```ts
+@ExceptionFilter(InternalServerException)
+export class InternalErrorFilter implements Filter {
+    @Catch()
+    public catch(error: any) {
+        console.log("[서버 내부 오류] " + error.message);
+
+        return {
+            message: error.message,
+            status: error.status,
+        };
+    }
+}
+```
 
 ### 제한 사항
 
