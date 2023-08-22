@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { Metadata, MetadataScanner } from "../../scanner/MetadataScanner";
+import { Metadata, MetadataScanner } from "../../IoC/scanners/MetadataScanner";
 import { getMethodParameters } from "../../../utils/extractor";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
-import { ClazzType } from "../common/RouterMapper";
+import { ClazzType } from "../../common/RouterMapper";
 
 /**
  * 공유 인스턴스를 보관하기 위한 스캐너 클래스입니다.

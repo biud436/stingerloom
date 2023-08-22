@@ -1,10 +1,10 @@
 import Container from "typedi";
-import { ExceptionScanner } from "../../scanner/ExceptionScanner";
+import { ExceptionScanner } from "../../IoC/scanners/ExceptionScanner";
 import {
     DynamicClassWrapper,
     ExceptionMetadata,
-} from "../../scanner/MetadataScanner";
-import { ErrorMetadataScanner } from "../../scanner/ErrorMetadataScanner";
+} from "../../IoC/scanners/MetadataScanner";
+import { ErrorMetadataScanner } from "../../IoC/scanners/ErrorMetadataScanner";
 import { createUniqueExceptionKey } from "../../../utils/scanner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

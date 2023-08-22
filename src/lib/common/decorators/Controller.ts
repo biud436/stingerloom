@@ -4,8 +4,8 @@ import Container from "typedi";
 import {
     DynamicClassWrapper,
     MetadataScanner,
-} from "../../scanner/MetadataScanner";
-import { ControllerScanner } from "../../scanner/ControllerScanner";
+} from "../../IoC/scanners/MetadataScanner";
+import { ControllerScanner } from "../../IoC/scanners/ControllerScanner";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
 import { createUniqueControllerKey } from "../../../utils/scanner";
 

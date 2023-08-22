@@ -1,5 +1,5 @@
-import { ControllerScanner } from "../lib/scanner/ControllerScanner";
-import { ExceptionScanner } from "../lib/scanner/ExceptionScanner";
+import { ControllerScanner } from "../lib/IoC/scanners/ControllerScanner";
+import { ExceptionScanner } from "../lib/IoC/scanners/ExceptionScanner";
 
 export function createUniqueControllerKey(
     name: string,
