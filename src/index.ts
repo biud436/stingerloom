@@ -256,7 +256,9 @@ class ServerBootstrapApplication {
         }
 
         this.app.setErrorHandler((err, _request, _reply) => {
-            let errorData = null;
+            let errorData = {
+                status: 500,
+            } as any;
 
             for (const {
                 target,
@@ -264,12 +266,28 @@ class ServerBootstrapApplication {
                 handlers,
             } of exceptionScanner.makeExceptions()) {
                 if (err.name === exception.name) {
-                    const catcher = handlers[0];
                     const ExceptionFilter = target as ClazzType<any>;
-                    errorData = (catcher.handler as any).call(
-                        new ExceptionFilter(),
-                        err,
-                    );
+
+                    handlers.forEach((catcher) => {
+                        const { advice } = catcher;
+
+                        switch (advice) {
+                            case "throwing":
+                                errorData = (catcher.handler as any).call(
+                                    new ExceptionFilter(),
+                                    err,
+                                );
+                                break;
+                            case "before-throwing":
+                            case "after-throwing":
+                                (catcher.handler as any).call(
+                                    new ExceptionFilter(),
+                                );
+                                break;
+                            default:
+                                break;
+                        }
+                    });
                 }
             }
 
@@ -277,7 +295,7 @@ class ServerBootstrapApplication {
                 errorData = err;
             }
 
-            _reply.status(errorData.status || 500).send(errorData);
+            _reply.status(errorData?.status || 500).send(errorData);
         });
 
         return this;

@@ -31,9 +31,11 @@ export type ExceptionMetadata<T extends Error = Error> = {
     handlers: ErrorMetadata[];
 };
 
+export type ErrorAdvice = "before-throwing" | "after-throwing" | "throwing";
 export type ErrorMetadata = {
     target: unknown;
     handler: unknown;
+    advice: ErrorAdvice;
 };
 
 export type RepositoryMetadata = {

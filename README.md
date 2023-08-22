@@ -14,7 +14,7 @@ This is a node server framework made from scratch for study purposes.
 
 ## 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch` 데코레이터를 지원합니다.
 
 ### Controller
 
@@ -49,11 +49,17 @@ export class UserController {
 ### Exception Filter
 
 Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스에 해당하는 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
+`@BeforeCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행되기 전에 실행되고, `@AfterCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행된 후에 실행됩니다.
 
 ```ts
 @ExceptionFilter(InternalServerException)
 export class InternalErrorFilter implements Filter {
     private readonly logger = new Logger();
+
+    @BeforeCatch()
+    public beforeCatch() {
+        this.logger.info("before catch");
+    }
 
     @Catch()
     public catch(error: any) {
@@ -64,6 +70,11 @@ export class InternalErrorFilter implements Filter {
             status: error.status,
             result: "failure",
         };
+    }
+
+    @AfterCatch()
+    public afterCatch() {
+        this.logger.info("after catch");
     }
 }
 ```
