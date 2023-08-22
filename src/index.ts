@@ -27,8 +27,11 @@ import fs from "fs";
 import { ExceptionScanner } from "./lib/ExceptionScanner";
 import { InternalServerException } from "./lib/error/InternalServerException";
 import { InternalErrorFilter } from "./example/exceptions/InternalErrorFilter";
+import { Logger } from "./lib/Logger";
+import { InstanceLoader } from "./example/InstanceLoader";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const imports = [PostController, UserController, InternalErrorFilter];
+
 type HttpMethod = "get" | "post" | "patch" | "put" | "delete";
 
 class ServerBootstrapApplication {
@@ -38,7 +41,15 @@ class ServerBootstrapApplication {
 
     private constructor() {
         this.app = fastify({
-            logger: false,
+            logger: {
+                transport: {
+                    target: "pino-pretty",
+                    options: {
+                        translateTime: "HH:MM:ss Z",
+                        ignore: "pid,hostname",
+                    },
+                },
+            },
         });
     }
 
@@ -58,6 +69,8 @@ class ServerBootstrapApplication {
      * 서버를 시작합니다.
      */
     public async start(): Promise<void> {
+        InstanceLoader.load();
+
         // prettier-ignore
         this.handleGuards()
             .applyMiddlewares()
@@ -246,12 +259,17 @@ class ServerBootstrapApplication {
             let errorData = null;
 
             for (const {
+                target,
                 exception,
                 handlers,
             } of exceptionScanner.makeExceptions()) {
                 if (err.name === exception.name) {
                     const catcher = handlers[0];
-                    errorData = (catcher.handler as any).call(this, err);
+                    const ExceptionFilter = target as ClazzType<any>;
+                    errorData = (catcher.handler as any).call(
+                        new ExceptionFilter(),
+                        err,
+                    );
                 }
             }
 
