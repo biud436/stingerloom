@@ -66,9 +66,11 @@ Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터
 ```ts
 @ExceptionFilter(InternalServerException)
 export class InternalErrorFilter implements Filter {
+    private readonly logger = new Logger();
+
     @Catch()
     public catch(error: any) {
-        console.log("[서버 내부 오류] " + error.message);
+        this.logger.info("[서버 내부 오류] " + error.message);
 
         return {
             message: error.message,
