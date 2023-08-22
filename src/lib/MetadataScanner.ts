@@ -25,6 +25,17 @@ export type ControllerMetadata<T = any> = {
     repositoies: DynamicClassWrapper<T>;
 };
 
+export type ExceptionMetadata<T extends Error = Error> = {
+    target: unknown;
+    exception: DynamicClassWrapper<T>;
+    handlers: ErrorMetadata[];
+};
+
+export type ErrorMetadata = {
+    target: unknown;
+    handler: unknown;
+};
+
 export type RepositoryMetadata = {
     repository: Repository<ObjectLiteral>;
     target: any;

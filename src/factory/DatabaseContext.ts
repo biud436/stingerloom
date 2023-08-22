@@ -1,4 +1,4 @@
-import { option as databaseOption } from "../config";
+import { option as databaseOption } from "../example/config";
 import { DBConnectionOption } from "./DBConnectionOption";
 
 export class DatabaseContext {

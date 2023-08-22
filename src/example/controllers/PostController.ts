@@ -1,5 +1,5 @@
-import { Controller } from "../lib/Controller";
-import { Get } from "../lib/Get";
+import { Controller } from "../../lib/Controller";
+import { Get } from "../../lib/Get";
 
 /**
  * @class PostController

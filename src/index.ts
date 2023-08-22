@@ -15,9 +15,9 @@ import { ControllerMetadata } from "./lib/MetadataScanner";
 import { ControllerScanner } from "./lib/ControllerScanner";
 
 import { ClazzType } from "./lib/RouterMapper";
-import { PostController } from "./controllers/PostController";
+import { PostController } from "./example/controllers/PostController";
 import path from "path";
-import { UserController } from "./controllers/UserController";
+import { UserController } from "./example/controllers/UserController";
 import { plainToClass } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
 import { ValidationHandler } from "./lib/ValidationHandler";
@@ -39,6 +39,9 @@ class ServerBootstrapApplication {
         });
     }
 
+    /**
+     * 인스턴스를 취득합니다.
+     */
     public static getInstance(): ServerBootstrapApplication {
         if (!ServerBootstrapApplication.INSTANCE) {
             ServerBootstrapApplication.INSTANCE =
@@ -48,11 +51,14 @@ class ServerBootstrapApplication {
         return ServerBootstrapApplication.INSTANCE;
     }
 
+    /**
+     * 서버를 시작합니다.
+     */
     public async start(): Promise<void> {
         // prettier-ignore
         this.handleGuards()
             .applyMiddlewares()
-            .handleRoute();
+            .handleStaticRoute();
 
         await this.connectDatabase();
         await this.registerControllers();
@@ -61,8 +67,11 @@ class ServerBootstrapApplication {
         this.createServer();
     }
 
+    /**
+     * jsDoc을 읽어옵니다.
+     */
     public async readJsDoc() {
-        const targetPath = path.join(__dirname, "controllers");
+        const targetPath = path.join(__dirname, "example", "controllers");
 
         const files = fs.readdirSync(targetPath);
 
@@ -72,7 +81,7 @@ class ServerBootstrapApplication {
         );
 
         const sourceFile = program.getSourceFile(
-            "./src/controllers/PostController.ts",
+            "./src/example/controllers/PostController.ts",
         );
 
         ts.forEachChild(sourceFile!, (node) => {
@@ -129,6 +138,9 @@ class ServerBootstrapApplication {
         visitNode(sourceFile!);
     }
 
+    /**
+     * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.
+     */
     private async registerControllers(): Promise<this> {
         const controllerScanner = Container.get(ControllerScanner);
         const contollers = controllerScanner.makeControllers();
@@ -230,6 +242,11 @@ class ServerBootstrapApplication {
         return this;
     }
 
+    /**
+     * Exception Filter로 잡아내지 못한 서버 오류를 캐치합니다.
+     *
+     * @returns
+     */
     private handleGuards(): this {
         const handleErrorWather = (err: unknown) => {
             console.error(err);
@@ -240,8 +257,13 @@ class ServerBootstrapApplication {
         return this;
     }
 
-    private handleRoute(): this {
-        this.app.register(import("./routes"), {
+    /**
+     * 정적 라우터를 등록합니다.
+     *
+     * @returns
+     */
+    private handleStaticRoute(): this {
+        this.app.register(import("./example/routes"), {
             prefix: "/api",
         });
 
