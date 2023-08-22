@@ -83,6 +83,8 @@ export class InternalErrorFilter implements Filter {
 
 ![image](https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770)
 
+`BeforeCatch -> Catch -> AfterCatch` 순으로 실행됩니다.
+
 ### 제한 사항
 
 현재 버전에서는 컨트롤러 데코레이터가 마킹된 클래스에서만 생성자에 매개변수 주입이 가능하며, 서비스 레이어에서는 매개변수 주입이 아직 불가능합니다.
