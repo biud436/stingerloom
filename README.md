@@ -1,6 +1,6 @@
 # Introduction
 
-This is a node server framework made from scratch for study purposes.
+직접 바닥부터 만들어보는 Custom Node.js Server Framework입니다.
 
 ## 사용한 기술
 
