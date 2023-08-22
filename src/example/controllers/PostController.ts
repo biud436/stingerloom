@@ -1,5 +1,7 @@
 import { Controller } from "../../lib/Controller";
 import { Get } from "../../lib/Get";
+import { Header } from "../../lib/Header";
+import { ResponseBuilder } from "../../lib/ResponseBuilder";
 
 /**
  * @class PostController
@@ -7,11 +9,15 @@ import { Get } from "../../lib/Get";
 @Controller("/post")
 export class PostController {
     /**
-     * getPost 메서드
+     * wow
      * @returns
      */
+    @Header("Content-Type", "application/json")
     @Get()
     public async getPost() {
-        return "post 입니다.";
+        return new ResponseBuilder("post 입니다.")
+            .statusOK()
+            .success()
+            .response();
     }
 }

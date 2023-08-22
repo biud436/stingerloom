@@ -9,6 +9,7 @@ import { InternalServerException } from "../../lib/error/InternalServerException
 export class InternalErrorFilter implements Filter {
     @Catch()
     public catch(error: any) {
+        console.warn("[서버 내부 오류] " + error.message);
         return {
             message: error.message,
             status: error.status,
