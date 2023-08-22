@@ -3,7 +3,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { ClazzType } from "../common/RouterMapper";
 import Container from "typedi";
 import { ControllerScanner } from "./scanners/ControllerScanner";
-import { ControllerMetadata } from "./scanners/MetadataScanner";
+import { ContainerMetadata } from "./scanners/MetadataScanner";
 import { ExceptionScanner } from "./scanners/ExceptionScanner";
 import { HttpMethod } from "../common/HttpMethod";
 import { ValidationError, validate } from "class-validator";
@@ -29,19 +29,22 @@ export class ContainerManager {
         await this.regsterExceptions();
     }
 
+    /**
+     * 컨트롤러를 스캔하고 라우터로 등록합니다.
+     */
     private async registerControllers() {
         // Controller 스캐너 생성
         const controllerScanner = Container.get(ControllerScanner);
         const contollers = controllerScanner.makeControllers();
-        let controller: IteratorResult<ControllerMetadata>;
+        let controller: IteratorResult<ContainerMetadata>;
 
         // Controller 스캔 시작
         while ((controller = contollers.next())) {
             if (controller.done) break;
-            const metadata = controller.value as ControllerMetadata;
+            const metadata = controller.value as ContainerMetadata;
 
             const TargetController = metadata.target as ClazzType<any>;
-            const injectParameters = metadata.repositoies;
+            const injectParameters = metadata.parameters;
             const args = injectParameters as any;
 
             const targetController = new TargetController(...args);
@@ -125,6 +128,9 @@ export class ContainerManager {
         }
     }
 
+    /**
+     * 예외 처리를 스캔하고 예외를 캐치합니다.
+     */
     private async regsterExceptions() {
         // Exception 스캐너 생성
         const exceptionScanner = Container.get(ExceptionScanner);
@@ -150,20 +156,21 @@ export class ContainerManager {
                         );
                     }
 
+                    // Advice 처리
                     handlers.forEach((catcher) => {
                         const { advice } = catcher;
-                        const instance = instanceScanner.get(ExceptionFilter);
+                        const context = instanceScanner.get(ExceptionFilter);
 
                         switch (advice) {
                             case "throwing":
                                 errorData = (catcher.handler as any).call(
-                                    instance,
+                                    context,
                                     err,
                                 );
                                 break;
                             case "before-throwing":
                             case "after-throwing":
-                                (catcher.handler as any).call(instance);
+                                (catcher.handler as any).call(context);
                                 break;
                             default:
                                 break;

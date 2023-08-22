@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 import {
+    ContainerMetadata,
     DynamicClassWrapper,
     MetadataScanner,
 } from "../../IoC/scanners/MetadataScanner";
@@ -35,7 +36,8 @@ export function Controller(path: string): ClassDecorator {
             path,
             target,
             routers: metadataScanner.allMetadata(),
-            repositoies,
+            type: "controller",
+            parameters: repositoies,
         });
 
         metadataScanner.clear();

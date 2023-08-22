@@ -18,11 +18,13 @@ export type Metadata = {
     header?: Record<string, string>;
 };
 
-export type ControllerMetadata<T = any> = {
+export type ContainerType = "controller" | "service";
+export type ContainerMetadata<T = any> = {
     path: string;
     target: unknown;
     routers: Metadata[];
-    repositoies: DynamicClassWrapper<T>;
+    type: ContainerType;
+    parameters: DynamicClassWrapper<T>;
 };
 
 export type ExceptionMetadata<T extends Error = Error> = {
