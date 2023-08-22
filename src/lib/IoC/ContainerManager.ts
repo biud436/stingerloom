@@ -47,8 +47,6 @@ export class ContainerManager {
             const injectParameters = metadata.parameters;
             const args = injectParameters as any;
 
-            console.log(args);
-
             const targetController = new TargetController(...args);
             this._controllers.push(targetController);
 

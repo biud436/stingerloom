@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
 import { ClazzType } from "../../common/RouterMapper";
+import { DYNAMIC_SERVICE_TOKEN } from "../../common/decorators/InjectRepository";
 
 /**
  * 공유 인스턴스를 보관하기 위한 스캐너 클래스입니다.
@@ -25,8 +26,17 @@ export class InstanceScanner {
 
     public wrap<T>(key: ClazzType<any>): T {
         if (!this.has(key)) {
-            const value = new key();
-            this.set(key, value);
+            const service = Reflect.getMetadata(
+                DYNAMIC_SERVICE_TOKEN,
+                key.prototype,
+            );
+
+            if (!service) {
+                const value = new key();
+                this.set(key, value);
+            } else {
+                // 서비스 메타데이터가 존재하면, 해당 메타데이터를 이용하여 인스턴스를 생성합니다.
+            }
         }
 
         return this.get(key);

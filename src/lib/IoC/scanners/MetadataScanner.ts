@@ -27,6 +27,13 @@ export type ContainerMetadata<T = any> = {
     parameters: DynamicClassWrapper<T>;
 };
 
+export type ServiceMetadata = {
+    type: ContainerType;
+    target: unknown;
+    name: string;
+    parameters: DynamicClassWrapper<any>[];
+};
+
 export type ExceptionMetadata<T extends Error = Error> = {
     target: unknown;
     exception: DynamicClassWrapper<T>;
