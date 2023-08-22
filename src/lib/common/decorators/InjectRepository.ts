@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "reflect-metadata";
 import Container from "typedi";
-import Database from "./Database";
-import { ClazzType } from "./RouterMapper";
-import { RepositoryScanner } from "./RepositoryScanner";
+import Database from "../Database";
+import { ClazzType } from "../RouterMapper";
+import { RepositoryScanner } from "../../scanner/RepositoryScanner";
 
 export const REPOSITORY_TOKEN = "repository";
 export function InjectRepository<T>(entity: ClazzType<T>): ParameterDecorator {

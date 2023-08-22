@@ -8,28 +8,28 @@ import {
 } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
-import database from "./lib/Database";
+import database from "./lib/common/Database";
 import fastifyCookie from "@fastify/cookie";
 import Container from "typedi";
-import { ControllerMetadata } from "./lib/MetadataScanner";
-import { ControllerScanner } from "./lib/ControllerScanner";
+import { ControllerMetadata } from "./lib/scanner/MetadataScanner";
+import { ControllerScanner } from "./lib/scanner/ControllerScanner";
 
-import { ClazzType } from "./lib/RouterMapper";
+import { ClazzType } from "./lib/common/RouterMapper";
 import { PostController } from "./example/controllers/PostController";
 import path from "path";
 import { UserController } from "./example/controllers/UserController";
 import { plainToClass } from "class-transformer";
 import { ValidationError, validate } from "class-validator";
-import { ValidationHandler } from "./lib/ValidationHandler";
-import { HEADER_TOKEN } from "./lib/Header";
+import { ValidationHandler } from "./lib/common/ValidationHandler";
+import { HEADER_TOKEN } from "./lib/common/decorators/Header";
 import ts, { Identifier, MethodDeclaration, MethodSignature } from "typescript";
 import fs from "fs";
-import { ExceptionScanner } from "./lib/ExceptionScanner";
+import { ExceptionScanner } from "./lib/scanner/ExceptionScanner";
 import { InternalServerException } from "./lib/error/InternalServerException";
 import { InternalErrorFilter } from "./example/exceptions/InternalErrorFilter";
-import { Logger } from "./lib/Logger";
+import { Logger } from "./lib/common/Logger";
 import { InstanceLoader } from "./example/InstanceLoader";
-import { InstanceScanner } from "./lib/InstanceScanner";
+import { InstanceScanner } from "./lib/scanner/InstanceScanner";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 

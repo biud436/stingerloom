@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import v1 from "./v1";
 import os from "os";
 import { serializer } from "../../utils/serializer";
-import { ReplyBuilder } from "../../lib/ReplyBuilder";
+import { ReplyBuilder } from "../../lib/common/ReplyBuilder";
 
 const handler: FastifyFPHandler = async (_request, _reply) => {
     const builder = new ReplyBuilder(_reply);

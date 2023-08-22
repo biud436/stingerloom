@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { ErrorAdvice, ErrorMetadata } from "./MetadataScanner";
-import { ErrorMetadataScanner } from "./ErrorMetadataScanner";
+import { ErrorAdvice, ErrorMetadata } from "../../scanner/MetadataScanner";
+import { ErrorMetadataScanner } from "../../scanner/ErrorMetadataScanner";
 
 export function Catch(advice: ErrorAdvice = "throwing") {
     return function (

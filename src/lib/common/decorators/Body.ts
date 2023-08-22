@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ClazzType } from "./RouterMapper";
+import { ClazzType } from "../RouterMapper";
 
 export type BodyParameter = {
     index: number;

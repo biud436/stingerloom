@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
-import { Controller } from "../../lib/Controller";
-import { Get } from "../../lib/Get";
-import { Header } from "../../lib/Header";
-import { InjectRepository } from "../../lib/InjectRepository";
-import { Req } from "../../lib/Req";
+import { Controller } from "../../lib/common/decorators/Controller";
+import { Get } from "../../lib/common/decorators/Get";
+import { Header } from "../../lib/common/decorators/Header";
+import { InjectRepository } from "../../lib/common/decorators/InjectRepository";
+import { Req } from "../../lib/common/decorators/Req";
 import { FastifyRequest } from "fastify";
-import { Post } from "../../lib/Post";
-import { Body } from "../../lib/Body";
+import { Post } from "../../lib/common/decorators/Post";
+import { Body } from "../../lib/common/decorators/Body";
 import { CreateUserDto } from "./dto/CreateUserDto";
 
 @Controller("/user")

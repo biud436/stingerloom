@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { Metadata, MetadataScanner } from "./MetadataScanner";
-import { HttpRouterParameter } from "./HttpRouterParameter";
-import { getMethodParameters } from "../utils/extractor";
+import { Metadata, MetadataScanner } from "../../scanner/MetadataScanner";
+import { getMethodParameters } from "../../../utils/extractor";
+import { HttpRouterParameter } from "../HttpRouterParameter";
 
-export function Delete(path = "") {
+export function Post(path = "") {
     return function (
         target: any,
         propertyKey: string,
@@ -19,7 +19,7 @@ export function Delete(path = "") {
         const uniqueKey = scanner.createUniqueKey();
         scanner.set<Metadata>(uniqueKey, {
             path,
-            method: "DELETE",
+            method: "POST",
             target,
             router: descriptor.value,
             parameters,

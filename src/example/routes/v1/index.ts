@@ -1,4 +1,4 @@
-import { ReplyBuilder } from "../../../lib/ReplyBuilder";
+import { ReplyBuilder } from "../../../lib/common/ReplyBuilder";
 
 const v1: FastifyFPHandler = async (_request, _reply) => {
     const builder = new ReplyBuilder(_reply);

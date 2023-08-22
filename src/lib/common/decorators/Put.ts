@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { Metadata, MetadataScanner } from "./MetadataScanner";
-import { getMethodParameters } from "../utils/extractor";
-import { HttpRouterParameter } from "./HttpRouterParameter";
+import { Metadata, MetadataScanner } from "../../scanner/MetadataScanner";
+import { getMethodParameters } from "../../../utils/extractor";
+import { HttpRouterParameter } from "../HttpRouterParameter";
 
 export function Put(path = "") {
     return function (

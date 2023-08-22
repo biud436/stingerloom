@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { Metadata, MetadataScanner } from "./MetadataScanner";
-import { HttpRouterParameter } from "./HttpRouterParameter";
-import { getMethodParameters } from "../utils/extractor";
+import { Metadata, MetadataScanner } from "../../scanner/MetadataScanner";
+import { HttpRouterParameter } from "../HttpRouterParameter";
+import { getMethodParameters } from "../../../utils/extractor";
 
 export function Get(path = "") {
     return function (

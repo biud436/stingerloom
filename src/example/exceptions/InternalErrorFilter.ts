@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AfterCatch } from "../../lib/AfterCatch";
-import { BeforeCatch } from "../../lib/BeforeCatch";
-import { Catch } from "../../lib/Catch";
-import { ExceptionFilter } from "../../lib/ExceptionFilter";
-import { Filter } from "../../lib/Filter";
-import { Logger } from "../../lib/Logger";
+import { AfterCatch } from "../../lib/common/decorators/AfterCatch";
+import { BeforeCatch } from "../../lib/common/decorators/BeforeCatch";
+import { Catch } from "../../lib/common/decorators/Catch";
+import { ExceptionFilter } from "../../lib/common/decorators/ExceptionFilter";
+import { Filter } from "../../lib/common/Filter";
+import { Logger } from "../../lib/common/Logger";
 import { InternalServerException } from "../../lib/error/InternalServerException";
 
 @ExceptionFilter(InternalServerException)

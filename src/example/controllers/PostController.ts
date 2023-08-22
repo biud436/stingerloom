@@ -1,7 +1,7 @@
-import { Controller } from "../../lib/Controller";
-import { Get } from "../../lib/Get";
-import { Header } from "../../lib/Header";
-import { ResponseBuilder } from "../../lib/ResponseBuilder";
+import { Controller } from "../../lib/common/decorators/Controller";
+import { Get } from "../../lib/common/decorators/Get";
+import { Header } from "../../lib/common/decorators/Header";
+import { ResponseBuilder } from "../../lib/common/ResponseBuilder";
 import { InternalServerException } from "../../lib/error/InternalServerException";
 
 /**

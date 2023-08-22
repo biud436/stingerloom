@@ -1,8 +1,11 @@
 import Container from "typedi";
-import { ExceptionScanner } from "./ExceptionScanner";
-import { DynamicClassWrapper, ExceptionMetadata } from "./MetadataScanner";
-import { ErrorMetadataScanner } from "./ErrorMetadataScanner";
-import { createUniqueExceptionKey } from "../utils/scanner";
+import { ExceptionScanner } from "../../scanner/ExceptionScanner";
+import {
+    DynamicClassWrapper,
+    ExceptionMetadata,
+} from "../../scanner/MetadataScanner";
+import { ErrorMetadataScanner } from "../../scanner/ErrorMetadataScanner";
+import { createUniqueExceptionKey } from "../../../utils/scanner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export function ExceptionFilter<T extends Error = Error>(

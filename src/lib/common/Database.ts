@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
 import Container, { Service } from "typedi";
-import { User } from "../example/entity/User";
+import { User } from "../../example/entity/User";
 import bcrypt from "bcrypt";
-import { databaseFactory } from "../factory/DatabaseFactory";
+import { databaseFactory } from "../../factory/DatabaseFactory";
 
 @Service()
 class Database {

@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { DynamicClassWrapper, MetadataScanner } from "./MetadataScanner";
-import { ControllerScanner } from "./ControllerScanner";
+import {
+    DynamicClassWrapper,
+    MetadataScanner,
+} from "../../scanner/MetadataScanner";
+import { ControllerScanner } from "../../scanner/ControllerScanner";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
-import { createUniqueControllerKey } from "../utils/scanner";
+import { createUniqueControllerKey } from "../../../utils/scanner";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { REQ_TOKEN } from "../lib/Req";
-import { HttpRouterParameter } from "../lib/HttpRouterParameter";
-import { BODY_TOKEN, BodyParameter } from "../lib/Body";
+import { REQ_TOKEN } from "../lib/common/decorators/Req";
+import { HttpRouterParameter } from "../lib/common/HttpRouterParameter";
+import { BODY_TOKEN, BodyParameter } from "../lib/common/decorators/Body";
 
 /**
  * 특정 메소드의 매개변수 정보를 취득합니다.
