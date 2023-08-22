@@ -3,12 +3,15 @@ import { Get } from "../../lib/common/decorators/Get";
 import { Header } from "../../lib/common/decorators/Header";
 import { ResponseBuilder } from "../../lib/common/ResponseBuilder";
 import { InternalServerException } from "../../lib/error/InternalServerException";
+import { Point } from "../entity/Point";
 
 /**
  * @class PostController
  */
 @Controller("/post")
 export class PostController {
+    constructor(private readonly point: Point) {}
+
     /**
      * wow
      * @returns
@@ -24,5 +27,15 @@ export class PostController {
             .statusOK()
             .success()
             .response();
+    }
+
+    @Get("/point")
+    async getPoint() {
+        this.point.move(4, 4);
+
+        return {
+            x: this.point.x,
+            y: this.point.y,
+        };
     }
 }

@@ -22,4 +22,13 @@ export class InstanceScanner {
     public has(key: ClazzType<any>): boolean {
         return this.mapper.has(key);
     }
+
+    public wrap<T>(key: ClazzType<any>): T {
+        if (!this.has(key)) {
+            const value = new key();
+            this.set(key, value);
+        }
+
+        return this.get(key);
+    }
 }

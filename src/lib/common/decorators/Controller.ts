@@ -9,6 +9,7 @@ import {
 import { ControllerScanner } from "../../IoC/scanners/ControllerScanner";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
 import { createUniqueControllerKey } from "../../../utils/scanner";
+import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
@@ -18,7 +19,7 @@ export function Controller(path: string): ClassDecorator {
         const params = Reflect.getMetadata("design:paramtypes", target) || [];
 
         // 리포지토리 주입을 위해 매개변수를 스캔합니다.
-        const repositoies: DynamicClassWrapper<any>[] = [];
+        const parameters: DynamicClassWrapper<any>[] = [];
         params.forEach((param: any, index: number) => {
             const repository = Reflect.getMetadata(
                 REPOSITORY_TOKEN,
@@ -26,7 +27,15 @@ export function Controller(path: string): ClassDecorator {
             );
 
             if (repository) {
-                repositoies.push(repository);
+                parameters.push(repository);
+            } else {
+                const TargetService = param;
+
+                const instanceScanner = Container.get(InstanceScanner);
+
+                if (TargetService) {
+                    parameters.push(instanceScanner.wrap(TargetService));
+                }
             }
         });
 
@@ -37,7 +46,7 @@ export function Controller(path: string): ClassDecorator {
             target,
             routers: metadataScanner.allMetadata(),
             type: "controller",
-            parameters: repositoies,
+            parameters: parameters,
         });
 
         metadataScanner.clear();

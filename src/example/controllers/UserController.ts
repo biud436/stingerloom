@@ -11,13 +11,24 @@ import { FastifyRequest } from "fastify";
 import { Post } from "../../lib/common/decorators/Post";
 import { Body } from "../../lib/common/decorators/Body";
 import { CreateUserDto } from "./dto/CreateUserDto";
+import { Point } from "../entity/Point";
 
 @Controller("/user")
 export class UserController {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly point: Point,
     ) {}
+
+    @Get("/point")
+    async getPoint() {
+        this.point.move(5, 5);
+        return {
+            x: this.point.x,
+            y: this.point.y,
+        };
+    }
 
     @Header("Content-Type", "application/json")
     @Get()
