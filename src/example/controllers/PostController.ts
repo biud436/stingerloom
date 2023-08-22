@@ -17,7 +17,7 @@ export class PostController {
     @Get()
     public async getPost() {
         throw new InternalServerException(
-            "포스트를 읽는 중 오류가 발생하였습니다.",
+            "포스트를 읽는 중 오류가 발생하였습니다",
         );
 
         return new ResponseBuilder("post 입니다.")
