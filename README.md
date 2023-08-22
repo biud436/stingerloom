@@ -21,19 +21,6 @@ This is a node server framework made from scratch for study purposes.
 Controller는 다음과 같이 정의할 수 있습니다. 상단에 `@Controller` 데코레이터를 붙이고 데코레이터의 인자로는 해당 컨트롤러의 기본 경로를 지정합니다. 이후에는 해당 컨트롤러의 메소드를 정의하면 됩니다.
 
 ```ts
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Repository } from "typeorm";
-import { User } from "../entity/User";
-import { Controller } from "../lib/Controller";
-import { Get } from "../lib/Get";
-import { InjectRepository } from "../lib/InjectRepository";
-import { Req } from "../lib/Req";
-import { FastifyRequest } from "fastify";
-import { Post } from "../lib/Post";
-import { Body } from "../lib/Body";
-import { CreateUserDto } from "./dto/CreateUserDto";
-
 @Controller("/user")
 export class UserController {
     constructor(
