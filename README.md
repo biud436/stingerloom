@@ -61,7 +61,7 @@ export class UserController {
 
 ### Exception Filter
 
-Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스의 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
+Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스에 해당하는 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
 
 ```ts
 @ExceptionFilter(InternalServerException)
