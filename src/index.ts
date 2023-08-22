@@ -29,6 +29,7 @@ import { InternalServerException } from "./lib/error/InternalServerException";
 import { InternalErrorFilter } from "./example/exceptions/InternalErrorFilter";
 import { Logger } from "./lib/Logger";
 import { InstanceLoader } from "./example/InstanceLoader";
+import { InstanceScanner } from "./lib/InstanceScanner";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -255,6 +256,7 @@ class ServerBootstrapApplication {
             );
         }
 
+        const instanceScanner = Container.get(InstanceScanner);
         this.app.setErrorHandler((err, _request, _reply) => {
             let errorData = {
                 status: 500,
@@ -268,21 +270,27 @@ class ServerBootstrapApplication {
                 if (err.name === exception.name) {
                     const ExceptionFilter = target as ClazzType<any>;
 
+                    if (!instanceScanner.has(ExceptionFilter)) {
+                        instanceScanner.set(
+                            ExceptionFilter,
+                            new ExceptionFilter(),
+                        );
+                    }
+
                     handlers.forEach((catcher) => {
                         const { advice } = catcher;
+                        const instance = instanceScanner.get(ExceptionFilter);
 
                         switch (advice) {
                             case "throwing":
                                 errorData = (catcher.handler as any).call(
-                                    new ExceptionFilter(),
+                                    instance,
                                     err,
                                 );
                                 break;
                             case "before-throwing":
                             case "after-throwing":
-                                (catcher.handler as any).call(
-                                    new ExceptionFilter(),
-                                );
+                                (catcher.handler as any).call(instance);
                                 break;
                             default:
                                 break;

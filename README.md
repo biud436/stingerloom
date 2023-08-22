@@ -83,8 +83,7 @@ export class InternalErrorFilter implements Filter {
 
 ![image](https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770)
 
-예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 다만 각 예외 컨텍스트는 일회성입니다. 따라서 `@BeforeCatch`에서 저장한 데이터는 `@Catch`에서 사용할 수 없습니다. `@Catch`에 저장된 데이터도 `@AfterCatch`에서 사용할 수 없습니다.
-실행 컨텍스트 문제는 쉽지 않지만 공유 인스턴스를 사용하여 해결할 예정입니다.
+예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
 
 ### 제한 사항
 
