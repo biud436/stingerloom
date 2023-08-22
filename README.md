@@ -73,6 +73,7 @@ export class InternalErrorFilter implements Filter {
         return {
             message: error.message,
             status: error.status,
+            result: "failure",
         };
     }
 }
