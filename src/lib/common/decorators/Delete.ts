@@ -3,10 +3,11 @@ import Container from "typedi";
 import { Metadata, MetadataScanner } from "../../IoC/scanners/MetadataScanner";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 import { getMethodParameters } from "../../../utils/extractor";
+import { PATH } from "./PATH_KEY";
 
 export function Delete(path = "") {
     return function (
-        target: any,
+        target: object,
         propertyKey: string,
         descriptor: PropertyDescriptor,
     ) {
@@ -14,6 +15,8 @@ export function Delete(path = "") {
             target,
             propertyKey,
         );
+
+        Reflect.defineMetadata(PATH, path, descriptor.value);
 
         const scanner = Container.get(MetadataScanner);
         const uniqueKey = scanner.createUniqueKey();

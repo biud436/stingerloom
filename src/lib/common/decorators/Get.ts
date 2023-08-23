@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 import { Metadata, MetadataScanner } from "../../IoC/scanners/MetadataScanner";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 import { getMethodParameters } from "../../../utils/extractor";
+import { PATH } from "./PATH_KEY";
 
+export const GET_KEY = Symbol("GET");
 export function Get(path = "") {
     return function (
-        target: any,
+        target: object,
         propertyKey: string,
         descriptor: PropertyDescriptor,
     ) {
@@ -15,6 +16,8 @@ export function Get(path = "") {
             target,
             propertyKey,
         );
+
+        Reflect.defineMetadata(PATH, path, descriptor.value);
 
         // 메소드 메타데이터를 등록합니다.
         const scanner = Container.get(MetadataScanner);
