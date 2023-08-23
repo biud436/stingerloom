@@ -87,9 +87,17 @@ export class ReflectManager {
 
     /**
      * 타입 정보를 반환합니다.
+     *
+     * @param target
      */
     public static getTypeInfo(target: object): any;
 
+    /**
+     * 타입 정보를 반환합니다.
+     *
+     * @param target
+     * @param key
+     */
     public static getTypeInfo(
         target: object,
         key: string | symbol | undefined,
