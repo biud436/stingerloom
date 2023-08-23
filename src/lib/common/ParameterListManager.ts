@@ -25,11 +25,11 @@ export class ParameterListManager {
 
     private constructor() {}
 
-    addCommand(name: string, allocator: ParameterAllocator) {
+    private addCommand(name: string, allocator: ParameterAllocator) {
         this.commandList.set(name, allocator);
     }
 
-    getCommand(name: string): ParameterAllocator | undefined {
+    private getCommand(name: string): ParameterAllocator | undefined {
         if (!this.commandList.has(name)) {
             return this.commandList.get(ParameterListManager.DEFAULT);
         }
@@ -45,6 +45,12 @@ export class ParameterListManager {
         return ParameterListManager.instance;
     }
 
+    /**
+     * Parameter Allocator를 취득합니다.
+     *
+     * @param name
+     * @returns
+     */
     public static invoke(name: string): ParameterAllocator | undefined {
         const manager = ParameterListManager.getInstance();
         if (!manager.isReady) {
@@ -54,6 +60,9 @@ export class ParameterListManager {
         return manager.getCommand(name);
     }
 
+    /**
+     * 매개변수 할당기를 커맨드로 등록합니다.
+     */
     public static initAllocator() {
         const manager = ParameterListManager.getInstance();
 

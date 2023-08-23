@@ -1,18 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import {
-    DynamicClassWrapper,
-    InjectableMetadata,
-} from "../../IoC/scanners/MetadataScanner";
-import { REPOSITORY_TOKEN } from "./InjectRepository";
-import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
+import { DynamicClassWrapper } from "../../IoC/scanners/MetadataScanner";
 import { ParameterListManager } from "../ParameterListManager";
-import {
-    createUniqueControllerKey,
-    createUniqueInjectableKey,
-} from "../../../utils/scanner";
-import { ControllerScanner } from "../../IoC/scanners/ControllerScanner";
+import { createUniqueInjectableKey } from "../../../utils/scanner";
 import { InjectableScanner } from "../../IoC/scanners/InjectableScanner";
 
 export const INJECTABLE_TOKEN = "injectable";
