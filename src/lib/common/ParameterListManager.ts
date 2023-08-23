@@ -45,7 +45,7 @@ export class ParameterListManager {
         return ParameterListManager.instance;
     }
 
-    public static getCommand(name: string): ParameterAllocator | undefined {
+    public static invoke(name: string): ParameterAllocator | undefined {
         const manager = ParameterListManager.getInstance();
         if (!manager.isReady) {
             ParameterListManager.initAllocator();

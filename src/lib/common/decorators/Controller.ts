@@ -24,7 +24,7 @@ export function Controller(path: string): ClassDecorator {
         params.forEach((param: any, index: number) => {
             const targetName = param.name;
 
-            ParameterListManager.getCommand(targetName)?.(param, parameters);
+            ParameterListManager.invoke(targetName)?.(param, parameters);
         });
 
         // 컨트롤러 메타데이터를 등록합니다.

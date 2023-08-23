@@ -33,9 +33,10 @@ export function Injectable(): ClassDecorator {
         params.forEach((param: any, index: number) => {
             const targetName = param.name;
 
-            ParameterListManager.getCommand(targetName)?.(param, parameters);
+            ParameterListManager.invoke(targetName)?.(param, parameters);
         });
 
+        // 스캐너가 스캔할 수 있도록 Injectable한 객체와 매개변수를 등록합니다.
         const scanner = Container.get(InjectableScanner);
         const name = createUniqueInjectableKey(target.name, scanner);
         scanner.set(name, {
