@@ -150,17 +150,10 @@ export class ContainerManager {
                 if (err.name === exception.name) {
                     const ExceptionFilter = target as ClazzType<any>;
 
-                    if (!instanceScanner.has(ExceptionFilter)) {
-                        instanceScanner.set(
-                            ExceptionFilter,
-                            new ExceptionFilter(),
-                        );
-                    }
-
                     // Advice 처리
                     handlers.forEach((catcher) => {
                         const { advice } = catcher;
-                        const context = instanceScanner.get(ExceptionFilter);
+                        const context = instanceScanner.wrap(ExceptionFilter);
 
                         switch (advice) {
                             case "throwing":
