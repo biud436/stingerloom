@@ -11,6 +11,7 @@
 -   mariadb
 -   class-transformer
 -   class-validator
+-   http-status
 
 ## 사용법
 

@@ -12,6 +12,7 @@ import { HEADER_TOKEN } from "../common/decorators/Header";
 import { ValidationHandler } from "../common/ValidationHandler";
 import path from "path";
 import { InstanceScanner } from "./scanners/InstanceScanner";
+import { HttpStatus } from "../common/HttpStatus";
 
 /**
  * @class ContainerManager
@@ -26,7 +27,7 @@ export class ContainerManager {
 
     public async register() {
         await this.registerControllers();
-        await this.regsterExceptions();
+        await this.registerExceptions();
     }
 
     /**
@@ -131,14 +132,14 @@ export class ContainerManager {
     /**
      * 예외 처리를 스캔하고 예외를 캐치합니다.
      */
-    private async regsterExceptions() {
+    private async registerExceptions() {
         // Exception 스캐너 생성
         const exceptionScanner = Container.get(ExceptionScanner);
 
         const instanceScanner = Container.get(InstanceScanner);
         this.app.setErrorHandler((err, _request, _reply) => {
             let errorData = {
-                status: 500,
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
             } as any;
 
             for (const {
