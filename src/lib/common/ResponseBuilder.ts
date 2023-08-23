@@ -1,3 +1,5 @@
+import { HttpStatus } from "./HttpStatus";
+
 export class ResponseBuilder<T = unknown> {
     status?: number;
     result?: string;
@@ -6,32 +8,32 @@ export class ResponseBuilder<T = unknown> {
     constructor(private data: T) {}
 
     statusOK(): this {
-        this.status = 200;
+        this.status = HttpStatus.OK;
         return this;
     }
 
     statusCreated(): this {
-        this.status = 201;
+        this.status = HttpStatus.CREATED;
         return this;
     }
 
     statusBadRequest(): this {
-        this.status = 400;
+        this.status = HttpStatus.BAD_REQUEST;
         return this;
     }
 
     statusUnauthorized(): this {
-        this.status = 401;
+        this.status = HttpStatus.UNAUTHORIZED;
         return this;
     }
 
     statusForbidden(): this {
-        this.status = 403;
+        this.status = HttpStatus.FORBIDDEN;
         return this;
     }
 
     statusInternalServerError(): this {
-        this.status = 500;
+        this.status = HttpStatus.INTERNAL_SERVER_ERROR;
         return this;
     }
 
