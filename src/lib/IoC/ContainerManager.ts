@@ -13,6 +13,7 @@ import { ValidationHandler } from "../common/ValidationHandler";
 import path from "path";
 import { InstanceScanner } from "./scanners/InstanceScanner";
 import { HttpStatus } from "../common/HttpStatus";
+import { ReflectManager } from "../common/ReflectManager";
 
 /**
  * @class ContainerManager
@@ -45,10 +46,17 @@ export class ContainerManager {
             const metadata = controller.value as ContainerMetadata;
 
             const TargetController = metadata.target as ClazzType<any>;
+            if (!ReflectManager.isController(TargetController)) {
+                throw new Error(
+                    `${TargetController.name}은 컨트롤러가 아닌 것 같습니다.`,
+                );
+            }
+
             const injectParameters = metadata.parameters;
             const args = injectParameters as any;
 
             const targetController = new TargetController(...args);
+
             this._controllers.push(targetController);
 
             const controllerPath = metadata.path;

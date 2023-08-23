@@ -12,6 +12,7 @@ import { createUniqueControllerKey } from "../../../utils/scanner";
 import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
 import { ParameterListManager } from "../ParameterListManager";
 import { ReflectManager } from "../ReflectManager";
+import { CONTROLLER_TOKEN } from "../RouterMapper";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
@@ -19,6 +20,8 @@ export function Controller(path: string): ClassDecorator {
         const metadataScanner = Container.get(MetadataScanner);
 
         const params = ReflectManager.getParamTypes(target) || [];
+
+        Reflect.defineMetadata(CONTROLLER_TOKEN, path, target);
 
         // 매개변수 주입을 위해 매개변수를 스캔합니다.
         const parameters: DynamicClassWrapper<any>[] = [];
