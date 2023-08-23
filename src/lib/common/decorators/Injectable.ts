@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { DynamicClassWrapper } from "../../IoC/scanners/MetadataScanner";
+import {
+    DynamicClassWrapper,
+    InjectableMetadata,
+} from "../../IoC/scanners/MetadataScanner";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
 import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
+import { ParameterListManager } from "../ParameterListManager";
+import {
+    createUniqueControllerKey,
+    createUniqueInjectableKey,
+} from "../../../utils/scanner";
+import { ControllerScanner } from "../../IoC/scanners/ControllerScanner";
+import { InjectableScanner } from "../../IoC/scanners/InjectableScanner";
 
 export const INJECTABLE_TOKEN = "injectable";
 export function Injectable(): ClassDecorator {
@@ -23,30 +33,16 @@ export function Injectable(): ClassDecorator {
         params.forEach((param: any, index: number) => {
             const targetName = param.name;
 
-            switch (targetName) {
-                case "Repository":
-                    {
-                        const repository = Reflect.getMetadata(
-                            REPOSITORY_TOKEN,
-                            param.prototype,
-                        );
-                        parameters.push(repository);
-                    }
-                    break;
-                default:
-                    {
-                        const TargetService = param;
+            ParameterListManager.getCommand(targetName)?.(param, parameters);
+        });
 
-                        const instanceScanner = Container.get(InstanceScanner);
-
-                        if (TargetService) {
-                            parameters.push(
-                                instanceScanner.wrap(TargetService),
-                            );
-                        }
-                    }
-                    break;
-            }
+        const scanner = Container.get(InjectableScanner);
+        const name = createUniqueInjectableKey(target.name, scanner);
+        scanner.set(name, {
+            name,
+            target,
+            parameters,
+            type: "injectable",
         });
 
         return target;

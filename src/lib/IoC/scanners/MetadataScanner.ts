@@ -27,7 +27,7 @@ export type ContainerMetadata<T = any> = {
     parameters: DynamicClassWrapper<T>;
 };
 
-export type ServiceMetadata = {
+export type InjectableMetadata = {
     type: ContainerType;
     target: unknown;
     name: string;
