@@ -28,7 +28,13 @@ export function Controller(path: string): ClassDecorator {
             ParameterListManager.invoke(targetName)?.(param, parameters);
         });
 
-        // 컨트롤러 메타데이터를 등록합니다.
+        /**
+         * 컨트롤러 메타데이터를 등록합니다
+         * 리플렉션의 경우, 컨트롤러 데코레이터에서 컨트롤러에 대한 메타데이터를 설정해야 합니다.
+         * 이렇게 하면 컨트롤러 클래스만 전달하면 메타데이터를 리플렉션으로 가져올 수 있습니다.
+         * 하지만 다음 코드는 스캐너를 통해 메타데이터를 수집하는 코드입니다.
+         * 이 로직은 향후 동일 동작이 보장될 경우, 리플렉션 방식으로 변경될 수도 있습니다.
+         */
         const name = createUniqueControllerKey(target.name, scanner);
         scanner.set(name, {
             path,

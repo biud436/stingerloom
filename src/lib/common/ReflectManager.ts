@@ -1,3 +1,5 @@
+import { INJECTABLE_TOKEN } from "./decorators/Injectable";
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Type = Function | string | symbol | undefined;
 /**
@@ -54,5 +56,15 @@ export class ReflectManager {
     ) {
         if (key) return Reflect.getMetadata("design:returntype", target, key!);
         return Reflect.getMetadata("design:returntype", target);
+    }
+
+    /**
+     * 주입 가능한지 여부를 반환합니다.
+     *
+     * @param target
+     * @returns
+     */
+    public static isInjectable(target: object): boolean {
+        return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
     }
 }
