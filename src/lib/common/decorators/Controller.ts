@@ -10,6 +10,7 @@ import { ControllerScanner } from "../../IoC/scanners/ControllerScanner";
 import { REPOSITORY_TOKEN } from "./InjectRepository";
 import { createUniqueControllerKey } from "../../../utils/scanner";
 import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
+import { ParameterListManager } from "../ParameterListManager";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
@@ -18,25 +19,12 @@ export function Controller(path: string): ClassDecorator {
 
         const params = Reflect.getMetadata("design:paramtypes", target) || [];
 
-        // 리포지토리 주입을 위해 매개변수를 스캔합니다.
+        // 매개변수 주입을 위해 매개변수를 스캔합니다.
         const parameters: DynamicClassWrapper<any>[] = [];
         params.forEach((param: any, index: number) => {
-            const repository = Reflect.getMetadata(
-                REPOSITORY_TOKEN,
-                param.prototype,
-            );
+            const targetName = param.name;
 
-            if (repository) {
-                parameters.push(repository);
-            } else {
-                const TargetService = param;
-
-                const instanceScanner = Container.get(InstanceScanner);
-
-                if (TargetService) {
-                    parameters.push(instanceScanner.wrap(TargetService));
-                }
-            }
+            ParameterListManager.getCommand(targetName)?.(param, parameters);
         });
 
         // 컨트롤러 메타데이터를 등록합니다.

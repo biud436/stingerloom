@@ -8,8 +8,10 @@ import fastifyCookie from "@fastify/cookie";
 import { InstanceLoader } from "./example/InstanceLoader";
 
 import { ContainerManager } from "./lib/IoC/ContainerManager";
+import { ParameterListManager } from "./lib/common/ParameterListManager";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+ParameterListManager.initAllocator();
 
 class ServerBootstrapApplication {
     private app!: FastifyInstance;
