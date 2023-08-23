@@ -11,13 +11,14 @@ import { REPOSITORY_TOKEN } from "./InjectRepository";
 import { createUniqueControllerKey } from "../../../utils/scanner";
 import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
 import { ParameterListManager } from "../ParameterListManager";
+import { ReflectManager } from "../ReflectManager";
 
 export function Controller(path: string): ClassDecorator {
     return function (target: any) {
         const scanner = Container.get(ControllerScanner);
         const metadataScanner = Container.get(MetadataScanner);
 
-        const params = Reflect.getMetadata("design:paramtypes", target) || [];
+        const params = ReflectManager.getParamTypes(target) || [];
 
         // 매개변수 주입을 위해 매개변수를 스캔합니다.
         const parameters: DynamicClassWrapper<any>[] = [];

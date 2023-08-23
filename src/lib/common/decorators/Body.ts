@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { ReflectManager } from "../ReflectManager";
 import { ClazzType } from "../RouterMapper";
 
 export type BodyParameter = {
@@ -15,11 +16,7 @@ export function Body(): ParameterDecorator {
         const methodName = propertyKey as string;
         const parameterIndex = index;
 
-        const paramTypes = Reflect.getMetadata(
-            "design:paramtypes",
-            target,
-            methodName,
-        ) as any;
+        const paramTypes = ReflectManager.getParamTypes(target, methodName)!;
 
         // 몇번째 매개변수 인지 마킹
         Reflect.defineMetadata(

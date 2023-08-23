@@ -3,6 +3,8 @@ export type Type = Function | string | symbol | undefined;
 /**
  * @class ReflectManager
  * @docs https://rbuckton.github.io/reflect-metadata/
+ * @description
+ * design: 접두사를 사용하면 타입스크립트 컴파일러가 타입 정보를 보존하기 때문에 타입 정보를 추출할 수 있습니다.
  */
 export class ReflectManager {
     /**
@@ -26,8 +28,12 @@ export class ReflectManager {
      * @param target
      * @param key [optional]
      */
-    public static getParamType(target: object): Type[] | undefined;
-    public static getParamType(
+    public static getParamTypes(target: object): Type[] | undefined;
+    public static getParamTypes(
+        target: object,
+        key: string | symbol | undefined,
+    ): Type[] | undefined;
+    public static getParamTypes(
         target: object,
         key?: string | symbol | undefined,
     ) {

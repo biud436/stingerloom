@@ -2,6 +2,7 @@
 import { REQ_TOKEN } from "../lib/common/decorators/Req";
 import { HttpRouterParameter } from "../lib/common/HttpRouterParameter";
 import { BODY_TOKEN, BodyParameter } from "../lib/common/decorators/Body";
+import { ReflectManager } from "../lib/common/ReflectManager";
 
 /**
  * 특정 메소드의 매개변수 정보를 취득합니다.
@@ -11,15 +12,8 @@ import { BODY_TOKEN, BodyParameter } from "../lib/common/decorators/Body";
  * @returns
  */
 export function getMethodParameters(target: any, propertyKey: string) {
-    const params =
-        (Reflect.getMetadata(
-            "design:paramtypes",
-            target,
-            propertyKey,
-        ) as any[]) || [];
+    const params = ReflectManager.getParamTypes(target, propertyKey) || [];
     const parameters: HttpRouterParameter[] = [];
-    // const className = target.constructor.name;
-    // const methodName = propertyKey as string;
 
     // 매개변수 값을 저장하지만, 매개변수가 Req 객체일 경우에는 특별히 표시합니다.
     params.forEach((param, index) => {
@@ -37,8 +31,6 @@ export function getMethodParameters(target: any, propertyKey: string) {
             value: param,
             isReq: reqIndex === index,
             body: bodyParam,
-            // isBody: bodyParam.index === index,
-            // body: bodyParam.type,
         });
     });
     return parameters;
