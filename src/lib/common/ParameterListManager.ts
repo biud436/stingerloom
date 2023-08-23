@@ -12,9 +12,9 @@ export type ParameterAllocator = (
  * @description
  * 컨트롤러나 서비스 클래스의 생성자 매개변수가 어떻게 변환되어야 하는지를 통괄 관리하는 클래스입니다.
  * 예를 들면, 리포지토리 같은 경우에는 자동으로 매개변수에 리포지토리가 주입되어야 합니다.
- * 매개변수에 주입되기 전에 변환 작업이 필요한 경우가 있습니다.
+ * 매개변수에 주입되기 전에 변환 또는 할당 작업이 필요한 경우가 있습니다.
  *
- * 이 클래스는 이러한 매개변수 변환 함수(변환기)를 관리하는 클래스입니다.
+ * 이 클래스는 이러한 매개변수 할당 함수(할당기)를 관리하는 클래스입니다.
  */
 export class ParameterListManager {
     private commandList: Map<string, ParameterAllocator> = new Map();
