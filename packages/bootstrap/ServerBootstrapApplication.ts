@@ -18,7 +18,6 @@ ParameterListManager.initAllocator();
 
 export class ServerBootstrapApplication {
     private app!: FastifyInstance;
-    // private static INSTANCE: ServerBootstrapApplication;
     private containerManager!: ContainerManager;
     protected moduleOptions!: ModuleOptions;
 
@@ -35,18 +34,6 @@ export class ServerBootstrapApplication {
             },
         });
     }
-
-    // /**
-    //  * 인스턴스를 취득합니다.
-    //  */
-    // public static getInstance(): ServerBootstrapApplication {
-    //     if (!ServerBootstrapApplication.INSTANCE) {
-    //         ServerBootstrapApplication.INSTANCE =
-    //             new ServerBootstrapApplication();
-    //     }
-
-    //     return ServerBootstrapApplication.INSTANCE;
-    // }
 
     /**
      * 서버를 시작합니다.
