@@ -129,6 +129,12 @@ export class ReflectManager {
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
     }
 
+    /**
+     * Repository인지 여부를 반환합니다.
+     *
+     * @param target
+     * @returns
+     */
     public static isRepository(target: any): boolean {
         if (!Object.getPrototypeOf(target)) return false;
         console.log(Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target));
@@ -138,6 +144,11 @@ export class ReflectManager {
         );
     }
 
+    /**
+     * Entity를 반환합니다.
+     * @param target
+     * @returns
+     */
     public static getRepositoryEntity(target: any): any {
         return Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target);
     }
