@@ -67,6 +67,7 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly discoveryService: DiscoveryService,
     ) {}
 
     async create(createUserDto: CreateUserDto) {

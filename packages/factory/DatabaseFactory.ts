@@ -1,5 +1,4 @@
 import { IFactory } from "./IFactory";
-import { DatabaseContext } from "./DatabaseContext";
 import { DBConnection } from "./DBConnection";
 
 import { DataSourceOptions } from "typeorm";
@@ -10,8 +9,6 @@ import { DataSourceOptions } from "typeorm";
  * 데이터베이스 연결을 생성하는 팩토리 클래스입니다.
  */
 class DatabaseFactory implements IFactory<DBConnection> {
-    protected option = DatabaseContext.getConfig();
-
     /**
      * DB 연결 객체를 생성합니다.
      * 추후 생명 주기(싱글턴, 일회성 생성)를 관리하기 위해 팩토리 클래스 내부에서 생성하고 있습니다.

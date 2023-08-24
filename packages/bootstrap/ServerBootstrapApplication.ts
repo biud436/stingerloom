@@ -12,6 +12,7 @@ import { ModuleOptions } from "@stingerloom/common";
 import Database from "@stingerloom/common/Database";
 import Container from "typedi";
 import { InstanceScanner } from "@stingerloom/IoC";
+import { DiscoveryService } from "@stingerloom/services";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ParameterListManager.initAllocator();
@@ -46,6 +47,7 @@ export class ServerBootstrapApplication {
      */
     public async start(): Promise<void> {
         this.beforeStart();
+        this.mergeModuleOptions();
 
         // prettier-ignore
         this.handleGuards()
@@ -62,6 +64,13 @@ export class ServerBootstrapApplication {
      * 자식 클래스에서 이 함수를 오버라이딩하여 사용할 수 있습니다.
      */
     protected beforeStart() {}
+
+    private mergeModuleOptions(): void {
+        this.moduleOptions = ModuleOptions.merge(this.moduleOptions, {
+            controllers: [],
+            providers: [DiscoveryService],
+        });
+    }
 
     /**
      * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.

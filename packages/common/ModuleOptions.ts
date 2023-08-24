@@ -7,4 +7,25 @@ export class ModuleOptions<T = any> {
     controllers!: ClazzType<T>[];
     providers!: (ClazzType<T> | Function)[];
     configuration!: ReturnType<() => DBConnectionOption>;
+
+    static of<T>(options: ModuleOptions): ModuleOptions<T> {
+        return Object.assign(new ModuleOptions(), options);
+    }
+
+    static merge<T>(
+        options: ModuleOptions,
+        ...others: Omit<ModuleOptions, "configuration">[]
+    ): ModuleOptions<T> {
+        return {
+            controllers: [
+                ...options.controllers,
+                ...others.flatMap((o) => o.controllers),
+            ],
+            providers: [
+                ...options.providers,
+                ...others.flatMap((o) => o.providers),
+            ],
+            configuration: options.configuration,
+        };
+    }
 }

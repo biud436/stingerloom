@@ -2,12 +2,14 @@ import { InjectRepository, Injectable } from "@stingerloom/common";
 import { User } from "@stingerloom/example/entity/User";
 import { Repository } from "typeorm/repository/Repository";
 import { CreateUserDto } from "./dto/CreateUserDto";
+import { DiscoveryService } from "@stingerloom/services";
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly discoveryService: DiscoveryService,
     ) {}
 
     async create(createUserDto: CreateUserDto) {

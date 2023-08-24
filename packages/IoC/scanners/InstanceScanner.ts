@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
 import { ClazzType } from "@stingerloom/common/RouterMapper";
-import { INJECTABLE_TOKEN } from "@stingerloom/common/decorators/Injectable";
+import { ReflectManager } from "@stingerloom/common";
 
 /**
  * 공유 인스턴스를 보관하기 위한 스캐너 클래스입니다.
@@ -26,16 +26,9 @@ export class InstanceScanner {
 
     public wrap<T>(key: ClazzType<any>): T {
         if (!this.has(key)) {
-            const service = Reflect.getMetadata(
-                INJECTABLE_TOKEN,
-                key.prototype,
-            );
-
-            if (!service) {
+            if (!ReflectManager.isInjectable(key.prototype)) {
                 const value = new key();
                 this.set(key, value);
-            } else {
-                // 서비스 메타데이터가 존재하면, 해당 메타데이터를 이용하여 인스턴스를 생성합니다.
             }
         }
 
