@@ -16,6 +16,12 @@ import { InstanceScanner } from "@stingerloom/IoC";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ParameterListManager.initAllocator();
 
+/**
+ * @class ServerBootstrapApplication
+ * @description
+ * 이 클래스는 서버를 시작하는 역할을 하며 `Stingerloom`의 핵심 클래스입니다.
+ * 컨트롤러를 스캔하고 라우터를 동적으로 등록하여 서버를 구동시키는 역할을 합니다.
+ */
 export class ServerBootstrapApplication {
     private app!: FastifyInstance;
     private containerManager!: ContainerManager;
@@ -51,6 +57,10 @@ export class ServerBootstrapApplication {
         this.createServer();
     }
 
+    /**
+     * 서버를 시작하기 전에 실행되는 함수입니다.
+     * 자식 클래스에서 이 함수를 오버라이딩하여 사용할 수 있습니다.
+     */
     protected beforeStart() {}
 
     /**

@@ -5,7 +5,7 @@ import { InternalErrorFilter } from "./exceptions/InternalErrorFilter";
 import { option as databaseOption } from "./config";
 
 export class StingerLoomBootstrapApplication extends ServerBootstrapApplication {
-    beforeStart(): void {
+    override beforeStart(): void {
         this.moduleOptions = {
             controllers: [PostController, UserController],
             providers: [InternalErrorFilter],

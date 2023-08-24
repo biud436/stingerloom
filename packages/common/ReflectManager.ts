@@ -10,6 +10,10 @@ export type Type = Function | string | symbol | undefined;
  * @class ReflectManager
  * @docs https://rbuckton.github.io/reflect-metadata/
  * @description
+ * 이 클래스는 데코레이터를 통해 수집한 메타데이터를 관리하기 위해 만든 유틸리티 클래스입니다.
+ * 메타 데이터는 파일 단위로 순서대로 읽어가면서 수집이 되기 때문에 동작 순서를 보장해야 하는 경우에는
+ * 메타데이터 수집 완료 이후, 서버 시작 단계에서 수집된 메타데이터를 읽고 수집된 메타데이터를 바탕으로 필요한 데이터를 만들어냅니다.
+ *
  * design: 접두사를 사용하면 타입스크립트 컴파일러가 타입 정보를 보존하기 때문에 타입 정보를 추출할 수 있습니다.
  *
  * https://github.com/microsoft/TypeScript/blob/d0684f789b6e8368789c0f9e09f5b5217f59de2b/src/compiler/transformers/ts.ts#L1139
@@ -137,7 +141,6 @@ export class ReflectManager {
      */
     public static isRepository(target: any): boolean {
         if (!Object.getPrototypeOf(target)) return false;
-        console.log(Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target));
         return (
             Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target) !==
             undefined

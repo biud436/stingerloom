@@ -2,6 +2,11 @@ import { EventEmitter } from "events";
 import chalk from "chalk";
 import { LoggerState } from "./LoggerState";
 
+/**
+ * @class Logger
+ * @description
+ * Logger 클래스는 서버의 로그를 몇 가지 레벨로 구분하여 출력합니다.
+ */
 export class Logger extends EventEmitter {
     private readonly state: LoggerState = new LoggerState();
     static NormalColor = chalk.yellow;

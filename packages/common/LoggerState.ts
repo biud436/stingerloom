@@ -1,3 +1,8 @@
+/**
+ * @class LoggerState
+ * @description
+ * 로거의 상태를 관리하기 위해 정의된 클래스입니다.
+ */
 export class LoggerState {
     private state = "[Logger]";
 
