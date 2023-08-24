@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { HttpRouterParameter } from "../common/HttpRouterParameter";
-import { ReflectManager } from "../common/ReflectManager";
-import { BODY_TOKEN, BodyParameter } from "../common/decorators/Body";
-import { REQ_TOKEN } from "../common/decorators/Req";
+import { HttpRouterParameter } from "@stingerloom/common/HttpRouterParameter";
+import { ReflectManager } from "@stingerloom/common/ReflectManager";
+import { BODY_TOKEN, BodyParameter } from "@stingerloom/common/decorators/Body";
+import { REQ_TOKEN } from "@stingerloom/common/decorators/Req";
 
 /**
  * 특정 메소드의 매개변수 정보를 취득합니다.

@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { ClazzType } from "../common/RouterMapper";
+import { ClazzType } from "@stingerloom/common/RouterMapper";
 import Container from "typedi";
 import { ControllerScanner } from "./scanners/ControllerScanner";
 import { ContainerMetadata } from "./scanners/MetadataScanner";
 import { ExceptionScanner } from "./scanners/ExceptionScanner";
-import { HttpMethod } from "../common/HttpMethod";
+import { HttpMethod } from "@stingerloom/common/HttpMethod";
 import { ValidationError, validate } from "class-validator";
 import { plainToClass } from "class-transformer";
-import { HEADER_TOKEN } from "../common/decorators/Header";
-import { ValidationHandler } from "../common/ValidationHandler";
+import { HEADER_TOKEN } from "@stingerloom/common/decorators/Header";
+import { ValidationHandler } from "@stingerloom/common/ValidationHandler";
 import path from "path";
 import { InstanceScanner } from "./scanners/InstanceScanner";
-import { HttpStatus } from "../common/HttpStatus";
-import { ReflectManager } from "../common/ReflectManager";
+import { HttpStatus } from "@stingerloom/common/HttpStatus";
+import { ReflectManager } from "@stingerloom/common/ReflectManager";
 
 /**
  * @class ContainerManager

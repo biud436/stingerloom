@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
-import { ClazzType } from "../../common/RouterMapper";
-import { INJECTABLE_TOKEN } from "../../common/decorators/Injectable";
+import { ClazzType } from "@stingerloom/common/RouterMapper";
+import { INJECTABLE_TOKEN } from "@stingerloom/common/decorators/Injectable";
 
 /**
  * 공유 인스턴스를 보관하기 위한 스캐너 클래스입니다.

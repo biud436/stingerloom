@@ -1,6 +1,6 @@
-import { ControllerScanner } from "../IoC/scanners/ControllerScanner";
-import { ExceptionScanner } from "../IoC/scanners/ExceptionScanner";
-import { InjectableScanner } from "../IoC/scanners/InjectableScanner";
+import { ControllerScanner } from "@stingerloom/IoC/scanners/ControllerScanner";
+import { ExceptionScanner } from "@stingerloom/IoC/scanners/ExceptionScanner";
+import { InjectableScanner } from "@stingerloom/IoC/scanners/InjectableScanner";
 
 export function createUniqueControllerKey(
     name: string,
