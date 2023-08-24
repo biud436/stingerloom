@@ -44,7 +44,7 @@
         "webpack": "^5.88.2"
     },
     "scripts": {
-        "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/bootstrap",
+        "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example",
         "build": "rimraf dist && tsc"
     }
 }

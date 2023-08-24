@@ -4,21 +4,25 @@ import "dotenv/config";
 import "reflect-metadata";
 import fastifyCookie from "@fastify/cookie";
 
-import { InstanceLoader } from "@stingerloom/example/InstanceLoader";
+// import { InstanceLoader } from "@stingerloom/example/InstanceLoader";
 
-import database from "@stingerloom/common/Database";
 import { ContainerManager } from "@stingerloom/IoC/ContainerManager";
 import { ParameterListManager } from "@stingerloom/common/ParameterListManager";
+import { ModuleOptions } from "@stingerloom/common";
+import Database from "@stingerloom/common/Database";
+import Container from "typedi";
+import { InstanceScanner } from "@stingerloom/IoC";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ParameterListManager.initAllocator();
 
 export class ServerBootstrapApplication {
     private app!: FastifyInstance;
-    private static INSTANCE: ServerBootstrapApplication;
+    // private static INSTANCE: ServerBootstrapApplication;
     private containerManager!: ContainerManager;
+    protected moduleOptions!: ModuleOptions;
 
-    private constructor() {
+    constructor() {
         this.app = fastify({
             logger: {
                 transport: {
@@ -32,34 +36,35 @@ export class ServerBootstrapApplication {
         });
     }
 
-    /**
-     * 인스턴스를 취득합니다.
-     */
-    public static getInstance(): ServerBootstrapApplication {
-        if (!ServerBootstrapApplication.INSTANCE) {
-            ServerBootstrapApplication.INSTANCE =
-                new ServerBootstrapApplication();
-        }
+    // /**
+    //  * 인스턴스를 취득합니다.
+    //  */
+    // public static getInstance(): ServerBootstrapApplication {
+    //     if (!ServerBootstrapApplication.INSTANCE) {
+    //         ServerBootstrapApplication.INSTANCE =
+    //             new ServerBootstrapApplication();
+    //     }
 
-        return ServerBootstrapApplication.INSTANCE;
-    }
+    //     return ServerBootstrapApplication.INSTANCE;
+    // }
 
     /**
      * 서버를 시작합니다.
      */
     public async start(): Promise<void> {
-        InstanceLoader.load();
+        this.beforeStart();
 
         // prettier-ignore
         this.handleGuards()
-            .applyMiddlewares()
-            .handleStaticRoute();
+            .applyMiddlewares();
 
         await this.connectDatabase();
         await this.registerControllers();
 
         this.createServer();
     }
+
+    protected beforeStart() {}
 
     /**
      * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.
@@ -87,19 +92,6 @@ export class ServerBootstrapApplication {
         return this;
     }
 
-    /**
-     * 정적 라우터를 등록합니다.
-     *
-     * @returns
-     */
-    private handleStaticRoute(): this {
-        this.app.register(import("../example/routes"), {
-            prefix: "/api",
-        });
-
-        return this;
-    }
-
     private applyMiddlewares(): this {
         this.app.register(fastifyCookie, {
             secret: process.env.COOKIE_SECRET,
@@ -119,14 +111,18 @@ export class ServerBootstrapApplication {
     }
 
     private async connectDatabase(): Promise<void> {
+        if (!this.moduleOptions) {
+            throw new Error("Database configuration is undefined.");
+        }
+
+        const database = new Database(this.moduleOptions.configuration);
+
+        const instanceScanner = Container.get(InstanceScanner);
+        instanceScanner.set(Database, database);
+
         await database.start();
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const user = await database.echoUser();
     }
 }
-
-Promise.resolve(ServerBootstrapApplication.getInstance().start()).catch(
-    (err) => {
-        console.error(err);
-    },
-);

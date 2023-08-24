@@ -14,6 +14,7 @@ import path from "path";
 import { InstanceScanner } from "./scanners/InstanceScanner";
 import { HttpStatus } from "@stingerloom/common/HttpStatus";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
+import { transformBasicParameter } from "@stingerloom/common/allocators";
 
 /**
  * @class ContainerManager
@@ -53,7 +54,12 @@ export class ContainerManager {
             }
 
             const injectParameters = metadata.parameters;
-            const args = injectParameters as any;
+            let args = injectParameters as any;
+
+            // TODO: 이 단계에서 repository가 주입되어야 합니다.
+            if (Array.isArray(args)) {
+                args = args.map((target) => transformBasicParameter(target));
+            }
 
             const targetController = new TargetController(...args);
 

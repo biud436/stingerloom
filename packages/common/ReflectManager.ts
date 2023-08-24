@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTROLLER_TOKEN } from "./RouterMapper";
+import { REPOSITORY_ENTITY_METADATA } from "./decorators";
 
 import { INJECTABLE_TOKEN } from "./decorators/Injectable";
 
@@ -126,5 +127,18 @@ export class ReflectManager {
      */
     public static isInjectable(target: object): boolean {
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
+    }
+
+    public static isRepository(target: any): boolean {
+        if (!Object.getPrototypeOf(target)) return false;
+        console.log(Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target));
+        return (
+            Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target) !==
+            undefined
+        );
+    }
+
+    public static getRepositoryEntity(target: any): any {
+        return Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target);
     }
 }

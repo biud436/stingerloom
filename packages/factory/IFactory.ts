@@ -1,3 +1,5 @@
+import { ModuleOptions } from "@stingerloom/common";
+
 export interface IFactory<T> {
-    create(): T;
+    create(options: ModuleOptions["configuration"]): T;
 }

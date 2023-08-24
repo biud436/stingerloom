@@ -1,15 +1,16 @@
 import { DataSource } from "typeorm";
-import Container, { Service } from "typedi";
+
 import bcrypt from "bcrypt";
 import { databaseFactory } from "@stingerloom/factory/DatabaseFactory";
 import { User } from "@stingerloom/example/entity/User";
 
-@Service()
+import { ModuleOptions } from "./ModuleOptions";
+
 class Database {
     private dataSource: DataSource;
 
-    constructor() {
-        this.dataSource = databaseFactory.create();
+    constructor(options: ModuleOptions["configuration"]) {
+        this.dataSource = databaseFactory.create(options);
     }
 
     public async start() {
@@ -20,11 +21,6 @@ class Database {
         return this.dataSource;
     }
 
-    /**
-     * 커넥션 테스트 용 데이터를 생성합니다.
-     *
-     * @returns
-     */
     public async echoUser() {
         const repository = this.dataSource.getRepository(User);
 
@@ -38,4 +34,5 @@ class Database {
         return await repository.save(user);
     }
 }
-export default Container.get(Database);
+
+export default Database;

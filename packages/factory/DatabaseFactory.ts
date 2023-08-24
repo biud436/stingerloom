@@ -1,7 +1,8 @@
 import { IFactory } from "./IFactory";
 import { DatabaseContext } from "./DatabaseContext";
 import { DBConnection } from "./DBConnection";
-import { DBConnectionOption } from "./DBConnectionOption";
+
+import { DataSourceOptions } from "typeorm";
 
 /**
  * @name DatabaseFactory
@@ -17,8 +18,8 @@ class DatabaseFactory implements IFactory<DBConnection> {
      * 호출 시, 매번 새로운 객체가 생성됩니다.
      * 하지만 기본적으로는 싱글턴(메타데이터 저장)이 되어야 합니다.
      */
-    public create(): DBConnection {
-        return new DBConnection(this.option as DBConnectionOption);
+    public create(options: DataSourceOptions): DBConnection {
+        return new DBConnection(options);
     }
 }
 

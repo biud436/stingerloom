@@ -1,8 +1,8 @@
-import { getRepositoryAllocator } from "./getRepositoryAllocator";
+// import { getRepositoryAllocator } from "./getRepositoryAllocator";
 import { getDefaultAllocator } from "./getDefaultAllocator";
 import { ParameterAllocator } from "../ParameterListManager";
 
 export const allocators: [string, ParameterAllocator][] = [
-    ["Repository", getRepositoryAllocator],
+    // ["Repository", getRepositoryAllocator],
     ["default", getDefaultAllocator],
 ];
