@@ -4,7 +4,7 @@ import "dotenv/config";
 import "reflect-metadata";
 import fastifyCookie from "@fastify/cookie";
 
-import { InstanceLoader } from "./example/InstanceLoader";
+import { InstanceLoader } from "@stingerloom/example/InstanceLoader";
 
 import database from "@stingerloom/common/Database";
 import { ContainerManager } from "@stingerloom/IoC/ContainerManager";
@@ -13,7 +13,7 @@ import { ParameterListManager } from "@stingerloom/common/ParameterListManager";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ParameterListManager.initAllocator();
 
-class ServerBootstrapApplication {
+export class ServerBootstrapApplication {
     private app!: FastifyInstance;
     private static INSTANCE: ServerBootstrapApplication;
     private containerManager!: ContainerManager;
@@ -93,7 +93,7 @@ class ServerBootstrapApplication {
      * @returns
      */
     private handleStaticRoute(): this {
-        this.app.register(import("./example/routes"), {
+        this.app.register(import("../example/routes"), {
             prefix: "/api",
         });
 

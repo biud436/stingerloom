@@ -2,14 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 import {
-    ContainerMetadata,
     DynamicClassWrapper,
     MetadataScanner,
-} from "../../IoC/scanners/MetadataScanner";
-import { ControllerScanner } from "../../IoC/scanners/ControllerScanner";
-import { REPOSITORY_TOKEN } from "./InjectRepository";
-import { createUniqueControllerKey } from "../../utils/scanner";
-import { InstanceScanner } from "../../IoC/scanners/InstanceScanner";
+} from "@stingerloom/IoC/scanners/MetadataScanner";
+import { ControllerScanner } from "@stingerloom/IoC/scanners/ControllerScanner";
+import { createUniqueControllerKey } from "@stingerloom/utils/scanner";
 import { ParameterListManager } from "../ParameterListManager";
 import { ReflectManager } from "../ReflectManager";
 import { CONTROLLER_TOKEN } from "../RouterMapper";

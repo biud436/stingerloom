@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { ErrorAdvice, ErrorMetadata } from "../../IoC/scanners/MetadataScanner";
-import { ErrorMetadataScanner } from "../../IoC/scanners/ErrorMetadataScanner";
+import {
+    ErrorAdvice,
+    ErrorMetadata,
+} from "@stingerloom/IoC/scanners/MetadataScanner";
+import { ErrorMetadataScanner } from "@stingerloom/IoC/scanners/ErrorMetadataScanner";
 
 export const CATCH_METADATA = "CATCH_METADATA";
 export function Catch(advice: ErrorAdvice = "throwing") {

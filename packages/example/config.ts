@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { DataSourceOptions } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import configService from "../common/ConfigService";
+import configService from "@stingerloom/common/ConfigService";
 
 export const option = <DataSourceOptions>{
     type: "mariadb",

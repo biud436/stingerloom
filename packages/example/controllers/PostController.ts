@@ -1,8 +1,8 @@
-import { Controller } from "../../common/decorators/Controller";
-import { Get } from "../../common/decorators/Get";
-import { Header } from "../../common/decorators/Header";
-import { ResponseBuilder } from "../../common/ResponseBuilder";
-import { InternalServerException } from "../../error/InternalServerException";
+import { Controller } from "@stingerloom/common/decorators/Controller";
+import { Get } from "@stingerloom/common/decorators/Get";
+import { Header } from "@stingerloom/common/decorators/Header";
+import { ResponseBuilder } from "@stingerloom/common/ResponseBuilder";
+import { InternalServerException } from "@stingerloom/error/InternalServerException";
 import { Point } from "../entity/Point";
 
 /**

@@ -1,11 +1,11 @@
 import Container from "typedi";
-import { ExceptionScanner } from "../../IoC/scanners/ExceptionScanner";
+import { ExceptionScanner } from "@stingerloom/IoC/scanners/ExceptionScanner";
 import {
     DynamicClassWrapper,
     ExceptionMetadata,
-} from "../../IoC/scanners/MetadataScanner";
-import { ErrorMetadataScanner } from "../../IoC/scanners/ErrorMetadataScanner";
-import { createUniqueExceptionKey } from "../../utils/scanner";
+} from "@stingerloom/IoC/scanners/MetadataScanner";
+import { ErrorMetadataScanner } from "@stingerloom/IoC/scanners/ErrorMetadataScanner";
+import { createUniqueExceptionKey } from "@stingerloom/utils/scanner";
 
 export const EXCEPTION_FILTER_METADATA = "EXCEPTION_FILTER_METADATA";
 

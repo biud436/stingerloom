@@ -1,4 +1,4 @@
-import { DynamicClassWrapper } from "../IoC/scanners/MetadataScanner";
+import { DynamicClassWrapper } from "@stingerloom/IoC/scanners/MetadataScanner";
 import { allocators } from "./allocators/allocators";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

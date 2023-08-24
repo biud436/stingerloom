@@ -1,6 +1,9 @@
 import Container from "typedi";
-import { Metadata, MetadataScanner } from "../../IoC/scanners/MetadataScanner";
-import { getMethodParameters } from "../../utils/extractor";
+import {
+    Metadata,
+    MetadataScanner,
+} from "@stingerloom/IoC/scanners/MetadataScanner";
+import { getMethodParameters } from "@stingerloom/utils/extractor";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 import { PATH } from "./PATH_KEY";
 

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { AfterCatch } from "../../common/decorators/AfterCatch";
-import { BeforeCatch } from "../../common/decorators/BeforeCatch";
-import { Catch } from "../../common/decorators/Catch";
-import { ExceptionFilter } from "../../common/decorators/ExceptionFilter";
-import { Filter } from "../../common/Filter";
-import { Logger } from "../../common/Logger";
-import { InternalServerException } from "../../error/InternalServerException";
+import { AfterCatch } from "@stingerloom/common/decorators/AfterCatch";
+import { BeforeCatch } from "@stingerloom/common/decorators/BeforeCatch";
+import { Catch } from "@stingerloom/common/decorators/Catch";
+import { ExceptionFilter } from "@stingerloom/common/decorators/ExceptionFilter";
+import { Filter } from "@stingerloom/common/Filter";
+import { Logger } from "@stingerloom/common/Logger";
+import { InternalServerException } from "@stingerloom/error/InternalServerException";
 
 @ExceptionFilter(InternalServerException)
 export class InternalErrorFilter implements Filter {

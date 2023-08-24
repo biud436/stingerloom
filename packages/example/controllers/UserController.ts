@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Repository } from "typeorm";
 import { User } from "../entity/User";
-import { Controller } from "../../common/decorators/Controller";
-import { Get } from "../../common/decorators/Get";
-import { Header } from "../../common/decorators/Header";
-import { InjectRepository } from "../../common/decorators/InjectRepository";
-import { Req } from "../../common/decorators/Req";
+import { Controller } from "@stingerloom/common/decorators/Controller";
+import { Get } from "@stingerloom/common/decorators/Get";
+import { Header } from "@stingerloom/common/decorators/Header";
+import { InjectRepository } from "@stingerloom/common/decorators/InjectRepository";
+import { Req } from "@stingerloom/common/decorators/Req";
 import { FastifyRequest } from "fastify";
-import { Post } from "../../common/decorators/Post";
-import { Body } from "../../common/decorators/Body";
+import { Post } from "@stingerloom/common/decorators/Post";
+import { Body } from "@stingerloom/common/decorators/Body";
 import { CreateUserDto } from "./dto/CreateUserDto";
 import { Point } from "../entity/Point";
 

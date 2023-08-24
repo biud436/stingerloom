@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
 import Container, { Service } from "typedi";
 import bcrypt from "bcrypt";
-import { databaseFactory } from "../factory/DatabaseFactory";
-import { User } from "../example/entity/User";
+import { databaseFactory } from "@stingerloom/factory/DatabaseFactory";
+import { User } from "@stingerloom/example/entity/User";
 
 @Service()
 class Database {

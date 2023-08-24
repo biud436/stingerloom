@@ -1,4 +1,4 @@
-import { ReplyBuilder } from "../../../common/ReplyBuilder";
+import { ReplyBuilder } from "@stingerloom/common/ReplyBuilder";
 
 const v1: FastifyFPHandler = async (_request, _reply) => {
     const builder = new ReplyBuilder(_reply);

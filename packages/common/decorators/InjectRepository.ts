@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import "reflect-metadata";
-import Container from "typedi";
 import Database from "../Database";
 import { ClazzType } from "../RouterMapper";
-import { RepositoryScanner } from "../../IoC/scanners/RepositoryScanner";
 import { ReflectManager } from "../ReflectManager";
 
 export const REPOSITORY_TOKEN = "repository";
