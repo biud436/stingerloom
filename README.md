@@ -1,6 +1,6 @@
 # Introduction
 
-직접 바닥부터 만들어보는 Custom Node.js Server Framework입니다.
+직접 바닥부터 만드는 나만의 Node.js 서버 프레임워크 입니다. 이 프레임워크는 Nest.js와 비슷한 구조를 가지고 있습니다.
 
 ## 사용한 기술
 
