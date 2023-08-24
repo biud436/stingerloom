@@ -3,7 +3,7 @@ import { Get } from "@stingerloom/common/decorators/Get";
 import { Header } from "@stingerloom/common/decorators/Header";
 import { ResponseBuilder } from "@stingerloom/common/ResponseBuilder";
 import { InternalServerException } from "@stingerloom/error/InternalServerException";
-import { Point } from "../entity/Point";
+import { Point } from "../../entity/Point";
 
 /**
  * @class PostController

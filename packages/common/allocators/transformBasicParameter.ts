@@ -13,14 +13,19 @@ import Database from "../Database";
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 export const transformBasicParameter = (target: any) => {
+    const instanceScanner = Container.get(InstanceScanner);
+
     if (ReflectManager.isRepository(target)) {
-        const instanceScanner = Container.get(InstanceScanner);
         const database = instanceScanner.get(Database) as Database;
         const entity = ReflectManager.getRepositoryEntity(target);
 
         const repository = database.getRepository(entity);
 
         return repository;
+    } else if (ReflectManager.isInjectable(target)) {
+        const injectable = instanceScanner.get(target);
+
+        return injectable;
     }
 
     return target;

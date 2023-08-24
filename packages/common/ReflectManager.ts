@@ -130,6 +130,9 @@ export class ReflectManager {
      * @returns
      */
     public static isInjectable(target: object): boolean {
+        if (!Object.getPrototypeOf(target)) {
+            return false;
+        }
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
     }
 

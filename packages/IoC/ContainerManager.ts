@@ -3,7 +3,10 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { ClazzType } from "@stingerloom/common/RouterMapper";
 import Container from "typedi";
 import { ControllerScanner } from "./scanners/ControllerScanner";
-import { ContainerMetadata } from "./scanners/MetadataScanner";
+import {
+    ContainerMetadata,
+    InjectableMetadata,
+} from "./scanners/MetadataScanner";
 import { ExceptionScanner } from "./scanners/ExceptionScanner";
 import { HttpMethod } from "@stingerloom/common/HttpMethod";
 import { ValidationError, validate } from "class-validator";
@@ -15,12 +18,14 @@ import { InstanceScanner } from "./scanners/InstanceScanner";
 import { HttpStatus } from "@stingerloom/common/HttpStatus";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/common/allocators";
+import { InjectableScanner } from "./scanners/InjectableScanner";
 
 /**
  * @class ContainerManager
  */
 export class ContainerManager {
     private _controllers: ClazzType<any>[] = [];
+    private _injectables: ClazzType<any>[] = [];
     private app!: FastifyInstance;
 
     constructor(app: FastifyInstance) {
@@ -28,8 +33,46 @@ export class ContainerManager {
     }
 
     public async register() {
+        await this.registerInjectables();
         await this.registerControllers();
         await this.registerExceptions();
+    }
+
+    /**
+     * injectable을 스캔하고 생성합니다.
+     */
+    private async registerInjectables() {
+        const injectableScanner = Container.get(InjectableScanner);
+        const injectables = injectableScanner.makeInjectables();
+
+        const instanceScanner = Container.get(InstanceScanner);
+
+        let injectable: IteratorResult<InjectableMetadata>;
+
+        while ((injectable = injectables.next())) {
+            if (injectable.done) break;
+            const metadata = injectable.value as InjectableMetadata;
+
+            const TargetInjectable = metadata.target as ClazzType<any>;
+            if (!ReflectManager.isInjectable(TargetInjectable)) {
+                throw new Error(
+                    `${TargetInjectable.name}은 injectable이 아닌 것 같습니다.`,
+                );
+            }
+
+            const injectParameters = metadata.parameters;
+            let args = injectParameters as any;
+
+            if (Array.isArray(args)) {
+                args = args.map((target) => transformBasicParameter(target));
+            }
+
+            const targetInjectable = new TargetInjectable(...args);
+
+            this._injectables.push(targetInjectable);
+
+            instanceScanner.set(TargetInjectable, targetInjectable);
+        }
     }
 
     /**
@@ -193,5 +236,15 @@ export class ContainerManager {
 
             _reply.status(errorData?.status || 500).send(errorData);
         });
+    }
+
+    public findInjectable<T>(target: ClazzType<T>): T | undefined {
+        if (ReflectManager.isInjectable(target)) {
+            return this._injectables.find(
+                (injectable) => injectable instanceof target,
+            ) as T;
+        }
+
+        return undefined;
     }
 }

@@ -15,7 +15,7 @@
 
 ## 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable` 데코레이터를 지원합니다.
 
 ### Controller
 
@@ -27,24 +27,57 @@
 @Controller("/user")
 export class UserController {
     constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
+        private readonly point: Point,
+        private readonly userService: UserService,
     ) {}
 
-    @Header("Content-Type", "application/json")
-    @Get()
-    public async getUser(@Req() req: FastifyRequest) {
-        const user = await this.userRepository.find();
+    @Get("/point")
+    async getPoint() {
+        this.point.move(5, 5);
         return {
-            user,
-            ip: req.ip,
+            x: this.point.x,
+            y: this.point.y,
         };
     }
 
     @Post()
     public async create(@Body() createUserDto: CreateUserDto) {
+        return await this.userService.create(createUserDto);
+    }
+
+    @Header("Content-Type", "application/json")
+    @Get()
+    public async getUser(@Req() req: FastifyRequest) {
+        return await this.userService.getUser(req.ip);
+    }
+}
+```
+
+### Injectable
+
+`@Injectable` 데코레이터가 붙은 클래스는 다른 클래스의 생성자에 주입될 수 있습니다. 또한 생성자 매개변수의 타입을 분석하여 인스턴스를 오직 하나만 생성하는 서버 컨테이너에서 관리하는 싱글톤 인스턴스로 만들어줍니다.
+
+하지만 `@Injectable` 데코레이터를 붙이지 않아도 여전히 주입이 가능합니다. 그러나 `@Injectable` 데코레이터가 마킹되어있지 않은 경우, 이 클래스는 단순히 디폴트 생성자를 통해 매번 인스턴스화되며, 서버 컨테이너에서 관리되지 않습니다.
+
+```ts
+@Injectable()
+export class UserService {
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) {}
+
+    async create(createUserDto: CreateUserDto) {
         const newUser = await this.userRepository.create(createUserDto);
         return await this.userRepository.save(newUser);
+    }
+
+    async getUser(ip: string) {
+        const user = await this.userRepository.find();
+        return {
+            user,
+            ip,
+        };
     }
 }
 ```
@@ -87,10 +120,6 @@ export class InternalErrorFilter implements Filter {
 ![image](https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770)
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
-
-### 제한 사항
-
-현재 버전에서는 컨트롤러 데코레이터가 마킹된 클래스에서만 생성자에 매개변수 주입이 가능하며, 서비스 레이어에서는 매개변수 주입이 아직 불가능합니다.
 
 ## Usage
 

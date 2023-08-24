@@ -1,6 +1,7 @@
 import Container from "typedi";
 import { ParameterAllocator } from "../ParameterListManager";
 import { InstanceScanner } from "@stingerloom/IoC/scanners/InstanceScanner";
+import { ReflectManager } from "../ReflectManager";
 
 /**
  * 요청하는 클래스가 이미 컨테이너에 존재할 경우 해당 인스턴스를 반환하고 존재하지 않을 경우, 새로 생성하여 반환하는 함수입니다.
@@ -15,7 +16,9 @@ export const getDefaultAllocator: ParameterAllocator = (param, parameters) => {
 
     const instanceScanner = Container.get(InstanceScanner);
 
-    if (TargetService) {
+    if (ReflectManager.isInjectable(TargetService)) {
+        parameters.push(TargetService);
+    } else if (TargetService) {
         parameters.push(instanceScanner.wrap(TargetService));
     }
 };
