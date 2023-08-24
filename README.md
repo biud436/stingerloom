@@ -27,8 +27,8 @@
 @Controller("/user")
 export class UserController {
     constructor(
-        private readonly point: Point,
-        private readonly userService: UserService,
+        private readonly point: Point, // Point는 injectable한 클래스가 아니므로 매번 인스턴스화됩니다.
+        private readonly userService: UserService, // UserService는 injectable한 클래스이므로 싱글톤 인스턴스로 관리됩니다.
     ) {}
 
     @Get("/point")
