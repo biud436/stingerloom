@@ -144,7 +144,8 @@ export class ContainerManager {
 
                         try {
                             // 기존 메소드를 대체합니다.
-                            targetInjectable[method] = await transactionRunner;
+                            targetInjectable[method] =
+                                await transactionRunner();
                         } catch (err: any) {
                             throw new InternalServerException(
                                 `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
