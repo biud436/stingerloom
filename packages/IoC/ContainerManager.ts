@@ -23,7 +23,10 @@ import { AdviceType } from "./AdviceType";
 import { createSessionProxy } from "@stingerloom/common/SessionProxy";
 import Database from "@stingerloom/common/Database";
 import { EntityManager } from "typeorm";
-import { TRANSACTION_ISOLATE_LEVEL } from "@stingerloom/common";
+import {
+    DEFAULT_ISOLATION_LEVEL,
+    TRANSACTION_ISOLATE_LEVEL,
+} from "@stingerloom/common";
 
 /**
  * @class ContainerManager
@@ -99,7 +102,7 @@ export class ContainerManager {
                                     TRANSACTION_ISOLATE_LEVEL,
                                     targetInjectable,
                                     method,
-                                ) || "READ_COMMITTED";
+                                ) || DEFAULT_ISOLATION_LEVEL;
 
                             return new Promise((resolve, reject) => {
                                 database
@@ -107,7 +110,9 @@ export class ContainerManager {
                                     .transaction(
                                         transactionIsolationLevel,
                                         async (manager) => {
-                                            return function (...args: any[]) {
+                                            const transactionProxy = function (
+                                                ...args: any[]
+                                            ) {
                                                 if (
                                                     Array.isArray(args) &&
                                                     args.length > 0
@@ -123,13 +128,13 @@ export class ContainerManager {
                                                     });
                                                 }
 
-                                                resolve(() =>
-                                                    originalMethod.apply(
-                                                        targetInjectable,
-                                                        args,
-                                                    ),
+                                                originalMethod.apply(
+                                                    targetInjectable,
+                                                    args,
                                                 );
                                             };
+
+                                            resolve(transactionProxy);
                                         },
                                     )
                                     .catch(reject);
@@ -137,7 +142,7 @@ export class ContainerManager {
                         };
 
                         // 기존 메소드를 대체합니다.
-                        targetInjectable[method] = await transactionRunner();
+                        targetInjectable[method] = await transactionRunner;
                     }
                 }
             }
