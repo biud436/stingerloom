@@ -2,8 +2,8 @@ import { Injectable, SessionObject } from "@stingerloom/common";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { UserService } from "../user/UserService";
-import { plainToClass } from "class-transformer";
-import { User } from "@stingerloom/example/entity/User";
+// import { plainToClass } from "class-transformer";
+// import { User } from "@stingerloom/example/entity/User";
 // import { plainToClass } from "class-transformer";
 // import { User } from "@stingerloom/example/entity/User";
 
@@ -14,7 +14,7 @@ export class AuthService {
     async login(session: SessionObject, loginUserDto: LoginUserDto) {
         const user = await this.userService.validateUser(loginUserDto);
         session.authenticated = true;
-        session.user = plainToClass(User, user);
+        session.user = user;
 
         return ResultUtils.successWrap({
             message: "로그인에 성공하였습니다.",
