@@ -18,7 +18,7 @@ export function Transactional(option?: TransactionalOptions) {
     ) {
         Reflect.defineMetadata(
             TRANSACTION_ISOLATE_LEVEL,
-            option?.isolationLevel ?? "",
+            option?.isolationLevel ?? DEFAULT_ISOLATION_LEVEL,
             descriptor.value,
         );
         Reflect.defineMetadata(TRANSACTIONAL_TOKEN, true, descriptor.value);
