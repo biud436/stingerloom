@@ -125,7 +125,7 @@ export class Point {
 
 반대로 `Injectable`한 클래스는 싱글톤 인스턴스로 관리되므로 요청 당이 아니라 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 같은 인스턴스가 주입됩니다.
 
-이에 대한 예시는 다음 섹션인 `Injectable`을 참고하시기 바랍니다.
+이에 대한 예시는 다음 섹션인 [Injectable](https://github.com/biud436/stingerloom#injectable)을 참고하시기 바랍니다.
 
 ## Injectable
 
