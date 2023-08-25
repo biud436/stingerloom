@@ -15,3 +15,5 @@ export * from "./Post";
 export * from "./Put";
 export * from "./Req";
 export * from "./Transactional";
+export * from "./InjectDataSource";
+export * from "./Session";
