@@ -16,3 +16,4 @@ export * from "./RouterMapper";
 export * from "./ValidationHandler";
 export * from "./ModuleOptions";
 export * from "./SessionProxy";
+export * from "./TransactionManager";
