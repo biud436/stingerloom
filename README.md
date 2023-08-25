@@ -52,9 +52,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 @Controller("/user")
 export class UserController {
     constructor(
-        // Point는 injectable한 클래스가 아니므로 매번 인스턴스화됩니다.
         private readonly point: Point,
-        // UserService는 injectable한 클래스이므로 싱글톤 인스턴스로 관리됩니다.
         private readonly userService: UserService,
     ) {}
 
@@ -147,16 +145,47 @@ export class UserService {
     ) {}
 
     async create(createUserDto: CreateUserDto) {
+        const safedUserDto = createUserDto as Record<string, any>;
+        if (safedUserDto.role) {
+            throw new BadRequestException("role 속성은 입력할 수 없습니다.");
+        }
+
         const newUser = await this.userRepository.create(createUserDto);
-        return await this.userRepository.save(newUser);
+        const res = await this.userRepository.save(newUser);
+        const safedUser = plainToClass(User, res);
+
+        return ResultUtils.success("유저 생성에 성공하였습니다.", safedUser);
+    }
+
+    async validateUser(loginUserDto: LoginUserDto): Promise<User> {
+        const { username, password } = loginUserDto;
+
+        const user = await this.userRepository
+            .createQueryBuilder("user")
+            .select()
+            .where("user.username = :username", {
+                username,
+            })
+            .getOne();
+
+        if (!user) {
+            throw new BadRequestException("존재하지 않는 유저입니다.");
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
     }
 
     async getUser(ip: string) {
         const user = await this.userRepository.find();
-        return {
+        return ResultUtils.success("유저 조회에 성공하였습니다", {
             user,
             ip,
-        };
+        });
     }
 }
 ```
@@ -212,8 +241,11 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @Post("/login")
-    async login(@Session() session: SessionObject) {
-        return await this.authService.login(session);
+    async login(
+        @Session() session: SessionObject,
+        @Body() loginUserDto: LoginUserDto,
+    ) {
+        return await this.authService.login(session, loginUserDto);
     }
 
     @Get("/session")
@@ -230,20 +262,25 @@ export class AuthController {
 ```ts
 @Injectable()
 export class AuthService {
-    async login(session: SessionObject) {
-        session.authenticated = true;
+    constructor(private readonly userService: UserService) {}
 
-        return {
+    async login(session: SessionObject, loginUserDto: LoginUserDto) {
+        const user = await this.userService.validateUser(loginUserDto);
+        session.authenticated = true;
+        session.user = plainToClass(User, user);
+
+        return ResultUtils.successWrap({
             message: "로그인에 성공하였습니다.",
-            status: 200,
-            data: session.cookie.path,
-        };
+            result: "success",
+            data: session.user,
+        });
     }
 
     async checkSession(session: SessionObject) {
-        return {
+        return ResultUtils.success("세션 인증에 성공하였습니다", {
             authenticated: session.authenticated,
-        };
+            user: session.user,
+        });
     }
 }
 ```

@@ -25,4 +25,6 @@ export function createSessionProxy(req: FastifyRequest) {
  */
 export interface SessionObject extends fastifySession.FastifySessionObject {
     authenticated: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    user: any;
 }

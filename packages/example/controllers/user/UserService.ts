@@ -6,7 +6,9 @@ import { CreateUserDto } from "./dto/CreateUserDto";
 import { DiscoveryService } from "@stingerloom/services";
 import { BadRequestException } from "@stingerloom/error/BadRequestException";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
-
+import { LoginUserDto } from "../auth/dto/LoginUserDto";
+import bcrypt from "bcrypt";
+import { plainToClass } from "class-transformer";
 @Injectable()
 export class UserService {
     constructor(
@@ -23,8 +25,32 @@ export class UserService {
 
         const newUser = await this.userRepository.create(createUserDto);
         const res = await this.userRepository.save(newUser);
+        const safedUser = plainToClass(User, res);
 
-        return ResultUtils.success("유저 생성에 성공하였습니다.", res);
+        return ResultUtils.success("유저 생성에 성공하였습니다.", safedUser);
+    }
+
+    async validateUser(loginUserDto: LoginUserDto): Promise<User> {
+        const { username, password } = loginUserDto;
+
+        const user = await this.userRepository
+            .createQueryBuilder("user")
+            .select()
+            .where("user.username = :username", {
+                username,
+            })
+            .getOne();
+
+        if (!user) {
+            throw new BadRequestException("존재하지 않는 유저입니다.");
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            throw new BadRequestException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return user;
     }
 
     async getUser(ip: string) {

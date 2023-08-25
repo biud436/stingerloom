@@ -21,6 +21,26 @@ export const transformBasicParameter = (target: any) => {
 
         const repository = database.getRepository(entity);
 
+        // const proxy = new Proxy(repository, {
+        //     get: (target, prop) => {
+        //         // createQueryBuilder의 SelectQueryBuilder의 getOne 메서드를 호출할 때
+        //         // 결과를 plainToClass로 변환합니다.
+        //         if (prop === "getOne") {
+        //             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        //             return async (...args: any[]) => {
+        //                 const result = await Reflect.get(target, prop)(...args);
+        //                 return plainToClass(entity, result);
+        //             };
+        //         }
+
+        //         return Reflect.get(target, prop);
+        //     },
+        //     set: (target, prop, value) => {
+        //         Reflect.set(target, prop, value);
+        //         return true;
+        //     },
+        // });
+
         return repository;
     } else if (ReflectManager.isInjectable(target)) {
         const injectable = instanceScanner.get(target);
