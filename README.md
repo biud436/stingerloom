@@ -227,7 +227,9 @@ export class InternalErrorFilter implements Filter {
 
 이렇게 하면 아래와 같이 출력됩니다.
 
-![image](https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770)
+<p align="center">
+<img src="https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770" />
+</p>
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
 
