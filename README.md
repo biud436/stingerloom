@@ -11,6 +11,8 @@
 -   [나만의 Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
 -   [나만의 Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
 
+Fastify나 Express에 종속성 없는 설계, Authorization, Guards, Redis, Cache, OpenAPI (Swagger) 등 다양한 기능을 지원하기 위해서는 아직도 많은 고민이 필요합니다.
+
 ## 사용한 기술
 
 본 서버 프레임워크는 아래의 기술을 사용하였습니다.
@@ -25,6 +27,10 @@
 -   class-transformer
 -   class-validator
 -   http-status
+
+ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직렬화를 위해서 class-transformer와 class-validator를 사용하였습니다.
+
+또한 메타데이터 수집을 위해서 reflect-metadata를 사용하였습니다.
 
 # 사용법
 
