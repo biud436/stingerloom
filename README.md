@@ -152,9 +152,8 @@ export class UserService {
 
         const newUser = await this.userRepository.create(createUserDto);
         const res = await this.userRepository.save(newUser);
-        const safedUser = plainToClass(User, res);
 
-        return ResultUtils.success("유저 생성에 성공하였습니다.", safedUser);
+        return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
 
     async validateUser(loginUserDto: LoginUserDto): Promise<User> {
@@ -269,7 +268,7 @@ export class AuthService {
     async login(session: SessionObject, loginUserDto: LoginUserDto) {
         const user = await this.userService.validateUser(loginUserDto);
         session.authenticated = true;
-        session.user = plainToClass(User, user);
+        session.user = user;
 
         return ResultUtils.successWrap({
             message: "로그인에 성공하였습니다.",

@@ -10,7 +10,7 @@ import {
 import { ExceptionScanner } from "./scanners/ExceptionScanner";
 import { HttpMethod } from "@stingerloom/common/HttpMethod";
 import { ValidationError, validate } from "class-validator";
-import { plainToClass } from "class-transformer";
+import { classToPlain, plainToClass } from "class-transformer";
 import { HEADER_TOKEN } from "@stingerloom/common/decorators/Header";
 import { ValidationHandler } from "@stingerloom/common/ValidationHandler";
 import path from "path";
@@ -180,7 +180,7 @@ export class ContainerManager {
                             ...args,
                         );
 
-                        return result;
+                        return classToPlain(result);
                     };
 
                     handler(

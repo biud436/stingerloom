@@ -8,7 +8,7 @@ import { BadRequestException } from "@stingerloom/error/BadRequestException";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "../auth/dto/LoginUserDto";
 import bcrypt from "bcrypt";
-import { plainToClass } from "class-transformer";
+
 @Injectable()
 export class UserService {
     constructor(
@@ -25,9 +25,8 @@ export class UserService {
 
         const newUser = await this.userRepository.create(createUserDto);
         const res = await this.userRepository.save(newUser);
-        const safedUser = plainToClass(User, res);
 
-        return ResultUtils.success("유저 생성에 성공하였습니다.", safedUser);
+        return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
 
     async validateUser(loginUserDto: LoginUserDto): Promise<User> {
