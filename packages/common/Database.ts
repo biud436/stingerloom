@@ -1,8 +1,6 @@
 import { DataSource } from "typeorm";
 
-import bcrypt from "bcrypt";
 import { databaseFactory } from "@stingerloom/factory/database/DatabaseFactory";
-import { User } from "@stingerloom/example/entity/User";
 
 import { ModuleOptions } from "./ModuleOptions";
 
@@ -41,23 +39,6 @@ class Database {
      */
     public getRepository<T>(entity: new () => T) {
         return this.dataSource.getRepository(entity);
-    }
-
-    /**
-     * 테스트 용도로 사용하는 에코 유저 함수입니다.
-     * @returns
-     */
-    public async echoUser() {
-        const repository = this.dataSource.getRepository(User);
-
-        await repository.clear();
-
-        const user = new User();
-        user.name = "test";
-        user.password = bcrypt.hashSync("test1234", 10);
-        user.score = 10;
-
-        return await repository.save(user);
     }
 }
 

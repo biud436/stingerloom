@@ -121,8 +121,5 @@ export class ServerBootstrapApplication {
         instanceScanner.set(Database, database);
 
         await database.start();
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const user = await database.echoUser();
     }
 }
