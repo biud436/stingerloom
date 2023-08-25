@@ -1,11 +1,14 @@
 import {
     BaseEntity,
+    BeforeInsert,
     Column,
     CreateDateColumn,
     Entity,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
+import bcrypt from "bcrypt";
+import { Exclude } from "class-transformer";
 
 @Entity()
 export class User extends BaseEntity {
@@ -16,22 +19,28 @@ export class User extends BaseEntity {
         length: 10,
         nullable: false,
     })
-    name!: string;
+    username!: string;
 
     @Column({
         nullable: false,
-        select: false,
     })
+    @Exclude()
     password!: string;
 
     @Column({
-        nullable: true,
+        nullable: false,
+        default: "user",
     })
-    score?: number;
+    role!: string;
 
     @CreateDateColumn()
     createdAt!: Date;
 
     @UpdateDateColumn()
     updatedAt!: Date;
+
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
 }
