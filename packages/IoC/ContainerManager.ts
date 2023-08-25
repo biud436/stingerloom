@@ -19,6 +19,7 @@ import { HttpStatus } from "@stingerloom/common/HttpStatus";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/common/allocators";
 import { InjectableScanner } from "./scanners/InjectableScanner";
+import { AdviceType } from "./AdviceType";
 
 /**
  * @class ContainerManager
@@ -213,14 +214,14 @@ export class ContainerManager {
                         const context = instanceScanner.wrap(ExceptionFilter);
 
                         switch (advice) {
-                            case "throwing":
+                            case AdviceType.THROWING:
                                 errorData = (catcher.handler as any).call(
                                     context,
                                     err,
                                 );
                                 break;
-                            case "before-throwing":
-                            case "after-throwing":
+                            case AdviceType.BEFORE_THROWING:
+                            case AdviceType.AFTER_THROWING:
                                 (catcher.handler as any).call(context);
                                 break;
                             default:
