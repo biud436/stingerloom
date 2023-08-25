@@ -20,6 +20,7 @@ import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/common/allocators";
 import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
+import { createSessionProxy } from "@stingerloom/common/SessionProxy";
 
 /**
  * @class ContainerManager
@@ -137,6 +138,10 @@ export class ContainerManager {
                         const args = parameters.map((param) => {
                             if (param.isReq) {
                                 return req;
+                            }
+
+                            if (param.isSession) {
+                                return createSessionProxy(req);
                             }
 
                             if (param.body) {

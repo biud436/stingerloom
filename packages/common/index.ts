@@ -15,3 +15,4 @@ export * from "./ResponseBuilder";
 export * from "./RouterMapper";
 export * from "./ValidationHandler";
 export * from "./ModuleOptions";
+export * from "./SessionProxy";

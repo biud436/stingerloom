@@ -11,5 +11,6 @@ export type HttpRouterParameter = {
     index: number;
     value: any;
     isReq: boolean;
+    isSession: boolean;
     body?: HttpBodyParameter;
 };

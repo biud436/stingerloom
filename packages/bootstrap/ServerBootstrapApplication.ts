@@ -2,7 +2,6 @@
 import { FastifyInstance, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
-import fastifyCookie from "@fastify/cookie";
 
 // import { InstanceLoader } from "@stingerloom/example/InstanceLoader";
 
@@ -24,7 +23,7 @@ ParameterListManager.initAllocator();
  * 컨트롤러를 스캔하고 라우터를 동적으로 등록하여 서버를 구동시키는 역할을 합니다.
  */
 export class ServerBootstrapApplication {
-    private app!: FastifyInstance;
+    protected app!: FastifyInstance;
     private containerManager!: ContainerManager;
     protected moduleOptions!: ModuleOptions;
 
@@ -98,12 +97,7 @@ export class ServerBootstrapApplication {
         return this;
     }
 
-    private applyMiddlewares(): this {
-        this.app.register(fastifyCookie, {
-            secret: process.env.COOKIE_SECRET,
-            hook: "onRequest",
-        });
-
+    protected applyMiddlewares(): this {
         return this;
     }
 

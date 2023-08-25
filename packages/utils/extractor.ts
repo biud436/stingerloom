@@ -4,6 +4,7 @@ import { HttpRouterParameter } from "@stingerloom/common/HttpRouterParameter";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { BODY_TOKEN, BodyParameter } from "@stingerloom/common/decorators/Body";
 import { REQ_TOKEN } from "@stingerloom/common/decorators/Req";
+import { SESSION_TOKEN } from "@stingerloom/common/decorators/Session";
 
 /**
  * 특정 메소드의 매개변수 정보를 취득합니다.
@@ -20,6 +21,11 @@ export function getMethodParameters(target: any, propertyKey: string) {
     params.forEach((param, index) => {
         // Req 데코레이터가 붙은 매개변수의 인덱스를 가져옵니다.
         const reqIndex = Reflect.getMetadata(REQ_TOKEN, target, propertyKey);
+        const sessionIndex = Reflect.getMetadata(
+            SESSION_TOKEN,
+            target,
+            propertyKey,
+        );
         // Body 데코레이터가 붙은 매개변수의 인덱스를 가져옵니다.
         const bodyParam = Reflect.getMetadata(
             BODY_TOKEN,
@@ -30,6 +36,7 @@ export function getMethodParameters(target: any, propertyKey: string) {
         parameters.push({
             index,
             value: param,
+            isSession: sessionIndex === index,
             isReq: reqIndex === index,
             body: bodyParam,
         });

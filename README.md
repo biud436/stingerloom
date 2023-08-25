@@ -36,7 +36,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session` 데코레이터를 지원합니다.
 
 ## Controller
 
@@ -197,6 +197,50 @@ export class InternalErrorFilter implements Filter {
 ![image](https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770)
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
+
+## 인증
+
+StingerLoom에선 세션 기반 인증을 지원합니다.
+
+```ts
+@Controller("/auth")
+export class AuthController {
+    constructor(private readonly authService: AuthService) {}
+
+    @Post("/login")
+    async login(@Session() session: SessionObject) {
+        return await this.authService.login(session);
+    }
+
+    @Get("/session")
+    async checkSession(@Session() session: SessionObject) {
+        return await this.authService.checkSession(session);
+    }
+}
+```
+
+다만 현재는 핸들러 전에 실행되는 인증 가드(AuthGuard) 개념과 Roles가 구현되어있지 않습니다. 이 부분은 추후에 구현될 예정입니다. 현재는 아래와 같이 세션 오브젝트를 사용하여 인증을 구현할 수 있습니다.
+
+```ts
+@Injectable()
+export class AuthService {
+    async login(session: SessionObject) {
+        session.authenticated = true;
+
+        return {
+            message: "로그인에 성공하였습니다.",
+            status: 200,
+            data: session.cookie.path,
+        };
+    }
+
+    async checkSession(session: SessionObject) {
+        return {
+            authenticated: session.authenticated,
+        };
+    }
+}
+```
 
 ## Installations
 

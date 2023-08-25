@@ -5,6 +5,11 @@ import { InternalErrorFilter } from "./exceptions/InternalErrorFilter";
 import { option as databaseOption } from "./config";
 import { UserService } from "./controllers/user/UserService";
 import { ModuleOptions } from "@stingerloom/common";
+import fastifyCookie from "@fastify/cookie";
+import fastifyFormdody from "@fastify/formbody";
+import fastifySession from "@fastify/session";
+import { AuthService } from "./controllers/auth/AuthService";
+import { AuthController } from "./controllers/auth/AuthController";
 
 /**
  * @class StingerLoomBootstrapApplication
@@ -17,10 +22,26 @@ import { ModuleOptions } from "@stingerloom/common";
 export class StingerLoomBootstrapApplication extends ServerBootstrapApplication {
     override beforeStart(): void {
         this.moduleOptions = ModuleOptions.merge({
-            controllers: [PostController, UserController],
-            providers: [InternalErrorFilter, UserService],
+            controllers: [PostController, UserController, AuthController],
+            providers: [InternalErrorFilter, UserService, AuthService],
             configuration: databaseOption,
         });
+    }
+
+    protected applyMiddlewares(): this {
+        const app = this.app;
+
+        app.register(fastifyCookie, {
+            secret: process.env.COOKIE_SECRET,
+            hook: "onRequest",
+        });
+
+        app.register(fastifyFormdody);
+        app.register(fastifySession, {
+            secret: process.env.SESSION_SECRET,
+        });
+
+        return this;
     }
 }
 

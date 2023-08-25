@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
 
 import bcrypt from "bcrypt";
-import { databaseFactory } from "@stingerloom/factory/DatabaseFactory";
+import { databaseFactory } from "@stingerloom/factory/database/DatabaseFactory";
 import { User } from "@stingerloom/example/entity/User";
 
 import { ModuleOptions } from "./ModuleOptions";

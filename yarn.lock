@@ -393,6 +393,14 @@
   dependencies:
     fastify-plugin "^4.0.0"
 
+"@fastify/formbody@^7.4.0":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@fastify/formbody/-/formbody-7.4.0.tgz#5370b16d1ee58b9023008d1e883de60353a132ad"
+  integrity sha512-H3C6h1GN56/SMrZS8N2vCT2cZr7mIHzBHzOBa5OPpjfB/D6FzP9mMpE02ZzrFX0ANeh0BAJdoXKOF2e7IbV+Og==
+  dependencies:
+    fast-querystring "^1.0.0"
+    fastify-plugin "^4.0.0"
+
 "@fastify/passport@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@fastify/passport/-/passport-2.3.0.tgz#e942a914961d8bbe3d989ef39ccb6c33550b1dbc"
