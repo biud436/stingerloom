@@ -198,7 +198,7 @@ export class InternalErrorFilter implements Filter {
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
 
-## Usage
+## Installations
 
 before starting this application, you must install dependencies as below in your terminal.
 
