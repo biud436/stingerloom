@@ -90,18 +90,18 @@ export class ContainerManager {
                             method,
                         )
                     ) {
-                        const proxy = new Proxy(targetInjectable, {
-                            get: function (target, property) {
-                                const originalMethod = target[property];
+                        const transactionRunner = () => {
+                            const originalMethod = targetInjectable[method];
 
-                                // 트랜잭션 격리 레벨을 가져옵니다.
-                                const transactionIsolationLevel =
-                                    Reflect.getMetadata(
-                                        TRANSACTION_ISOLATE_LEVEL,
-                                        targetInjectable,
-                                        method,
-                                    ) || "READ_COMMITTED";
+                            // 트랜잭션 격리 레벨을 가져옵니다.
+                            const transactionIsolationLevel =
+                                Reflect.getMetadata(
+                                    TRANSACTION_ISOLATE_LEVEL,
+                                    targetInjectable,
+                                    method,
+                                ) || "READ_COMMITTED";
 
+                            return new Promise((resolve, reject) => {
                                 database
                                     .getDataSource()
                                     .transaction(
@@ -123,18 +123,21 @@ export class ContainerManager {
                                                     });
                                                 }
 
-                                                return originalMethod.apply(
-                                                    target,
-                                                    args,
+                                                resolve(() =>
+                                                    originalMethod.apply(
+                                                        targetInjectable,
+                                                        args,
+                                                    ),
                                                 );
                                             };
                                         },
-                                    );
-                            },
-                        });
+                                    )
+                                    .catch(reject);
+                            });
+                        };
 
                         // 기존 메소드를 대체합니다.
-                        targetInjectable[method] = proxy;
+                        targetInjectable[method] = await transactionRunner();
                     }
                 }
             }
