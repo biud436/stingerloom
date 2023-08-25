@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTROLLER_TOKEN } from "./RouterMapper";
-import { REPOSITORY_ENTITY_METADATA } from "./decorators";
+import {
+    REPOSITORY_ENTITY_METADATA,
+    TRANSACTIONAL_TOKEN,
+    TRANSACTIONAL_ZONE,
+} from "./decorators";
 
 import { INJECTABLE_TOKEN } from "./decorators/Injectable";
 
@@ -134,6 +138,31 @@ export class ReflectManager {
             return false;
         }
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
+    }
+
+    /**
+     * 트랜잭션 존재 여부를 반환합니다.
+     * @param target
+     * @returns
+     */
+    public static isTransactionalZone(target: object): boolean {
+        if (!Object.getPrototypeOf(target)) {
+            return false;
+        }
+        return Reflect.getMetadata(TRANSACTIONAL_ZONE, target) !== undefined;
+    }
+
+    /**
+     * 트랜잭션 메서드 여부를 반환합니다.
+     *
+     * @param target
+     * @param key
+     * @returns
+     */
+    public static isTransactionalZoneMethod(target: object, key: string) {
+        return (
+            Reflect.getMetadata(TRANSACTIONAL_TOKEN, target, key) !== undefined
+        );
     }
 
     /**

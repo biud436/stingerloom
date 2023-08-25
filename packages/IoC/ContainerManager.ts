@@ -21,6 +21,8 @@ import { transformBasicParameter } from "@stingerloom/common/allocators";
 import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
 import { createSessionProxy } from "@stingerloom/common/SessionProxy";
+import Database from "@stingerloom/common/Database";
+import { EntityManager } from "typeorm";
 
 /**
  * @class ContainerManager
@@ -70,6 +72,60 @@ export class ContainerManager {
             }
 
             const targetInjectable = new TargetInjectable(...args);
+
+            // 만일 트랜잭셔널 존이라면
+            if (ReflectManager.isTransactionalZone(TargetInjectable)) {
+                // 모든 메소드를 순회합니다.
+                for (const method of Object.getOwnPropertyNames(
+                    targetInjectable,
+                )) {
+                    // 데이터베이스 인스턴스를 가져옵니다.
+                    const database = instanceScanner.get(Database) as Database;
+
+                    // 메소드가 트랜잭셔널이라면
+                    if (
+                        ReflectManager.isTransactionalZoneMethod(
+                            targetInjectable,
+                            method,
+                        )
+                    ) {
+                        const proxy = new Proxy(targetInjectable, {
+                            get: function (target, property) {
+                                const originalMethod = target[property];
+
+                                database
+                                    .getDataSource()
+                                    .transaction(async (manager) => {
+                                        return function (...args: any[]) {
+                                            if (
+                                                Array.isArray(args) &&
+                                                args.length > 0
+                                            ) {
+                                                args.map((arg) => {
+                                                    if (
+                                                        arg instanceof
+                                                        EntityManager
+                                                    ) {
+                                                        return manager;
+                                                    }
+                                                    return arg;
+                                                });
+                                            }
+
+                                            return originalMethod.apply(
+                                                target,
+                                                args,
+                                            );
+                                        };
+                                    });
+                            },
+                        });
+
+                        // 기존 메소드를 대체합니다.
+                        targetInjectable[method] = proxy;
+                    }
+                }
+            }
 
             this._injectables.push(targetInjectable);
 
