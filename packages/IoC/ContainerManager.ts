@@ -23,6 +23,7 @@ import { AdviceType } from "./AdviceType";
 import { createSessionProxy } from "@stingerloom/common/SessionProxy";
 import Database from "@stingerloom/common/Database";
 import { EntityManager } from "typeorm";
+import { TRANSACTION_ISOLATE_LEVEL } from "@stingerloom/common";
 
 /**
  * @class ContainerManager
@@ -93,31 +94,42 @@ export class ContainerManager {
                             get: function (target, property) {
                                 const originalMethod = target[property];
 
+                                // 트랜잭션 격리 레벨을 가져옵니다.
+                                const transactionIsolationLevel =
+                                    Reflect.getMetadata(
+                                        TRANSACTION_ISOLATE_LEVEL,
+                                        targetInjectable,
+                                        method,
+                                    ) || "READ_COMMITTED";
+
                                 database
                                     .getDataSource()
-                                    .transaction(async (manager) => {
-                                        return function (...args: any[]) {
-                                            if (
-                                                Array.isArray(args) &&
-                                                args.length > 0
-                                            ) {
-                                                args.map((arg) => {
-                                                    if (
-                                                        arg instanceof
-                                                        EntityManager
-                                                    ) {
-                                                        return manager;
-                                                    }
-                                                    return arg;
-                                                });
-                                            }
+                                    .transaction(
+                                        transactionIsolationLevel,
+                                        async (manager) => {
+                                            return function (...args: any[]) {
+                                                if (
+                                                    Array.isArray(args) &&
+                                                    args.length > 0
+                                                ) {
+                                                    args.map((arg) => {
+                                                        if (
+                                                            arg instanceof
+                                                            EntityManager
+                                                        ) {
+                                                            return manager;
+                                                        }
+                                                        return arg;
+                                                    });
+                                                }
 
-                                            return originalMethod.apply(
-                                                target,
-                                                args,
-                                            );
-                                        };
-                                    });
+                                                return originalMethod.apply(
+                                                    target,
+                                                    args,
+                                                );
+                                            };
+                                        },
+                                    );
                             },
                         });
 
