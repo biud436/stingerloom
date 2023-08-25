@@ -42,7 +42,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 컨트롤러는 클라이언트가 보내는 요청을 처리하고 응답하는 클래스입니다.
 
-`@Controller` 데코레이터는 HTTP 요청을 특정 경로에 해당하는 컨트롤러로 보내기 위한 메타데이터를 수집하며, 알맞은 라우팅 맵을 형성할 수 있도록 해줍니다.
+`@Controller` 데코레이터는 HTTP 요청을 특정 경로에 해당하는 컨트롤러로 보내기 위한 메타데이터를 수집하며 알맞은 라우팅 맵을 형성할 수 있도록 해줍니다.
 
 ```ts
 @Controller("/user")
@@ -76,6 +76,57 @@ export class UserController {
 }
 ```
 
+라우팅 맵은 StingerLoom에서 알아서 처리하므로 사용자는 기존처럼 라우팅 맵을 일일히 작성할 필요가 없습니다.
+
+위 코드에 보이는 `@Body()` 데코레이터는 요청의 바디를 역직렬화하여 `createUserDto`에 할당하며 유효성 검사를 수행합니다. 보통 유효성 검사가 실패하는 경우에는 400 오류가 발생하게 됩니다.
+
+`@Req()` 데코레이터를 붙이면 FastifyRequest 인스턴스를 주입받을 수 있습니다.
+
+또한 `@Header()` 데코레이터는 응답 헤더를 설정합니다. 이 데코레이터는 메소드에만 붙일 수 있고 생략할 경우 기본적으로 `Content-Type: application/json` 헤더가 설정됩니다.
+
+주의해야 할 점은 생성자 부분인데요.
+
+```ts
+@Controller("/user")
+export class UserController {
+    constructor(
+        // 1. Point는 injectable한 클래스가 아니므로 매번 인스턴스화됩니다.
+        private readonly point: Point,
+        // 2. UserService는 injectable한 클래스이므로 싱글톤 인스턴스로 관리됩니다.
+        private readonly userService: UserService,
+    ) {}
+```
+
+아래 `@Injectable` 챕터에서 설명되겠지만 아래 `Point` 클래스는 `@Injectable` 데코레이터가 붙지 않았기 때문에 컨테이너에서 관리되지 않습니다. 요청 당이 아니며 각 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 새로운 인스턴스가 생성됩니다.
+
+```ts
+export class Point {
+    public x: number;
+    public y: number;
+
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+    }
+
+    public move(x: number, y: number) {
+        this.x += x;
+        this.y += y;
+    }
+}
+```
+
+따라서 `/user/point`를 연달아 호출하면 아래와 같이 출력될 것입니다.
+
+```json
+{"x":5,"y":5}
+{"x":10,"y":10}
+```
+
+반대로 `Injectable`한 클래스는 싱글톤 인스턴스로 관리되므로 요청 당이 아니라 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 같은 인스턴스가 주입됩니다.
+
+이에 대한 예시는 다음 섹션인 `Injectable`을 참고하시기 바랍니다.
+
 ## Injectable
 
 `@Injectable` 데코레이터가 붙은 클래스는 다른 클래스의 생성자에 주입될 수 있습니다. 또한 생성자 매개변수의 타입을 분석하여 인스턴스를 오직 하나만 생성하는 서버 컨테이너에서 관리하는 싱글톤 인스턴스로 만들어줍니다.
@@ -105,6 +156,8 @@ export class UserService {
     }
 }
 ```
+
+강조해서 설명하고 있는 싱글턴 인스턴스라는 것은 인스턴스를 단 하나만 생성하겠다는 소리입니다. 즉, 모든 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 정확히 같은 인스턴스가 주입되는 것입니다.
 
 ## Exception Filter와 실행 컨텍스트
 
