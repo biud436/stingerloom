@@ -53,7 +53,7 @@ export class TransactionManager {
                                                 Array.isArray(args) &&
                                                 args.length > 0
                                             ) {
-                                                args.map((arg) => {
+                                                args = args.map((arg) => {
                                                     if (
                                                         arg instanceof
                                                         EntityManager
