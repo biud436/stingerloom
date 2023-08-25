@@ -13,7 +13,7 @@
 -   [나만의 Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
 -   [나만의 Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
 
-Fastify나 Express에 종속성 없는 설계, Authorization(Session And JWT, Roles), Guards, Redis, Cache, OpenAPI (Swagger) 등 다양한 기능을 지원하기 위해서는 아직도 많은 고민이 필요합니다.
+Fastify나 Express에 종속성 없는 설계, Guards, Redis, Cache, OpenAPI (Swagger) 등 다양한 기능을 지원하기 위해서는 아직도 많은 고민이 필요합니다.
 
 ## 사용한 기술
 
