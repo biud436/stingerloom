@@ -1,8 +1,21 @@
 # Introduction
 
-이 프레임워크는 Nest.js와 비슷한 구조를 가지고 있으며 `나만의 서버 프레임워크를 만들어보자`라는 취지로 만들어졌습니다.
+이 서버 프레임워크는 Nest.js라는 서버 프레임워크의 동작 원리와 기술을 더 깊이 이해하기 위해, 나아가 `나만의 서버 프레임워크를 만들어보자`라는 취지로 개발을 시작하였습니다.
+
+`나만의 서버 프레임워크`의 이름은 StingerLoom이며 라우터 맵핑 기능과 StingerLoom Container에 의한 DI와 데이터베이스 접근에 필요한 ORM 등의 기능을 지원합니다.
+
+## 개발 일지
+
+이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
+
+-   [나만의 Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
+-   [나만의 Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
 
 ## 사용한 기술
+
+본 서버 프레임워크는 아래의 기술을 사용하였습니다.
+
+또한 fastify에 기반한 프레임워크이므로 fastify에 강한 의존성을 가지고 있습니다.
 
 -   fastify
 -   typeorm
@@ -13,11 +26,11 @@
 -   class-validator
 -   http-status
 
-## 사용법
+# 사용법
 
 이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable` 데코레이터를 지원합니다.
 
-### Controller
+## Controller
 
 컨트롤러는 클라이언트가 보내는 요청을 처리하고 응답하는 클래스입니다.
 
@@ -55,7 +68,7 @@ export class UserController {
 }
 ```
 
-### Injectable
+## Injectable
 
 `@Injectable` 데코레이터가 붙은 클래스는 다른 클래스의 생성자에 주입될 수 있습니다. 또한 생성자 매개변수의 타입을 분석하여 인스턴스를 오직 하나만 생성하는 서버 컨테이너에서 관리하는 싱글톤 인스턴스로 만들어줍니다.
 
@@ -85,7 +98,7 @@ export class UserService {
 }
 ```
 
-### Exception Filter와 실행 컨텍스트
+## Exception Filter와 실행 컨텍스트
 
 Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스에 해당하는 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
 `@BeforeCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행되기 전에 실행되고, `@AfterCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행된 후에 실행됩니다.
