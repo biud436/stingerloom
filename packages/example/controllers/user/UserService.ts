@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InjectRepository, Injectable } from "@stingerloom/common";
 import { User } from "@stingerloom/example/entity/User";
 import { Repository } from "typeorm/repository/Repository";
 import { CreateUserDto } from "./dto/CreateUserDto";
 import { DiscoveryService } from "@stingerloom/services";
+import { BadRequestException } from "@stingerloom/error/BadRequestException";
+import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 
 @Injectable()
 export class UserService {
@@ -13,15 +16,22 @@ export class UserService {
     ) {}
 
     async create(createUserDto: CreateUserDto) {
+        const safedUserDto = createUserDto as Record<string, any>;
+        if (safedUserDto.role) {
+            throw new BadRequestException("role 속성은 입력할 수 없습니다.");
+        }
+
         const newUser = await this.userRepository.create(createUserDto);
-        return await this.userRepository.save(newUser);
+        const res = await this.userRepository.save(newUser);
+
+        return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
 
     async getUser(ip: string) {
         const user = await this.userRepository.find();
-        return {
+        return ResultUtils.success("유저 조회에 성공하였습니다", {
             user,
             ip,
-        };
+        });
     }
 }
