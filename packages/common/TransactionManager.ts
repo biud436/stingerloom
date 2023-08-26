@@ -49,10 +49,12 @@ export class TransactionManager {
                                         const transactionProxy = function (
                                             ...args: any[]
                                         ) {
-                                            if (
+                                            const isExistParameter =
                                                 Array.isArray(args) &&
-                                                args.length > 0
-                                            ) {
+                                                args.length > 0;
+
+                                            // 매개변수가 존재한다면 EntityManager를 주입합니다.
+                                            if (isExistParameter) {
                                                 args = args.map((arg) => {
                                                     if (
                                                         arg instanceof
