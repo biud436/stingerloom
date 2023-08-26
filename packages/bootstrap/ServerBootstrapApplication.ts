@@ -66,6 +66,7 @@ export class ServerBootstrapApplication {
 
     private mergeModuleOptions(): void {
         this.moduleOptions = ModuleOptions.merge(this.moduleOptions, {
+            imports: [],
             controllers: [],
             providers: [DiscoveryService],
         });

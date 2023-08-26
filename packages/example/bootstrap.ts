@@ -22,6 +22,7 @@ import { AuthController } from "./controllers/auth/AuthController";
 export class StingerLoomBootstrapApplication extends ServerBootstrapApplication {
     override beforeStart(): void {
         this.moduleOptions = ModuleOptions.merge({
+            imports: [],
             controllers: [PostController, UserController, AuthController],
             providers: [InternalErrorFilter, UserService, AuthService],
             configuration: databaseOption,
