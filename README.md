@@ -319,7 +319,7 @@ export class AuthService {
 
 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
-QueryRunner를 정확히 위치에 주입하기 위해 매개변수에 `@InjectQueryRunner()`를 마킹해야 합니다.
+`QueryRunner`는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
 
 ```ts
 @TransactionalZone()
