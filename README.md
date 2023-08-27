@@ -295,6 +295,8 @@ export class AuthService {
 
 오류가 발생하면 자동으로 롤백됩니다.
 
+다음은 예제 코드 입니다.
+
 ```ts
 @TransactionalZone()
 @Injectable()
@@ -320,6 +322,8 @@ export class AuthService {
 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
 `QueryRunner`는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
+
+다음은 또 다른 예제인 회원 가입 예제입니다.
 
 ```ts
 @TransactionalZone()
@@ -353,7 +357,7 @@ export class UserService {
 }
 ```
 
-위는 회원 가입에 대한 예시입니다.
+중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
