@@ -13,6 +13,7 @@ import {
 import { InternalServerException } from "@stingerloom/error";
 import { Logger } from "./Logger";
 import { EntityManager } from "typeorm";
+
 export class TransactionManager {
     private static LOGGER = new Logger();
 
@@ -113,9 +114,7 @@ export class TransactionManager {
                                                                     ];
                                                                 if (
                                                                     param instanceof
-                                                                        param[0] &&
-                                                                    param[0] ===
-                                                                        EntityManager
+                                                                    EntityManager
                                                                 ) {
                                                                     return em;
                                                                 }
@@ -199,12 +198,11 @@ export class TransactionManager {
                                                         (arg, index) => {
                                                             const param =
                                                                 params[index];
+
+                                                            // QueryRunner는 인터페이스로 구현되어 있기 때문에 instanceof로 체크할 수 없다.
                                                             if (
-                                                                param instanceof
-                                                                    param[0] &&
-                                                                param[0]
-                                                                    .name ===
-                                                                    "QueryRunner"
+                                                                param.name ===
+                                                                "QueryRunner"
                                                             ) {
                                                                 return queryRunner;
                                                             }
