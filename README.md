@@ -303,7 +303,7 @@ export class AuthService {
 
 ### `QueryRunner`를 사용하는 경우 (추천)
 
-제가 자주 사용하는 방법인데요. 바로 단일 데이터베이스를 연결을 통해 `QueryRunner`를 사용하는 방법이 있습니다.
+제가 자주 사용하는 방법인데요. 바로 `QueryRunner`를 사용하는 방법이 있습니다.
 
 `QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
 
