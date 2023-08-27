@@ -272,7 +272,7 @@ export class AuthService {
      * @returns
      */
     @Transactional({
-        isolationLevel: "REPEATABLE READ",
+        isolationLevel: TransactionIsolationLevel.REPEATABLE_READ,
         transactionalEntityManager: true,
     })
     async checkTransaction(em?: EntityManager) {

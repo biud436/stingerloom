@@ -3,15 +3,19 @@ export const TRANSACTION_ISOLATE_LEVEL = "TRANSACTION_ISOLATE_LEVEL";
 export const TRANSACTIONAL_PARAMS = "TRANSACTIONAL_PARAMS";
 export const TRANSACTION_ENTITY_MANAGER = "TRANSACTION_ENTITY_MANAGER";
 
+export enum TransactionIsolationLevel {
+    READ_UNCOMMITTED = "READ UNCOMMITTED",
+    READ_COMMITTED = "READ COMMITTED",
+    REPEATABLE_READ = "REPEATABLE READ",
+    SERIALIZABLE = "SERIALIZABLE",
+}
+
 export interface TransactionalOptions {
-    isolationLevel?:
-        | "READ UNCOMMITTED"
-        | "READ COMMITTED"
-        | "REPEATABLE READ"
-        | "SERIALIZABLE";
+    isolationLevel?: TransactionIsolationLevel;
     transactionalEntityManager?: boolean;
 }
-export const DEFAULT_ISOLATION_LEVEL = "REPEATABLE READ";
+export const DEFAULT_ISOLATION_LEVEL =
+    TransactionIsolationLevel.REPEATABLE_READ;
 
 export function Transactional(option?: TransactionalOptions) {
     return function (

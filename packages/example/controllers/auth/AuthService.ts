@@ -1,6 +1,7 @@
 import {
     Injectable,
     SessionObject,
+    TransactionIsolationLevel,
     Transactional,
     TransactionalZone,
 } from "@stingerloom/common";
@@ -42,7 +43,7 @@ export class AuthService {
      * @returns
      */
     @Transactional({
-        isolationLevel: "REPEATABLE READ",
+        isolationLevel: TransactionIsolationLevel.REPEATABLE_READ,
         transactionalEntityManager: true,
     })
     async checkTransaction(em?: EntityManager) {
