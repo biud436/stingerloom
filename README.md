@@ -38,40 +38,11 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone` 데코레이터를 지원합니다.
 
-## 트랜잭션의 처리
-
-StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
-
-이 기능은 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다. 또한 트랜잭션 처리를 위해서는 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
-
-`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`를 주입받을 메소드를 찾아내는데요.
-
-다음은 트랜잭션을 처리하는 심플한 예시입니다.
-
-```ts
-@TransactionalZone()
-@Injectable()
-export class AuthService {
-    constructor(private readonly userService: UserService) {}
-
-    // Skip...
-
-    @Transactional({
-        isolationLevel: "REPEATABLE READ",
-    })
-    async checkTransaction(em?: EntityManager) {
-        const users = (await em?.queryRunner?.query(
-            "SELECT * FROM user;",
-        )) as User[];
-
-        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
-            users: plainToClass(User, users),
-        });
-    }
-}
-```
-
-트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라, 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
+-   [Controller](https://github.com/biud436/stingerloom#controller)
+-   [Injectable](https://github.com/biud436/stingerloom#injectable)
+-   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
+-   [트랜잭션의 처리](https://github.com/biud436/stingerloom#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EC%B2%98%EB%A6%AC)
+-   [세션 인증](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
 
 ## Controller
 
@@ -266,6 +237,41 @@ export class InternalErrorFilter implements Filter {
 </p>
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
+
+## 트랜잭션의 처리
+
+StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
+
+이 기능은 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다. 또한 트랜잭션 처리를 위해서는 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
+
+`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`를 주입받을 메소드를 찾아내는데요.
+
+다음은 트랜잭션을 처리하는 심플한 예시입니다.
+
+```ts
+@TransactionalZone()
+@Injectable()
+export class AuthService {
+    constructor(private readonly userService: UserService) {}
+
+    // Skip...
+
+    @Transactional({
+        isolationLevel: "REPEATABLE READ",
+    })
+    async checkTransaction(em?: EntityManager) {
+        const users = (await em?.queryRunner?.query(
+            "SELECT * FROM user;",
+        )) as User[];
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            users: plainToClass(User, users),
+        });
+    }
+}
+```
+
+트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라, 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
 
 ## 인증
 
