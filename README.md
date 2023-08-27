@@ -44,7 +44,7 @@ StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레
 
 이 기능은 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다. 또한 트랜잭션 처리를 위해서는 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
 
-`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`를 주입받을 메소드를 찾아냅니다.
+`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`를 주입받을 메소드를 찾아내는데요.
 
 다음은 트랜잭션을 처리하는 심플한 예시입니다.
 
@@ -71,7 +71,7 @@ export class AuthService {
 }
 ```
 
-트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않습니다.
+트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라, 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
 
 ## Controller
 
