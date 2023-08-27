@@ -38,6 +38,41 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone` 데코레이터를 지원합니다.
 
+## 트랜잭션의 처리
+
+StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
+
+이 기능은 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다. 또한 트랜잭션 처리를 위해서는 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
+
+`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`를 주입받을 메소드를 찾아냅니다.
+
+다음은 트랜잭션을 처리하는 심플한 예시입니다.
+
+```ts
+@TransactionalZone()
+@Injectable()
+export class AuthService {
+    constructor(private readonly userService: UserService) {}
+
+    // Skip...
+
+    @Transactional({
+        isolationLevel: "REPEATABLE READ",
+    })
+    async checkTransaction(em?: EntityManager) {
+        const users = (await em?.queryRunner?.query(
+            "SELECT * FROM user;",
+        )) as User[];
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            users: plainToClass(User, users),
+        });
+    }
+}
+```
+
+트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않습니다.
+
 ## Controller
 
 컨트롤러는 클라이언트가 보내는 요청을 처리하고 응답하는 클래스입니다.
@@ -190,39 +225,6 @@ export class UserService {
 ```
 
 강조해서 설명하고 있는 싱글턴 인스턴스라는 것은 인스턴스를 단 하나만 생성하겠다는 소리입니다. 즉, 모든 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 정확히 같은 인스턴스가 주입되는 것입니다.
-
-## 트랜잭션의 처리
-
-StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
-
-이 기능을 사용하려면 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
-
-다음은 트랜잭션을 처리하는 심플한 예시입니다.
-
-```ts
-@TransactionalZone()
-@Injectable()
-export class AuthService {
-    constructor(private readonly userService: UserService) {}
-
-    // Skip...
-
-    @Transactional({
-        isolationLevel: "REPEATABLE READ",
-    })
-    async checkTransaction(em?: EntityManager) {
-        const users = (await em?.queryRunner?.query(
-            "SELECT * FROM user;",
-        )) as User[];
-
-        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
-            users: plainToClass(User, users),
-        });
-    }
-}
-```
-
-트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않습니다.
 
 ## Exception Filter와 실행 컨텍스트
 
