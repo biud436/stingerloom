@@ -35,7 +35,9 @@ export class AuthService {
         });
     }
 
-    @Transactional()
+    @Transactional({
+        isolationLevel: "REPEATABLE READ",
+    })
     async checkTransaction(em?: EntityManager) {
         const users = (await em?.queryRunner?.query(
             "SELECT * FROM user;",

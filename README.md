@@ -36,7 +36,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone` 데코레이터를 지원합니다.
 
 ## Controller
 
@@ -190,6 +190,52 @@ export class UserService {
 ```
 
 강조해서 설명하고 있는 싱글턴 인스턴스라는 것은 인스턴스를 단 하나만 생성하겠다는 소리입니다. 즉, 모든 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 정확히 같은 인스턴스가 주입되는 것입니다.
+
+## Transactional과 TransactionalZone (트랜잭션 존)
+
+StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 이 데코레이터는 트랜잭션을 처리하기 위해서 `@TransactionalZone` 데코레이터를 클래스에 붙여야 합니다.
+
+다음은 트랜잭션을 처리하는 예시입니다.
+
+```ts
+@TransactionalZone()
+@Injectable()
+export class AuthService {
+    constructor(private readonly userService: UserService) {}
+
+    async login(session: SessionObject, loginUserDto: LoginUserDto) {
+        const user = await this.userService.validateUser(loginUserDto);
+        session.authenticated = true;
+        session.user = user;
+
+        return ResultUtils.successWrap({
+            message: "로그인에 성공하였습니다.",
+            result: "success",
+            data: session.user,
+        });
+    }
+
+    async checkSession(session: SessionObject) {
+        return ResultUtils.success("세션 인증에 성공하였습니다", {
+            authenticated: session.authenticated,
+            user: session.user,
+        });
+    }
+
+    @Transactional({
+        isolationLevel: "REPEATABLE READ",
+    })
+    async checkTransaction(em?: EntityManager) {
+        const users = (await em?.queryRunner?.query(
+            "SELECT * FROM user;",
+        )) as User[];
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            users: plainToClass(User, users),
+        });
+    }
+}
+```
 
 ## Exception Filter와 실행 컨텍스트
 
