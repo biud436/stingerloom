@@ -246,17 +246,29 @@ export class InternalErrorFilter implements Filter {
 
 ## 트랜잭션의 처리
 
-StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
+트랜잭션은 작업의 완전성과 데이터의 정합성을 보장하기 위한 기능입니다. 즉, 어떤 작업을 완벽하게 처리하지 못했을 때 원 상태로 복구할 수 있도록 해주는 기능입니다.
 
-이 기능은 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다. 또한 트랜잭션 처리를 위해서는 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
+StingerLoom에서는 이러한 트랜잭션 처리를 위해서 `@Transactional`이라는 데코레이터를 지원합니다.
 
-`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`를 주입받을 메소드를 찾아내는데요.
+스프링에서 영감을 받은 이 데코레이터의 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
+
+트랜잭션 격리 수준이란 여러 트랜잭션이 동시에 처리될 때, 특정 트랜잭션이 다른 트랜잭션의 변경 사항을 볼 수 있는 수준을 말합니다.
+
+크게 4가지로 나뉘는데, `READ UNCOMMITTED`, `READ COMMITTED`, `REPEATABLE READ`, `SERIALIZABLE`이 있습니다.
+
+`@Transactional` 기능은 현재 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다.
+
+또한 트랜잭션 처리를 위해서는 효율적인 검색을 위해 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
+
+`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`과 `QueryRunner`를 주입받을 메소드를 찾아서 트랜잭션 처리를 수행합니다.
 
 다음은 트랜잭션을 처리하는 심플한 예시입니다.
 
 ### Transaction Entity Manager를 사용하는 경우
 
-`transactionalEntityManager` 속성을 `true`로 설정하면 다중 트랜잭션 처리를 위한 `Transaction Entity Manager`를 자동으로 주입받을 수 있습니다.
+`transactionalEntityManager` 속성을 `true`로 설정하면, `Transaction Entity Manager`를 자동으로 주입받을 수 있습니다.
+
+`Transaction Entity Manager`를 사용하면 트랜잭션 엔티티 매니저를 사용하여 단일이 아닌 여러 쿼리를 트랜잭션으로 처리를 할 수 있게 됩니다.
 
 ```ts
 @TransactionalZone()
@@ -287,15 +299,23 @@ export class AuthService {
 }
 ```
 
-반드시 트랜잭션 엔티티 매니저를 사용해야 트랜잭션으로 처리가 됩니다.
+위 코드를 보면 주입 받은 트랜잭션 엔티티 매니저의 인스턴스인 `em`을 사용해야 트랜잭션으로 처리가 됩니다.
 
 ### `QueryRunner`를 사용하는 경우 (추천)
 
-`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있습니다. `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
+제가 자주 사용하는 방법인데요. 바로 단일 데이터베이스를 연결을 통해 `QueryRunner`를 사용하는 방법이 있습니다.
 
-오류가 발생하면 자동으로 롤백됩니다.
+`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
 
-다음은 예제 코드 입니다.
+또한 오류가 발생하면 자동으로 롤백 처리까지 해줍니다.
+
+처음에 이것을 설계할 때 `QueryRunner`가 인터페이스라서 `QueryRunner`를 주입받는 것이 불가능하다고 생각했었는데요.
+
+이는 `@InjectQueryRunner()`를 통해 해결할 수 있었습니다.
+
+따라서 QueryRunner 인스턴스를 제대로 주입받으려면 `@InjectQueryRunner()` 데코레이터를 사용해야 합니다.
+
+그럼 예제를 볼까요?
 
 ```ts
 @TransactionalZone()
@@ -319,7 +339,7 @@ export class AuthService {
 }
 ```
 
-반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
+예제를 보면 굉장히 심플하다는 것을 알 수 있습니다. 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
 `QueryRunner`는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
 
@@ -348,8 +368,6 @@ export class UserService {
         const newUser = await this.userRepository.create(createUserDto);
         const res = await queryRunner?.manager.save(newUser);
 
-        console.log("res", res);
-
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
 
@@ -358,6 +376,8 @@ export class UserService {
 ```
 
 중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
+
+대신, 트랜잭션이 필요한 부분은 주입되는 `queryRunner`를 통해 처리해야 합니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
