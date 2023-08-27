@@ -36,7 +36,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner` 데코레이터를 지원합니다.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
@@ -307,7 +307,7 @@ export class AuthService {
      * @returns
      */
     @Transactional()
-    async checkTransaction2(queryRunner?: QueryRunner) {
+    async checkTransaction2(@InjectQueryRunner() queryRunner?: QueryRunner) {
         const users = await queryRunner?.query("SELECT * FROM user;");
 
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {
@@ -318,6 +318,38 @@ export class AuthService {
 ```
 
 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
+
+```ts
+@TransactionalZone()
+@Injectable()
+export class UserService {
+    constructor(
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+        private readonly discoveryService: DiscoveryService,
+    ) {}
+
+    @Transactional()
+    async create(
+        createUserDto: CreateUserDto,
+        @InjectQueryRunner() queryRunner?: QueryRunner,
+    ) {
+        const safedUserDto = createUserDto as Record<string, any>;
+        if (safedUserDto.role) {
+            throw new BadRequestException("role 속성은 입력할 수 없습니다.");
+        }
+
+        const newUser = await this.userRepository.create(createUserDto);
+        const res = await queryRunner?.manager.save(newUser);
+
+        console.log("res", res);
+
+        return ResultUtils.success("유저 생성에 성공하였습니다.", res);
+    }
+
+    // Skip...
+}
+```
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 

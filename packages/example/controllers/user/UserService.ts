@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { InjectRepository, Injectable } from "@stingerloom/common";
+import {
+    InjectQueryRunner,
+    InjectRepository,
+    Injectable,
+    Transactional,
+    TransactionalZone,
+} from "@stingerloom/common";
 import { User } from "@stingerloom/example/entity/User";
 import { Repository } from "typeorm/repository/Repository";
 import { CreateUserDto } from "./dto/CreateUserDto";
@@ -8,7 +14,9 @@ import { BadRequestException } from "@stingerloom/error/BadRequestException";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "../auth/dto/LoginUserDto";
 import bcrypt from "bcrypt";
+import { QueryRunner } from "typeorm";
 
+@TransactionalZone()
 @Injectable()
 export class UserService {
     constructor(
@@ -17,14 +25,20 @@ export class UserService {
         private readonly discoveryService: DiscoveryService,
     ) {}
 
-    async create(createUserDto: CreateUserDto) {
+    @Transactional()
+    async create(
+        createUserDto: CreateUserDto,
+        @InjectQueryRunner() queryRunner?: QueryRunner,
+    ) {
         const safedUserDto = createUserDto as Record<string, any>;
         if (safedUserDto.role) {
             throw new BadRequestException("role 속성은 입력할 수 없습니다.");
         }
 
         const newUser = await this.userRepository.create(createUserDto);
-        const res = await this.userRepository.save(newUser);
+        const res = await queryRunner?.manager.save(newUser);
+
+        console.log("res", res);
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }

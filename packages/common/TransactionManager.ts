@@ -5,6 +5,7 @@ import { ReflectManager } from "./ReflectManager";
 import Database from "./Database";
 import {
     DEFAULT_ISOLATION_LEVEL,
+    INJECT_QUERYRUNNER_TOKEN,
     TRANSACTIONAL_PARAMS,
     TRANSACTION_ENTITY_MANAGER,
     TRANSACTION_ISOLATE_LEVEL,
@@ -76,11 +77,6 @@ export class TransactionManager {
                             TRANSACTION_ENTITY_MANAGER,
                             targetInjectable,
                             method as any,
-                        );
-
-                        console.log(
-                            "transactionalEntityManager",
-                            transactionalEntityManager,
                         );
 
                         const callback = async (...args: any[]) => {
@@ -190,28 +186,21 @@ export class TransactionManager {
                                                 Array.isArray(params) &&
                                                 params.length > 0
                                             ) {
-                                                if (
-                                                    Array.isArray(args) &&
-                                                    args.length > 0
-                                                ) {
-                                                    args = args.map(
-                                                        (arg, index) => {
-                                                            const param =
-                                                                params[index];
+                                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                                const paramIndex =
+                                                    Reflect.getMetadata(
+                                                        INJECT_QUERYRUNNER_TOKEN,
+                                                        targetInjectable,
+                                                        method as any,
+                                                    ) as number;
 
-                                                            // QueryRunner는 인터페이스로 구현되어 있기 때문에 instanceof로 체크할 수 없다.
-                                                            if (
-                                                                param.name ===
-                                                                "QueryRunner"
-                                                            ) {
-                                                                return queryRunner;
-                                                            }
-                                                            return arg;
-                                                        },
-                                                    );
-                                                } else {
-                                                    args = [queryRunner];
-                                                }
+                                                params.forEach(
+                                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                                    (param, _index) => {
+                                                        args[paramIndex] =
+                                                            queryRunner;
+                                                    },
+                                                );
                                             }
 
                                             const result = originalMethod.call(

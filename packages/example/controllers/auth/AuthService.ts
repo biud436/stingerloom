@@ -10,6 +10,7 @@ import { UserService } from "../user/UserService";
 import { EntityManager, QueryRunner } from "typeorm";
 import { User } from "@stingerloom/example/entity/User";
 import { plainToClass } from "class-transformer";
+import { InjectQueryRunner } from "@stingerloom/common/decorators/InjectQueryRunner";
 
 @TransactionalZone()
 @Injectable()
@@ -60,7 +61,7 @@ export class AuthService {
      * @returns
      */
     @Transactional()
-    async checkTransaction2(queryRunner?: QueryRunner) {
+    async checkTransaction2(@InjectQueryRunner() queryRunner?: QueryRunner) {
         const users = await queryRunner?.query("SELECT * FROM user;");
 
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {

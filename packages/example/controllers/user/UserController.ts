@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Repository } from "typeorm";
+import { QueryRunner, Repository } from "typeorm";
 import { User } from "../../entity/User";
 import { Controller } from "@stingerloom/common/decorators/Controller";
 import { Get } from "@stingerloom/common/decorators/Get";
@@ -13,6 +13,8 @@ import { Body } from "@stingerloom/common/decorators/Body";
 import { CreateUserDto } from "./dto/CreateUserDto";
 import { Point } from "../../entity/Point";
 import { UserService } from "./UserService";
+import { TransactionalZone } from "@stingerloom/common/decorators/TransactionalZone";
+import { InjectQueryRunner, Transactional } from "@stingerloom/common";
 
 @Controller("/user")
 export class UserController {
