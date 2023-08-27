@@ -6,12 +6,13 @@ import Database from "./Database";
 import {
     DEFAULT_ISOLATION_LEVEL,
     TRANSACTIONAL_PARAMS,
+    TRANSACTION_ENTITY_MANAGER,
     TRANSACTION_ISOLATE_LEVEL,
 } from "./decorators";
 
 import { InternalServerException } from "@stingerloom/error";
 import { Logger } from "./Logger";
-
+import { EntityManager } from "typeorm";
 export class TransactionManager {
     private static LOGGER = new Logger();
 
@@ -69,13 +70,117 @@ export class TransactionManager {
                         const dataSource = database.getDataSource();
                         const entityManager = dataSource.manager;
 
+                        // 트랜잭션 엔티티 매니저가 필요한가?
+                        const transactionalEntityManager = Reflect.getMetadata(
+                            TRANSACTION_ENTITY_MANAGER,
+                            targetInjectable,
+                            method as any,
+                        );
+
+                        console.log(
+                            "transactionalEntityManager",
+                            transactionalEntityManager,
+                        );
+
                         const callback = async (...args: any[]) => {
                             return new Promise((resolve, reject) => {
-                                // 트랜잭션을 시작합니다.
-                                entityManager
-                                    .transaction(
-                                        transactionIsolationLevel,
-                                        async (em) => {
+                                if (transactionalEntityManager) {
+                                    // 트랜잭션 엔티티 매니저를 실행합니다.
+                                    entityManager
+                                        .transaction(
+                                            transactionIsolationLevel,
+                                            async (em) => {
+                                                const params =
+                                                    Reflect.getMetadata(
+                                                        TRANSACTIONAL_PARAMS,
+                                                        targetInjectable,
+                                                        method as any,
+                                                    );
+
+                                                if (
+                                                    Array.isArray(params) &&
+                                                    params.length > 0
+                                                ) {
+                                                    if (
+                                                        Array.isArray(args) &&
+                                                        args.length > 0
+                                                    ) {
+                                                        args = args.map(
+                                                            (arg, index) => {
+                                                                const param =
+                                                                    params[
+                                                                        index
+                                                                    ];
+                                                                if (
+                                                                    param instanceof
+                                                                        param[0] &&
+                                                                    param[0] ===
+                                                                        EntityManager
+                                                                ) {
+                                                                    return em;
+                                                                }
+                                                                return arg;
+                                                            },
+                                                        );
+                                                    } else {
+                                                        args = [em];
+                                                    }
+                                                }
+
+                                                // 트랜잭션을 실행합니다.
+                                                try {
+                                                    const result =
+                                                        originalMethod.call(
+                                                            targetInjectable,
+                                                            ...args,
+                                                        );
+
+                                                    // promise인가?
+                                                    if (
+                                                        result instanceof
+                                                        Promise
+                                                    ) {
+                                                        return resolve(
+                                                            await result,
+                                                        );
+                                                    } else {
+                                                        resolve(result);
+                                                    }
+                                                } catch (err: any) {
+                                                    TransactionManager.LOGGER.error(
+                                                        `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
+                                                    );
+
+                                                    const queryRunner =
+                                                        em.queryRunner;
+
+                                                    if (queryRunner) {
+                                                        queryRunner.rollbackTransaction();
+                                                    }
+
+                                                    reject(err);
+                                                }
+                                            },
+                                        )
+                                        .catch((err) => {
+                                            TransactionManager.LOGGER.error(
+                                                `트랜잭션을 실행하는 도중 오류가 발생했습니다1: ${err.message}`,
+                                            );
+                                            reject(err);
+                                        });
+                                } else {
+                                    const wrapper = async (...args: any[]) => {
+                                        // 단일 트랜잭션을 실행합니다.
+                                        const queryRunner =
+                                            dataSource.createQueryRunner();
+
+                                        await queryRunner.connect();
+                                        await queryRunner.startTransaction(
+                                            transactionIsolationLevel,
+                                        );
+
+                                        try {
+                                            // QueryRunner를 찾아서 대체한다.
                                             const params = Reflect.getMetadata(
                                                 TRANSACTIONAL_PARAMS,
                                                 targetInjectable,
@@ -96,33 +201,50 @@ export class TransactionManager {
                                                                 params[index];
                                                             if (
                                                                 param instanceof
+                                                                    param[0] &&
                                                                 param[0]
+                                                                    .name ===
+                                                                    "QueryRunner"
                                                             ) {
-                                                                return em;
+                                                                return queryRunner;
                                                             }
                                                             return arg;
                                                         },
                                                     );
                                                 } else {
-                                                    args = [em];
+                                                    args = [queryRunner];
                                                 }
                                             }
 
-                                            // 트랜잭션을 실행합니다.
                                             const result = originalMethod.call(
                                                 targetInjectable,
                                                 ...args,
                                             );
 
-                                            resolve(result);
-                                        },
-                                    )
-                                    .catch((err) => {
-                                        TransactionManager.LOGGER.error(
-                                            `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
-                                        );
-                                        reject(err);
-                                    });
+                                            let ret = null;
+                                            // promise인가?
+                                            if (result instanceof Promise) {
+                                                ret = await result;
+                                            } else {
+                                                ret = result;
+                                            }
+
+                                            await queryRunner.commitTransaction();
+
+                                            return ret;
+                                        } catch (e: any) {
+                                            await queryRunner.rollbackTransaction();
+                                            TransactionManager.LOGGER.error(
+                                                `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${e.message}`,
+                                            );
+                                            reject(e);
+                                        } finally {
+                                            await queryRunner.release();
+                                        }
+                                    };
+
+                                    resolve(wrapper(...args));
+                                }
                             });
                         };
 

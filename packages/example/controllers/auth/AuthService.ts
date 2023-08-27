@@ -7,7 +7,7 @@ import {
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { UserService } from "../user/UserService";
-import { EntityManager } from "typeorm";
+import { EntityManager, QueryRunner } from "typeorm";
 import { User } from "@stingerloom/example/entity/User";
 import { plainToClass } from "class-transformer";
 
@@ -35,13 +35,33 @@ export class AuthService {
         });
     }
 
+    /**
+     * Transaction EntityManager를 사용하여 트랜잭션을 제어합니다.
+     * @param em
+     * @returns
+     */
     @Transactional({
         isolationLevel: "REPEATABLE READ",
+        transactionalEntityManager: true,
     })
     async checkTransaction(em?: EntityManager) {
         const users = (await em?.queryRunner?.query(
             "SELECT * FROM user;",
         )) as User[];
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            users: plainToClass(User, users),
+        });
+    }
+
+    /**
+     * QueryRunner를 사용하여 트랜잭션을 제어합니다.
+     * @param queryRunner
+     * @returns
+     */
+    @Transactional()
+    async checkTransaction2(queryRunner?: QueryRunner) {
+        const users = await queryRunner?.query("SELECT * FROM user;");
 
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {
             users: plainToClass(User, users),

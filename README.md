@@ -254,6 +254,8 @@ StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레
 
 다음은 트랜잭션을 처리하는 심플한 예시입니다.
 
+### Transaction Entity Manager를 사용하는 경우
+
 ```ts
 @TransactionalZone()
 @Injectable()
@@ -262,8 +264,14 @@ export class AuthService {
 
     // Skip...
 
+    /**
+     * Transaction EntityManager를 사용하여 트랜잭션을 제어합니다.
+     * @param em
+     * @returns
+     */
     @Transactional({
         isolationLevel: "REPEATABLE READ",
+        transactionalEntityManager: true,
     })
     async checkTransaction(em?: EntityManager) {
         const users = (await em?.queryRunner?.query(
@@ -278,6 +286,36 @@ export class AuthService {
 ```
 
 트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라, 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
+
+### `QueryRunner`를 사용하는 경우 (추천)
+
+`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있습니다. `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
+
+오류가 발생하면 자동으로 롤백됩니다.
+
+```ts
+@TransactionalZone()
+@Injectable()
+export class AuthService {
+    constructor(private readonly userService: UserService) {}
+
+    /**
+     * QueryRunner를 사용하여 트랜잭션을 제어합니다.
+     * @param queryRunner
+     * @returns
+     */
+    @Transactional()
+    async checkTransaction2(queryRunner?: QueryRunner) {
+        const users = await queryRunner?.query("SELECT * FROM user;");
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            users: plainToClass(User, users),
+        });
+    }
+}
+```
+
+반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 

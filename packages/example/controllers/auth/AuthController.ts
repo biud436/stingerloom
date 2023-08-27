@@ -25,4 +25,9 @@ export class AuthController {
     async checkTransaction() {
         return await this.authService.checkTransaction();
     }
+
+    @Get("/transaction2")
+    async checkTransaction2() {
+        return await this.authService.checkTransaction2();
+    }
 }
