@@ -191,7 +191,7 @@ export class UserService {
 
 강조해서 설명하고 있는 싱글턴 인스턴스라는 것은 인스턴스를 단 하나만 생성하겠다는 소리입니다. 즉, 모든 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 정확히 같은 인스턴스가 주입되는 것입니다.
 
-## Transactional과 TransactionalZone (트랜잭션 존)
+## 트랜잭션의 처리
 
 StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 이 데코레이터는 트랜잭션을 처리하기 위해서 `@TransactionalZone` 데코레이터를 클래스에 붙여야 합니다.
 
@@ -236,6 +236,8 @@ export class AuthService {
     }
 }
 ```
+
+트랜잭션 존과 트랜잭션 데코레이터를 사용하면 트랜잭션 처리를 EntityManager가 자동으로 주입됩니다.
 
 ## Exception Filter와 실행 컨텍스트
 
