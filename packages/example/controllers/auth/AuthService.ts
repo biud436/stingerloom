@@ -1,12 +1,17 @@
-import { Injectable, SessionObject } from "@stingerloom/common";
+import {
+    Injectable,
+    SessionObject,
+    Transactional,
+    TransactionalZone,
+} from "@stingerloom/common";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { UserService } from "../user/UserService";
-// import { plainToClass } from "class-transformer";
-// import { User } from "@stingerloom/example/entity/User";
-// import { plainToClass } from "class-transformer";
-// import { User } from "@stingerloom/example/entity/User";
+import { EntityManager } from "typeorm";
+import { User } from "@stingerloom/example/entity/User";
+import { plainToClass } from "class-transformer";
 
+@TransactionalZone()
 @Injectable()
 export class AuthService {
     constructor(private readonly userService: UserService) {}
@@ -27,6 +32,17 @@ export class AuthService {
         return ResultUtils.success("세션 인증에 성공하였습니다", {
             authenticated: session.authenticated,
             user: session.user,
+        });
+    }
+
+    @Transactional()
+    async checkTransaction(em?: EntityManager) {
+        const users = (await em?.queryRunner?.query(
+            "SELECT * FROM user;",
+        )) as User[];
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            users: plainToClass(User, users),
         });
     }
 }

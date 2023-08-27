@@ -20,4 +20,9 @@ export class AuthController {
     async checkSession(@Session() session: SessionObject) {
         return await this.authService.checkSession(session);
     }
+
+    @Get("/transaction")
+    async checkTransaction() {
+        return await this.authService.checkTransaction();
+    }
 }
