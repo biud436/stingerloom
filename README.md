@@ -256,6 +256,8 @@ StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레
 
 ### Transaction Entity Manager를 사용하는 경우
 
+`transactionalEntityManager` 속성을 `true`로 설정하면 다중 트랜잭션 처리를 위한 `Transaction Entity Manager`를 자동으로 주입받을 수 있습니다.
+
 ```ts
 @TransactionalZone()
 @Injectable()
@@ -285,7 +287,7 @@ export class AuthService {
 }
 ```
 
-트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라, 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
+트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
 
 ### `QueryRunner`를 사용하는 경우 (추천)
 
