@@ -2,6 +2,16 @@ import { EventEmitter } from "events";
 import chalk from "chalk";
 import { LoggerState } from "./LoggerState";
 
+type LOG_LEVEL =
+    | "info"
+    | "warn"
+    | "error"
+    | "debug"
+    | "fatal"
+    | "trace"
+    | "slient"
+    | "child";
+
 /**
  * @class Logger
  * @description
@@ -16,59 +26,26 @@ export class Logger extends EventEmitter {
 
     public level?: string;
 
-    public info(message: string) {
-        this.state.info();
+    // 커링 기법을 사용하여 로그 레벨 지정
+    print = (level: string) => (message: string) => {
+        this.state[level as LOG_LEVEL]();
         console.log(
-            `${Logger.NormalColor(this.state)} ${Logger.DefaultColor(message)}`,
+            `${
+                level === "warn"
+                    ? Logger.WarnColor
+                    : level === "error"
+                    ? Logger.ErrorColor
+                    : Logger.NormalColor(this.state)
+            } ${message} - ${Logger.DefaultColor(
+                new Date().toLocaleTimeString(),
+            )}`,
         );
-    }
-
-    public warn(message: string) {
-        this.state.warn();
-        console.log(
-            `${Logger.WarnColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
-
-    public error(message: string) {
-        this.state.error();
-        console.log(
-            `${Logger.ErrorColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
-
-    public debug(message: string) {
-        this.state.debug();
-        console.log(
-            `${Logger.NormalColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
-
-    public fatal(message: string) {
-        this.state.fatal();
-        console.log(
-            `${Logger.ErrorColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
-
-    public trace(message: string) {
-        this.state.trace();
-        console.log(
-            `${Logger.NormalColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
-
-    public slient(message: string) {
-        this.state.slient();
-        console.log(
-            `${Logger.NormalColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
-
-    public child(message: string) {
-        this.state.child();
-        console.log(
-            `${Logger.NormalColor(this.state)} ${Logger.DefaultColor(message)}`,
-        );
-    }
+    };
+    info = this.print("info");
+    warn = this.print("warn");
+    error = this.print("error");
+    debug = this.print("debug");
+    fatal = this.print("fatal");
+    trace = this.print("trace");
+    silent = this.print("slient");
 }
