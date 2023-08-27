@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InstanceScanner } from "@stingerloom/IoC";
 import { ClazzType, Injectable, ReflectManager } from "@stingerloom/common";
 import Container from "typedi";
@@ -49,5 +50,30 @@ export class DiscoveryService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     isRepository(target: any) {
         return ReflectManager.isRepository(target);
+    }
+
+    /**
+     * 모든 메소드를 취득합니다.
+     *
+     * @param target
+     * @returns
+     */
+    getPrototypeMethods(target: any) {
+        const properties = new Set();
+        let currentObj = target;
+        do {
+            Object.getOwnPropertyNames(currentObj).map((item) =>
+                properties.add(item),
+            );
+
+            currentObj = Object.getPrototypeOf(currentObj);
+        } while (
+            Object.getPrototypeOf(currentObj) &&
+            Object.getPrototypeOf(currentObj) !== null
+        );
+
+        return [...properties.keys()].filter(
+            (item) => typeof target[item as any] === "function",
+        );
     }
 }
