@@ -385,6 +385,8 @@ export class UserService {
 
 StingerLoom에선 세션 기반 인증을 지원합니다.
 
+SessionObject를 상속받은 클래스를 세션 오브젝트로 사용할 수 있습니다.
+
 ```ts
 @Controller("/auth")
 export class AuthController {
@@ -405,9 +407,13 @@ export class AuthController {
 }
 ```
 
-다만 현재는 핸들러 전에 실행되는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념이 구현되어있지 않습니다.
+아직 예제에 인가 처리가 구현되지 않았는데요.
 
-이 부분은 추후에 구현될 예정입니다.
+인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념을 구현해야 합니다.
+
+추후에 구현할 예정이지만 라우터 맵핑 기능을 수행하기 전에 프리 핸들러를 추가해야 하므로, 이 부분은 조금 더 고민해봐야 할 것 같습니다.
+
+조금 더 실용적인 예제는 아래와 같습니다. 물론, 이 부분도 나중에 Proxy를 통해 자동으로 `session.authenticated = true`로 처리할 수 있도록 개선할 예정입니다.
 
 ```ts
 @Injectable()
