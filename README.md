@@ -319,6 +319,8 @@ export class AuthService {
 
 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
+QueryRunner를 정확히 위치에 주입하기 위해 매개변수에 `@InjectQueryRunner()`를 마킹해야 합니다.
+
 ```ts
 @TransactionalZone()
 @Injectable()
@@ -350,6 +352,8 @@ export class UserService {
     // Skip...
 }
 ```
+
+위는 회원 가입에 대한 예시입니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
