@@ -193,9 +193,11 @@ export class UserService {
 
 ## 트랜잭션의 처리
 
-StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 이 데코레이터는 트랜잭션을 처리하기 위해서 `@TransactionalZone` 데코레이터를 클래스에 붙여야 합니다.
+StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레이터를 지원합니다. 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
 
-다음은 트랜잭션을 처리하는 예시입니다.
+이 기능을 사용하려면 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
+
+다음은 트랜잭션을 처리하는 심플한 예시입니다.
 
 ```ts
 @TransactionalZone()
@@ -203,24 +205,7 @@ StingerLoom에서는 트랜잭션 처리를 위해서 `@Transactional` 데코레
 export class AuthService {
     constructor(private readonly userService: UserService) {}
 
-    async login(session: SessionObject, loginUserDto: LoginUserDto) {
-        const user = await this.userService.validateUser(loginUserDto);
-        session.authenticated = true;
-        session.user = user;
-
-        return ResultUtils.successWrap({
-            message: "로그인에 성공하였습니다.",
-            result: "success",
-            data: session.user,
-        });
-    }
-
-    async checkSession(session: SessionObject) {
-        return ResultUtils.success("세션 인증에 성공하였습니다", {
-            authenticated: session.authenticated,
-            user: session.user,
-        });
-    }
+    // Skip...
 
     @Transactional({
         isolationLevel: "REPEATABLE READ",
@@ -237,7 +222,7 @@ export class AuthService {
 }
 ```
 
-트랜잭션 존과 트랜잭션 데코레이터를 사용하면 트랜잭션 처리를 EntityManager가 자동으로 주입됩니다.
+트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않습니다.
 
 ## Exception Filter와 실행 컨텍스트
 
