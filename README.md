@@ -135,7 +135,7 @@ export class Point {
 
 이에 대한 예시는 다음 섹션인 [Injectable](https://github.com/biud436/stingerloom#injectable)을 참고하시기 바랍니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Injectable
 
@@ -199,7 +199,7 @@ export class UserService {
 
 강조해서 설명하고 있는 싱글턴 인스턴스라는 것은 인스턴스를 단 하나만 생성하겠다는 소리입니다. 즉, 모든 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 정확히 같은 인스턴스가 주입되는 것입니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Exception Filter와 실행 컨텍스트
 
@@ -242,7 +242,7 @@ export class InternalErrorFilter implements Filter {
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## 트랜잭션의 처리
 
@@ -279,7 +279,7 @@ export class AuthService {
 
 트랜잭션 처리를 `EntityManager`가 자동으로 주입되기 때문에 트랜잭션 처리를 위한 별도의 반복적인 설정이 필요하지 않을 뿐만 아니라, 트랜잭션 처리를 위한 `EntityManager`를 직접 생성할 필요도 없습니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## 인증
 
@@ -337,7 +337,7 @@ export class AuthService {
 
 현재 버전에서는 위와 같이 세션 오브젝트를 사용하여 인증을 구현할 수 있습니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Installations
 
