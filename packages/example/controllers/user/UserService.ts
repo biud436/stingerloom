@@ -3,6 +3,7 @@ import {
     InjectQueryRunner,
     InjectRepository,
     Injectable,
+    OnModuleInit,
     Transactional,
     TransactionalZone,
 } from "@stingerloom/common";
@@ -18,12 +19,19 @@ import { QueryRunner } from "typeorm";
 
 @TransactionalZone()
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         private readonly discoveryService: DiscoveryService,
     ) {}
+
+    /**
+     * 모듈 초기화
+     */
+    async onModuleInit() {
+        await this.userRepository.clear();
+    }
 
     @Transactional()
     async create(
@@ -37,8 +45,6 @@ export class UserService {
 
         const newUser = await this.userRepository.create(createUserDto);
         const res = await queryRunner?.manager.save(newUser);
-
-        console.log("res", res);
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }

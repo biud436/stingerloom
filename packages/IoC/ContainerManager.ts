@@ -41,6 +41,18 @@ export class ContainerManager {
         await this.registerExceptions();
     }
 
+    public async callOnModuleInit(targetInstance: any) {
+        if (!targetInstance.onModuleInit) {
+            return;
+        }
+
+        if (targetInstance.onModuleInit instanceof Promise) {
+            await targetInstance.onModuleInit();
+        } else {
+            targetInstance.onModuleInit();
+        }
+    }
+
     /**
      * injectable을 스캔하고 생성합니다.
      */
@@ -71,6 +83,8 @@ export class ContainerManager {
             }
 
             const targetInjectable = new TargetInjectable(...args);
+
+            await this.callOnModuleInit(targetInjectable);
 
             await TransactionManager.checkTransactionalZone(
                 TargetInjectable,
@@ -114,6 +128,7 @@ export class ContainerManager {
             }
 
             const targetController = new TargetController(...args);
+            await this.callOnModuleInit(targetController);
 
             this._controllers.push(targetController);
 
