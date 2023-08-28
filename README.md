@@ -43,7 +43,6 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 -   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
 -   [트랜잭션의 처리](https://github.com/biud436/stingerloom#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EC%B2%98%EB%A6%AC)
 -   [인증](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
--   [인가](https://github.com/biud436/stingerloom#%EC%9D%B8%EA%B0%80)
 
 ## Controller
 
@@ -436,12 +435,6 @@ export class AuthService {
 ```
 
 현재 버전에서는 위와 같이 세션 오브젝트를 사용하여 인증을 구현할 수 있습니다.
-
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
-
-## 인가
-
-인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 개념들을 구현해야 합니다.
 
 ### 세션 인증
 
