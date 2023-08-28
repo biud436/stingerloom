@@ -36,13 +36,14 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard` 데코레이터를 지원합니다.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
 -   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
 -   [트랜잭션의 처리](https://github.com/biud436/stingerloom#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EC%B2%98%EB%A6%AC)
--   [세션 인증](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+-   [인증](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+-   [인가](https://github.com/biud436/stingerloom#%EC%9D%B8%EA%B0%80)
 
 ## Controller
 
@@ -484,6 +485,8 @@ export class AuthController {
 ```
 
 위와 같이 하면 세션 인증을 통과한 로그인 사용자의 경우에만 라우터가 실행될 것입니다.
+
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Installations
 
