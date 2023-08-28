@@ -399,23 +399,12 @@ export class AuthController {
     ) {
         return await this.authService.login(session, loginUserDto);
     }
-
-    @Get("/session")
-    async checkSession(@Session() session: SessionObject) {
-        return await this.authService.checkSession(session);
-    }
 }
 ```
 
 아직 예제에 인가 처리가 구현되지 않았는데요.
 
 인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념을 구현해야 합니다.
-
-이런 부분은 사용자가 구현해야 하므로, 서버 코어에서는 인증 가드에 대한 기본적인 인터페이스만 제공할 예정입니다.
-
-추후에 구현할 예정이지만 라우터 맵핑 기능을 수행하기 전에 인증 가드에 대한 메타데이터를 수집하고 프리 핸들러를 추가해야 하므로 이 부분은 조금 더 고민해봐야 할 것 같습니다.
-
-물론, 이 부분도 나중에 Proxy를 통해 자동으로 `session.authenticated = true`로 처리할 수 있도록 개선할 예정입니다.
 
 조금 더 실용적인 예제는 아래와 같습니다.
 
@@ -449,12 +438,61 @@ export class AuthService {
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
+## 인가
+
+인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 개념들을 구현해야 합니다.
+
+### 세션 인증
+
+세션 인증은 `@Session()` 데코레이터를 사용하여 세션 오브젝트를 주입받아서 처리할 수 있고, SessionGuard를 추가하여 세션 인증을 처리할 수 있습니다.
+
+코드는 다음과 같습니다.
+
+```ts
+@Injectable()
+export class SessionGuard implements Guard {
+    canActivate(context: ServerContext): Promise<boolean> | boolean {
+        const req = context.req;
+        const session = req.session as SessionObject;
+
+        if (!session) {
+            return false;
+        }
+
+        if (!session.authenticated) {
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+위 가드를 providers에 추가하고 아래와 같이 컨트롤러나 라우터에 붙여서 사용할 수 있습니다.
+
+```ts
+@Controller("/auth")
+export class AuthController {
+    constructor(private readonly authService: AuthService) {}
+
+    @Get("/session-guard")
+    @UseGuard(SessionGuard)
+    async checkSessionGuard(@Session() session: SessionObject) {
+        return ResultUtils.success("세션 가드 통과", session);
+    }
+}
+```
+
+위와 같이 하면 세션 인증을 통과한 로그인 사용자의 경우에만 라우터가 실행될 것입니다.
+
 ## Installations
 
 before starting this application, you must install dependencies as below in your terminal.
 
 ```
+
 yarn install
+
 ```
 
 or

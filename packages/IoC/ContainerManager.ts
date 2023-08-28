@@ -177,21 +177,30 @@ export class ContainerManager {
                         // 가드 구현
                         const routerName = (router as (...args: any[]) => any)
                             .name;
-                        const isGuard =
+                        const isControllerGuard = Reflect.getMetadata(
+                            USE_GUARD_OPTION_TOKEN,
+                            targetController,
+                        );
+                        const isMethodGuard =
                             Reflect.getMetadata(
                                 USE_GUARD_OPTION_TOKEN,
                                 targetController,
                                 routerName,
                             ) !== undefined;
 
-                        if (isGuard) {
+                        if (isControllerGuard || isMethodGuard) {
                             this.logger.info("가드가 있습니다.");
 
-                            const raw = Reflect.getMetadata(
-                                USE_GUARD_OPTION_TOKEN,
-                                targetController,
-                                routerName,
-                            );
+                            const raw = isControllerGuard
+                                ? Reflect.getMetadata(
+                                      USE_GUARD_OPTION_TOKEN,
+                                      targetController,
+                                  )
+                                : Reflect.getMetadata(
+                                      USE_GUARD_OPTION_TOKEN,
+                                      targetController,
+                                      routerName,
+                                  );
 
                             const instanceScanner =
                                 Container.get(InstanceScanner);
