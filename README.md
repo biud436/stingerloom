@@ -244,7 +244,7 @@ export class InternalErrorFilter implements Filter {
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
-## 트랜잭션의 처리
+## Handling Database Transactions
 
 트랜잭션은 작업의 완전성과 데이터의 정합성을 보장하기 위한 기능입니다. 즉, 어떤 작업을 완벽하게 처리하지 못했을 때 원 상태로 복구할 수 있도록 해주는 기능입니다.
 
@@ -381,7 +381,7 @@ export class UserService {
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
-## 인증
+## Authorization
 
 StingerLoom에선 세션 기반 인증을 지원합니다.
 
@@ -406,7 +406,7 @@ export class AuthController {
 
 인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념을 구현해야 합니다.
 
-### 로그인 처리
+### Handling Session
 
 조금 더 실용적인 예제는 아래와 같습니다.
 
@@ -438,7 +438,7 @@ export class AuthService {
 
 현재 버전에서는 위와 같이 세션 오브젝트를 사용하여 인증을 구현할 수 있습니다.
 
-### 세션 인증
+### Session Guard
 
 세션 인증은 `@Session()` 데코레이터를 사용하여 세션 오브젝트를 주입받아서 처리할 수 있고, SessionGuard를 추가하여 세션 인증을 처리할 수 있습니다.
 
@@ -484,6 +484,81 @@ export class AuthController {
 인증이 되지 않은 사용자의 경우에는 401 오류가 발생합니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+
+## Custom Parameter Decorator
+
+`createCustomParamDecoractor` 함수를 이용하여 자신만의 `ParameterDecorator`를 만들 수 있습니다.
+
+다음은 유저 정보와 유저 ID를 세션으로부터 취득하는 예제입니다.
+
+```ts
+export const User = createCustomParamDecoractor((data, context) => {
+    const req = context.req;
+    const session = req.session as SessionObject;
+
+    if (!session) {
+        return null;
+    }
+
+    return session.user;
+});
+```
+
+유저 ID는 아래와 같이 취득할 수 있습니다.
+
+```ts
+export const UserId = createCustomParamDecoractor((data, context) => {
+    const req = context.req;
+    const session = req.session as SessionObject;
+
+    if (!session) {
+        return null;
+    }
+
+    return session.user.id;
+});
+```
+
+최종 사용법은 아래와 같습니다.
+
+```ts
+@Controller("/auth")
+export class AuthController {
+    constructor(private readonly authService: AuthService) {}
+
+    @Get("/session-guard")
+    @UseGuard(SessionGuard)
+    async checkSessionGuard(
+        @Session() session: SessionObject,
+        @User() user: any,
+        @UserId() userId: string,
+    ) {
+        return ResultUtils.success("세션 가드 통과", {
+            user,
+            userId,
+        });
+    }
+}
+```
+
+조회하면 결과는 아래와 같이 출력됩니다.
+
+```json
+{
+    "message": "세션 가드 통과",
+    "result": "success",
+    "data": {
+        "user": {
+            "id": "4500949a-3855-42d4-a4d0-a7f0e81c4054",
+            "username": "abcd",
+            "role": "user",
+            "createdAt": "2023-08-28T09:22:37.144Z",
+            "updatedAt": "2023-08-28T09:22:37.144Z"
+        },
+        "userId": "4500949a-3855-42d4-a4d0-a7f0e81c4054"
+    }
+}
+```
 
 ## Installations
 
