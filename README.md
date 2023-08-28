@@ -406,6 +406,8 @@ export class AuthController {
 
 인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념을 구현해야 합니다.
 
+### 로그인 처리
+
 조금 더 실용적인 예제는 아래와 같습니다.
 
 ```ts
