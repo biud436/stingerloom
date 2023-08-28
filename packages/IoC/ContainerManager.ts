@@ -41,7 +41,7 @@ export class ContainerManager {
         await this.registerExceptions();
     }
 
-    public async callOnModuleInit(targetInstance: any) {
+    private async callOnModuleInit(targetInstance: any) {
         if (!targetInstance.onModuleInit) {
             return;
         }
