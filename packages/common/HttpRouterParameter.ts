@@ -22,6 +22,11 @@ export type HttpRouterParameter = {
     isSession: boolean;
 
     /**
+     * 커스텀 파라미터인지 여부
+     */
+    isCustom: boolean;
+
+    /**
      * 바디 파라미터인지 여부
      */
     body?: HttpBodyParameter;

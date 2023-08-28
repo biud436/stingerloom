@@ -9,15 +9,15 @@ import { PATH } from "./PATH_KEY";
 
 export const PATCH_KEY = Symbol("PATCH");
 
-export function Patch(path = "") {
+export function Patch(path = ""): MethodDecorator {
     return function (
         target: object,
-        propertyKey: string,
+        propertyKey: string | symbol,
         descriptor: PropertyDescriptor,
     ) {
         const parameters: HttpRouterParameter[] = getMethodParameters(
             target,
-            propertyKey,
+            propertyKey as string,
         );
 
         Reflect.defineMetadata(PATH, path, descriptor.value);

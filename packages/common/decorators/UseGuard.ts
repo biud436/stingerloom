@@ -16,7 +16,9 @@ export interface Guard {
 export const USE_GUARD_OPTION_TOKEN = "USE_GUARD_CLASS_TOKEN";
 
 // Method Decorator 와 Class Decorator에서 동시 사용 가능
-export function UseGuard<T extends Guard = Guard>(...guards: ClazzType<T>[]) {
+export function UseGuard<T extends Guard = Guard>(
+    ...guards: ClazzType<T>[]
+): MethodDecorator {
     return function (
         target: object | any,
         propertyKey?: string | symbol,

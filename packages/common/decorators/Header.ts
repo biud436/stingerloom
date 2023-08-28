@@ -1,8 +1,8 @@
 export const HEADER_TOKEN = "HEADER_TOKEN";
-export function Header(key: string, value: string) {
+export function Header(key: string, value: string): MethodDecorator {
     return function (
         target: object,
-        methodName: string,
+        methodName: string | symbol,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         descriptor: PropertyDescriptor,
     ) {
@@ -13,7 +13,7 @@ export function Header(key: string, value: string) {
                 value,
             },
             target,
-            methodName,
+            methodName as string,
         );
     };
 }

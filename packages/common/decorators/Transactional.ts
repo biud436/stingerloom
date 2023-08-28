@@ -17,10 +17,10 @@ export interface TransactionalOptions {
 export const DEFAULT_ISOLATION_LEVEL =
     TransactionIsolationLevel.REPEATABLE_READ;
 
-export function Transactional(option?: TransactionalOptions) {
+export function Transactional(option?: TransactionalOptions): MethodDecorator {
     return function (
         target: object,
-        propertyKey: string,
+        propertyKey: string | symbol,
         descriptor: PropertyDescriptor,
     ) {
         const methodName = propertyKey || descriptor.value.name;

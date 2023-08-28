@@ -8,16 +8,16 @@ import { getMethodParameters } from "@stingerloom/utils/extractor";
 import { PATH } from "./PATH_KEY";
 
 export const GET_KEY = Symbol("GET");
-export function Get(path = "") {
+export function Get(path = ""): MethodDecorator {
     return function (
         target: object,
-        propertyKey: string,
+        propertyKey: string | symbol,
         descriptor: PropertyDescriptor,
     ) {
         // 메소드 함수의 매개변수 정보를 가져옵니다.
         const parameters: HttpRouterParameter[] = getMethodParameters(
             target,
-            propertyKey,
+            propertyKey as string,
         );
 
         Reflect.defineMetadata(PATH, path, descriptor.value);
@@ -34,5 +34,5 @@ export function Get(path = "") {
             router: descriptor.value,
             parameters,
         });
-    } as MethodDecorator;
+    };
 }

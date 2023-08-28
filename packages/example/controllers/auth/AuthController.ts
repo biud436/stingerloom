@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Body, Controller, Get, Post, UseGuard } from "@stingerloom/common";
 import { Session } from "@stingerloom/common/decorators/Session";
 import { SessionObject } from "@stingerloom/common";
@@ -5,6 +7,8 @@ import { AuthService } from "./AuthService";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { SessionGuard } from "./guards/SessionGuard";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
+import { User } from "@stingerloom/example/common/decorators/User";
+import { UserId } from "@stingerloom/example/common/decorators/UserId";
 
 @Controller("/auth")
 export class AuthController {
@@ -35,7 +39,14 @@ export class AuthController {
 
     @Get("/session-guard")
     @UseGuard(SessionGuard)
-    async checkSessionGuard(@Session() session: SessionObject) {
-        return ResultUtils.success("세션 가드 통과", session);
+    async checkSessionGuard(
+        @Session() session: SessionObject,
+        @User() user: any,
+        @UserId() userId: string,
+    ) {
+        return ResultUtils.success("세션 가드 통과", {
+            user,
+            userId,
+        });
     }
 }

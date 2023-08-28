@@ -22,11 +22,14 @@ import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
 import { createSessionProxy } from "@stingerloom/common/SessionProxy";
 import {
+    CustomParamDecoratorMetadata,
     Guard,
+    HTTP_PARAM_DECORATOR_TOKEN,
     Logger,
     ServerContext,
     TransactionManager,
     USE_GUARD_OPTION_TOKEN,
+    getParamDecoratorUniqueKey,
 } from "@stingerloom/common";
 import { UnauthorizedException } from "@stingerloom/error";
 
@@ -153,27 +156,6 @@ export class ContainerManager {
                             ValidationError[]
                         >[] = [];
 
-                        const args = parameters.map((param) => {
-                            if (param.isReq) {
-                                return req;
-                            }
-
-                            if (param.isSession) {
-                                return createSessionProxy(req);
-                            }
-
-                            if (param.body) {
-                                const bodyData = plainToClass(
-                                    param.body.type,
-                                    req.body,
-                                );
-                                bodyValidationActions.push(validate(bodyData));
-                                return bodyData;
-                            }
-
-                            return param.value;
-                        });
-
                         // 가드 구현
                         const routerName = (router as (...args: any[]) => any)
                             .name;
@@ -229,6 +211,45 @@ export class ContainerManager {
                                 }
                             }
                         }
+
+                        // 매개변수 구현
+                        const args = parameters.map((param) => {
+                            if (param.isReq) {
+                                return req;
+                            }
+
+                            if (param.isSession) {
+                                return createSessionProxy(req);
+                            }
+
+                            if (param.isCustom) {
+                                const callback = Reflect.getMetadata(
+                                    HTTP_PARAM_DECORATOR_TOKEN,
+                                    targetController,
+                                    routerName,
+                                ) as CustomParamDecoratorMetadata;
+
+                                const context = new ServerContext(req);
+                                return callback[
+                                    getParamDecoratorUniqueKey(
+                                        targetController,
+                                        routerName,
+                                        param.index,
+                                    )
+                                ].callback(param.value, context);
+                            }
+
+                            if (param.body) {
+                                const bodyData = plainToClass(
+                                    param.body.type,
+                                    req.body,
+                                );
+                                bodyValidationActions.push(validate(bodyData));
+                                return bodyData;
+                            }
+
+                            return param.value;
+                        });
 
                         // 헤더 구현
                         const header = Reflect.getMetadata(

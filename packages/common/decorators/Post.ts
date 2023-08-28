@@ -8,15 +8,15 @@ import { getMethodParameters } from "@stingerloom/utils/extractor";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 import { PATH } from "./PATH_KEY";
 
-export function Post(path = "") {
+export function Post(path = ""): MethodDecorator {
     return function (
         target: any,
-        propertyKey: string,
+        propertyKey: string | symbol,
         descriptor: PropertyDescriptor,
     ) {
         const parameters: HttpRouterParameter[] = getMethodParameters(
             target,
-            propertyKey,
+            propertyKey as string,
         );
 
         Reflect.defineMetadata(PATH, path, descriptor.value);

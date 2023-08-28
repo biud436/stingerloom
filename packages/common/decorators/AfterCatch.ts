@@ -1,5 +1,5 @@
 import { Catch } from "./Catch";
 
-export function AfterCatch() {
+export function AfterCatch(): MethodDecorator {
     return Catch("after-throwing");
 }

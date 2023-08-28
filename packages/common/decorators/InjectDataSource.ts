@@ -6,8 +6,12 @@ export class DataSourceMetadata {
 }
 
 export const INJECT_DATA_SOURCE_TOKEN = "INJECT_DATA_SOURCE:metadata";
-export function InjectDataSource<T>() {
-    return (target: object, _propertyKey: string, index: number) => {
+export function InjectDataSource<T>(): ParameterDecorator {
+    return (
+        target: object,
+        _propertyKey: string | symbol | undefined,
+        index: number,
+    ) => {
         const params = ReflectManager.getParamTypes(target) || [];
         const injectParam = params[index] as ClazzType<T>;
 

@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import {
+    CustomParamDecoratorMetadata,
+    HTTP_PARAM_DECORATOR_TOKEN,
+    getParamDecoratorUniqueKey,
+} from "@stingerloom/common";
 import { HttpRouterParameter } from "@stingerloom/common/HttpRouterParameter";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { BODY_TOKEN, BodyParameter } from "@stingerloom/common/decorators/Body";
@@ -33,11 +38,21 @@ export function getMethodParameters(target: any, propertyKey: string) {
             propertyKey,
         ) as BodyParameter;
 
+        const customParam = Reflect.getMetadata(
+            HTTP_PARAM_DECORATOR_TOKEN,
+            target,
+            propertyKey,
+        ) as CustomParamDecoratorMetadata | undefined;
+
         parameters.push({
             index,
             value: param,
             isSession: sessionIndex === index,
             isReq: reqIndex === index,
+            isCustom:
+                !!customParam?.[
+                    getParamDecoratorUniqueKey(target, propertyKey, index)
+                ],
             body: bodyParam,
         });
     });

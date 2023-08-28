@@ -7,7 +7,7 @@ import {
 import { ErrorMetadataScanner } from "@stingerloom/IoC/scanners/ErrorMetadataScanner";
 
 export const CATCH_METADATA = "CATCH_METADATA";
-export function Catch(advice: ErrorAdvice = "throwing") {
+export function Catch(advice: ErrorAdvice = "throwing"): MethodDecorator {
     return function (
         target: any,
         propertyKey: string,
