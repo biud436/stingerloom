@@ -486,6 +486,8 @@ export class AuthController {
 
 위와 같이 하면 세션 인증을 통과한 로그인 사용자의 경우에만 라우터가 실행됩니다.
 
+인증이 되지 않은 사용자의 경우에는 401 오류가 발생합니다.
+
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Installations
