@@ -69,7 +69,7 @@ export function mergeCustomParamDecoractor(
  * @param callback
  * @returns
  */
-export function createCustomParamDecoractor(
+export function createCustomParamDecorator(
     callback: HttpParamDecoratorCallback,
 ): (...args: any[]) => ParameterDecorator {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -488,12 +488,12 @@ export class AuthController {
 
 ## Custom Parameter Decorator
 
-`createCustomParamDecoractor` 함수를 이용하여 자신만의 `ParameterDecorator`를 만들 수 있습니다.
+`createCustomParamDecorator` 함수를 이용하여 자신만의 `ParameterDecorator`를 만들 수 있습니다.
 
 다음은 유저 정보와 유저 ID를 세션으로부터 취득하는 예제입니다.
 
 ```ts
-export const User = createCustomParamDecoractor((data, context) => {
+export const User = createCustomParamDecorator((data, context) => {
     const req = context.req;
     const session = req.session as SessionObject;
 
@@ -508,7 +508,7 @@ export const User = createCustomParamDecoractor((data, context) => {
 유저 ID는 아래와 같이 취득할 수 있습니다.
 
 ```ts
-export const UserId = createCustomParamDecoractor((data, context) => {
+export const UserId = createCustomParamDecorator((data, context) => {
     const req = context.req;
     const session = req.session as SessionObject;
 
