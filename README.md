@@ -41,8 +41,9 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
 -   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
--   [트랜잭션의 처리](https://github.com/biud436/stingerloom#%ED%8A%B8%EB%9E%9C%EC%9E%AD%EC%85%98%EC%9D%98-%EC%B2%98%EB%A6%AC)
--   [인증](https://github.com/biud436/stingerloom#%EC%9D%B8%EC%A6%9D)
+-   [트랜잭션의 처리](https://github.com/biud436/stingerloom#handling-database-transactions)
+-   [인증](https://github.com/biud436/stingerloom#authorization)
+-   [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
 
 ## Controller
 
