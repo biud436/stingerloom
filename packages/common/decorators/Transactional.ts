@@ -23,7 +23,7 @@ export function Transactional(option?: TransactionalOptions) {
         propertyKey: string,
         descriptor: PropertyDescriptor,
     ) {
-        const methodName = descriptor.value.name;
+        const methodName = propertyKey || descriptor.value.name;
         Reflect.defineMetadata(
             TRANSACTION_ISOLATE_LEVEL,
             option?.isolationLevel ?? DEFAULT_ISOLATION_LEVEL,

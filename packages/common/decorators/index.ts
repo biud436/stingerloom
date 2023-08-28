@@ -19,3 +19,4 @@ export * from "./InjectDataSource";
 export * from "./Session";
 export * from "./TransactionalZone";
 export * from "./InjectQueryRunner";
+export * from "./UseGuard";

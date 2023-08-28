@@ -10,6 +10,7 @@ import fastifyFormdody from "@fastify/formbody";
 import fastifySession from "@fastify/session";
 import { AuthService } from "./controllers/auth/AuthService";
 import { AuthController } from "./controllers/auth/AuthController";
+import { SessionGuard } from "./controllers/auth/guards/SessionGuard";
 
 /**
  * @class StingerLoomBootstrapApplication
@@ -20,15 +21,28 @@ import { AuthController } from "./controllers/auth/AuthController";
  * `beforeStart` 메서드를 오버라이딩하여 필요한 기능들을 추가할 수 있습니다.
  */
 export class StingerLoomBootstrapApplication extends ServerBootstrapApplication {
+    /**
+     * 서버가 시작되기 전에 모듈을 초기화합니다.
+     */
     override beforeStart(): void {
         this.moduleOptions = ModuleOptions.merge({
             imports: [],
             controllers: [PostController, UserController, AuthController],
-            providers: [InternalErrorFilter, UserService, AuthService],
+            providers: [
+                InternalErrorFilter,
+                UserService,
+                AuthService,
+                SessionGuard, // 테스트 세션 가드
+            ],
             configuration: databaseOption,
         });
     }
 
+    /**
+     * 미들웨어를 추가합니다.
+     *
+     * @returns
+     */
     protected applyMiddlewares(): this {
         const app = this.app;
 

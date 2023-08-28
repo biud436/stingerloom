@@ -21,7 +21,14 @@ import { transformBasicParameter } from "@stingerloom/common/allocators";
 import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
 import { createSessionProxy } from "@stingerloom/common/SessionProxy";
-import { TransactionManager } from "@stingerloom/common";
+import {
+    Guard,
+    Logger,
+    ServerContext,
+    TransactionManager,
+    USE_GUARD_OPTION_TOKEN,
+} from "@stingerloom/common";
+import { UnauthorizedException } from "@stingerloom/error";
 
 /**
  * @class ContainerManager
@@ -31,6 +38,8 @@ export class ContainerManager {
     private _injectables: ClazzType<any>[] = [];
     private app!: FastifyInstance;
 
+    private readonly logger = new Logger();
+
     constructor(app: FastifyInstance) {
         this.app = app;
     }
@@ -39,18 +48,6 @@ export class ContainerManager {
         await this.registerInjectables();
         await this.registerControllers();
         await this.registerExceptions();
-    }
-
-    private async callOnModuleInit(targetInstance: any) {
-        if (!targetInstance.onModuleInit) {
-            return;
-        }
-
-        if (targetInstance.onModuleInit instanceof Promise) {
-            await targetInstance.onModuleInit();
-        } else {
-            targetInstance.onModuleInit();
-        }
     }
 
     /**
@@ -122,7 +119,6 @@ export class ContainerManager {
             const injectParameters = metadata.parameters;
             let args = injectParameters as any;
 
-            // TODO: 이 단계에서 repository가 주입되어야 합니다.
             if (Array.isArray(args)) {
                 args = args.map((target) => transformBasicParameter(target));
             }
@@ -177,6 +173,53 @@ export class ContainerManager {
 
                             return param.value;
                         });
+
+                        // 가드 구현
+                        const routerName = (router as (...args: any[]) => any)
+                            .name;
+                        const isGuard =
+                            Reflect.getMetadata(
+                                USE_GUARD_OPTION_TOKEN,
+                                targetController,
+                                routerName,
+                            ) !== undefined;
+
+                        if (isGuard) {
+                            this.logger.info("가드가 있습니다.");
+
+                            const raw = Reflect.getMetadata(
+                                USE_GUARD_OPTION_TOKEN,
+                                targetController,
+                                routerName,
+                            );
+
+                            const instanceScanner =
+                                Container.get(InstanceScanner);
+                            const guards = raw.map((guard: any) => {
+                                const guardInstance = instanceScanner.wrap(
+                                    guard,
+                                ) as Guard;
+
+                                if (!guardInstance.canActivate) {
+                                    throw new Error(
+                                        `${guard.name}은 canActivate 메소드가 없습니다.`,
+                                    );
+                                }
+
+                                return guardInstance;
+                            });
+
+                            for (const guard of guards) {
+                                const context = new ServerContext(req);
+                                const result = await guard.canActivate(context);
+
+                                if (!result) {
+                                    throw new UnauthorizedException(
+                                        "접근 권한이 없습니다.",
+                                    );
+                                }
+                            }
+                        }
 
                         // 헤더 구현
                         const header = Reflect.getMetadata(
@@ -258,12 +301,33 @@ export class ContainerManager {
                 }
             }
 
-            if (!errorData) {
+            if (err) {
                 errorData = err;
-            }
 
+                if (!errorData.status) {
+                    errorData.status = err.code || 500;
+                }
+            }
             _reply.status(errorData?.status || 500).send(errorData);
         });
+    }
+
+    /**
+     * onModuleInit가 정의되어있는지 확인하고 정의되어있으면 호출합니다.
+     * @param targetInstance
+     * @returns
+     */
+    private async callOnModuleInit(targetInstance: any) {
+        if (!targetInstance.onModuleInit) {
+            return;
+        }
+
+        // 비동기 또는 동기인지 확인하고 호출합니다.
+        if (targetInstance.onModuleInit instanceof Promise) {
+            await targetInstance.onModuleInit();
+        } else {
+            targetInstance.onModuleInit();
+        }
     }
 
     public findInjectable<T>(target: ClazzType<T>): T | undefined {

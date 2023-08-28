@@ -10,7 +10,19 @@ export type HttpBodyParameter<T = any> = {
 export type HttpRouterParameter = {
     index: number;
     value: any;
+
+    /**
+     * 요청 파라미터인지 여부
+     */
     isReq: boolean;
+
+    /**
+     * 세션 파라미터인지 여부
+     */
     isSession: boolean;
+
+    /**
+     * 바디 파라미터인지 여부
+     */
     body?: HttpBodyParameter;
 };

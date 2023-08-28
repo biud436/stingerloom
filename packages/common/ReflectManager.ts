@@ -4,6 +4,7 @@ import {
     REPOSITORY_ENTITY_METADATA,
     TRANSACTIONAL_TOKEN,
     TRANSACTIONAL_ZONE,
+    USE_GUARD_OPTION_TOKEN,
 } from "./decorators";
 
 import { INJECTABLE_TOKEN } from "./decorators/Injectable";
@@ -138,6 +139,38 @@ export class ReflectManager {
             return false;
         }
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
+    }
+
+    /**
+     * 가드가 걸려있는지 여부를 반환합니다.
+     *
+     * @param target
+     * @returns
+     */
+    public static isGuard(target: object, propertyKey?: string): boolean {
+        if (!Object.getPrototypeOf(target)) {
+            return false;
+        }
+        if (!this.isInjectable(target)) {
+            return false;
+        }
+
+        // 메소드인가?
+        if (propertyKey) {
+            return (
+                Reflect.getMetadata(
+                    USE_GUARD_OPTION_TOKEN,
+                    target,
+                    propertyKey,
+                ) !== undefined
+            );
+        } else {
+            // 컨트롤러(클래스)인가?
+            return (
+                Reflect.getMetadata(USE_GUARD_OPTION_TOKEN, target) !==
+                undefined
+            );
+        }
     }
 
     /**
