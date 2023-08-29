@@ -1,0 +1,76 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { INJECT_QUERYRUNNER_TOKEN, TRANSACTIONAL_PARAMS } from "../decorators";
+import { Logger } from "../Logger";
+import { DataSource } from "typeorm";
+
+export class TransactionQueryRunnerConsumer {
+    private LOGGER = new Logger();
+
+    public execute(
+        dataSource: DataSource,
+        transactionIsolationLevel: any,
+        targetInjectable: any,
+        method: unknown,
+        originalMethod: any,
+        reject: (reason?: any) => void,
+        resolve: (value: unknown) => void,
+        args: any[],
+    ) {
+        const wrapper = async (...args: any[]) => {
+            // 단일 트랜잭션을 실행합니다.
+            const queryRunner = dataSource.createQueryRunner();
+
+            await queryRunner.connect();
+            await queryRunner.startTransaction(transactionIsolationLevel);
+
+            try {
+                // QueryRunner를 찾아서 대체한다.
+                const params = Reflect.getMetadata(
+                    TRANSACTIONAL_PARAMS,
+                    targetInjectable,
+                    method as any,
+                );
+
+                if (Array.isArray(params) && params.length > 0) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const paramIndex = Reflect.getMetadata(
+                        INJECT_QUERYRUNNER_TOKEN,
+                        targetInjectable,
+                        method as any,
+                    ) as number;
+
+                    params.forEach(
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        (param, _index) => {
+                            args[paramIndex] = queryRunner;
+                        },
+                    );
+                }
+
+                const result = originalMethod.call(targetInjectable, ...args);
+
+                let ret = null;
+                // promise인가?
+                if (result instanceof Promise) {
+                    ret = await result;
+                } else {
+                    ret = result;
+                }
+
+                await queryRunner.commitTransaction();
+
+                return ret;
+            } catch (e: any) {
+                await queryRunner.rollbackTransaction();
+                this.LOGGER.error(
+                    `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${e.message}`,
+                );
+                reject(e);
+            } finally {
+                await queryRunner.release();
+            }
+        };
+
+        resolve(wrapper(...args));
+    }
+}
