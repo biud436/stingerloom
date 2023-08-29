@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance } from "fastify";
 import { ClazzType } from "@stingerloom/common/RouterMapper";
 import Container from "typedi";
 import { ControllerScanner } from "./scanners/ControllerScanner";
@@ -8,30 +8,13 @@ import {
     InjectableMetadata,
 } from "./scanners/MetadataScanner";
 import { ExceptionScanner } from "./scanners/ExceptionScanner";
-import { HttpMethod } from "@stingerloom/common/HttpMethod";
-import { ValidationError, validate } from "class-validator";
-import { classToPlain, plainToClass } from "class-transformer";
-import { HEADER_TOKEN } from "@stingerloom/common/decorators/Header";
-import { ValidationHandler } from "@stingerloom/common/ValidationHandler";
-import path from "path";
 import { InstanceScanner } from "./scanners/InstanceScanner";
 import { HttpStatus } from "@stingerloom/common/HttpStatus";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/common/allocators";
 import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
-import { createSessionProxy } from "@stingerloom/common/SessionProxy";
-import {
-    CustomParamDecoratorMetadata,
-    Guard,
-    HTTP_PARAM_DECORATOR_TOKEN,
-    Logger,
-    ServerContext,
-    TransactionManager,
-    USE_GUARD_OPTION_TOKEN,
-    getParamDecoratorUniqueKey,
-} from "@stingerloom/common";
-import { UnauthorizedException } from "@stingerloom/error";
+import { Logger, TransactionManager } from "@stingerloom/common";
 import { RouterExecutionContext } from "./RouterExecutionContext";
 
 /**
@@ -143,160 +126,6 @@ export class ContainerManager {
                 controllerPath,
             );
         }
-    }
-
-    private async registerRouterExecution(
-        metadata: ContainerMetadata,
-        targetController: any,
-        controllerPath: string,
-    ) {
-        metadata.routers.forEach(
-            ({ method, path: routerPath, router, parameters }) => {
-                const targetMethod = method.toLowerCase();
-
-                const handler = this.app[targetMethod as HttpMethod].bind(
-                    this.app,
-                );
-
-                const routerProxy: FastifyFPHandler = async (
-                    _request,
-                    _reply,
-                ) => {
-                    /**
-                     * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸줍니다.
-                     */
-                    const req = _request as FastifyRequest;
-                    const res = _reply as FastifyReply;
-
-                    const bodyValidationActions: Promise<ValidationError[]>[] =
-                        [];
-
-                    // 가드 구현
-                    const routerName = (router as (...args: any[]) => any).name;
-                    const isControllerGuard = Reflect.getMetadata(
-                        USE_GUARD_OPTION_TOKEN,
-                        targetController,
-                    );
-                    const isMethodGuard =
-                        Reflect.getMetadata(
-                            USE_GUARD_OPTION_TOKEN,
-                            targetController,
-                            routerName,
-                        ) !== undefined;
-
-                    if (isControllerGuard || isMethodGuard) {
-                        this.logger.info("가드가 있습니다.");
-
-                        const raw = isControllerGuard
-                            ? Reflect.getMetadata(
-                                  USE_GUARD_OPTION_TOKEN,
-                                  targetController,
-                              )
-                            : Reflect.getMetadata(
-                                  USE_GUARD_OPTION_TOKEN,
-                                  targetController,
-                                  routerName,
-                              );
-
-                        const instanceScanner = Container.get(InstanceScanner);
-                        const guards = raw.map((guard: any) => {
-                            const guardInstance = instanceScanner.wrap(
-                                guard,
-                            ) as Guard;
-
-                            if (!guardInstance.canActivate) {
-                                throw new Error(
-                                    `${guard.name}은 canActivate 메소드가 없습니다.`,
-                                );
-                            }
-
-                            return guardInstance;
-                        });
-
-                        for (const guard of guards) {
-                            const context = new ServerContext(req);
-                            const result = await guard.canActivate(context);
-
-                            if (!result) {
-                                throw new UnauthorizedException(
-                                    "접근 권한이 없습니다.",
-                                );
-                            }
-                        }
-                    }
-
-                    // 매개변수 구현
-                    const args = parameters.map((param) => {
-                        if (param.isReq) {
-                            return req;
-                        }
-
-                        if (param.isSession) {
-                            return createSessionProxy(req);
-                        }
-
-                        if (param.isCustom) {
-                            const callback = Reflect.getMetadata(
-                                HTTP_PARAM_DECORATOR_TOKEN,
-                                targetController,
-                                routerName,
-                            ) as CustomParamDecoratorMetadata;
-
-                            const context = new ServerContext(req);
-                            return callback[
-                                getParamDecoratorUniqueKey(
-                                    targetController,
-                                    routerName,
-                                    param.index,
-                                )
-                            ].callback(param.value, context);
-                        }
-
-                        if (param.body) {
-                            const bodyData = plainToClass(
-                                param.body.type,
-                                req.body,
-                            );
-                            bodyValidationActions.push(validate(bodyData));
-                            return bodyData;
-                        }
-
-                        return param.value;
-                    });
-
-                    // 헤더 구현
-                    const header = Reflect.getMetadata(
-                        HEADER_TOKEN,
-                        targetController,
-                        (router as any).name,
-                    );
-                    if (header) {
-                        res.header(header.key, header.value);
-                    }
-
-                    const validationHandler = new ValidationHandler(
-                        res,
-                        bodyValidationActions,
-                    );
-
-                    if (await validationHandler.isError()) {
-                        return validationHandler.getResponse();
-                    }
-
-                    const result = (router as any).call(
-                        targetController,
-                        ...args,
-                    );
-
-                    return classToPlain(result);
-                };
-
-                handler(
-                    path.posix.join(controllerPath, routerPath),
-                    routerProxy,
-                );
-            },
-        );
     }
 
     /**
