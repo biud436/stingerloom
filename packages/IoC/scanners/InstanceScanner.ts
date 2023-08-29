@@ -10,7 +10,7 @@ import { ReflectManager } from "@stingerloom/common";
  */
 @Service()
 export class InstanceScanner {
-    protected mapper: Map<ClazzType<any>, any> = new Map();
+    protected mapper: WeakMap<ClazzType<any>, any> = new Map();
 
     public set<T>(key: ClazzType<any>, value: T): void {
         this.mapper.set(key, value);
