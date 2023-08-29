@@ -58,33 +58,32 @@ export class TransactionManager {
                         method as any,
                     )
                 ) {
-                    const transactionRunner = () => {
+                    const wrapTransaction = () => {
                         const originalMethod = targetInjectable[method as any];
 
                         // 트랜잭션 격리 레벨을 가져옵니다.
                         const transactionIsolationLevel =
-                            Reflect.getMetadata(
-                                TRANSACTION_ISOLATE_LEVEL,
+                            TransactionManager.getTransactionIsolationLevel(
                                 targetInjectable,
-                                method as any,
-                            ) || DEFAULT_ISOLATION_LEVEL;
+                                method,
+                            );
 
                         // 트랜잭션을 시작합니다.
                         const dataSource = database.getDataSource();
                         const entityManager = dataSource.manager;
 
                         // 트랜잭션 엔티티 매니저가 필요한가?
-                        const transactionalEntityManager = Reflect.getMetadata(
-                            TRANSACTION_ENTITY_MANAGER,
-                            targetInjectable,
-                            method as any,
-                        );
+                        const transactionalEntityManager =
+                            TransactionManager.getTxManager(
+                                targetInjectable,
+                                method,
+                            );
 
                         const callback = async (...args: any[]) => {
                             return new Promise((resolve, reject) => {
                                 if (transactionalEntityManager) {
                                     // 트랜잭션 엔티티 매니저를 실행합니다.
-                                    args = this.txManagerConsumer.execute(
+                                    this.txManagerConsumer.execute(
                                         entityManager,
                                         transactionIsolationLevel,
                                         targetInjectable,
@@ -114,7 +113,7 @@ export class TransactionManager {
 
                     try {
                         // 기존 메소드를 대체합니다.
-                        targetInjectable[method as any] = transactionRunner();
+                        targetInjectable[method as any] = wrapTransaction();
                     } catch (err: any) {
                         throw new InternalServerException(
                             `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
@@ -123,5 +122,40 @@ export class TransactionManager {
                 }
             }
         }
+    }
+
+    /**
+     * 트랜잭션 엔티티 매니저를 가져옵니다.
+     *
+     * @param targetInjectable
+     * @param method
+     * @returns
+     */
+    private static getTxManager(targetInjectable: any, method: unknown) {
+        return Reflect.getMetadata(
+            TRANSACTION_ENTITY_MANAGER,
+            targetInjectable,
+            method as any,
+        );
+    }
+
+    /**
+     * 트랜잭션 격리 수준을 가져옵니다.
+     *
+     * @param targetInjectable
+     * @param method
+     * @returns
+     */
+    private static getTransactionIsolationLevel(
+        targetInjectable: any,
+        method: unknown,
+    ) {
+        return (
+            Reflect.getMetadata(
+                TRANSACTION_ISOLATE_LEVEL,
+                targetInjectable,
+                method as any,
+            ) || DEFAULT_ISOLATION_LEVEL
+        );
     }
 }
