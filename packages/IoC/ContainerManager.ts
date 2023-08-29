@@ -32,6 +32,7 @@ import {
     getParamDecoratorUniqueKey,
 } from "@stingerloom/common";
 import { UnauthorizedException } from "@stingerloom/error";
+import { RouterExecutionContext } from "./RouterExecutionContext";
 
 /**
  * @class ContainerManager
@@ -42,9 +43,11 @@ export class ContainerManager {
     private app!: FastifyInstance;
 
     private readonly logger = new Logger();
+    private readonly routerExecutionContext;
 
     constructor(app: FastifyInstance) {
         this.app = app;
+        this.routerExecutionContext = new RouterExecutionContext(this.app);
     }
 
     public async register() {
@@ -133,158 +136,167 @@ export class ContainerManager {
 
             const controllerPath = metadata.path;
 
-            // 라우터 스캔 시작
-            metadata.routers.forEach(
-                ({ method, path: routerPath, router, parameters }) => {
-                    const targetMethod = method.toLowerCase();
-
-                    const handler = this.app[targetMethod as HttpMethod].bind(
-                        this.app,
-                    );
-
-                    const routerProxy: FastifyFPHandler = async (
-                        _request,
-                        _reply,
-                    ) => {
-                        /**
-                         * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸줍니다.
-                         */
-                        const req = _request as FastifyRequest;
-                        const res = _reply as FastifyReply;
-
-                        const bodyValidationActions: Promise<
-                            ValidationError[]
-                        >[] = [];
-
-                        // 가드 구현
-                        const routerName = (router as (...args: any[]) => any)
-                            .name;
-                        const isControllerGuard = Reflect.getMetadata(
-                            USE_GUARD_OPTION_TOKEN,
-                            targetController,
-                        );
-                        const isMethodGuard =
-                            Reflect.getMetadata(
-                                USE_GUARD_OPTION_TOKEN,
-                                targetController,
-                                routerName,
-                            ) !== undefined;
-
-                        if (isControllerGuard || isMethodGuard) {
-                            this.logger.info("가드가 있습니다.");
-
-                            const raw = isControllerGuard
-                                ? Reflect.getMetadata(
-                                      USE_GUARD_OPTION_TOKEN,
-                                      targetController,
-                                  )
-                                : Reflect.getMetadata(
-                                      USE_GUARD_OPTION_TOKEN,
-                                      targetController,
-                                      routerName,
-                                  );
-
-                            const instanceScanner =
-                                Container.get(InstanceScanner);
-                            const guards = raw.map((guard: any) => {
-                                const guardInstance = instanceScanner.wrap(
-                                    guard,
-                                ) as Guard;
-
-                                if (!guardInstance.canActivate) {
-                                    throw new Error(
-                                        `${guard.name}은 canActivate 메소드가 없습니다.`,
-                                    );
-                                }
-
-                                return guardInstance;
-                            });
-
-                            for (const guard of guards) {
-                                const context = new ServerContext(req);
-                                const result = await guard.canActivate(context);
-
-                                if (!result) {
-                                    throw new UnauthorizedException(
-                                        "접근 권한이 없습니다.",
-                                    );
-                                }
-                            }
-                        }
-
-                        // 매개변수 구현
-                        const args = parameters.map((param) => {
-                            if (param.isReq) {
-                                return req;
-                            }
-
-                            if (param.isSession) {
-                                return createSessionProxy(req);
-                            }
-
-                            if (param.isCustom) {
-                                const callback = Reflect.getMetadata(
-                                    HTTP_PARAM_DECORATOR_TOKEN,
-                                    targetController,
-                                    routerName,
-                                ) as CustomParamDecoratorMetadata;
-
-                                const context = new ServerContext(req);
-                                return callback[
-                                    getParamDecoratorUniqueKey(
-                                        targetController,
-                                        routerName,
-                                        param.index,
-                                    )
-                                ].callback(param.value, context);
-                            }
-
-                            if (param.body) {
-                                const bodyData = plainToClass(
-                                    param.body.type,
-                                    req.body,
-                                );
-                                bodyValidationActions.push(validate(bodyData));
-                                return bodyData;
-                            }
-
-                            return param.value;
-                        });
-
-                        // 헤더 구현
-                        const header = Reflect.getMetadata(
-                            HEADER_TOKEN,
-                            targetController,
-                            (router as any).name,
-                        );
-                        if (header) {
-                            res.header(header.key, header.value);
-                        }
-
-                        const validationHandler = new ValidationHandler(
-                            res,
-                            bodyValidationActions,
-                        );
-
-                        if (await validationHandler.isError()) {
-                            return validationHandler.getResponse();
-                        }
-
-                        const result = (router as any).call(
-                            targetController,
-                            ...args,
-                        );
-
-                        return classToPlain(result);
-                    };
-
-                    handler(
-                        path.posix.join(controllerPath, routerPath),
-                        routerProxy,
-                    );
-                },
+            // 라우터를 등록합니다.
+            await this.routerExecutionContext.create(
+                metadata,
+                targetController,
+                controllerPath,
             );
         }
+    }
+
+    private async registerRouterExecution(
+        metadata: ContainerMetadata,
+        targetController: any,
+        controllerPath: string,
+    ) {
+        metadata.routers.forEach(
+            ({ method, path: routerPath, router, parameters }) => {
+                const targetMethod = method.toLowerCase();
+
+                const handler = this.app[targetMethod as HttpMethod].bind(
+                    this.app,
+                );
+
+                const routerProxy: FastifyFPHandler = async (
+                    _request,
+                    _reply,
+                ) => {
+                    /**
+                     * @Req, @Res 데코레이터를 구현하기 위해 프록시로 감싸줍니다.
+                     */
+                    const req = _request as FastifyRequest;
+                    const res = _reply as FastifyReply;
+
+                    const bodyValidationActions: Promise<ValidationError[]>[] =
+                        [];
+
+                    // 가드 구현
+                    const routerName = (router as (...args: any[]) => any).name;
+                    const isControllerGuard = Reflect.getMetadata(
+                        USE_GUARD_OPTION_TOKEN,
+                        targetController,
+                    );
+                    const isMethodGuard =
+                        Reflect.getMetadata(
+                            USE_GUARD_OPTION_TOKEN,
+                            targetController,
+                            routerName,
+                        ) !== undefined;
+
+                    if (isControllerGuard || isMethodGuard) {
+                        this.logger.info("가드가 있습니다.");
+
+                        const raw = isControllerGuard
+                            ? Reflect.getMetadata(
+                                  USE_GUARD_OPTION_TOKEN,
+                                  targetController,
+                              )
+                            : Reflect.getMetadata(
+                                  USE_GUARD_OPTION_TOKEN,
+                                  targetController,
+                                  routerName,
+                              );
+
+                        const instanceScanner = Container.get(InstanceScanner);
+                        const guards = raw.map((guard: any) => {
+                            const guardInstance = instanceScanner.wrap(
+                                guard,
+                            ) as Guard;
+
+                            if (!guardInstance.canActivate) {
+                                throw new Error(
+                                    `${guard.name}은 canActivate 메소드가 없습니다.`,
+                                );
+                            }
+
+                            return guardInstance;
+                        });
+
+                        for (const guard of guards) {
+                            const context = new ServerContext(req);
+                            const result = await guard.canActivate(context);
+
+                            if (!result) {
+                                throw new UnauthorizedException(
+                                    "접근 권한이 없습니다.",
+                                );
+                            }
+                        }
+                    }
+
+                    // 매개변수 구현
+                    const args = parameters.map((param) => {
+                        if (param.isReq) {
+                            return req;
+                        }
+
+                        if (param.isSession) {
+                            return createSessionProxy(req);
+                        }
+
+                        if (param.isCustom) {
+                            const callback = Reflect.getMetadata(
+                                HTTP_PARAM_DECORATOR_TOKEN,
+                                targetController,
+                                routerName,
+                            ) as CustomParamDecoratorMetadata;
+
+                            const context = new ServerContext(req);
+                            return callback[
+                                getParamDecoratorUniqueKey(
+                                    targetController,
+                                    routerName,
+                                    param.index,
+                                )
+                            ].callback(param.value, context);
+                        }
+
+                        if (param.body) {
+                            const bodyData = plainToClass(
+                                param.body.type,
+                                req.body,
+                            );
+                            bodyValidationActions.push(validate(bodyData));
+                            return bodyData;
+                        }
+
+                        return param.value;
+                    });
+
+                    // 헤더 구현
+                    const header = Reflect.getMetadata(
+                        HEADER_TOKEN,
+                        targetController,
+                        (router as any).name,
+                    );
+                    if (header) {
+                        res.header(header.key, header.value);
+                    }
+
+                    const validationHandler = new ValidationHandler(
+                        res,
+                        bodyValidationActions,
+                    );
+
+                    if (await validationHandler.isError()) {
+                        return validationHandler.getResponse();
+                    }
+
+                    const result = (router as any).call(
+                        targetController,
+                        ...args,
+                    );
+
+                    return classToPlain(result);
+                };
+
+                handler(
+                    path.posix.join(controllerPath, routerPath),
+                    routerProxy,
+                );
+            },
+        );
     }
 
     /**

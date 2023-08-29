@@ -25,6 +25,12 @@ export class Logger extends EventEmitter {
     static DefaultColor = chalk.white;
 
     public level?: string;
+    public name? = "";
+
+    constructor(name?: string) {
+        super();
+        this.name = name;
+    }
 
     // 커링 기법을 사용하여 로그 레벨 지정
     print = (level: string) => (message: string) => {
@@ -36,7 +42,9 @@ export class Logger extends EventEmitter {
                     : level === "error"
                     ? Logger.ErrorColor
                     : Logger.NormalColor(this.state)
-            } ${message} - ${Logger.DefaultColor(
+            }${
+                this.name ? `[${chalk.green(this.name)}] - ` : ""
+            }${message} - ${Logger.DefaultColor(
                 new Date().toLocaleTimeString(),
             )}`,
         );
