@@ -25,7 +25,7 @@ import { GuardConsumer } from "./GuardConsumer";
  * 라우터를 실행하기 위한 컨텍스트 클래스입니다.
  */
 export class RouterExecutionContext {
-    private readonly logger = new Logger();
+    private readonly logger = new Logger(RouterExecutionContext.name);
     private readonly guardConsumer: GuardConsumer;
 
     constructor(private readonly app: FastifyInstance) {
@@ -134,9 +134,14 @@ export class RouterExecutionContext {
                     return classToPlain(result);
                 };
 
-                handler(
-                    path.posix.join(controllerPath, routerPath),
-                    routerProxy,
+                const registerPath = path.posix.join(
+                    controllerPath,
+                    routerPath,
+                );
+                handler(registerPath, routerProxy);
+
+                this.logger.info(
+                    `{${registerPath}, ${targetMethod.toUpperCase()}} 에 등록됨`,
                 );
             },
         );

@@ -4,38 +4,38 @@
  * 로거의 상태를 관리하기 위해 정의된 클래스입니다.
  */
 export class LoggerState {
-    private state = "[Logger]";
+    private state = "Logger";
 
     public info() {
-        this.state = "[INFO]";
+        this.state = "INFO";
     }
 
     public warn() {
-        this.state = "[WARN]";
+        this.state = "WARN";
     }
 
     public error() {
-        this.state = "[ERROR]";
+        this.state = "ERROR";
     }
 
     public debug() {
-        this.state = "[DEBUG]";
+        this.state = "DEBUG";
     }
 
     public fatal() {
-        this.state = "[FATAL]";
+        this.state = "FATAL";
     }
 
     public trace() {
-        this.state = "[TRACE]";
+        this.state = "TRACE";
     }
 
     public slient() {
-        this.state = "[SILENT]";
+        this.state = "SILENT";
     }
 
     public child() {
-        this.state = "[CHILD]";
+        this.state = "CHILD";
     }
 
     public get() {
