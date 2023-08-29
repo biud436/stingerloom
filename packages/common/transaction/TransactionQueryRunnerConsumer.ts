@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { INJECT_QUERYRUNNER_TOKEN, TRANSACTIONAL_PARAMS } from "../decorators";
+
+import {
+    INJECT_QUERYRUNNER_TOKEN,
+    TRANSACTIONAL_PARAMS,
+    TransactionIsolationLevel,
+} from "../decorators";
 import { Logger } from "../Logger";
 import { DataSource } from "typeorm";
 
@@ -8,7 +13,7 @@ export class TransactionQueryRunnerConsumer {
 
     public execute(
         dataSource: DataSource,
-        transactionIsolationLevel: any,
+        transactionIsolationLevel: TransactionIsolationLevel,
         targetInjectable: any,
         method: unknown,
         originalMethod: any,

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TRANSACTIONAL_PARAMS } from "../decorators";
+import { TRANSACTIONAL_PARAMS, TransactionIsolationLevel } from "../decorators";
 import { Logger } from "../Logger";
 import { EntityManager } from "typeorm";
 
@@ -8,7 +8,7 @@ export class TransactionEntityManagerConsumer {
 
     public execute(
         entityManager: EntityManager,
-        transactionIsolationLevel: any,
+        transactionIsolationLevel: TransactionIsolationLevel,
         targetInjectable: any,
         method: unknown,
         args: any[],

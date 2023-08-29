@@ -7,6 +7,7 @@ import {
     DEFAULT_ISOLATION_LEVEL,
     TRANSACTION_ENTITY_MANAGER,
     TRANSACTION_ISOLATE_LEVEL,
+    TransactionIsolationLevel,
 } from "../decorators";
 
 import { InternalServerException } from "@stingerloom/error";
@@ -125,18 +126,21 @@ export class TransactionManager {
     }
 
     /**
-     * 트랜잭션 엔티티 매니저를 가져옵니다.
+     * 트랜잭션 엔티티 매니저가 필요한 지 여부를 확인합니다.
      *
      * @param targetInjectable
      * @param method
      * @returns
      */
-    private static getTxManager(targetInjectable: any, method: unknown) {
+    private static getTxManager(
+        targetInjectable: any,
+        method: unknown,
+    ): boolean {
         return Reflect.getMetadata(
             TRANSACTION_ENTITY_MANAGER,
             targetInjectable,
             method as any,
-        );
+        ) as boolean;
     }
 
     /**
@@ -149,13 +153,11 @@ export class TransactionManager {
     private static getTransactionIsolationLevel(
         targetInjectable: any,
         method: unknown,
-    ) {
-        return (
-            Reflect.getMetadata(
-                TRANSACTION_ISOLATE_LEVEL,
-                targetInjectable,
-                method as any,
-            ) || DEFAULT_ISOLATION_LEVEL
-        );
+    ): TransactionIsolationLevel {
+        return (Reflect.getMetadata(
+            TRANSACTION_ISOLATE_LEVEL,
+            targetInjectable,
+            method as any,
+        ) || DEFAULT_ISOLATION_LEVEL) as TransactionIsolationLevel;
     }
 }
