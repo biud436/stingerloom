@@ -46,7 +46,15 @@ class Database implements OnApplicationShutdown {
      * @returns
      */
     public getRepository<T>(entity: new () => T) {
-        return this.dataSource.getRepository(entity);
+        const metadata = this.dataSource.getMetadata(entity);
+        const isTreeEntity = metadata.treeType !== undefined;
+        const isMongoEntity = this.dataSource.options.type === "mongodb";
+
+        return isTreeEntity
+            ? this.dataSource.getTreeRepository(entity)
+            : isMongoEntity
+            ? this.dataSource.getMongoRepository(entity)
+            : this.dataSource.getRepository(entity);
     }
 }
 
