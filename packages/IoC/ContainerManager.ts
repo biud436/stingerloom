@@ -16,7 +16,9 @@ import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
 import { Logger, TransactionManager } from "@stingerloom/common";
 import { RouterExecutionContext } from "./RouterExecutionContext";
+import chalk from "chalk";
 
+const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
 /**
  * @class ContainerManager
  */
@@ -25,8 +27,11 @@ export class ContainerManager {
     private _injectables: ClazzType<any>[] = [];
     private app!: FastifyInstance;
 
-    private readonly logger = new Logger();
+    private readonly logger = new Logger(ContainerManager.name);
     private readonly routerExecutionContext;
+    private readonly [LAZY_INJECTED_EXPLORER_SYMBOL]: ((
+        ...args: unknown[]
+    ) => void)[] = [];
 
     constructor(app: FastifyInstance) {
         this.app = app;
@@ -37,6 +42,7 @@ export class ContainerManager {
         await this.registerInjectables();
         await this.registerControllers();
         await this.registerExceptions();
+        await this.printLazyInjectedExplorer();
     }
 
     /**
@@ -65,6 +71,8 @@ export class ContainerManager {
             let args = injectParameters as any;
 
             if (Array.isArray(args)) {
+                this.printInjectables(args, TargetInjectable);
+
                 args = args.map((target) => transformBasicParameter(target));
             }
 
@@ -109,6 +117,8 @@ export class ContainerManager {
             let args = injectParameters as any;
 
             if (Array.isArray(args)) {
+                this.printInjectables(args, TargetController);
+
                 args = args.map((target) => transformBasicParameter(target));
             }
 
@@ -126,6 +136,23 @@ export class ContainerManager {
                 controllerPath,
             );
         }
+    }
+
+    private printInjectables(args: any[], TargetController: ClazzType<any>) {
+        args.forEach((arg: any) => {
+            this[LAZY_INJECTED_EXPLORER_SYMBOL].push(() =>
+                this.logger.info(
+                    `${TargetController.name}에 ${
+                        arg.name ?? arg.constructor.name
+                    }가 ${
+                        ReflectManager.isInjectable(arg) ||
+                        ReflectManager.isRepository(arg)
+                            ? chalk.yellow("SINGLETON SCOPE")
+                            : chalk.red("TRANSIENT SCOPE")
+                    }로 inject됨`,
+                ),
+            );
+        });
     }
 
     /**
@@ -181,6 +208,10 @@ export class ContainerManager {
             }
             _reply.status(errorData?.status || 500).send(errorData);
         });
+    }
+
+    async printLazyInjectedExplorer() {
+        this[LAZY_INJECTED_EXPLORER_SYMBOL].forEach((explorer) => explorer());
     }
 
     /**

@@ -141,7 +141,7 @@ export class RouterExecutionContext {
                 handler(registerPath, routerProxy);
 
                 this.logger.info(
-                    `{${registerPath}, ${targetMethod.toUpperCase()}} 에 등록됨`,
+                    `{${registerPath}, ${targetMethod.toUpperCase()}} 에 route가 등록됨`,
                 );
             },
         );
