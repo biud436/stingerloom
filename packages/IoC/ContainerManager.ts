@@ -14,7 +14,11 @@ import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/common/allocators";
 import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
-import { Logger, TransactionManager } from "@stingerloom/common";
+import {
+    Logger,
+    OnApplicationShutdown,
+    TransactionManager,
+} from "@stingerloom/common";
 import { RouterExecutionContext } from "./RouterExecutionContext";
 import chalk from "chalk";
 
@@ -43,6 +47,21 @@ export class ContainerManager {
         await this.registerControllers();
         await this.registerExceptions();
         await this.printLazyInjectedExplorer();
+    }
+
+    public async propagateShutdown() {
+        const consumers: unknown[] = this._injectables.concat(
+            this._controllers,
+        );
+
+        for (const consumer of consumers) {
+            const cather = consumer as OnApplicationShutdown;
+            if (cather.onApplicationShutdown instanceof Promise) {
+                await cather.onApplicationShutdown();
+            } else {
+                cather.onApplicationShutdown();
+            }
+        }
     }
 
     /**

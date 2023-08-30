@@ -83,6 +83,15 @@ export class ServerBootstrapApplication {
         return this;
     }
 
+    private async onApplicationShutdown(): Promise<void> {
+        await this.containerManager.propagateShutdown();
+
+        const instanceScanner = Container.get(InstanceScanner);
+        const database = instanceScanner.get<Database>(Database);
+
+        await database.onApplicationShutdown();
+    }
+
     /**
      * Exception Filter로 잡아내지 못한 서버 오류를 캐치합니다.
      *
@@ -94,6 +103,8 @@ export class ServerBootstrapApplication {
         };
         process.on("uncaughtException", handleErrorWather);
         process.on("unhandledRejection", handleErrorWather);
+
+        process.on("exit", () => this.onApplicationShutdown.bind(this));
 
         return this;
     }

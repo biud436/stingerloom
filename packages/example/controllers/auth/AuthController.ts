@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Body, Controller, Get, Post, UseGuard } from "@stingerloom/common";
+import {
+    Body,
+    Controller,
+    Get,
+    OnApplicationShutdown,
+    Post,
+    UseGuard,
+} from "@stingerloom/common";
 import { Session } from "@stingerloom/common/decorators/Session";
 import { SessionObject } from "@stingerloom/common";
 import { AuthService } from "./AuthService";

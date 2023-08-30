@@ -3,13 +3,14 @@ import { DataSource } from "typeorm";
 import { databaseFactory } from "@stingerloom/factory/database/DatabaseFactory";
 
 import { ModuleOptions } from "./ModuleOptions";
+import { OnApplicationShutdown } from "./OnApplicationShutdown";
 
 /**
  * @class Database
  * @description
  * 데이터베이스 연결을 관리하는 TypeORM을 위한 클래스입니다.
  */
-class Database {
+class Database implements OnApplicationShutdown {
     private dataSource: DataSource;
 
     constructor(options: ModuleOptions["configuration"]) {
@@ -21,6 +22,13 @@ class Database {
      */
     public async start() {
         await this.dataSource.initialize();
+    }
+
+    /**
+     * 서버가 종료될 때 실행되는 함수입니다.
+     */
+    async onApplicationShutdown(): Promise<void> {
+        await this.dataSource.destroy();
     }
 
     /**
