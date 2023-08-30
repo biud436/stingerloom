@@ -15,21 +15,21 @@ import { Logger } from "../Logger";
 import { TransactionEntityManagerConsumer } from "./TransactionEntityManagerConsumer";
 import { TransactionQueryRunnerConsumer } from "./TransactionQueryRunnerConsumer";
 
+export const TRANSACTION_MANAGER_SYMBOL = Symbol("TRANSACTION_MANAGER");
+
 export class TransactionManager {
-    private static LOGGER = new Logger();
+    private static LOGGER = new Logger(TransactionManager.name);
     private static txManagerConsumer = new TransactionEntityManagerConsumer();
     private static txQueryRunnerConsumer = new TransactionQueryRunnerConsumer();
 
     public static async checkTransactionalZone(
         TargetInjectable: ClazzType<any>,
-        targetInjectable: any,
+        targetInjectable: InstanceType<any>,
         instanceScanner: InstanceScanner,
     ) {
         if (ReflectManager.isTransactionalZone(TargetInjectable)) {
-            TransactionManager.LOGGER.info("트랜잭션 존이 발견되었습니다.");
-
-            const getPrototypeMethods = (obj: any) => {
-                const properties = new Set();
+            const getPrototypeMethods = (obj: any): string[] => {
+                const properties = new Set<string>();
                 let currentObj = obj;
                 do {
                     Object.getOwnPropertyNames(currentObj).map((item) =>
@@ -56,9 +56,13 @@ export class TransactionManager {
                 if (
                     ReflectManager.isTransactionalZoneMethod(
                         targetInjectable,
-                        method as any,
+                        method,
                     )
                 ) {
+                    TransactionManager.LOGGER.info(
+                        `{${TargetInjectable.name}/${method}} 트랜잭션 존이 발견됨`,
+                    );
+
                     const wrapTransaction = () => {
                         const originalMethod = targetInjectable[method as any];
 
@@ -114,7 +118,7 @@ export class TransactionManager {
 
                     try {
                         // 기존 메소드를 대체합니다.
-                        targetInjectable[method as any] = wrapTransaction();
+                        targetInjectable[method] = wrapTransaction();
                     } catch (err: any) {
                         throw new InternalServerException(
                             `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
@@ -134,7 +138,7 @@ export class TransactionManager {
      */
     private static getTxManager(
         targetInjectable: any,
-        method: unknown,
+        method: string,
     ): boolean {
         return Reflect.getMetadata(
             TRANSACTION_ENTITY_MANAGER,
@@ -152,7 +156,7 @@ export class TransactionManager {
      */
     private static getTransactionIsolationLevel(
         targetInjectable: any,
-        method: unknown,
+        method: string,
     ): TransactionIsolationLevel {
         return (Reflect.getMetadata(
             TRANSACTION_ISOLATE_LEVEL,

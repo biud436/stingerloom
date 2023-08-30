@@ -4,17 +4,17 @@ import { Logger } from "../Logger";
 import { EntityManager } from "typeorm";
 
 export class TransactionEntityManagerConsumer {
-    public LOGGER: Logger = new Logger();
+    public LOGGER: Logger = new Logger(TransactionEntityManagerConsumer.name);
 
     public execute(
         entityManager: EntityManager,
         transactionIsolationLevel: TransactionIsolationLevel,
-        targetInjectable: any,
-        method: unknown,
-        args: any[],
-        originalMethod: any,
+        targetInjectable: InstanceType<any>,
+        method: string,
+        args: unknown[],
+        originalMethod: (...args: unknown[]) => unknown | Promise<unknown>,
         resolve: (value: unknown) => void,
-        reject: (reason?: any) => void,
+        reject: (reason?: unknown) => void,
     ) {
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {

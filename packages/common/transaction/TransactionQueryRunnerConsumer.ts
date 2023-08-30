@@ -14,12 +14,12 @@ export class TransactionQueryRunnerConsumer {
     public execute(
         dataSource: DataSource,
         transactionIsolationLevel: TransactionIsolationLevel,
-        targetInjectable: any,
-        method: unknown,
-        originalMethod: any,
-        reject: (reason?: any) => void,
+        targetInjectable: InstanceType<any>,
+        method: string,
+        originalMethod: (...args: unknown[]) => unknown | Promise<unknown>,
         resolve: (value: unknown) => void,
-        args: any[],
+        reject: (reason?: unknown) => void,
+        args: unknown[],
     ) {
         const wrapper = async (...args: any[]) => {
             // 단일 트랜잭션을 실행합니다.
@@ -33,7 +33,7 @@ export class TransactionQueryRunnerConsumer {
                 const params = Reflect.getMetadata(
                     TRANSACTIONAL_PARAMS,
                     targetInjectable,
-                    method as any,
+                    method,
                 );
 
                 if (Array.isArray(params) && params.length > 0) {
@@ -41,7 +41,7 @@ export class TransactionQueryRunnerConsumer {
                     const paramIndex = Reflect.getMetadata(
                         INJECT_QUERYRUNNER_TOKEN,
                         targetInjectable,
-                        method as any,
+                        method,
                     ) as number;
 
                     params.forEach(
