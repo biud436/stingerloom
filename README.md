@@ -7,7 +7,7 @@
 `나만의 서버 프레임워크`의 이름은 StingerLoom이며 라우터 맵핑 기능과 StingerLoom Container에 의한 DI와 데이터베이스 접근에 필요한 ORM 등의 기능을 지원합니다.
 
 <p align="center"> 
-<img src="https://github.com/biud436/stingerloom/assets/13586185/2a79d335-791d-4d0a-a076-6a62ad328925" />
+<img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
 </p>
 
 ## 개발 일지
