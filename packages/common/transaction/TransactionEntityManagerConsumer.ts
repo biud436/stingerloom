@@ -45,14 +45,16 @@ export class TransactionEntityManagerConsumer {
                         ...args,
                     );
 
-                    // 비동기 함수인지 동기 함수인지 확인합니다.
+                    // promise인가?
                     if (result instanceof Promise) {
                         return resolve(await result);
                     } else {
                         resolve(result);
                     }
                 } catch (err: any) {
-                    this.printError(err);
+                    this.LOGGER.error(
+                        `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
+                    );
 
                     const queryRunner = em.queryRunner;
 
@@ -64,15 +66,11 @@ export class TransactionEntityManagerConsumer {
                 }
             })
             .catch((err) => {
-                this.printError(err);
+                this.LOGGER.error(
+                    `트랜잭션을 실행하는 도중 오류가 발생했습니다1: ${err.message}`,
+                );
                 reject(err);
             });
         return args;
-    }
-
-    private printError(err: any) {
-        this.LOGGER.error(
-            `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${err.message}`,
-        );
     }
 }
