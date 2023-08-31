@@ -55,11 +55,11 @@ export class ContainerManager {
         );
 
         for (const consumer of consumers) {
-            const cather = consumer as OnApplicationShutdown;
-            if (cather.onApplicationShutdown instanceof Promise) {
-                await cather.onApplicationShutdown();
+            const handler = consumer as OnApplicationShutdown;
+            if (handler.onApplicationShutdown instanceof Promise) {
+                await handler.onApplicationShutdown();
             } else {
-                cather.onApplicationShutdown();
+                handler.onApplicationShutdown();
             }
         }
     }
