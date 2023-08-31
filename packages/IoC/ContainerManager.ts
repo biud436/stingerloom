@@ -49,6 +49,9 @@ export class ContainerManager {
         await this.printLazyInjectedExplorer();
     }
 
+    /**
+     * 프로세스가 종료될 때 호출됩니다.
+     */
     public async propagateShutdown() {
         const consumers: unknown[] = this._injectables.concat(
             this._controllers,
@@ -117,6 +120,7 @@ export class ContainerManager {
     private async registerControllers() {
         // Controller 스캐너 생성
         const controllerScanner = Container.get(ControllerScanner);
+        // const instanceScanner = Container.get(InstanceScanner);
         const contollers = controllerScanner.makeControllers();
         let controller: IteratorResult<ContainerMetadata>;
 
@@ -143,6 +147,12 @@ export class ContainerManager {
 
             const targetController = new TargetController(...args);
             await this.callOnModuleInit(targetController);
+
+            // await TransactionManager.checkTransactionalZone(
+            //     TargetController,
+            //     targetController,
+            //     instanceScanner,
+            // );
 
             this._controllers.push(targetController);
 
@@ -186,6 +196,8 @@ export class ContainerManager {
             let errorData = {
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
             } as any;
+
+            console.warn("오류", err);
 
             for (const {
                 target,

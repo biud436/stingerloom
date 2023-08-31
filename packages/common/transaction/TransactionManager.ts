@@ -87,7 +87,6 @@ export class TransactionManager {
                         const callback = async (...args: any[]) => {
                             return new Promise((resolve, reject) => {
                                 if (transactionalEntityManager) {
-                                    // 트랜잭션 엔티티 매니저를 실행합니다.
                                     this.txManagerConsumer.execute(
                                         entityManager,
                                         transactionIsolationLevel,

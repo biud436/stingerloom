@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
@@ -22,7 +23,6 @@ export class TransactionQueryRunnerConsumer {
         args: unknown[],
     ) {
         const wrapper = async (...args: any[]) => {
-            // 단일 트랜잭션을 실행합니다.
             const queryRunner = dataSource.createQueryRunner();
 
             await queryRunner.connect();
@@ -37,25 +37,22 @@ export class TransactionQueryRunnerConsumer {
                 );
 
                 if (Array.isArray(params) && params.length > 0) {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const paramIndex = Reflect.getMetadata(
                         INJECT_QUERYRUNNER_TOKEN,
                         targetInjectable,
                         method,
                     ) as number;
 
-                    params.forEach(
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        (param, _index) => {
-                            args[paramIndex] = queryRunner;
-                        },
-                    );
+                    params.forEach((param, _index) => {
+                        args[paramIndex] = queryRunner;
+                    });
                 }
 
                 const result = originalMethod.call(targetInjectable, ...args);
 
                 let ret = null;
-                // promise인가?
+
+                // 비동기 함수인지 동기 함수인지 확인합니다.
                 if (result instanceof Promise) {
                     ret = await result;
                 } else {
@@ -76,6 +73,8 @@ export class TransactionQueryRunnerConsumer {
             }
         };
 
-        resolve(wrapper(...args));
+        wrapper(...args)
+            .then(resolve)
+            .catch(reject);
     }
 }
