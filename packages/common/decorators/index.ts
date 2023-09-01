@@ -21,3 +21,4 @@ export * from "./TransactionalZone";
 export * from "./InjectQueryRunner";
 export * from "./UseGuard";
 export * from "./decoratorFactory";
+export * from "./Render";
