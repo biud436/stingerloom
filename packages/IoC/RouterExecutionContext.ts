@@ -2,17 +2,13 @@
 import { Logger } from "@stingerloom/common/Logger";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { ContainerMetadata } from "./scanners/MetadataScanner";
-import {
-    ClazzType,
-    HEADER_TOKEN,
-    HttpMethod,
-    ValidationHandler,
-} from "@stingerloom/common";
+import { ClazzType, HttpMethod, ValidationHandler } from "@stingerloom/common";
 import { ValidationError } from "class-validator";
 import { classToPlain } from "class-transformer";
 import path from "path";
 import { GuardConsumer } from "./GuardConsumer";
 import { RouteParameterTransformer } from "./RouteParameterTransformer";
+import { HeaderConsumer } from "./HeaderConsumer";
 
 /**
  * @class RouterExecutionContext
@@ -33,6 +29,11 @@ export class RouterExecutionContext {
         targetController: ClazzType<any>,
         controllerPath: string,
     ) {
+        const routeParameterTransformer = new RouteParameterTransformer(
+            targetController,
+        );
+        const headerConsumer = new HeaderConsumer(targetController);
+
         metadata.routers.forEach(
             ({ method, path: routerPath, router, parameters }) => {
                 const targetMethod = method.toLowerCase();
@@ -60,27 +61,16 @@ export class RouterExecutionContext {
                         routerName,
                     );
 
-                    const routeParameterTransformer =
-                        new RouteParameterTransformer(
-                            req,
-                            targetController,
-                            routerName,
-                            bodyValidationActions,
-                        );
-
                     // Parameters Consumer
-                    const args =
-                        routeParameterTransformer.transform(parameters);
+                    const args = routeParameterTransformer.transform(
+                        routerName,
+                        req,
+                        parameters,
+                        bodyValidationActions,
+                    );
 
                     // Header Consumer
-                    const header = Reflect.getMetadata(
-                        HEADER_TOKEN,
-                        targetController,
-                        (router as any).name,
-                    );
-                    if (header) {
-                        res.header(header.key, header.value);
-                    }
+                    headerConsumer.execute(res, routerName);
 
                     const validationHandler = new ValidationHandler(
                         res,
