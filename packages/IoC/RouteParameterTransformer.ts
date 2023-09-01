@@ -14,16 +14,15 @@ import { ValidationError } from "class-validator/types/validation/ValidationErro
 import { FastifyRequest } from "fastify";
 
 export class RouteParameterTransformer {
-    constructor(
-        private readonly req: FastifyRequest,
-        private readonly targetController: ClazzType<any>,
-        private readonly routerName: string,
-        private readonly bodyValidationActions: Promise<ValidationError[]>[],
-    ) {}
+    constructor(private readonly targetController: ClazzType<any>) {}
 
-    transform(parameters: HttpRouterParameter[]) {
-        const { req, targetController, routerName, bodyValidationActions } =
-            this;
+    transform(
+        routerName: string,
+        req: FastifyRequest,
+        parameters: HttpRouterParameter[],
+        bodyValidationActions: Promise<ValidationError[]>[],
+    ) {
+        const { targetController } = this;
 
         const args = parameters.map((param) => {
             // Req 객체 요청
