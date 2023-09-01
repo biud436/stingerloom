@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClazzType, HEADER_TOKEN } from "@stingerloom/common";
 import { FastifyReply } from "fastify";
 

@@ -5,3 +5,4 @@ export * from "./RouterExecutionContext";
 export * from "./GuardConsumer";
 export * from "./RouteParameterTransformer";
 export * from "./HeaderConsumer";
+export * from "./RenderConsumer";

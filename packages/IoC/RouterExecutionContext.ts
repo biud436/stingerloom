@@ -9,6 +9,7 @@ import path from "path";
 import { GuardConsumer } from "./GuardConsumer";
 import { RouteParameterTransformer } from "./RouteParameterTransformer";
 import { HeaderConsumer } from "./HeaderConsumer";
+import { RenderConsumer } from "./RenderConsumer";
 
 /**
  * @class RouterExecutionContext
@@ -33,6 +34,7 @@ export class RouterExecutionContext {
             targetController,
         );
         const headerConsumer = new HeaderConsumer(targetController);
+        const renderConsumer = new RenderConsumer(targetController);
 
         metadata.routers.forEach(
             ({ method, path: routerPath, router, parameters }) => {
@@ -86,7 +88,9 @@ export class RouterExecutionContext {
                         ...args,
                     );
 
-                    return classToPlain(result);
+                    return renderConsumer.isRender(routerName)
+                        ? renderConsumer.execute(res, routerName, result)
+                        : classToPlain(result);
                 };
 
                 const registerPath = path.posix.join(
