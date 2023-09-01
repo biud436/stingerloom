@@ -10,6 +10,11 @@ export class ServerContext {
 }
 
 export interface Guard {
+    /**
+     * canActivate 메소드는 요청을 처리하기 전에 실행됩니다.
+     *
+     * @param context
+     */
     canActivate(context: ServerContext): Promise<boolean> | boolean;
 }
 
