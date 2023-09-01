@@ -11,6 +11,11 @@ import { InstanceScanner } from "./scanners";
 import { FastifyRequest } from "fastify";
 import { UnauthorizedException } from "@stingerloom/error";
 
+/**
+ * @class GuardConsumer
+ * @description
+ * 이 클래스는 가드를 실행하기 위한 컨슈머 클래스입니다.
+ */
 export class GuardConsumer {
     private readonly logger = new Logger(GuardConsumer.name);
 
