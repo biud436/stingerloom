@@ -9,7 +9,7 @@ import { FastifyReply } from "fastify";
 /**
  * @class RenderConsumer
  * @description
- * 렌더링을 위한 컨슈머 클래스입니다.
+ * 이 클래스는 HTML을 렌더링하기 위한 컨슈머 클래스입니다.
  */
 export class RenderConsumer {
     constructor(private readonly targetController: ClazzType<unknown>) {}
