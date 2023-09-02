@@ -1,5 +1,6 @@
 export const TRANSACTIONAL_TOKEN = "TRANSACTIONAL_TOKEN";
 export const TRANSACTION_ISOLATE_LEVEL = "TRANSACTION_ISOLATE_LEVEL";
+export const TRANSACTION_PROPAGATION = "TRANSACTION_PROPAGATION";
 export const TRANSACTIONAL_PARAMS = "TRANSACTIONAL_PARAMS";
 export const TRANSACTION_ENTITY_MANAGER = "TRANSACTION_ENTITY_MANAGER";
 
@@ -10,9 +11,14 @@ export enum TransactionIsolationLevel {
     SERIALIZABLE = "SERIALIZABLE",
 }
 
+export enum TransactionPropagation {
+    REQUIRES_NEW = "REQUIRES_NEW",
+}
+
 export interface TransactionalOptions {
     isolationLevel?: TransactionIsolationLevel;
     transactionalEntityManager?: boolean;
+    propagation?: TransactionPropagation;
 }
 export const DEFAULT_ISOLATION_LEVEL =
     TransactionIsolationLevel.REPEATABLE_READ;
@@ -33,6 +39,12 @@ export function Transactional(option?: TransactionalOptions): MethodDecorator {
         Reflect.defineMetadata(
             TRANSACTION_ENTITY_MANAGER,
             option?.transactionalEntityManager ?? false,
+            target,
+            methodName,
+        );
+        Reflect.defineMetadata(
+            TRANSACTION_ENTITY_MANAGER,
+            option?.propagation ?? TransactionPropagation.REQUIRES_NEW,
             target,
             methodName,
         );
