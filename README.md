@@ -603,7 +603,7 @@ yarn add @fastify/view handlebars
                 handlebars,
             },
             root: `${__dirname}/views`,
-            viewExt: "hbs",
+            includeViewExtension: true,
         });
 
         return this;

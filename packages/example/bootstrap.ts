@@ -70,7 +70,7 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
                 handlebars,
             },
             root: `${__dirname}/views`,
-            viewExt: "hbs",
+            includeViewExtension: true,
         });
 
         return this;
