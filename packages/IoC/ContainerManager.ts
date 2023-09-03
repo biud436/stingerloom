@@ -19,7 +19,7 @@ import {
     OnApplicationShutdown,
     TransactionManager,
 } from "@stingerloom/common";
-import { RouterExecutionContext } from "./RouterExecutionContext";
+import { RouterExecutionContext } from "@stingerloom/router/RouterExecutionContext";
 import chalk from "chalk";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
