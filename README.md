@@ -569,9 +569,9 @@ export class AuthController {
 
 ## Template Engine
 
-템플릿 엔진은 `@View` 데코레이터 또는 `@Render`를 사용하여 뷰를 렌더링할 수 있습니다.
+템플릿 엔진은 `@View` 데코레이터를 사용하여 뷰를 렌더링할 수 있습니다.
 
-먼저 필요한 패키지를 설치해야 합니다.
+먼저 필요한 패키지를 설치해야 합니다. 터미널에서 다음과 같이 입력합니다.
 
 ```bash
 yarn add @fastify/view handlebars
@@ -610,7 +610,7 @@ yarn add @fastify/view handlebars
     }
 ```
 
-컨트롤러에서는 `@View` 데코레이터를 사용하여 템플릿을 렌더링할 수 있습니다.
+컨트롤러에서는 `@View` 데코레이터를 사용하면 템플릿과 매핑할 수 있습니다.
 
 ```ts
 @Controller("/")
@@ -618,7 +618,6 @@ export class AppController {
     /**
      * 로그인 페이지를 표시합니다.
      */
-    @Get("/login")
     @View("login")
     login() {
         return {
@@ -630,8 +629,26 @@ export class AppController {
     /**
      * 로그인된 유저만 접근할 수 있는 페이지입니다.
      */
-    @Get("/memberInfo")
     @View("memberInfo")
+    @UseGuard(SessionGuard)
+    async memberInfo(@User() user: UserEntity) {
+        return {
+            username: user.username,
+        };
+    }
+}
+```
+
+만약 뷰의 경로와 라우트의 경로가 다르다면 다음과 같이 `@Render` 데코레이터를 사용하여 템플릿 리소스의 경로를 지정할 수 있습니다.
+
+```ts
+@Controller("/")
+export class AppController {
+    /**
+     * 로그인된 유저만 접근할 수 있는 페이지입니다.
+     */
+    @Get("/info")
+    @Render("memberInfo")
     @UseGuard(SessionGuard)
     async memberInfo(@User() user: UserEntity) {
         return {

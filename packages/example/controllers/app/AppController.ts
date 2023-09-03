@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuard, View } from "@stingerloom/common";
+import { Controller, UseGuard, View } from "@stingerloom/common";
 import { SessionGuard } from "../auth/guards/SessionGuard";
 import { User } from "@stingerloom/example/common/decorators/User";
 import { User as UserEntity } from "@stingerloom/example/entity/User";
@@ -8,7 +8,6 @@ export class AppController {
     /**
      * 로그인 페이지를 표시합니다.
      */
-    @Get("/login")
     @View("login")
     login() {
         return {
@@ -20,7 +19,6 @@ export class AppController {
     /**
      * 로그인된 유저만 접근할 수 있는 페이지입니다.
      */
-    @Get("/memberInfo")
     @View("memberInfo")
     @UseGuard(SessionGuard)
     async memberInfo(@User() user: UserEntity) {
