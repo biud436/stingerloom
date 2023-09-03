@@ -7,7 +7,7 @@ import "reflect-metadata";
 
 import { ContainerManager } from "@stingerloom/IoC/ContainerManager";
 import { ParameterListManager } from "@stingerloom/common/ParameterListManager";
-import { ModuleOptions } from "@stingerloom/common";
+import { Logger, ModuleOptions } from "@stingerloom/common";
 import Database from "@stingerloom/common/Database";
 import Container from "typedi";
 import { InstanceScanner } from "@stingerloom/IoC";
@@ -26,6 +26,7 @@ export class ServerBootstrapApplication {
     protected app!: FastifyInstance;
     private containerManager!: ContainerManager;
     protected moduleOptions!: ModuleOptions;
+    private logger = new Logger(ServerBootstrapApplication.name);
 
     constructor() {
         this.app = fastify({
@@ -84,6 +85,8 @@ export class ServerBootstrapApplication {
     }
 
     private async onApplicationShutdown(): Promise<void> {
+        this.logger.info("Application is shutting down...");
+
         await this.containerManager.propagateShutdown();
 
         const instanceScanner = Container.get(InstanceScanner);
@@ -105,6 +108,9 @@ export class ServerBootstrapApplication {
         process.on("unhandledRejection", handleErrorWather);
 
         process.on("exit", () => this.onApplicationShutdown.bind(this));
+        // process.on("SIGINT", () => this.onApplicationShutdown.bind(this));
+        // process.on("SIGTERM", () => this.onApplicationShutdown.bind(this));
+        // process.on("SIGQUIT", () => this.onApplicationShutdown.bind(this));
 
         return this;
     }
