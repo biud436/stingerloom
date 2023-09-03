@@ -569,7 +569,7 @@ export class AuthController {
 
 ## Template Engine
 
-템플릿 엔진은 `@View` 데코레이터를 사용하여 뷰를 렌더링할 수 있습니다.
+템플릿 엔진은 `@View` 데코레이터를 사용하여 HTML 파일을 렌더링할 수 있습니다.
 
 먼저 필요한 패키지를 설치해야 합니다. 터미널에서 다음과 같이 입력합니다.
 
