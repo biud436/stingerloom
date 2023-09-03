@@ -11,6 +11,9 @@ import fastifySession from "@fastify/session";
 import { AuthService } from "./controllers/auth/AuthService";
 import { AuthController } from "./controllers/auth/AuthController";
 import { SessionGuard } from "./controllers/auth/guards/SessionGuard";
+import handlebars from "handlebars";
+import view from "@fastify/view";
+import { AppController } from "./controllers/app/AppController";
 
 /**
  * @class StingerLoomBootstrapApplication
@@ -26,7 +29,13 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
      */
     override beforeStart(): void {
         this.moduleOptions = ModuleOptions.merge({
-            imports: [],
+            imports: [
+                {
+                    imports: [],
+                    controllers: [AppController],
+                    providers: [],
+                },
+            ],
             controllers: [PostController, UserController, AuthController],
             providers: [
                 InternalErrorFilter,
@@ -54,6 +63,14 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
         app.register(fastifyFormdody);
         app.register(fastifySession, {
             secret: process.env.SESSION_SECRET,
+        });
+
+        app.register(view, {
+            engine: {
+                handlebars,
+            },
+            root: `${__dirname}/views`,
+            viewExt: "hbs",
         });
 
         return this;

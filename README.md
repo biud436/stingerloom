@@ -41,7 +41,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render` 데코레이터를 지원합니다.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
@@ -564,6 +564,93 @@ export class AuthController {
         "userId": "4500949a-3855-42d4-a4d0-a7f0e81c4054"
     }
 }
+```
+
+## Template Engine
+
+템플릿 엔진은 `@View` 데코레이터 또는 `@Render`를 사용하여 뷰를 렌더링할 수 있습니다.
+
+먼저 필요한 패키지를 설치해야 합니다.
+
+```bash
+yarn add @fastify/view handlebars
+```
+
+`bootstrap.ts` 파일에서 템플릿 엔진을 미들웨어로 등록하면 모든 컨트롤러에서 템플릿 엔진을 사용할 수 있습니다.
+
+```ts
+    /**
+     * 미들웨어를 추가합니다.
+     *
+     * @returns
+     */
+    protected applyMiddlewares(): this {
+        const app = this.app;
+
+        app.register(fastifyCookie, {
+            secret: process.env.COOKIE_SECRET,
+            hook: "onRequest",
+        });
+
+        app.register(fastifyFormdody);
+        app.register(fastifySession, {
+            secret: process.env.SESSION_SECRET,
+        });
+
+        app.register(view, {
+            engine: {
+                handlebars,
+            },
+            root: `${__dirname}/views`,
+            viewExt: "hbs",
+        });
+
+        return this;
+    }
+```
+
+컨트롤러에서는 `@View` 데코레이터를 사용하여 템플릿을 렌더링할 수 있습니다.
+
+```ts
+@Controller("/")
+export class AppController {
+    @Get("/login")
+    @View("login")
+    login() {
+        return {
+            username: "아이디",
+            password: "비밀번호",
+        };
+    }
+}
+```
+
+필요한 매개변수를 반환하면 각 템플릿 엔진에서 이를 처리할 수 있습니다.
+
+다음은 `handlebars` 템플릿 엔진을 사용한 예제입니다.
+
+```html
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>템플릿 렌더링 예제</title>
+    </head>
+    <body>
+        <div>
+            <h2>로그인</h2>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="{{username}}" />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="{{password}}"
+                />
+                <input type="submit" value="login" />
+            </form>
+        </div>
+    </body>
+</html>
 ```
 
 ## Installations
