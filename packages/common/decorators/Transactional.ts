@@ -43,7 +43,7 @@ export function Transactional(option?: TransactionalOptions): MethodDecorator {
             methodName,
         );
         Reflect.defineMetadata(
-            TRANSACTION_ENTITY_MANAGER,
+            TRANSACTION_PROPAGATION,
             option?.propagation ?? TransactionPropagation.REQUIRES_NEW,
             target,
             methodName,

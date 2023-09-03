@@ -615,6 +615,9 @@ yarn add @fastify/view handlebars
 ```ts
 @Controller("/")
 export class AppController {
+    /**
+     * 로그인 페이지를 표시합니다.
+     */
     @Get("/login")
     @View("login")
     login() {
@@ -623,14 +626,27 @@ export class AppController {
             password: "비밀번호",
         };
     }
+
+    /**
+     * 로그인된 유저만 접근할 수 있는 페이지입니다.
+     */
+    @Get("/memberInfo")
+    @View("memberInfo")
+    @UseGuard(SessionGuard)
+    async memberInfo(@User() user: UserEntity) {
+        return {
+            username: user.username,
+        };
+    }
 }
 ```
 
 필요한 매개변수를 반환하면 각 템플릿 엔진에서 이를 처리할 수 있습니다.
 
-다음은 `handlebars` 템플릿 엔진을 사용한 예제입니다.
+다음은 `handlebars` 템플릿 엔진을 사용한 로그인 예제입니다.
 
-```html
+```hbs
+<!-- login.hbs -->
 <html lang="ko">
     <head>
         <meta charset="UTF-8" />
@@ -640,7 +656,7 @@ export class AppController {
     <body>
         <div>
             <h2>로그인</h2>
-            <form action="/login" method="post">
+            <form action="/auth/login" method="post">
                 <input type="text" name="username" placeholder="{{username}}" />
                 <input
                     type="password"
@@ -650,6 +666,22 @@ export class AppController {
                 <input type="submit" value="login" />
             </form>
         </div>
+    </body>
+</html>
+```
+
+세션 정보를 표시하는 예제입니다.
+
+```hbs
+<!-- memberInfo.hbs -->
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>세션 예제</title>
+    </head>
+    <body>
+        <p>로그인한 유저 정보는 <strong>{{username}}</strong>입니다.</p>
     </body>
 </html>
 ```

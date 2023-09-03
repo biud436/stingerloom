@@ -44,7 +44,11 @@ export class UserService implements OnModuleInit {
         }
 
         const newUser = await this.userRepository.create(createUserDto);
+
+        console.log("newUser", newUser);
         const res = await queryRunner?.manager.save(newUser);
+
+        console.log("res", res);
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }

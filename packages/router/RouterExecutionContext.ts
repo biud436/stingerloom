@@ -89,7 +89,11 @@ export class RouterExecutionContext {
                     );
 
                     return renderConsumer.isRender(routerName)
-                        ? renderConsumer.execute(res, routerName, result)
+                        ? renderConsumer.execute(
+                              res,
+                              routerName,
+                              result instanceof Promise ? await result : result,
+                          )
                         : classToPlain(result);
                 };
 
