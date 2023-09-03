@@ -19,3 +19,4 @@ export * from "./SessionProxy";
 export * from "./transaction/TransactionManager";
 export * from "./OnModuleInit";
 export * from "./OnApplicationShutdown";
+export * from "./Module";
