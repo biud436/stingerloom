@@ -45,7 +45,7 @@ This framework provides the following decorators: `Controller`, `Get`, `Post`, `
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
--   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
+-   [Exception Filter and Execution Context](https://github.com/biud436/stingerloom#exception-filter-and-execution-context)
 -   [트랜잭션의 처리](https://github.com/biud436/stingerloom#handling-database-transactions)
 -   [인증](https://github.com/biud436/stingerloom#authorization)
 -   [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
