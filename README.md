@@ -740,11 +740,11 @@ yarn start
 
 ## Generate a new controller and service
 
-to generate a new controller and service automatically, you can use the following command.
-
 <p align="center">
 <img src="https://github.com/biud436/stingerloom/assets/13586185/661719f1-38ba-4823-9458-3d8c017ebb82" />
 </p>
+
+to generate a new controller and service automatically, you can use the following command.
 
 ```bash
 yarn gen
