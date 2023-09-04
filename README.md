@@ -740,7 +740,7 @@ yarn start
 
 ## Generate a new controller and service
 
-StingerLoom supports interactive prompts. The interactive prompts make it easy to create module files. However, at this stage, you can only create variables in the template file, but I think you should add logic to read the module information using the Typescript compiler through further research.
+StingerLoom supports interactive prompts. The interactive prompts make it easy to create module files. It's pretty limited at this point, I think you should add logic to read the module information using the Typescript compiler through further research.
 
 <p align="center">
 <img src="https://github.com/biud436/stingerloom/assets/13586185/661719f1-38ba-4823-9458-3d8c017ebb82" />
