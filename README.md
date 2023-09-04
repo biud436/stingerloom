@@ -142,7 +142,7 @@ In contrast, an `Injectable` class is managed as a singleton instance, so the sa
 
 For an example of this, see the next section, [Injectable](https://github.com/biud436/stingerloom#injectable).
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Injectable
 
@@ -204,7 +204,7 @@ export class UserService {
 }
 ```
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Exception Filter와 실행 컨텍스트
 
@@ -247,7 +247,7 @@ export class InternalErrorFilter implements Filter {
 
 예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Handling Database Transactions
 
@@ -384,7 +384,7 @@ export class UserService {
 
 대신, 트랜잭션이 필요한 부분은 주입되는 `queryRunner`를 통해 처리해야 합니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Authorization
 
@@ -488,7 +488,7 @@ export class AuthController {
 
 인증이 되지 않은 사용자의 경우에는 401 오류가 발생합니다.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Custom Parameter Decorator
 
@@ -701,7 +701,7 @@ export class AppController {
 </html>
 ```
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Installations
 
