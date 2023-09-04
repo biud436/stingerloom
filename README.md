@@ -1,33 +1,33 @@
 # Introduction
 
-이 서버 프레임워크는 Nest.js라는 서버 프레임워크의 동작 원리와 기술을 더 깊이 이해하기 위해서 시작되었습니다.
+This server framework was started to better understand the mechanics and technology behind a server framework called Nest.js.
 
-`나만의 서버 프레임워크`를 만들어보면서 프레임워크에 대한 이해도를 높이고, Nest.js의 동작 원리를 이해하고자 하였습니다.
+By creating my own server framework, I wanted to gain a better understanding of frameworks and understand how Nest.js works.
 
-`나만의 서버 프레임워크`의 이름은 StingerLoom이며 라우터 맵핑 기능과 StingerLoom Container에 의한 DI와 데이터베이스 접근에 필요한 ORM 등의 기능을 지원합니다.
+The "build your own server framework" is named StingerLoom and supports features such as router mapping and the ORM needed to access database, and provide DI by the StingerLoom Container.
 
 <p align="center"> 
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
 </p>
 
-## 개발 일지
+## Development journal
 
-이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
+I've summarized my thoughts on creating this framework in the link below.
 
--   [나만의 Node.js 서버 프레임워크 개발기 3편](https://blog.naver.com/biud436/223198108682)
--   [나만의 Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
--   [나만의 Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
+-   [Build Your Own Node.js Server Framework, Part 3](https://blog.naver.com/biud436/223198108682)
+-   [Build Your Own Node.js Server Framework, Part 2](https://blog.naver.com/biud436/223192980484)
+-   [Build Your Own Node.js Server Framework, Part 1](https://blog.naver.com/biud436/223163267550)
 
-Fastify나 Express에 종속성 없는 설계, Redis, Cache, OpenAPI (Swagger) 등 다양한 기능을 지원하기 위해서는 아직도 많은 고민이 필요합니다.
+There's still a lot of work to be done to make Fastify or Express dependency-free, support Redis, Cache, OpenAPI (Swagger), and more.
 
-## 사용한 기술
+## Techniques
 
-본 서버 프레임워크는 아래의 기술을 사용하였습니다.
+This server framework uses the following technologies
 
-또한 fastify에 기반한 프레임워크이므로 fastify에 강한 의존성을 가지고 있습니다.
+It is also a framework based on fastify, so it has a strong dependency on fastify.
 
 -   fastify
--   typeorm
+-   typeform
 -   typedi
 -   reflect-metadata
 -   mariadb
@@ -35,13 +35,13 @@ Fastify나 Express에 종속성 없는 설계, Redis, Cache, OpenAPI (Swagger) �
 -   class-validator
 -   http-status
 
-ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직렬화를 위해서 class-transformer와 class-validator를 사용하였습니다.
+ORM used typeorm, and class-transformer and class-validator were used for serialization/deserialization of Body decorators.
 
-또한 메타데이터 수집을 위해서 reflect-metadata를 사용하였습니다.
+It also uses reflect-metadata to collect metadata.
 
-# 사용법
+# How to use
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render` 데코레이터를 지원합니다.
+This framework provides the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render` decorators.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
