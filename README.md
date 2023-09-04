@@ -14,9 +14,9 @@ The "build your own server framework" is named StingerLoom and supports features
 
 I've summarized my thoughts on creating this framework in the link below.
 
--   [Build Your Own Node.js Server Framework, Part 3](https://blog.naver.com/biud436/223198108682)
--   [Build Your Own Node.js Server Framework, Part 2](https://blog.naver.com/biud436/223192980484)
--   [Build Your Own Node.js Server Framework, Part 1](https://blog.naver.com/biud436/223163267550)
+-   [Build Your Own Node.js Server Framework, Part 3 (Korean)](https://blog.naver.com/biud436/223198108682)
+-   [Build Your Own Node.js Server Framework, Part 2 (Korean)](https://blog.naver.com/biud436/223192980484)
+-   [Build Your Own Node.js Server Framework, Part 1 (Korean)](https://blog.naver.com/biud436/223163267550)
 
 There's still a lot of work to be done to make Fastify or Express dependency-free, support Redis, Cache, OpenAPI (Swagger), and more.
 
