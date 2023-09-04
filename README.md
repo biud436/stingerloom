@@ -206,10 +206,9 @@ export class UserService {
 
 [▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
-## Exception Filter와 실행 컨텍스트
+## Exception Filter and Execution Context
 
-Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스에 해당하는 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
-`@BeforeCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행되기 전에 실행되고, `@AfterCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행된 후에 실행됩니다.
+An Exception Filter is a decorator that allows you to handle and override errors. You attach the `@ExceptionFilter` decorator and specify an error class as the decorator's argument. Then, when an error occurs that corresponds to that error class, the method with the `@Catch` decorator is executed. Methods with the `@BeforeCatch` decorator are executed before the method with the `@Catch` decorator is executed, and methods with the `@AfterCatch` decorator are executed after the method with the `@Catch` decorator is executed.
 
 ```ts
 @ExceptionFilter(InternalServerException)
@@ -239,13 +238,13 @@ export class InternalErrorFilter implements Filter {
 }
 ```
 
-이렇게 하면 아래와 같이 출력됩니다.
+This will produce the output shown below.
 
 <p align="center">
 <img src="https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770" />
 </p>
 
-예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
+Exception methods are executed in the order `@BeforeCatch -> @Catch -> @AfterCatch`. Each exception context is a shared instance, with one instance per exception-handling class.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
 
