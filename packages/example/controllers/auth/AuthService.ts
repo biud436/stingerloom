@@ -12,6 +12,8 @@ import { EntityManager, QueryRunner } from "typeorm";
 import { User } from "@stingerloom/example/entity/User";
 import { plainToClass } from "class-transformer";
 import { InjectQueryRunner } from "@stingerloom/common/decorators/InjectQueryRunner";
+import { InternalServerException } from "@stingerloom/error";
+import { FastifyRequest } from "fastify";
 
 @TransactionalZone()
 @Injectable()
@@ -27,6 +29,30 @@ export class AuthService {
             message: "로그인에 성공하였습니다.",
             result: "success",
             data: session.user,
+        });
+    }
+
+    async logout(
+        req: FastifyRequest & {
+            destroySession(callback: (err?: Error) => void): void;
+        },
+        session: SessionObject,
+    ) {
+        if (!session) {
+            throw new InternalServerException("세션이 존재하지 않습니다.");
+        }
+
+        if (!session.authenticated) {
+            throw new InternalServerException("로그인되어 있지 않습니다.");
+        }
+
+        return new Promise((resolve, reject) => {
+            req.destroySession((err) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(ResultUtils.success("로그아웃에 성공하였습니다.", {}));
+            });
         });
     }
 
