@@ -46,10 +46,10 @@ This framework provides the following decorators: `Controller`, `Get`, `Post`, `
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
 -   [Exception Filter and Execution Context](https://github.com/biud436/stingerloom#exception-filter-and-execution-context)
--   [트랜잭션의 처리](https://github.com/biud436/stingerloom#handling-database-transactions)
--   [인증](https://github.com/biud436/stingerloom#authorization)
+-   [Processing of transactions](https://github.com/biud436/stingerloom#handling-database-transactions)
+-   [Authorization](https://github.com/biud436/stingerloom#authorization)
 -   [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
--   [템플릿 엔진](https://github.com/biud436/stingerloom#template-engine)
+-   [Template Engine](https://github.com/biud436/stingerloom#template-engine)
 
 ## Controller
 
