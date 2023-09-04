@@ -737,3 +737,11 @@ and then next you can start this application with this command.
 ```bash
 yarn start
 ```
+
+## Generate a new controller and service
+
+to generate a new controller and service automatically, you can use the following command.
+
+```bash
+yarn gen
+```

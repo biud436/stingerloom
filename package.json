@@ -50,6 +50,6 @@
     "scripts": {
         "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example -V -L",
         "build": "rimraf dist && tsc",
-        "c": "hygen controller with-prompt"
+        "gen": "hygen module with-prompt"
     }
 }
