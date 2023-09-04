@@ -250,29 +250,29 @@ Exception methods are executed in the order `@BeforeCatch -> @Catch -> @AfterCat
 
 ## Handling Database Transactions
 
-트랜잭션은 작업의 완전성과 데이터의 정합성을 보장하기 위한 기능입니다. 즉, 어떤 작업을 완벽하게 처리하지 못했을 때 원 상태로 복구할 수 있도록 해주는 기능입니다.
+Transactions are a feature to ensure the completeness of operations and the consistency of data. In other words, they allow you to restore the original state when something doesn't work perfectly.
 
-StingerLoom에서는 이러한 트랜잭션 처리를 위해서 `@Transactional`이라는 데코레이터를 지원합니다.
+To handle these transactions, StingerLoom supports a decorator called `@Transactional`.
 
-스프링에서 영감을 받은 이 데코레이터의 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
+This Spring-inspired decorator's transaction isolation level defaults to REPETABLE READ when omitted.
 
-트랜잭션 격리 수준이란 여러 트랜잭션이 동시에 처리될 때, 특정 트랜잭션이 다른 트랜잭션의 변경 사항을 볼 수 있는 수준을 말합니다.
+Transaction isolation level refers to the level at which a particular transaction can see changes made by other transactions when multiple transactions are being processed at the same time.
 
-크게 4가지로 나뉘는데, `READ UNCOMMITTED`, `READ COMMITTED`, `REPEATABLE READ`, `SERIALIZABLE`이 있습니다.
+There are four main types: `READ UNCOMMITTED`, `READ COMMITTED`, `REPEATABLE READ`, and `SERIALIZABLE`.
 
-`@Transactional` 기능은 현재 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다.
+The `@Transactional` feature currently only applies to classes with the @Injectable decorator.
 
-또한 트랜잭션 처리를 위해서는 효율적인 검색을 위해 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
+Also, for transactional processing, classes must be marked with the @TransactionalZone decorator for efficient search.
 
-`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`과 `QueryRunner`를 주입받을 메소드를 찾아서 트랜잭션 처리를 수행합니다.
+The `@TransactionalZone` decorator performs transaction processing by finding methods to inject EntityManager and QueryRunner for transaction processing.
 
-다음은 트랜잭션을 처리하는 심플한 예시입니다.
+Here's a simple example of how to handle transactions.
 
-### Transaction Entity Manager를 사용하는 경우
+### If you are using Transaction Entity Manager
 
-`transactionalEntityManager` 속성을 `true`로 설정하면, `Transaction Entity Manager`를 자동으로 주입받을 수 있습니다.
+If you set the `transactionalEntityManager` property to `true`, you can have the `Transaction Entity Manager` automatically injected.
 
-`Transaction Entity Manager`를 사용하면 트랜잭션 엔티티 매니저를 사용하여 단일이 아닌 여러 쿼리를 트랜잭션으로 처리를 할 수 있게 됩니다.
+With `Transactional Entity Manager`, you will be able to process multiple queries as a transaction instead of a single one using the Transactional Entity Manager.
 
 ```ts
 @TransactionalZone()
@@ -303,23 +303,23 @@ export class AuthService {
 }
 ```
 
-위 코드를 보면 주입 받은 트랜잭션 엔티티 매니저의 인스턴스인 `em`을 사용해야 트랜잭션으로 처리가 됩니다.
+In the code above, you can see that we need to use `em`, which is an instance of the injected transaction entity manager, to be treated as a transaction.
 
-### `QueryRunner`를 사용하는 경우 (추천)
+### If you use `QueryRunner` (recommended)
 
-제가 자주 사용하는 방법인데요. 바로 `QueryRunner`를 사용하는 방법이 있습니다.
+My favorite way to do this is to use a `QueryRunner`.
 
-`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
+If you use `QueryRunner`, you have a lot more control over the transaction: methods labeled `@Transactional()` are automatically injected with `QueryRunner`.
 
-또한 오류가 발생하면 자동으로 롤백 처리까지 해줍니다.
+It also automatically handles rollbacks if an error occurs.
 
-처음에 이것을 설계할 때 `QueryRunner`가 인터페이스라서 `QueryRunner`를 주입받는 것이 불가능하다고 생각했었는데요.
+When I first designed this, I thought it was impossible to get `QueryRunner` injected because `QueryRunner` is an interface.
 
-이는 `@InjectQueryRunner()`를 통해 해결할 수 있었습니다.
+This was solved with `@InjectQueryRunner()`.
 
-따라서 QueryRunner 인스턴스를 제대로 주입받으려면 `@InjectQueryRunner()` 데코레이터를 사용해야 합니다.
+So, to get a QueryRunner instance injected properly, we need to use the `@InjectQueryRunner()` decorator.
 
-그럼 예제를 볼까요?
+So let's see an example.
 
 ```ts
 @TransactionalZone()
@@ -343,11 +343,11 @@ export class AuthService {
 }
 ```
 
-예제를 보면 굉장히 심플하다는 것을 알 수 있습니다. 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
+If you look at the example, you'll see that it's pretty simple. If no errors occur on return, the transaction will commit normally.
 
-`QueryRunner`는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
+The `QueryRunner` can be injected via the `@InjectQueryRunner()` decorator.
 
-다음은 또 다른 예제인 회원 가입 예제입니다.
+Here's another example, a membership signup example.
 
 ```ts
 @TransactionalZone()
@@ -379,17 +379,17 @@ export class UserService {
 }
 ```
 
-중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
+You'll notice the error handling logic in the middle, which can be thought of simply: if an error is thrown in the above code, the transaction is automatically rolled back.
 
-대신, 트랜잭션이 필요한 부분은 주입되는 `queryRunner`를 통해 처리해야 합니다.
+Instead, the parts that need to be transactional should be handled by the injected `queryRunner`.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
+[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Authorization
 
-StingerLoom에선 세션 기반 인증을 지원합니다.
+StingerLoom supports session-based authentication.
 
-SessionObject를 상속받은 클래스를 세션 오브젝트로 사용할 수 있습니다.
+Classes that inherit from SessionObject can be used as session objects.
 
 ```ts
 @Controller("/auth")
@@ -406,13 +406,13 @@ export class AuthController {
 }
 ```
 
-아직 예제에 인가 처리가 구현되지 않았는데요.
+Authorization processing is not yet implemented in the example.
 
-인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념을 구현해야 합니다.
+Authorization processing requires the implementation of the AuthGuard concept and the Role concept, which is required for authorization processing.
 
 ### Handling Session
 
-조금 더 실용적인 예제는 아래와 같습니다.
+Here's a more practical example.
 
 ```ts
 @Injectable()
@@ -440,13 +440,13 @@ export class AuthService {
 }
 ```
 
-현재 버전에서는 위와 같이 세션 오브젝트를 사용하여 인증을 구현할 수 있습니다.
+In the current version, you can implement authentication using session objects as shown above.
 
 ### Session Guard
 
-세션 인증은 `@Session()` 데코레이터를 사용하여 세션 오브젝트를 주입받아서 처리할 수 있고, SessionGuard를 추가하여 세션 인증을 처리할 수 있습니다.
+Session authentication can be handled by injecting a session object using the `@Session()` decorator and adding a SessionGuard to handle session authentication.
 
-코드는 다음과 같습니다.
+The code looks like this.
 
 ```ts
 @Injectable()
@@ -468,7 +468,7 @@ export class SessionGuard implements Guard {
 }
 ```
 
-위 가드를 providers에 추가하고 아래와 같이 컨트롤러나 라우터에 붙여서 사용할 수 있습니다.
+You can add the above guard to your providers and attach it to your controller or router as shown below.
 
 ```ts
 @Controller("/auth")
@@ -483,17 +483,17 @@ export class AuthController {
 }
 ```
 
-위와 같이 하면 세션 인증을 통과한 로그인 사용자의 경우에만 라우터가 실행됩니다.
+The above will only run the router for login users who have passed session authentication.
 
-인증이 되지 않은 사용자의 경우에는 401 오류가 발생합니다.
+For unauthenticated users, a 401 error will occur.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
+[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Custom Parameter Decorator
 
-`createCustomParamDecorator` 함수를 이용하여 자신만의 `ParameterDecorator`를 만들 수 있습니다.
+You can create your own `ParameterDecorator` using the `createCustomParamDecorator` function.
 
-다음은 유저 정보와 유저 ID를 세션으로부터 취득하는 예제입니다.
+Here is an example of getting user information and a user ID from a session.
 
 ```ts
 export const User = createCustomParamDecorator((data, context) => {
@@ -508,7 +508,7 @@ export const User = createCustomParamDecorator((data, context) => {
 });
 ```
 
-유저 ID는 아래와 같이 취득할 수 있습니다.
+You can get a user ID as follows.
 
 ```ts
 export const UserId = createCustomParamDecorator((data, context) => {
@@ -523,7 +523,7 @@ export const UserId = createCustomParamDecorator((data, context) => {
 });
 ```
 
-최종 사용법은 아래와 같습니다.
+Here's how I ended up using it
 
 ```ts
 @Controller("/auth")
@@ -545,7 +545,7 @@ export class AuthController {
 }
 ```
 
-조회하면 결과는 아래와 같이 출력됩니다.
+When queried, the result is output as shown below.
 
 ```json
 {
@@ -566,15 +566,15 @@ export class AuthController {
 
 ## Template Engine
 
-템플릿 엔진은 `@View` 데코레이터를 사용하여 HTML 파일을 렌더링할 수 있습니다.
+The template engine can render HTML files using the `@View` decorator.
 
-먼저 필요한 패키지를 설치해야 합니다. 터미널에서 다음과 같이 입력합니다.
+First, you need to install the necessary packages. In a terminal, type
 
 ```bash
 yarn add @fastify/view handlebars
 ```
 
-`bootstrap.ts` 파일에서 템플릿 엔진을 미들웨어로 등록하면 모든 컨트롤러에서 템플릿 엔진을 사용할 수 있습니다.
+In the `bootstrap.ts` file, register the template engine as middleware so that all controllers can use it.
 
 ```ts
     /**
@@ -607,7 +607,7 @@ yarn add @fastify/view handlebars
     }
 ```
 
-컨트롤러에서는 `@View` 데코레이터를 사용하면 템플릿과 매핑할 수 있습니다.
+In the controller, you can use the `@View` decorator to map with templates.
 
 ```ts
 @Controller("/")
@@ -636,7 +636,7 @@ export class AppController {
 }
 ```
 
-만약 뷰의 경로와 라우트의 경로가 다르다면 다음과 같이 `@Render` 데코레이터를 사용하여 템플릿 리소스의 경로를 지정할 수 있습니다.
+If the path in the view is different from the path in the route, you can use the `@Render` decorator to specify the path to the template resource, like this
 
 ```ts
 @Controller("/")
@@ -655,9 +655,9 @@ export class AppController {
 }
 ```
 
-필요한 매개변수를 반환하면 각 템플릿 엔진에서 이를 처리할 수 있습니다.
+Return the required parameters and each template engine can process them.
 
-다음은 `handlebars` 템플릿 엔진을 사용한 로그인 예제입니다.
+Here's an example of a login using the `handlebars` template engine.
 
 ```hbs
 <!-- login.hbs -->
@@ -684,7 +684,7 @@ export class AppController {
 </html>
 ```
 
-세션 정보를 표시하는 예제입니다.
+Example of displaying session information.
 
 ```hbs
 <!-- memberInfo.hbs -->
@@ -700,7 +700,7 @@ export class AppController {
 </html>
 ```
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
+[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Installations
 
