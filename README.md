@@ -743,11 +743,11 @@ yarn start
 StingerLoom supports interactive prompts. The interactive prompts make it easy to create module files. It's pretty limited at this point, I think you should add logic to read the module information using the Typescript compiler through further research.
 
 <p align="center">
-<img src="https://github.com/biud436/stingerloom/assets/13586185/661719f1-38ba-4823-9458-3d8c017ebb82" />
+<img src="https://github.com/biud436/stingerloom/assets/13586185/4762b3f0-6b39-4dac-b9ff-430ff8b20815" />
 </p>
 
 to generate a new controller and service automatically, you can use the following command.
 
 ```bash
-yarn gen
+yarn cli
 ```
