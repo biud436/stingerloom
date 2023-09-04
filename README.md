@@ -246,7 +246,7 @@ This will produce the output shown below.
 
 Exception methods are executed in the order `@BeforeCatch -> @Catch -> @AfterCatch`. Each exception context is a shared instance, with one instance per exception-handling class.
 
-[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#how-to-use)
+[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
 
 ## Handling Database Transactions
 
