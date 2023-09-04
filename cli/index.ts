@@ -43,6 +43,13 @@ export class Cli {
                     shell.stdout?.pipe(process.stdout);
                     shell.stderr?.pipe(process.stderr);
                 }
+
+                shell.on("close", (code) => {
+                    if (code === 0) {
+                        console.log("Success");
+                        // TODO: typescript transformer로 특정 파일에 특정 모듈 추가
+                    }
+                });
             }
         } catch (error) {
             console.error(error);
