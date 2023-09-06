@@ -3,6 +3,11 @@
 import * as ts from "typescript";
 import path from "path";
 
+/**
+ * TODO: 다음 링크를 참고할 것
+ *
+ * https://github.com/angular/angular/blob/main/packages/compiler-cli/src/ngtsc/transform/src/transform.ts
+ */
 export function visitNode(
     sourceFile: ts.SourceFile,
     typeChecker: ts.TypeChecker,
