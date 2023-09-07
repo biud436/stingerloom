@@ -33,6 +33,9 @@ export class BootstrapTransformer {
     private importsMap: Importer = new Map();
     private readonly logger: Logger = new Logger(BootstrapTransformer.name);
 
+    private program!: ts.Program;
+    private typeChecker!: ts.TypeChecker;
+
     /**
      * BootstrapTransformer 클래스의 생성자
      *
@@ -41,11 +44,12 @@ export class BootstrapTransformer {
     constructor(private readonly newFiles: string[]) {}
 
     async start() {
-        const program = ts.createProgram([__ENTRYPOINT__], {});
-        const sourceFile = program.getSourceFile(__ENTRYPOINT__);
-        const typeChecker = program.getTypeChecker();
+        this.program = ts.createProgram([__ENTRYPOINT__], {});
+        this.typeChecker = this.program.getTypeChecker();
 
-        this.visitNode(sourceFile!, typeChecker, this.importsMap);
+        const sourceFile = this.program.getSourceFile(__ENTRYPOINT__);
+
+        this.visitNode(sourceFile!, this.importsMap);
 
         this.importsMap.forEach((value, key) => {
             console.log(key, value);
@@ -61,23 +65,25 @@ export class BootstrapTransformer {
     }
 
     /**
-     * TODO: 다음 링크를 참고할 것
+     * 타입스크립트 AST를 순회하면서 필요한 정보를 수집합니다.
      *
+     * @see
      * https://github.com/angular/angular/blob/main/packages/compiler-cli/src/ngtsc/transform/src/transform.ts
+     *
      * https://youtu.be/X8k_4tZ16qU
+     *
      * https://www.huy.rocks/everyday/04-01-2022-typescript-how-the-compiler-compiles
+     *
+     * @param sourceFile 타입스크립트 소스 파일
+     * @param importsMap 모듈 옵션의 imports 속성을 수집합니다.
      */
-    visitNode(
-        sourceFile: ts.SourceFile,
-        typeChecker: ts.TypeChecker,
-        importsMap: Importer,
-    ) {
+    visitNode(sourceFile: ts.SourceFile, importsMap: Importer) {
         let isFoundModuleOption = false;
         let isFoundImports = false;
 
         const visitor = (node: ts.Node) => {
             if (ts.isClassDeclaration(node)) {
-                console.log(`찾았습니다 ${node.name?.text}`);
+                this.logger.debug(`${node.name?.text}을 찾았습니다.`);
             }
 
             if (ts.isMethodDeclaration(node)) {
@@ -99,13 +105,13 @@ export class BootstrapTransformer {
 
                 if (identifier.escapedText === "ModuleOptions") {
                     isFoundModuleOption = true;
-                    console.log("ModuleOptions을 찾았습니다");
+                    this.logger.debug("ModuleOptions을 찾았습니다");
                 }
 
                 if (isFoundModuleOption) {
                     if (identifier.escapedText === "imports") {
                         isFoundImports = true;
-                        console.log("imports를 찾았습니다");
+                        this.logger.debug("imports를 찾았습니다");
                     }
                 }
 

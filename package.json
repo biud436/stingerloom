@@ -21,7 +21,7 @@
         "http-status": "^1.6.2",
         "hygen": "^6.2.11",
         "inquirer": "^8.0.0",
-        "jest": "^29.6.2",
+        "jest": "^29.6.4",
         "jsonwebtoken": "^9.0.1",
         "mysql": "^2.18.1",
         "pino-pretty": "^10.2.0",
@@ -39,12 +39,17 @@
         "typescript": "^5.1.6"
     },
     "devDependencies": {
+        "@babel/core": "^7.22.15",
+        "@babel/preset-env": "^7.22.15",
+        "@babel/preset-typescript": "^7.22.15",
         "@types/bcrypt": "^5.0.0",
         "@types/inquirer": "^9.0.3",
+        "@types/jest": "^29.5.4",
         "@types/node": "^20.4.8",
         "@types/passport": "^1.0.12",
         "@typescript-eslint/eslint-plugin": "^6.3.0",
         "@typescript-eslint/parser": "^6.3.0",
+        "babel-jest": "^29.6.4",
         "eslint": "^8.46.0",
         "lerna": "^7.1.5",
         "nodemon": "^3.0.1",
@@ -53,6 +58,8 @@
     "scripts": {
         "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example -V -L",
         "build": "rimraf dist && tsc",
-        "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L"
+        "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L",
+        "test2": "ts-node -r tsconfig-paths/register test/createExpression.test.ts -V -L",
+        "test": "jest --config jest.config.js"
     }
 }
