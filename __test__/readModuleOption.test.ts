@@ -80,15 +80,104 @@ export function readModuleOption() {
     return {
         imports,
         module,
+        sourceFile,
     };
 }
 
+/**
+ * 컨트롤러 속성을 읽어옵니다.
+ *
+ * @param node
+ * @returns
+ */
+function readControllersWithDepth0(node: ts.CallExpression) {
+    let controllerNode: ts.PropertyAssignment | undefined = undefined;
+
+    const visitor = (node: ts.Node) => {
+        if (ts.isPropertyAssignment(node)) {
+            const name = node.name as ts.Identifier;
+
+            if (name.escapedText === "controllers") {
+                controllerNode = node;
+            }
+        }
+
+        ts.forEachChild(node, visitor);
+    };
+
+    visitor(node);
+
+    return controllerNode;
+}
+
+function updateControllerNode(node: ts.PropertyAssignment) {
+    if (!ts.isPropertyAssignment(node)) {
+        throw new Error("node는 PropertyAssignment 타입이어야 합니다.");
+    }
+
+    const initializer = node.initializer as ts.ArrayLiteralExpression;
+
+    return ts.factory.updatePropertyAssignment(
+        node,
+        node.name,
+        ts.factory.updateArrayLiteralExpression(initializer, [
+            ...initializer.elements,
+            ts.factory.createIdentifier("AuthController2"),
+        ]),
+    );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function updateControllerNode2(node: ts.PropertyAssignment) {
+    if (!ts.isPropertyAssignment(node)) {
+        throw new Error("node는 PropertyAssignment 타입이어야 합니다.");
+    }
+
+    const initializer = node.initializer as ts.ArrayLiteralExpression;
+
+    return ts.factory.createPropertyAssignment(
+        node.name,
+        ts.factory.createArrayLiteralExpression([
+            ...initializer.elements,
+            ts.factory.createIdentifier("AuthController2"),
+        ]),
+    );
+}
+
 describe("타입스크립트 컴파일러 테스트", () => {
-    const { module } = readModuleOption();
+    const { module, sourceFile } = readModuleOption();
+    const printer = ts.createPrinter();
 
     it("right 속성 확인", () => {
-        console.log(module.right);
-
         expect(module.right).toBeDefined();
+    });
+
+    it("컨트롤러 속성 확인", () => {
+        const controllers = readControllersWithDepth0(module.right!);
+
+        console.log(
+            printer.printNode(
+                ts.EmitHint.Unspecified,
+                controllers!,
+                sourceFile,
+            ),
+        );
+
+        expect(controllers).toBeDefined();
+    });
+
+    it("컨트롤러 속성에 새로운 컨트롤러 추가", () => {
+        const controllers = readControllersWithDepth0(module.right!);
+        const afterController = updateControllerNode(controllers!);
+
+        console.log(
+            printer.printNode(
+                ts.EmitHint.Unspecified,
+                afterController!,
+                sourceFile,
+            ),
+        );
+
+        expect(afterController).toBeDefined();
     });
 });
