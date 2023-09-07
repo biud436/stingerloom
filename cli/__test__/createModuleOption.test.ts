@@ -79,7 +79,7 @@ export function createModuleOptions() {
     return result;
 }
 
-describe("ModuleOptions 테스트", () => {
+describe("타입스크립트 컴파일러 테스트", () => {
     it("컴파일러로부터 ModuleOptions 생성", () => {
         const result = createModuleOptions();
 
