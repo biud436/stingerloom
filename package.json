@@ -59,7 +59,6 @@
         "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example -V -L",
         "build": "rimraf dist && tsc",
         "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L",
-        "test2": "ts-node -r tsconfig-paths/register test/createExpression.test.ts -V -L",
         "test": "jest --config jest.config.js"
     }
 }
