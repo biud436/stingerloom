@@ -12,7 +12,7 @@
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
 <span>▲ 서버 시작</span>
 <img src="https://github.com/biud436/stingerloom/assets/13586185/67bd938e-d882-4119-9912-9a62b56c73a4" />
-<span>▲ 타입스크립트 컴파일러를 이용한 파일 자동 생성 및 수정 </span>
+<span>▲ Typescript Compiler를 이용한 Auto Import 및 Module 의존성 자동 추가 </span>
 </p>
 
 ## 개발 일지
