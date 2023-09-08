@@ -14,6 +14,9 @@ export class ControllerCodeFactory {
                 { name: "Get", path: "@stingerloom/common/decorators/Get" },
             ],
             routerName,
+            {
+                isController: true,
+            },
         );
     }
 

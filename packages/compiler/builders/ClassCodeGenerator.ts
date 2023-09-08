@@ -9,16 +9,31 @@ type IImportDeclaration = {
     type?: string;
 };
 
+/**
+ * @class ClassCodeGenerator
+ * @author biud436
+ * @description
+ * 본 클래스를 사용하면 컨트롤러 파일을 타입스크립트 컴파일러 수준에서 생성할 수 있습니다.
+ */
 export class ClassCodeGenerator {
     private statements: ts.Statement[];
 
     constructor(
         private readonly imported: IImportDeclaration[],
         private readonly routerName: string,
+        private readonly options?: {
+            isController?: boolean;
+        },
     ) {
         this.statements = [];
     }
 
+    /**
+     * import 문을 추가합니다.
+     *
+     * @param imported
+     * @returns
+     */
     private addImports(imported: IImportDeclaration[]) {
         return imported.map((imp) => {
             return ts.factory.createImportDeclaration(
@@ -39,6 +54,13 @@ export class ClassCodeGenerator {
         });
     }
 
+    /**
+     * 생성자를 추가합니다.
+     *
+     * @param name
+     * @param clazzName
+     * @returns
+     */
     private createConstructorContainsNamedParameter(
         name: string,
         clazzName: string,
@@ -63,10 +85,22 @@ export class ClassCodeGenerator {
         );
     }
 
+    /**
+     * 개행 문자를 추가합니다.
+     *
+     * @returns
+     */
     private appendEmptyLine() {
         return ts.factory.createIdentifier("\n") as any;
     }
 
+    /**
+     * 데코레이터를 추가합니다.
+     *
+     * @param decoratorName
+     * @param content
+     * @returns
+     */
     private addDecorator(decoratorName: string, content?: string) {
         return ts.factory.createDecorator(
             ts.factory.createCallExpression(
@@ -77,46 +111,90 @@ export class ClassCodeGenerator {
         );
     }
 
+    /**
+     * 컨트롤러 데코레이터를 추가합니다.
+     *
+     * @param path
+     * @returns
+     */
     private addControllerDecorator(path: string) {
         return this.addDecorator("Controller", path);
     }
 
+    /**
+     * Get 데코레이터를 추가합니다.
+     *
+     * @param path
+     * @returns
+     */
     private addGetDecorator(path: string) {
         return this.addDecorator("Get", path);
     }
 
+    /**
+     * 파스칼 케이스로 변환합니다.
+     *
+     * @param str
+     * @returns
+     */
     public toPascalCase(str: string) {
         return `${str[0].toUpperCase()}${str.slice(1)}`;
     }
 
+    /**
+     * 카멜 케이스로 변환합니다.
+     *
+     * @param str
+     * @returns
+     */
     public toCamelCase(str: string) {
         return `${str[0].toLowerCase()}${str.slice(1)}`;
     }
 
+    /**
+     * 생성자 주입 시 사용될 프로바이더를 검색합니다.
+     *
+     * @returns
+     */
     public findProvider(): IImportDeclaration {
         return this.imported.find((imp) => imp.type === "service")!;
     }
 
+    /**
+     * ClassModifier를 추가합니다.
+     * @returns
+     */
+    private addClassModifier() {
+        const { isController } = this.options || {};
+
+        return isController
+            ? [
+                  this.addControllerDecorator(`/${this.routerName}`),
+                  ts.factory.createToken(ts.SyntaxKind.ExportKeyword),
+              ]
+            : [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)];
+    }
+
+    /**
+     * 컨트롤러 파일을 컴파일러 수준에서 생성합니다.
+     *
+     */
     public generateControllerFile() {
         const importDelcarations = this.addImports(this.imported);
         const provider = this.findProvider();
+        const isController = this.options?.isController;
         const constructorNode = this.createConstructorContainsNamedParameter(
             this.toCamelCase(provider?.name),
             this.toPascalCase(provider?.name),
         );
 
         const classDeclaration = ts.factory.createClassDeclaration(
-            [
-                this.addControllerDecorator(`/${this.routerName}`),
-                ts.factory.createToken(ts.SyntaxKind.ExportKeyword),
-            ],
-            ts.factory.createIdentifier(
-                `${this.toPascalCase(this.routerName)}Controller`,
-            ),
+            this.addClassModifier(),
+            ts.factory.createIdentifier(this.getFilename()),
             undefined,
             undefined,
             [
-                constructorNode,
+                isController ? constructorNode : undefined,
                 this.appendEmptyLine(),
                 ts.factory.createMethodDeclaration(
                     [
@@ -164,8 +242,9 @@ export class ClassCodeGenerator {
     }
 
     private generateFile() {
+        const filename = this.getFilename() + ".ts";
         const resultFile = ts.createSourceFile(
-            "testController.ts",
+            filename,
             "",
             ts.ScriptTarget.Latest,
         );
@@ -180,7 +259,7 @@ export class ClassCodeGenerator {
             ts.NodeFlags.BlockScoped,
         );
 
-        const filePath = path.resolve(__dirname, "TestController.ts");
+        const filePath = path.resolve(__dirname, filename);
 
         const result = printer.printNode(
             ts.EmitHint.Unspecified,
@@ -189,5 +268,9 @@ export class ClassCodeGenerator {
         );
 
         fs.writeFileSync(filePath, result);
+    }
+
+    private getFilename(): string {
+        return `${this.toPascalCase(this.routerName)}Controller`;
     }
 }
