@@ -1,10 +1,12 @@
+[[English Docs]](https://github.com/biud436/stingerloom/blob/main/README.en.md)
+
 # Introduction
 
-This server framework was started to better understand the mechanics and technology behind a server framework called Nest.js.
+이 서버 프레임워크는 Nest.js라는 서버 프레임워크의 동작 원리와 기술을 더 깊이 이해하기 위해서 시작되었습니다.
 
-By creating my own server framework, I wanted to gain a better understanding of frameworks and understand how Nest.js works.
+`나만의 서버 프레임워크`를 만들어보면서 프레임워크에 대한 이해도를 높이고, Nest.js의 동작 원리를 이해하고자 하였습니다.
 
-The "build your own server framework" is named StingerLoom and supports features such as router mapping and the ORM needed to access database, and provide DI by the StingerLoom Container.
+`나만의 서버 프레임워크`의 이름은 StingerLoom이며 라우터 맵핑 기능과 StingerLoom Container에 의한 DI와 데이터베이스 접근에 필요한 ORM 등의 기능을 지원합니다.
 
 <p align="center"> 
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
@@ -13,24 +15,24 @@ The "build your own server framework" is named StingerLoom and supports features
 <span>▲ 타입스크립트 컴파일러를 이용한 파일 자동 생성 및 수정 </span>
 </p>
 
-## Development journal
+## 개발 일지
 
-I've summarized my thoughts on creating this framework in the link below.
+이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
 
--   [Build Your Own Node.js Server Framework, Part 3 (Korean)](https://blog.naver.com/biud436/223198108682)
--   [Build Your Own Node.js Server Framework, Part 2 (Korean)](https://blog.naver.com/biud436/223192980484)
--   [Build Your Own Node.js Server Framework, Part 1 (Korean)](https://blog.naver.com/biud436/223163267550)
+-   [나만의 Node.js 서버 프레임워크 개발기 3편](https://blog.naver.com/biud436/223198108682)
+-   [나만의 Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
+-   [나만의 Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
 
-There's still a lot of work to be done to make Fastify or Express dependency-free, support Redis, Cache, OpenAPI (Swagger), and more.
+Fastify나 Express에 종속성 없는 설계, Redis, Cache, OpenAPI (Swagger) 등 다양한 기능을 지원하기 위해서는 아직도 많은 고민이 필요합니다.
 
-## Techniques
+## 사용한 기술
 
-This server framework uses the following technologies
+본 서버 프레임워크는 아래의 기술을 사용하였습니다.
 
-It is also a framework based on fastify, so it has a strong dependency on fastify.
+또한 fastify에 기반한 프레임워크이므로 fastify에 강한 의존성을 가지고 있습니다.
 
 -   fastify
--   typeform
+-   typeorm
 -   typedi
 -   reflect-metadata
 -   mariadb
@@ -38,31 +40,31 @@ It is also a framework based on fastify, so it has a strong dependency on fastif
 -   class-validator
 -   http-status
 
-ORM used typeorm, and class-transformer and class-validator were used for serialization/deserialization of Body decorators.
+ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직렬화를 위해서 class-transformer와 class-validator를 사용하였습니다.
 
-It also uses reflect-metadata to collect metadata.
+또한 메타데이터 수집을 위해서 reflect-metadata를 사용하였습니다.
 
-# How to use
+# 사용법
 
-This framework provides the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render` decorators.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render` 데코레이터를 지원합니다.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
--   [Exception Filter and Execution Context](https://github.com/biud436/stingerloom#exception-filter-and-execution-context)
--   [Processing of transactions](https://github.com/biud436/stingerloom#handling-database-transactions)
--   [Authorization](https://github.com/biud436/stingerloom#authorization)
+-   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
+-   [트랜잭션의 처리](https://github.com/biud436/stingerloom#handling-database-transactions)
+-   [인증](https://github.com/biud436/stingerloom#authorization)
 -   [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
--   [Template Engine](https://github.com/biud436/stingerloom#template-engine)
+-   [템플릿 엔진](https://github.com/biud436/stingerloom#template-engine)
 
 ## Controller
 
-A controller is a class that processes and responds to requests sent by clients.
+컨트롤러는 클라이언트가 보내는 요청을 처리하고 응답하는 클래스입니다.
 
 <p align="center">
 <img src="https://github.com/biud436/stingerloom/assets/13586185/366498a8-c871-400f-8ca4-4742a9e5110d" />
 </p>
 
-The `@Controller` decorator collects metadata for directing HTTP requests to controllers along a specific path and allows you to form a proper routing map.
+`@Controller` 데코레이터는 HTTP 요청을 특정 경로에 해당하는 컨트롤러로 보내기 위한 메타데이터를 수집하며 알맞은 라우팅 맵을 형성할 수 있도록 해줍니다.
 
 ```ts
 @Controller("/user")
@@ -94,15 +96,15 @@ export class UserController {
 }
 ```
 
-StingerLoom takes care of the routing maps for you, so you don't have to write them like you used to.
+라우팅 맵은 StingerLoom에서 알아서 처리하므로 사용자는 기존처럼 라우팅 맵을 일일히 작성할 필요가 없습니다.
 
-The `@Body()` decorator shown in the code above deserializes the body of the request, assigns it to `createUserDto`, and performs validation. Normally, if the validation fails, a 400 error will be thrown.
+위 코드에 보이는 `@Body()` 데코레이터는 요청의 바디를 역직렬화하여 `createUserDto`에 할당하며 유효성 검사를 수행합니다. 보통 유효성 검사가 실패하는 경우에는 400 오류가 발생하게 됩니다.
 
-You can inject an instance of FastifyRequest by attaching the `@Req()` decorator.
+`@Req()` 데코레이터를 붙이면 FastifyRequest 인스턴스를 주입받을 수 있습니다.
 
-In addition, the `@Header()` decorator sets the response headers. You can only attach this decorator to methods, and if you omit it, the `Content-Type: application/json` header is set by default.
+또한 `@Header()` 데코레이터는 응답 헤더를 설정합니다. 이 데코레이터는 메소드에만 붙일 수 있고 생략할 경우 기본적으로 `Content-Type: application/json` 헤더가 설정됩니다.
 
-One thing to watch out for is the constructor part.
+주의해야 할 점은 생성자 부분인데요.
 
 ```ts
 @Controller("/user")
@@ -115,7 +117,7 @@ export class UserController {
     ) {}
 ```
 
-As will be explained in the `@Injectable` chapter, the `Point` class below is not managed in a container because it does not have the `@Injectable` decorator attached to it. It is not per-request, and a new instance is created for each controller or `Injectable` class that is injected.
+아래 `@Injectable` 챕터에서 설명되겠지만 아래 `Point` 클래스는 `@Injectable` 데코레이터가 붙지 않았기 때문에 컨테이너에서 관리되지 않습니다. 요청 당이 아니며 각 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 새로운 인스턴스가 생성됩니다.
 
 ```ts
 export class Point {
@@ -134,24 +136,24 @@ export class Point {
 }
 ```
 
-So if you call `/user/point` back-to-back, you'll get the following output.
+따라서 `/user/point`를 연달아 호출하면 아래와 같이 출력될 것입니다.
 
 ```json
 {"x":5,"y":5}
 {"x":10,"y":10}
 ```
 
-In contrast, an `Injectable` class is managed as a singleton instance, so the same instance is injected each time it is injected into a controller or an `Injectable` class, rather than per request.
+반대로 `Injectable`한 클래스는 싱글톤 인스턴스로 관리되므로 요청 당이 아니라 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 같은 인스턴스가 주입됩니다.
 
-For an example of this, see the next section, [Injectable](https://github.com/biud436/stingerloom#injectable).
+이에 대한 예시는 다음 섹션인 [Injectable](https://github.com/biud436/stingerloom#injectable)을 참고하시기 바랍니다.
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Injectable
 
-A class marked with the `@Injectable` decorator can be injected into the constructor of another class. It will also analyze the type of the constructor parameters and turn the instance into a singleton instance managed by a server container that creates only one instance.
+`@Injectable` 데코레이터가 붙은 클래스는 다른 클래스의 생성자에 주입될 수 있습니다. 또한 생성자 매개변수의 타입을 분석하여 인스턴스를 오직 하나만 생성하는 서버 컨테이너에서 관리하는 싱글톤 인스턴스로 만들어줍니다.
 
-However, if the `@Injectable` decorator is not marked, the class is simply instantiated each time via the default constructor and is not managed by the server container.
+하지만 `@Injectable` 데코레이터를 붙이지 않아도 여전히 주입이 가능합니다. 그러나 `@Injectable` 데코레이터가 마킹되어있지 않은 경우, 이 클래스는 단순히 디폴트 생성자를 통해 매번 인스턴스화되며, 서버 컨테이너에서 관리되지 않습니다.
 
 ```ts
 @Injectable()
@@ -207,11 +209,14 @@ export class UserService {
 }
 ```
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
+강조해서 설명하고 있는 싱글턴 인스턴스라는 것은 인스턴스를 단 하나만 생성하겠다는 소리입니다. 즉, 모든 컨트롤러 또는 `Injectable`한 클래스에 주입될 때마다 정확히 같은 인스턴스가 주입되는 것입니다.
 
-## Exception Filter and Execution Context
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
-An Exception Filter is a decorator that allows you to handle and override errors. You attach the `@ExceptionFilter` decorator and specify an error class as the decorator's argument. Then, when an error occurs that corresponds to that error class, the method with the `@Catch` decorator is executed. Methods with the `@BeforeCatch` decorator are executed before the method with the `@Catch` decorator is executed, and methods with the `@AfterCatch` decorator are executed after the method with the `@Catch` decorator is executed.
+## Exception Filter와 실행 컨텍스트
+
+Exception Filter는 오류를 처리 및 재정의할 수 있는 데코레이터입니다. `@ExceptionFilter` 데코레이터를 붙이고 데코레이터의 인자로는 오류 클래스를 지정합니다. 이후에는 해당 오류 클래스에 해당하는 오류가 발생하면 `@Catch` 데코레이터가 붙은 메소드가 실행됩니다.
+`@BeforeCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행되기 전에 실행되고, `@AfterCatch` 데코레이터가 붙은 메소드는 `@Catch` 데코레이터가 붙은 메소드가 실행된 후에 실행됩니다.
 
 ```ts
 @ExceptionFilter(InternalServerException)
@@ -241,41 +246,41 @@ export class InternalErrorFilter implements Filter {
 }
 ```
 
-This will produce the output shown below.
+이렇게 하면 아래와 같이 출력됩니다.
 
 <p align="center">
 <img src="https://github.com/biud436/custom-server-framework/assets/13586185/998fe1e3-f705-4a9c-a453-7179f42fc770" />
 </p>
 
-Exception methods are executed in the order `@BeforeCatch -> @Catch -> @AfterCatch`. Each exception context is a shared instance, with one instance per exception-handling class.
+예외 메소드는 `@BeforeCatch -> @Catch -> @AfterCatch` 순으로 실행됩니다. 각 예외 컨텍스트는 예외 처리 클래스 당 하나의 인스턴스를 공유하는 공유 인스턴스입니다.
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Handling Database Transactions
 
-Transactions are a feature to ensure the completeness of operations and the consistency of data. In other words, they allow you to restore the original state when something doesn't work perfectly.
+트랜잭션은 작업의 완전성과 데이터의 정합성을 보장하기 위한 기능입니다. 즉, 어떤 작업을 완벽하게 처리하지 못했을 때 원 상태로 복구할 수 있도록 해주는 기능입니다.
 
-To handle these transactions, StingerLoom supports a decorator called `@Transactional`.
+StingerLoom에서는 이러한 트랜잭션 처리를 위해서 `@Transactional`이라는 데코레이터를 지원합니다.
 
-This Spring-inspired decorator's transaction isolation level defaults to REPETABLE READ when omitted.
+스프링에서 영감을 받은 이 데코레이터의 트랜잭션 격리 수준은 생략 시 `REPETABLE READ`가 기본값입니다.
 
-Transaction isolation level refers to the level at which a particular transaction can see changes made by other transactions when multiple transactions are being processed at the same time.
+트랜잭션 격리 수준이란 여러 트랜잭션이 동시에 처리될 때, 특정 트랜잭션이 다른 트랜잭션의 변경 사항을 볼 수 있는 수준을 말합니다.
 
-There are four main types: `READ UNCOMMITTED`, `READ COMMITTED`, `REPEATABLE READ`, and `SERIALIZABLE`.
+크게 4가지로 나뉘는데, `READ UNCOMMITTED`, `READ COMMITTED`, `REPEATABLE READ`, `SERIALIZABLE`이 있습니다.
 
-The `@Transactional` feature currently only applies to classes with the @Injectable decorator.
+`@Transactional` 기능은 현재 `@Injectable` 데코레이터가 붙은 클래스에만 적용됩니다.
 
-Also, for transactional processing, classes must be marked with the @TransactionalZone decorator for efficient search.
+또한 트랜잭션 처리를 위해서는 효율적인 검색을 위해 `@TransactionalZone` 데코레이터를 클래스에 마킹하여야 합니다.
 
-The `@TransactionalZone` decorator performs transaction processing by finding methods to inject EntityManager and QueryRunner for transaction processing.
+`@TransactionalZone` 데코레이터는 트랜잭션 처리를 위한 `EntityManager`과 `QueryRunner`를 주입받을 메소드를 찾아서 트랜잭션 처리를 수행합니다.
 
-Here's a simple example of how to handle transactions.
+다음은 트랜잭션을 처리하는 심플한 예시입니다.
 
-### If you are using Transaction Entity Manager
+### Transaction Entity Manager를 사용하는 경우
 
-If you set the `transactionalEntityManager` property to `true`, you can have the `Transaction Entity Manager` automatically injected.
+`transactionalEntityManager` 속성을 `true`로 설정하면, `Transaction Entity Manager`를 자동으로 주입받을 수 있습니다.
 
-With `Transactional Entity Manager`, you will be able to process multiple queries as a transaction instead of a single one using the Transactional Entity Manager.
+`Transaction Entity Manager`를 사용하면 트랜잭션 엔티티 매니저를 사용하여 단일이 아닌 여러 쿼리를 트랜잭션으로 처리를 할 수 있게 됩니다.
 
 ```ts
 @TransactionalZone()
@@ -306,23 +311,23 @@ export class AuthService {
 }
 ```
 
-In the code above, you can see that we need to use `em`, which is an instance of the injected transaction entity manager, to be treated as a transaction.
+위 코드를 보면 주입 받은 트랜잭션 엔티티 매니저의 인스턴스인 `em`을 사용해야 트랜잭션으로 처리가 됩니다.
 
-### If you use `QueryRunner` (recommended)
+### `QueryRunner`를 사용하는 경우 (추천)
 
-My favorite way to do this is to use a `QueryRunner`.
+제가 자주 사용하는 방법인데요. 바로 `QueryRunner`를 사용하는 방법이 있습니다.
 
-If you use `QueryRunner`, you have a lot more control over the transaction: methods labeled `@Transactional()` are automatically injected with `QueryRunner`.
+`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
 
-It also automatically handles rollbacks if an error occurs.
+또한 오류가 발생하면 자동으로 롤백 처리까지 해줍니다.
 
-When I first designed this, I thought it was impossible to get `QueryRunner` injected because `QueryRunner` is an interface.
+처음에 이것을 설계할 때 `QueryRunner`가 인터페이스라서 `QueryRunner`를 주입받는 것이 불가능하다고 생각했었는데요.
 
-This was solved with `@InjectQueryRunner()`.
+이는 `@InjectQueryRunner()`를 통해 해결할 수 있었습니다.
 
-So, to get a QueryRunner instance injected properly, we need to use the `@InjectQueryRunner()` decorator.
+따라서 QueryRunner 인스턴스를 제대로 주입받으려면 `@InjectQueryRunner()` 데코레이터를 사용해야 합니다.
 
-So let's see an example.
+그럼 예제를 볼까요?
 
 ```ts
 @TransactionalZone()
@@ -346,11 +351,11 @@ export class AuthService {
 }
 ```
 
-If you look at the example, you'll see that it's pretty simple. If no errors occur on return, the transaction will commit normally.
+예제를 보면 굉장히 심플하다는 것을 알 수 있습니다. 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
-The `QueryRunner` can be injected via the `@InjectQueryRunner()` decorator.
+`QueryRunner`는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
 
-Here's another example, a membership signup example.
+다음은 또 다른 예제인 회원 가입 예제입니다.
 
 ```ts
 @TransactionalZone()
@@ -382,17 +387,17 @@ export class UserService {
 }
 ```
 
-You'll notice the error handling logic in the middle, which can be thought of simply: if an error is thrown in the above code, the transaction is automatically rolled back.
+중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
 
-Instead, the parts that need to be transactional should be handled by the injected `queryRunner`.
+대신, 트랜잭션이 필요한 부분은 주입되는 `queryRunner`를 통해 처리해야 합니다.
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Authorization
 
-StingerLoom supports session-based authentication.
+StingerLoom에선 세션 기반 인증을 지원합니다.
 
-Classes that inherit from SessionObject can be used as session objects.
+SessionObject를 상속받은 클래스를 세션 오브젝트로 사용할 수 있습니다.
 
 ```ts
 @Controller("/auth")
@@ -409,13 +414,13 @@ export class AuthController {
 }
 ```
 
-Authorization processing is not yet implemented in the example.
+아직 예제에 인가 처리가 구현되지 않았는데요.
 
-Authorization processing requires the implementation of the AuthGuard concept and the Role concept, which is required for authorization processing.
+인가 처리는 인증 가드(AuthGuard) 개념과 인가 처리에 필요한 Role 개념을 구현해야 합니다.
 
 ### Handling Session
 
-Here's a more practical example.
+조금 더 실용적인 예제는 아래와 같습니다.
 
 ```ts
 @Injectable()
@@ -443,13 +448,13 @@ export class AuthService {
 }
 ```
 
-In the current version, you can implement authentication using session objects as shown above.
+현재 버전에서는 위와 같이 세션 오브젝트를 사용하여 인증을 구현할 수 있습니다.
 
 ### Session Guard
 
-Session authentication can be handled by injecting a session object using the `@Session()` decorator and adding a SessionGuard to handle session authentication.
+세션 인증은 `@Session()` 데코레이터를 사용하여 세션 오브젝트를 주입받아서 처리할 수 있고, SessionGuard를 추가하여 세션 인증을 처리할 수 있습니다.
 
-The code looks like this.
+코드는 다음과 같습니다.
 
 ```ts
 @Injectable()
@@ -471,7 +476,7 @@ export class SessionGuard implements Guard {
 }
 ```
 
-You can add the above guard to your providers and attach it to your controller or router as shown below.
+위 가드를 providers에 추가하고 아래와 같이 컨트롤러나 라우터에 붙여서 사용할 수 있습니다.
 
 ```ts
 @Controller("/auth")
@@ -486,17 +491,17 @@ export class AuthController {
 }
 ```
 
-The above will only run the router for login users who have passed session authentication.
+위와 같이 하면 세션 인증을 통과한 로그인 사용자의 경우에만 라우터가 실행됩니다.
 
-For unauthenticated users, a 401 error will occur.
+인증이 되지 않은 사용자의 경우에는 401 오류가 발생합니다.
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Custom Parameter Decorator
 
-You can create your own `ParameterDecorator` using the `createCustomParamDecorator` function.
+`createCustomParamDecorator` 함수를 이용하여 자신만의 `ParameterDecorator`를 만들 수 있습니다.
 
-Here is an example of getting user information and a user ID from a session.
+다음은 유저 정보와 유저 ID를 세션으로부터 취득하는 예제입니다.
 
 ```ts
 export const User = createCustomParamDecorator((data, context) => {
@@ -511,7 +516,7 @@ export const User = createCustomParamDecorator((data, context) => {
 });
 ```
 
-You can get a user ID as follows.
+유저 ID는 아래와 같이 취득할 수 있습니다.
 
 ```ts
 export const UserId = createCustomParamDecorator((data, context) => {
@@ -526,7 +531,7 @@ export const UserId = createCustomParamDecorator((data, context) => {
 });
 ```
 
-Here's how I ended up using it
+최종 사용법은 아래와 같습니다.
 
 ```ts
 @Controller("/auth")
@@ -548,7 +553,7 @@ export class AuthController {
 }
 ```
 
-When queried, the result is output as shown below.
+조회하면 결과는 아래와 같이 출력됩니다.
 
 ```json
 {
@@ -569,15 +574,15 @@ When queried, the result is output as shown below.
 
 ## Template Engine
 
-The template engine can render HTML files using the `@View` decorator.
+템플릿 엔진은 `@View` 데코레이터를 사용하여 HTML 파일을 렌더링할 수 있습니다.
 
-First, you need to install the necessary packages. In a terminal, type
+먼저 필요한 패키지를 설치해야 합니다. 터미널에서 다음과 같이 입력합니다.
 
 ```bash
 yarn add @fastify/view handlebars
 ```
 
-In the `bootstrap.ts` file, register the template engine as middleware so that all controllers can use it.
+`bootstrap.ts` 파일에서 템플릿 엔진을 미들웨어로 등록하면 모든 컨트롤러에서 템플릿 엔진을 사용할 수 있습니다.
 
 ```ts
     /**
@@ -610,7 +615,7 @@ In the `bootstrap.ts` file, register the template engine as middleware so that a
     }
 ```
 
-In the controller, you can use the `@View` decorator to map with templates.
+컨트롤러에서는 `@View` 데코레이터를 사용하면 템플릿과 매핑할 수 있습니다.
 
 ```ts
 @Controller("/")
@@ -639,7 +644,7 @@ export class AppController {
 }
 ```
 
-If the path in the view is different from the path in the route, you can use the `@Render` decorator to specify the path to the template resource, like this
+만약 뷰의 경로와 라우트의 경로가 다르다면 다음과 같이 `@Render` 데코레이터를 사용하여 템플릿 리소스의 경로를 지정할 수 있습니다.
 
 ```ts
 @Controller("/")
@@ -658,9 +663,9 @@ export class AppController {
 }
 ```
 
-Return the required parameters and each template engine can process them.
+필요한 매개변수를 반환하면 각 템플릿 엔진에서 이를 처리할 수 있습니다.
 
-Here's an example of a login using the `handlebars` template engine.
+다음은 `handlebars` 템플릿 엔진을 사용한 로그인 예제입니다.
 
 ```hbs
 <!-- login.hbs -->
@@ -687,7 +692,7 @@ Here's an example of a login using the `handlebars` template engine.
 </html>
 ```
 
-Example of displaying session information.
+세션 정보를 표시하는 예제입니다.
 
 ```hbs
 <!-- memberInfo.hbs -->
@@ -703,7 +708,7 @@ Example of displaying session information.
 </html>
 ```
 
-[▲ Back to Table of Contents](https://github.com/biud436/stingerloom#how-to-use)
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Installations
 
