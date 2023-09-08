@@ -13,35 +13,16 @@ import {
     findModuleOption,
 } from "@stingerloom/compiler/visitors/ModuleFinder";
 import { ModuleControllerService } from "@stingerloom/compiler/visitors/ModuleControllerService";
-import { UpdateModuleOptionsTransformer } from "@stingerloom/compiler/transformers/UpdateModuleOptionsTransformer";
+
 import { ModuleProviderService } from "@stingerloom/compiler/visitors/ModuleProviderService";
 
-type Importer = Map<
-    string,
-    Map<
-        string,
-        {
-            pos: number;
-            end: number;
-        }
-    >
->;
-
-const __ENTRYPOINT__ = path.join(
+const __bootstrap = path.join(
     __dirname,
     "..",
     "..",
     "packages",
     "example",
     "bootstrap.ts",
-);
-const __ENTRYPOINT2__ = path.join(
-    __dirname,
-    "..",
-    "..",
-    "packages",
-    "example",
-    "bootstrap2.ts",
 );
 
 /**
@@ -69,14 +50,17 @@ export class BootstrapTransformer {
         this.transform();
     }
 
+    /**
+     * import 문을 타겟 파일에 추가합니다.
+     */
     private handleImports() {
-        this.program = ts.createProgram([__ENTRYPOINT__], {
+        this.program = ts.createProgram([__bootstrap], {
             target: ts.ScriptTarget.ESNext,
             module: ts.ModuleKind.CommonJS,
             allowJs: false,
         });
 
-        this.sourceFile = this.program.getSourceFile(__ENTRYPOINT__)!;
+        this.sourceFile = this.program.getSourceFile(__bootstrap)!;
 
         this.newFiles.forEach((filePath) => {
             const clazzName = this.getClassName(filePath);
@@ -89,6 +73,9 @@ export class BootstrapTransformer {
         });
     }
 
+    /**
+     * ModuleOption.merge에 controller, provider를 추가합니다.
+     */
     private handleBootstrap() {
         this.newFiles.forEach((filePath) => {
             const clazzName = this.getClassName(filePath);
@@ -103,6 +90,11 @@ export class BootstrapTransformer {
         });
     }
 
+    /**
+     * 새로운 컨트롤러를 추가합니다.
+     *
+     * @param clzzName
+     */
     private updateBootstrapFileWithController(clzzName: string) {
         let moduleRef: IStingerModule = {};
         moduleRef = findModuleOption(this.sourceFile)(moduleRef);
@@ -129,6 +121,11 @@ export class BootstrapTransformer {
         );
     }
 
+    /**
+     * 새로운 프로바이더를 추가합니다.
+     *
+     * @param clzzName
+     */
     private updateBootstrapFileWithProvider(clzzName: string) {
         let moduleRef: IStingerModule = {};
         moduleRef = findModuleOption(this.sourceFile)(moduleRef);
@@ -152,6 +149,9 @@ export class BootstrapTransformer {
         );
     }
 
+    /**
+     * 변환 작업을 수행합니다.
+     */
     private transform() {
         const transformationResult = ts.transform(
             this.sourceFile,
@@ -167,6 +167,10 @@ export class BootstrapTransformer {
             this.sourceFile,
         );
 
+        /**
+         * 다음 코드는 하드코딩된 경로를 사용합니다.
+         * TODO: 추후에는 사용자가 지정한 경로를 사용하도록 수정해야 합니다.
+         */
         const bootstrapFilePath2 = path.resolve(
             __dirname,
             "..",
@@ -179,10 +183,22 @@ export class BootstrapTransformer {
         fs.writeFileSync(bootstrapFilePath2, result, "utf8");
     }
 
+    /**
+     * 클래스의 이름을 가져옵니다.
+     *
+     * @param importPath
+     * @returns
+     */
     private getClassName(importPath: string) {
         return path.basename(importPath, ".ts");
     }
 
+    /**
+     * 파일 경로를 안전하게 처리합니다.
+     *
+     * @param importPath
+     * @returns
+     */
     private getSafelyImportPath(importPath: string) {
         const rootPath = path
             .resolve(process.cwd(), "packages", "example")
