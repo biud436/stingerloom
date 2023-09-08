@@ -7,6 +7,7 @@ By creating my own server framework, I wanted to gain a better understanding of 
 The "build your own server framework" is named StingerLoom and supports features such as router mapping and the ORM needed to access database, and provide DI by the StingerLoom Container.
 
 <p align="center"> 
+<img src="https://github.com/biud436/stingerloom/assets/13586185/67bd938e-d882-4119-9912-9a62b56c73a4" />
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
 </p>
 

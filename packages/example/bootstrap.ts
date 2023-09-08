@@ -14,7 +14,8 @@ import { SessionGuard } from "./controllers/auth/guards/SessionGuard";
 import handlebars from "handlebars";
 import view from "@fastify/view";
 import { AppController } from "./controllers/app/AppController";
-
+import { TestController } from "./controllers/test/TestController";
+import { TestService } from "./controllers/test/TestService";
 /**
  * @class StingerLoomBootstrapApplication
  * @description
@@ -29,24 +30,23 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
      */
     override beforeStart(): void {
         this.moduleOptions = ModuleOptions.merge({
-            imports: [
-                {
-                    imports: [],
-                    controllers: [AppController],
-                    providers: [],
-                },
+            controllers: [
+                AppController,
+                PostController,
+                UserController,
+                AuthController,
+                TestController
             ],
-            controllers: [PostController, UserController, AuthController],
             providers: [
                 InternalErrorFilter,
                 UserService,
                 AuthService,
-                SessionGuard, // 테스트 세션 가드
+                SessionGuard,
+                TestService
             ],
             configuration: databaseOption,
         });
     }
-
     /**
      * 미들웨어를 추가합니다.
      *
@@ -54,17 +54,14 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
      */
     protected applyMiddlewares(): this {
         const app = this.app;
-
         app.register(fastifyCookie, {
             secret: process.env.COOKIE_SECRET,
             hook: "onRequest",
         });
-
         app.register(fastifyFormdody);
         app.register(fastifySession, {
             secret: process.env.SESSION_SECRET,
         });
-
         app.register(view, {
             engine: {
                 handlebars,
@@ -72,11 +69,9 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
             root: `${__dirname}/views`,
             includeViewExtension: true,
         });
-
         return this;
     }
 }
-
 Promise.resolve(new StingerLoomBootstrapApplication().start()).catch((err) => {
     console.error(err);
 });

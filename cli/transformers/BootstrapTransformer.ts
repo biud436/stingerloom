@@ -2,7 +2,19 @@
 /* eslint-disable no-case-declarations */
 import * as ts from "typescript";
 import path from "path";
+import fs from "fs";
 import { Logger } from "@stingerloom/common";
+import {
+    NamespaceImportTransformer,
+    PropertyTransformer,
+} from "@stingerloom/compiler/transformers";
+import {
+    IStingerModule,
+    findModuleOption,
+} from "@stingerloom/compiler/visitors/ModuleFinder";
+import { ModuleControllerService } from "@stingerloom/compiler/visitors/ModuleControllerService";
+import { UpdateModuleOptionsTransformer } from "@stingerloom/compiler/transformers/UpdateModuleOptionsTransformer";
+import { ModuleProviderService } from "@stingerloom/compiler/visitors/ModuleProviderService";
 
 type Importer = Map<
     string,
@@ -15,10 +27,6 @@ type Importer = Map<
     >
 >;
 
-type IStingerModule = {
-    right?: ts.CallExpression;
-};
-
 const __ENTRYPOINT__ = path.join(
     __dirname,
     "..",
@@ -27,6 +35,14 @@ const __ENTRYPOINT__ = path.join(
     "example",
     "bootstrap.ts",
 );
+const __ENTRYPOINT2__ = path.join(
+    __dirname,
+    "..",
+    "..",
+    "packages",
+    "example",
+    "bootstrap2.ts",
+);
 
 /**
  * @class BootstrapTransformer
@@ -34,11 +50,11 @@ const __ENTRYPOINT__ = path.join(
  * @description ModuleOptions을 자동으로 수정합니다.
  */
 export class BootstrapTransformer {
-    private importsMap: Importer = new Map();
     private readonly logger: Logger = new Logger(BootstrapTransformer.name);
 
     private program!: ts.Program;
-    private typeChecker!: ts.TypeChecker;
+    private sourceFile!: ts.SourceFile;
+    private transformer: ts.TransformerFactory<ts.SourceFile>[] = [];
 
     /**
      * BootstrapTransformer 클래스의 생성자
@@ -48,219 +64,135 @@ export class BootstrapTransformer {
     constructor(private readonly newFiles: string[]) {}
 
     async start() {
-        this.program = ts.createProgram([__ENTRYPOINT__], {});
-        this.typeChecker = this.program.getTypeChecker();
-
-        const sourceFile = this.program.getSourceFile(__ENTRYPOINT__);
-
-        this.visitNode(sourceFile!, this.importsMap);
-
-        this.importsMap.forEach((value, key) => {
-            console.log(key, value);
-        });
+        this.handleImports();
+        this.handleBootstrap();
+        this.transform();
     }
 
-    private isPropertyAssignment(node: ts.Node): boolean {
-        return node.kind === ts.SyntaxKind.PropertyAssignment;
-    }
-
-    private isBeforeStartHook(node: ts.Identifier): boolean {
-        return node.escapedText === "beforeStart";
-    }
-
-    /**
-     * ModuleOptions 노드를 획득합니다.
-     *
-     * @returns
-     */
-    getModuleOptionsNode(): { module: IStingerModule } {
-        const module: IStingerModule = {};
-
-        const bootstrapFilePath = path.resolve(
-            __dirname,
-            "../packages/example/bootstrap.ts",
-        );
-
-        const program = ts.createProgram([bootstrapFilePath], {
+    private handleImports() {
+        this.program = ts.createProgram([__ENTRYPOINT__], {
             target: ts.ScriptTarget.ESNext,
             module: ts.ModuleKind.CommonJS,
             allowJs: false,
         });
 
-        const sourceFile = program.getSourceFile(bootstrapFilePath);
+        this.sourceFile = this.program.getSourceFile(__ENTRYPOINT__)!;
 
-        if (!sourceFile) {
-            throw new Error("소스 파일을 찾을 수 없습니다.");
-        }
+        this.newFiles.forEach((filePath) => {
+            const clazzName = this.getClassName(filePath);
+            const transform = NamespaceImportTransformer.transformer(
+                clazzName,
+                this.getSafelyImportPath(filePath),
+            );
 
-        const visitor = (node: ts.Node) => {
-            if (ts.isClassDeclaration(node)) {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const heritageClauses = node.heritageClauses?.forEach(
-                    (clause) => {
-                        const isServerBootstrapApplication = clause.types.find(
-                            (type: ts.ExpressionWithTypeArguments) => {
-                                if (ts.isExpressionWithTypeArguments(type)) {
-                                    const name =
-                                        type.expression as ts.Identifier;
-
-                                    if (
-                                        name.escapedText ===
-                                        "ServerBootstrapApplication"
-                                    ) {
-                                        return true;
-                                    }
-
-                                    return false;
-                                }
-
-                                return false;
-                            },
-                        );
-
-                        if (!isServerBootstrapApplication) {
-                            throw new Error(
-                                "ServerBootstrapApplication 클래스를 상속받아야 합니다.",
-                            );
-                        }
-                    },
-                );
-            } else if (ts.isMethodDeclaration(node)) {
-                const name = node.name as ts.Identifier;
-
-                if (name.escapedText === "beforeStart") {
-                    console.log("beforeStart 메서드를 찾았습니다.");
-                }
-            } else if (ts.isBinaryExpression(node)) {
-                const left = node.left as ts.PropertyAccessExpression;
-                const name = left.name as ts.Identifier;
-
-                if (name.escapedText === "moduleOptions") {
-                    const right = node.right as ts.CallExpression;
-                    module.right = right;
-                }
-            }
-
-            ts.forEachChild(node, visitor);
-        };
-
-        visitor(sourceFile);
-
-        return {
-            module,
-        };
+            this.transformer.push(transform);
+        });
     }
 
-    /**
-     * 타입스크립트 AST를 순회하면서 필요한 정보를 수집합니다.
-     *
-     * @see
-     * https://github.com/angular/angular/blob/main/packages/compiler-cli/src/ngtsc/transform/src/transform.ts
-     *
-     * https://youtu.be/X8k_4tZ16qU
-     *
-     * https://www.huy.rocks/everyday/04-01-2022-typescript-how-the-compiler-compiles
-     *
-     * @param sourceFile 타입스크립트 소스 파일
-     * @param importsMap 모듈 옵션의 imports 속성을 수집합니다.
-     */
-    visitNode(sourceFile: ts.SourceFile, importsMap: Importer) {
-        let isFoundModuleOption = false;
-        let isFoundImports = false;
+    private handleBootstrap() {
+        this.newFiles.forEach((filePath) => {
+            const clazzName = this.getClassName(filePath);
 
-        const visitor = (node: ts.Node) => {
-            if (ts.isClassDeclaration(node)) {
-                this.logger.debug(`${node.name?.text}을 찾았습니다.`);
+            const target = clazzName.toLocaleLowerCase();
+
+            if (target.includes("controller")) {
+                this.updateBootstrapFileWithController(clazzName);
+            } else if (target.includes("service")) {
+                this.updateBootstrapFileWithProvider(clazzName);
             }
+        });
+    }
 
-            if (ts.isMethodDeclaration(node)) {
-                const name = node.name as ts.Identifier;
+    private updateBootstrapFileWithController(clzzName: string) {
+        let moduleRef: IStingerModule = {};
+        moduleRef = findModuleOption(this.sourceFile)(moduleRef);
 
-                if (this.isBeforeStartHook(name)) {
-                    node.body?.statements.forEach((stmt) => {
-                        if (ts.isExpressionStatement(stmt)) {
-                            const expression = stmt.expression;
+        if (!moduleRef.right) {
+            throw new Error("moduleOptions을 찾을 수 없습니다.");
+        }
 
-                            console.log(expression.getText(sourceFile));
-                        }
-                    });
-                }
-            }
+        const { right } = moduleRef;
 
-            if (ts.isIdentifier(node)) {
-                const identifier = node as ts.Identifier;
+        const controllerProperty = ModuleControllerService.read(
+            right as ts.CallExpression,
+        );
 
-                if (identifier.escapedText === "ModuleOptions") {
-                    isFoundModuleOption = true;
-                    this.logger.debug("ModuleOptions을 찾았습니다");
-                }
+        if (!controllerProperty) {
+            throw new Error("controllers 속성을 찾을 수 없습니다.");
+        }
 
-                if (isFoundModuleOption) {
-                    if (identifier.escapedText === "imports") {
-                        isFoundImports = true;
-                        this.logger.debug("imports를 찾았습니다");
-                    }
-                }
+        this.transformer.push(
+            PropertyTransformer.controllerTransformer(
+                controllerProperty,
+                clzzName,
+            ),
+        );
+    }
 
-                if (isFoundImports) {
-                    const imports = node.parent?.parent;
+    private updateBootstrapFileWithProvider(clzzName: string) {
+        let moduleRef: IStingerModule = {};
+        moduleRef = findModuleOption(this.sourceFile)(moduleRef);
 
-                    imports.forEachChild((child) => {
-                        if (
-                            child.kind === ts.SyntaxKind.ArrayLiteralExpression
-                        ) {
-                            const parent = child.parent;
+        if (!moduleRef.right) {
+            throw new Error("moduleOptions을 찾을 수 없습니다.");
+        }
 
-                            if (!this.isPropertyAssignment(parent)) {
-                                return;
-                            }
+        const { right } = moduleRef;
 
-                            const propertyAssignment =
-                                parent as ts.PropertyAssignment;
-                            const propertyName =
-                                propertyAssignment.name as ts.Identifier;
+        const providerProperty = ModuleProviderService.read(
+            right as ts.CallExpression,
+        );
 
-                            if (
-                                !importsMap.has(
-                                    propertyName.escapedText as string,
-                                )
-                            ) {
-                                importsMap.set(
-                                    propertyName.escapedText as string,
-                                    new Map(),
-                                );
-                            }
+        if (!providerProperty) {
+            throw new Error("providers 속성을 찾을 수 없습니다.");
+        }
 
-                            const arrayLiteralExpression =
-                                child as ts.ArrayLiteralExpression;
+        this.transformer.push(
+            PropertyTransformer.providerTransformer(providerProperty, clzzName),
+        );
+    }
 
-                            arrayLiteralExpression.elements.forEach(
-                                (element) => {
-                                    const name = element as ts.Identifier;
+    private transform() {
+        const transformationResult = ts.transform(
+            this.sourceFile,
+            this.transformer,
+            this.program.getCompilerOptions(),
+        );
 
-                                    const valuesMap = importsMap.get(
-                                        propertyName.escapedText as string,
-                                    );
+        const printer = ts.createPrinter();
 
-                                    if (valuesMap) {
-                                        valuesMap.set(
-                                            name.escapedText as string,
-                                            {
-                                                pos: name.pos,
-                                                end: name.end,
-                                            },
-                                        );
-                                    }
-                                },
-                            );
-                        }
-                    });
-                }
-            }
+        const result = printer.printNode(
+            ts.EmitHint.Unspecified,
+            transformationResult.transformed[0],
+            this.sourceFile,
+        );
 
-            ts.forEachChild(node, visitor);
-        };
+        const bootstrapFilePath2 = path.resolve(
+            __dirname,
+            "..",
+            "..",
+            "packages",
+            "example",
+            "bootstrap.ts",
+        );
 
-        visitor(sourceFile);
+        fs.writeFileSync(bootstrapFilePath2, result, "utf8");
+    }
+
+    private getClassName(importPath: string) {
+        return path.basename(importPath, ".ts");
+    }
+
+    private getSafelyImportPath(importPath: string) {
+        const rootPath = path
+            .resolve(process.cwd(), "packages", "example")
+            .replace(/\\/g, "/");
+
+        const imports = importPath
+            .replace(/\\/g, "/")
+            .replace(rootPath, "")
+            .replace(".ts", "");
+
+        return `.${imports}`;
     }
 }

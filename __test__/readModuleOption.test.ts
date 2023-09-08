@@ -81,8 +81,29 @@ export function readModuleOption() {
         imports,
         module,
         sourceFile,
+        program,
     };
 }
+
+const controllerTransformer =
+    (targetNode: ts.PropertyAssignment) =>
+    (context: ts.TransformationContext) => {
+        return (soureFile) => {
+            const visitor: ts.Visitor = (rootNode: ts.Node) => {
+                if (ts.isPropertyAssignment(rootNode)) {
+                    const name = rootNode.name as ts.Identifier;
+
+                    if (name.escapedText === "controllers") {
+                        return updateControllerNode(targetNode);
+                    }
+                }
+
+                return ts.visitEachChild(rootNode, visitor, context);
+            };
+
+            return ts.visitNode(soureFile, visitor);
+        };
+    };
 
 /**
  * 컨트롤러 속성을 읽어옵니다.
@@ -145,7 +166,7 @@ function updateControllerNode2(node: ts.PropertyAssignment) {
 }
 
 describe("타입스크립트 컴파일러 테스트", () => {
-    const { module, sourceFile } = readModuleOption();
+    const { module, sourceFile, program } = readModuleOption();
     const printer = ts.createPrinter();
 
     it("right 속성 확인", () => {
@@ -170,10 +191,16 @@ describe("타입스크립트 컴파일러 테스트", () => {
         const controllers = readControllersWithDepth0(module.right!);
         const afterController = updateControllerNode(controllers!);
 
+        const transformationResult = ts.transform(
+            sourceFile,
+            [controllerTransformer(controllers!)],
+            program.getCompilerOptions(),
+        );
+
         console.log(
             printer.printNode(
                 ts.EmitHint.Unspecified,
-                afterController!,
+                transformationResult.transformed[0],
                 sourceFile,
             ),
         );

@@ -1,7 +1,7 @@
 import ts from "typescript";
 
 /**
- * 컨트롤러 속성을 읽어옵니다.
+ * Provider 속성을 읽어옵니다.
  *
  * @param node
  * @returns
@@ -15,7 +15,7 @@ function readWithDepth0(
         if (ts.isPropertyAssignment(node)) {
             const name = node.name as ts.Identifier;
 
-            if (name.escapedText === "controllers") {
+            if (name.escapedText === "providers") {
                 controllerNode = node;
             }
         }
@@ -29,15 +29,12 @@ function readWithDepth0(
 }
 
 /**
- * 컨트롤러 속성을 업데이트합니다.
+ * Provider 속성을 업데이트합니다.
  *
  * @param node
  * @returns
  */
-function addControllerNode(
-    node: ts.PropertyAssignment,
-    controllerName: string,
-) {
+function addProviderNode(node: ts.PropertyAssignment, controllerName: string) {
     if (!ts.isPropertyAssignment(node)) {
         throw new Error("node는 PropertyAssignment 타입이어야 합니다.");
     }
@@ -54,9 +51,9 @@ function addControllerNode(
     );
 }
 
-export const ModuleControllerService = {
+export const ModuleProviderService = {
     /**
-     * 컨트롤러 속성을 읽어옵니다.
+     * 프로바이더 속성을 읽어옵니다.
      *
      * @param node
      * @returns
@@ -64,10 +61,10 @@ export const ModuleControllerService = {
     read: readWithDepth0,
 
     /**
-     * 컨트롤러 속성을 새로 추가합니다.
+     * 프로바이더 속성을 새로 추가합니다.
      *
      * @param node
      * @returns
      */
-    add: addControllerNode,
+    add: addProviderNode,
 };

@@ -17,7 +17,7 @@ const transformer =
                 : 0;
 
             return ts.factory.updateSourceFile(sourceFile, [
-                ...sourceFile.statements.slice(0, lastIndex),
+                ...sourceFile.statements.slice(0, lastIndex + 1),
                 factory.createImportDeclaration(
                     undefined,
                     ts.factory.createImportClause(

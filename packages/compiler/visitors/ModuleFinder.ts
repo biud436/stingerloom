@@ -1,7 +1,8 @@
 import ts from "typescript";
 
-type IStingerModule = {
+export type IStingerModule = {
     right?: ts.CallExpression;
+    root?: ts.BinaryExpression;
 };
 
 /**
@@ -54,6 +55,7 @@ export const findModuleOption =
                 if (name.escapedText === "moduleOptions") {
                     const right = node.right as ts.CallExpression;
                     moduleRef.right = right;
+                    moduleRef.root = node;
                 }
             }
 
