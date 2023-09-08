@@ -48,6 +48,8 @@
             "@stingerloom/services/*": ["packages/services/*"],
             "@stingerloom/router": ["packages/router"],
             "@stingerloom/router/*": ["packages/router/*"],
+            "@stingerloom/compiler": ["packages/compiler"],
+            "@stingerloom/compiler/*": ["packages/compiler/*"],
             "@stingerloom/cli": ["cli/"],
             "@stingerloom/cli/*": ["cli/*"]
         } /* Specify a set of entries that re-map imports to additional lookup locations. */,
