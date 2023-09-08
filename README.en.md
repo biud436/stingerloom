@@ -8,9 +8,9 @@ The "build your own server framework" is named StingerLoom and supports features
 
 <p align="center"> 
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
-<span>▲ 서버 시작</span>
+<span>▲ Logging</span>
 <img src="https://github.com/biud436/stingerloom/assets/13586185/67bd938e-d882-4119-9912-9a62b56c73a4" />
-<span>▲ 타입스크립트 컴파일러를 이용한 파일 자동 생성 및 수정 </span>
+<span>▲ Automatic file generation and modification using the Typescript compiler</span>
 </p>
 
 ## Development journal
