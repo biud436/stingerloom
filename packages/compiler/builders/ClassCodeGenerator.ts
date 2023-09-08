@@ -176,8 +176,7 @@ export class ClassCodeGenerator {
     }
 
     /**
-     * 컨트롤러 파일을 컴파일러 수준에서 생성합니다.
-     *
+     * 타입스크립트 AST를 생성합니다.
      */
     public generateControllerFile() {
         const importDelcarations = this.addImports(this.imported);
@@ -241,6 +240,9 @@ export class ClassCodeGenerator {
         this.generateFile();
     }
 
+    /**
+     * 파일을 생성합니다.
+     */
     private generateFile() {
         const filename = this.getFilename() + ".ts";
         const resultFile = ts.createSourceFile(
@@ -270,6 +272,11 @@ export class ClassCodeGenerator {
         fs.writeFileSync(filePath, result);
     }
 
+    /**
+     * 파일명을 파스칼 케이스로 가져옵니다.
+     *
+     * @returns
+     */
     private getFilename(): string {
         return `${this.toPascalCase(this.routerName)}Controller`;
     }
