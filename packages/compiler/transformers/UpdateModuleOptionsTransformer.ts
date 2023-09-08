@@ -41,5 +41,8 @@ const transformer =
     };
 
 export const UpdateModuleOptionsTransformer = {
+    /**
+     * 기존 모듈 옵션을 업데이트 합니다.
+     */
     transformer,
 };

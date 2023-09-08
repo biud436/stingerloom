@@ -1,12 +1,5 @@
 import ts from "typescript";
 
-/**
- * 새로운 import 구문을 추가합니다.
- *
- * @param namedImportIdentifier
- * @param importPath
- * @returns
- */
 const transformer =
     (namedImportIdentifier: string, importPath: string) =>
     (context: ts.TransformationContext) => {
@@ -48,5 +41,12 @@ const transformer =
     };
 
 export const NamespaceImportTransformer = {
+    /**
+     * 새로운 import 구문을 추가합니다.
+     *
+     * @param namedImportIdentifier
+     * @param importPath
+     * @returns
+     */
     transformer,
 };
