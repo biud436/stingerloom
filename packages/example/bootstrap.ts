@@ -16,6 +16,7 @@ import view from "@fastify/view";
 import { AppController } from "./controllers/app/AppController";
 import { TestController } from "./controllers/test/TestController";
 import { TestService } from "./controllers/test/TestService";
+
 /**
  * @class StingerLoomBootstrapApplication
  * @description
@@ -35,14 +36,14 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
                 PostController,
                 UserController,
                 AuthController,
-                TestController
+                TestController,
             ],
             providers: [
                 InternalErrorFilter,
                 UserService,
                 AuthService,
                 SessionGuard,
-                TestService
+                TestService,
             ],
             configuration: databaseOption,
         });

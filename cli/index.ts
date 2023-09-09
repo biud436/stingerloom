@@ -16,17 +16,20 @@ import { Logger } from "@stingerloom/common";
  */
 export class Cli {
     /**
-     * 기존 파일
+     * @property oldVisitedFiles
+     * @description 기존 파일
      */
     private oldVisitedFiles: Map<string, boolean>;
 
     /**
-     * 새로운 파일
+     * @property newVisitedFiles
+     * @description 새로운 파일
      */
     private newVisitedFiles: Map<string, boolean>;
 
     /**
-     * 로그 출력
+     * @property logger
+     * @description 로그 출력
      */
     private readonly logger = new Logger(Cli.name);
 

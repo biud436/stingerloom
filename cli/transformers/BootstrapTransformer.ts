@@ -15,15 +15,7 @@ import {
 import { ModuleControllerService } from "@stingerloom/compiler/visitors/ModuleControllerService";
 
 import { ModuleProviderService } from "@stingerloom/compiler/visitors/ModuleProviderService";
-
-const __bootstrap = path.join(
-    __dirname,
-    "..",
-    "..",
-    "packages",
-    "example",
-    "bootstrap.ts",
-);
+import ConfigService from "@stingerloom/common/ConfigService";
 
 /**
  * @class BootstrapTransformer
@@ -33,8 +25,22 @@ const __bootstrap = path.join(
 export class BootstrapTransformer {
     private readonly logger: Logger = new Logger(BootstrapTransformer.name);
 
+    /**
+     * @property program
+     * @description 타입스크립트 프로그램
+     */
     private program!: ts.Program;
+
+    /**
+     * @property sourceFile
+     * @description 타겟 파일
+     */
     private sourceFile!: ts.SourceFile;
+
+    /**
+     * @property transformer
+     * @description 타입스크립트 트랜스포머
+     */
     private transformer: ts.TransformerFactory<ts.SourceFile>[] = [];
 
     /**
@@ -50,17 +56,25 @@ export class BootstrapTransformer {
         this.transform();
     }
 
+    private get rootPath() {
+        return ConfigService.get<string>("ROOT_PATH");
+    }
+
     /**
      * import 문을 타겟 파일에 추가합니다.
      */
     private handleImports() {
-        this.program = ts.createProgram([__bootstrap], {
+        this.program = ts.createProgram([this.rootPath], {
             target: ts.ScriptTarget.ESNext,
             module: ts.ModuleKind.CommonJS,
             allowJs: false,
         });
 
-        this.sourceFile = this.program.getSourceFile(__bootstrap)!;
+        this.sourceFile = this.program.getSourceFile(this.rootPath)!;
+
+        if (!this.sourceFile) {
+            throw new Error("bootstrap.ts 파일을 찾을 수 없습니다.");
+        }
 
         this.newFiles.forEach((filePath) => {
             const clazzName = this.getClassName(filePath);
@@ -167,20 +181,7 @@ export class BootstrapTransformer {
             this.sourceFile,
         );
 
-        /**
-         * 다음 코드는 하드코딩된 경로를 사용합니다.
-         * TODO: 추후에는 사용자가 지정한 경로를 사용하도록 수정해야 합니다.
-         */
-        const bootstrapFilePath2 = path.resolve(
-            __dirname,
-            "..",
-            "..",
-            "packages",
-            "example",
-            "bootstrap.ts",
-        );
-
-        fs.writeFileSync(bootstrapFilePath2, result, "utf8");
+        fs.writeFileSync(this.rootPath, result, "utf8");
     }
 
     /**
