@@ -1282,10 +1282,10 @@
     "@fastify/flash" "^5.0.0"
     fastify-plugin "^4.0.0"
 
-"@fastify/session@^10.4.0":
-  version "10.4.0"
-  resolved "https://registry.yarnpkg.com/@fastify/session/-/session-10.4.0.tgz#d08a106d29bb732f7d457ee7be29c42c4c4cffaa"
-  integrity sha512-0lABZ0Rcg0VjiRj5xWeAwC1LBwgclaoAPikaONxTz0LJQTPPWSfSDDXafLkGDAqrl5KF8sC3jqLiZ9CbRHZ0Jg==
+"@fastify/session@^10.5.0":
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/@fastify/session/-/session-10.5.0.tgz#636cad7ab895403e7359400e82de20afa993aca3"
+  integrity sha512-2oXXSQ4Yy6pzLgbBoooblgHJ55DYqyxSLoKMq2CGmDZI2WPMrOIvN1bJbllWuUuCe7luPdQju3RJTRvNMW+j/g==
   dependencies:
     fastify-plugin "^4.0.0"
     safe-stable-stringify "^2.3.1"
@@ -4109,10 +4109,10 @@ fastify-plugin@^4.0.0:
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-4.5.1.tgz#44dc6a3cc2cce0988bc09e13f160120bbd91dbee"
   integrity sha512-stRHYGeuqpEZTL1Ef0Ovr2ltazUT9g844X5z/zEBFLG8RYlpDiOCIG+ATvYEp+/zmc7sN29mcIMp8gvYplYPIQ==
 
-fastify@^4.21.0:
-  version "4.21.0"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.21.0.tgz#82f4272310c0fb7733a1a70605c57bdd1de938f2"
-  integrity sha512-tsu4bcwE4HetxqW8prA5fbC9bKHMYDp7jGEDWyzK1l90a3uOaLoIcQbdGcWeODNLVJviQnzh1wvIjTZE3MJFEg==
+fastify@^4.22.2:
+  version "4.22.2"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.22.2.tgz#ad5ad555c9612874e8dcd7181a248fe3674142e7"
+  integrity sha512-rK8mF/1mZJHH6H/L22OhmilTgrp5XMkk3RHcSy03LC+TJ6+wLhbq+4U62bjns15VzIbBNgxTqAForBqtGAa0NQ==
   dependencies:
     "@fastify/ajv-compiler" "^3.5.0"
     "@fastify/error" "^3.2.0"
