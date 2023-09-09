@@ -1,28 +1,39 @@
-import { ClassCodeGenerator } from "./ClassCodeGenerator";
+import { ClassCodeGenerator, IImportDeclaration } from "./ClassCodeGenerator";
 
 export class ControllerCodeFactory {
-    private codeGenerator: ClassCodeGenerator;
+    private codeGenerator!: ClassCodeGenerator;
 
     constructor(routerName: string) {
+        this.createCodeGenerator(routerName);
+    }
+
+    /**
+     * 코드 생성기를 생성합니다.
+     *
+     * @param routerName
+     */
+    createCodeGenerator(routerName: string) {
         const serviceFileName = this.toPascalCase(routerName);
+        const imported: IImportDeclaration[] = [
+            {
+                name: "Controller",
+                path: "@stingerloom/common/decorators/Controller",
+            },
+            {
+                name: serviceFileName,
+                path: `./${serviceFileName}`,
+                type: "service",
+            },
+            { name: "Get", path: "@stingerloom/common/decorators/Get" },
+        ];
+        const options = {
+            isController: true,
+        };
 
         this.codeGenerator = new ClassCodeGenerator(
-            [
-                {
-                    name: "Controller",
-                    path: "@stingerloom/common/decorators/Controller",
-                },
-                {
-                    name: serviceFileName,
-                    path: `./${serviceFileName}`,
-                    type: "service",
-                },
-                { name: "Get", path: "@stingerloom/common/decorators/Get" },
-            ],
+            imported,
             routerName,
-            {
-                isController: true,
-            },
+            options,
         );
     }
 

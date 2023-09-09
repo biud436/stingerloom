@@ -3,7 +3,7 @@ import ts from "typescript";
 import fs from "fs";
 import path from "path";
 
-type IImportDeclaration = {
+export type IImportDeclaration = {
     name: string;
     path: string;
     type?: string;
