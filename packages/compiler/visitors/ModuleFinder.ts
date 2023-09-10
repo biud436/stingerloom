@@ -22,6 +22,7 @@ export const findModuleOption =
                             if (ts.isExpressionWithTypeArguments(type)) {
                                 const name = type.expression as ts.Identifier;
 
+                                // 서버 부트스트랩 애플리케이션 클래스를 상속받았는지 확인합니다.
                                 if (
                                     name.escapedText ===
                                     "ServerBootstrapApplication"
@@ -45,6 +46,7 @@ export const findModuleOption =
             } else if (ts.isMethodDeclaration(node)) {
                 const name = node.name as ts.Identifier;
 
+                // beforeStart 메서드가 있는지 확인합니다.
                 if (name.escapedText === "beforeStart") {
                     console.log("beforeStart 메서드를 찾았습니다.");
                 }
@@ -52,6 +54,7 @@ export const findModuleOption =
                 const left = node.left as ts.PropertyAccessExpression;
                 const name = left.name as ts.Identifier;
 
+                // moduleOptions 속성이 있는지 확인하고 있으면 추출합니다.
                 if (name.escapedText === "moduleOptions") {
                     const right = node.right as ts.CallExpression;
                     moduleRef.right = right;
