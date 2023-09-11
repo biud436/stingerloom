@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { isTsPropertyName } from "../utils";
 
 /**
  * 컨트롤러 속성을 읽어옵니다.
@@ -13,9 +14,7 @@ function readWithDepth0(
 
     const visitor = (node: ts.Node) => {
         if (ts.isPropertyAssignment(node)) {
-            const name = node.name as ts.Identifier;
-
-            if (name.escapedText === "controllers") {
+            if (isTsPropertyName(node, "controllers")) {
                 controllerNode = node;
             }
         }
