@@ -14,7 +14,6 @@ export class InjectableCodeGenerator extends ClassCodeGenerator {
             undefined,
             undefined,
             [
-                this.appendEmptyLine(),
                 ts.factory.createMethodDeclaration(
                     [
                         ts.factory.createToken(ts.SyntaxKind.PublicKeyword),
@@ -37,7 +36,6 @@ export class InjectableCodeGenerator extends ClassCodeGenerator {
                         true,
                     ),
                 ),
-                this.appendEmptyLine(),
             ],
         );
 
