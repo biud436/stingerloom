@@ -10,7 +10,7 @@ import { OnApplicationShutdown } from "./OnApplicationShutdown";
  * @description
  * 데이터베이스 연결을 관리하는 TypeORM을 위한 클래스입니다.
  */
-class Database implements OnApplicationShutdown {
+class Database implements OnApplicationShutdown, AsyncDisposable {
     private dataSource: DataSource;
 
     constructor(options: ModuleOptions["configuration"]) {
@@ -28,6 +28,9 @@ class Database implements OnApplicationShutdown {
      * 서버가 종료될 때 실행되는 함수입니다.
      */
     async onApplicationShutdown(): Promise<void> {
+        await this.dataSource.destroy();
+    }
+    async [Symbol.asyncDispose](): Promise<void> {
         await this.dataSource.destroy();
     }
 
