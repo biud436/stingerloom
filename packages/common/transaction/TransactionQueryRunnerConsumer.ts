@@ -25,6 +25,9 @@ export class TransactionQueryRunnerConsumer {
             // 단일 트랜잭션을 실행합니다.
             const queryRunner = dataSource.createQueryRunner();
 
+            // 에디터가 await using을 지원하지 않아서 주석처리합니다.
+            // await using myQueryRunner = new DisposableQueryRunner(dataSource);
+
             await queryRunner.connect();
             await queryRunner.startTransaction(transactionIsolationLevel);
 
