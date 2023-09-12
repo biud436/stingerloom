@@ -12,7 +12,7 @@ export class ControllerCodeFactory {
      *
      * @param routerName
      */
-    createCodeGenerator(routerName: string) {
+    private createCodeGenerator(routerName: string) {
         const serviceFileName = this.toPascalCase(routerName);
         const imported: IImportDeclaration[] = [
             {
