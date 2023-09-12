@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ts from "typescript";
 import path from "path";
 
@@ -88,7 +89,7 @@ export function readModuleOption() {
 const controllerTransformer =
     (targetNode: ts.PropertyAssignment) =>
     (context: ts.TransformationContext) => {
-        return (soureFile) => {
+        return (soureFile: any) => {
             const visitor: ts.Visitor = (rootNode: ts.Node) => {
                 if (ts.isPropertyAssignment(rootNode)) {
                     const name = rootNode.name as ts.Identifier;
