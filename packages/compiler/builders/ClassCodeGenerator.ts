@@ -16,13 +16,14 @@ export type IImportDeclaration = {
  * 본 클래스를 사용하면 컨트롤러 파일을 타입스크립트 컴파일러 수준에서 생성할 수 있습니다.
  */
 export class ClassCodeGenerator {
-    private statements: ts.Statement[];
+    protected statements: ts.Statement[];
 
     constructor(
-        private readonly imported: IImportDeclaration[],
-        private readonly routerName: string,
-        private readonly options?: {
+        protected readonly imported: IImportDeclaration[],
+        protected readonly routerName: string,
+        protected readonly options?: {
             isController?: boolean;
+            isInjectable?: boolean;
         },
     ) {
         this.statements = [];
@@ -34,7 +35,7 @@ export class ClassCodeGenerator {
      * @param imported
      * @returns
      */
-    private addImports(imported: IImportDeclaration[]) {
+    protected addImports(imported: IImportDeclaration[]) {
         return imported.map((imp) => {
             return ts.factory.createImportDeclaration(
                 undefined,
@@ -61,7 +62,7 @@ export class ClassCodeGenerator {
      * @param clazzName
      * @returns
      */
-    private createConstructorContainsNamedParameter(
+    protected createConstructorContainsNamedParameter(
         name: string,
         clazzName: string,
     ) {
@@ -90,7 +91,7 @@ export class ClassCodeGenerator {
      *
      * @returns
      */
-    private appendEmptyLine() {
+    protected appendEmptyLine() {
         return ts.factory.createIdentifier("\n") as any;
     }
 
@@ -101,7 +102,7 @@ export class ClassCodeGenerator {
      * @param content
      * @returns
      */
-    private addDecorator(decoratorName: string, content?: string) {
+    protected addDecorator(decoratorName: string, content?: string) {
         return ts.factory.createDecorator(
             ts.factory.createCallExpression(
                 ts.factory.createIdentifier(decoratorName),
@@ -117,7 +118,7 @@ export class ClassCodeGenerator {
      * @param path
      * @returns
      */
-    private addControllerDecorator(path: string) {
+    protected addControllerDecorator(path: string) {
         return this.addDecorator("Controller", path);
     }
 
@@ -127,7 +128,7 @@ export class ClassCodeGenerator {
      * @param path
      * @returns
      */
-    private addGetDecorator(path: string) {
+    protected addGetDecorator(path: string) {
         return this.addDecorator("Get", path);
     }
 
@@ -164,12 +165,17 @@ export class ClassCodeGenerator {
      * ClassModifier를 추가합니다.
      * @returns
      */
-    private addClassModifier() {
-        const { isController } = this.options || {};
+    protected addClassModifier() {
+        const { isController, isInjectable } = this.options || {};
 
         return isController
             ? [
                   this.addControllerDecorator(`/${this.routerName}`),
+                  ts.factory.createToken(ts.SyntaxKind.ExportKeyword),
+              ]
+            : isInjectable
+            ? [
+                  this.addDecorator("Injectable"),
                   ts.factory.createToken(ts.SyntaxKind.ExportKeyword),
               ]
             : [ts.factory.createToken(ts.SyntaxKind.ExportKeyword)];
@@ -240,10 +246,12 @@ export class ClassCodeGenerator {
         this.generateFile();
     }
 
+    public generateServiceFile() {}
+
     /**
      * 파일을 생성합니다.
      */
-    private generateFile() {
+    protected generateFile() {
         const filename = this.getFilename() + ".ts";
         const resultFile = ts.createSourceFile(
             filename,
@@ -277,7 +285,7 @@ export class ClassCodeGenerator {
      *
      * @returns
      */
-    private getFilename(): string {
+    protected getFilename(): string {
         return `${this.toPascalCase(this.routerName)}Controller`;
     }
 }

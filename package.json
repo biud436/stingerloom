@@ -60,5 +60,25 @@
         "build": "rimraf dist && tsc",
         "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L",
         "test": "jest --config jest.config.js"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "js",
+            "json",
+            "ts"
+        ],
+        "rootDir": ".",
+        "roots": [
+            "<rootDir>/packages/",
+            "<rootDir>/cli/",
+            "<rootDir>/__test__/"
+        ],
+        "transform": {
+            "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "testEnvironment": "node",
+        "moduleNameMapper": {
+            "^@stingerloom/compiler/(.*)$": "<rootDir>/packages/compiler/$1"
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { ClassCodeGenerator, IImportDeclaration } from "./ClassCodeGenerator";
 
 export class ControllerCodeFactory {
-    private codeGenerator!: ClassCodeGenerator;
+    protected codeGenerator!: ClassCodeGenerator;
 
     constructor(routerName: string) {
         this.createCodeGenerator(routerName);
@@ -12,7 +12,7 @@ export class ControllerCodeFactory {
      *
      * @param routerName
      */
-    private createCodeGenerator(routerName: string) {
+    protected createCodeGenerator(routerName: string) {
         const serviceFileName = this.toPascalCase(routerName);
         const imported: IImportDeclaration[] = [
             {
@@ -62,5 +62,7 @@ export class ControllerCodeFactory {
      */
     public build() {
         this.codeGenerator.generateControllerFile();
+
+        return true;
     }
 }
