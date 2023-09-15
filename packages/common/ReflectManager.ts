@@ -31,19 +31,17 @@ export class ReflectManager {
      * 타입을 반환합니다.
      *
      * @param target
-     */
-    public static getType(target: object): Type | undefined;
-
-    /**
-     * 타입을 반환합니다.
-     *
-     * @param target
      * @param key
      */
-    public static getType(
+    public static getType<T = Type>(target: object): T | undefined;
+    public static getType<T = Type>(
         target: object,
         key?: string | symbol | undefined,
-    ): Type | undefined {
+    ): T | undefined;
+    public static getType<T = Type>(
+        target: object,
+        key?: string | symbol | undefined,
+    ): T | undefined {
         if (key) return Reflect.getMetadata("design:type", target, key!);
         return Reflect.getMetadata("design:type", target);
     }

@@ -14,11 +14,17 @@ import { plainToClass } from "class-transformer";
 import { InjectQueryRunner } from "@stingerloom/common/decorators/InjectQueryRunner";
 import { InternalServerException } from "@stingerloom/error";
 import { FastifyRequest } from "fastify";
+import { Point } from "@stingerloom/example/entity/Point";
+import { Autowired } from "@stingerloom/common/decorators/Autowired";
 
 @TransactionalZone()
 @Injectable()
 export class AuthService {
-    constructor(private readonly userService: UserService) {}
+    @Autowired()
+    myPoint!: Point;
+
+    @Autowired()
+    userService!: UserService;
 
     async login(session: SessionObject, loginUserDto: LoginUserDto) {
         const user = await this.userService.validateUser(loginUserDto);

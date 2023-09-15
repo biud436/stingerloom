@@ -10,7 +10,7 @@ export * from "./Header";
 export * from "./Injectable";
 export * from "./InjectRepository";
 export * from "./Patch";
-export * from "./PATH_KEY";
+export * from "./PathToken";
 export * from "./Post";
 export * from "./Put";
 export * from "./Req";

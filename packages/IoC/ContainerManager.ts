@@ -21,6 +21,7 @@ import {
 } from "@stingerloom/common";
 import { RouterExecutionContext } from "@stingerloom/router/RouterExecutionContext";
 import chalk from "chalk";
+import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
 /**
@@ -88,7 +89,6 @@ export class ContainerManager {
                     `${TargetInjectable.name}은 injectable이 아닌 것 같습니다.`,
                 );
             }
-
             const injectParameters = metadata.parameters;
             let args = injectParameters as any;
 
@@ -99,6 +99,8 @@ export class ContainerManager {
             }
 
             const targetInjectable = new TargetInjectable(...args);
+
+            console.log(createAutoWiredFactory(targetInjectable));
 
             await this.callOnModuleInit(targetInjectable);
 
@@ -147,12 +149,6 @@ export class ContainerManager {
 
             const targetController = new TargetController(...args);
             await this.callOnModuleInit(targetController);
-
-            // await TransactionManager.checkTransactionalZone(
-            //     TargetController,
-            //     targetController,
-            //     instanceScanner,
-            // );
 
             this._controllers.push(targetController);
 

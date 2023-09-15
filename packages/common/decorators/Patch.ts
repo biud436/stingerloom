@@ -5,7 +5,7 @@ import {
 } from "@stingerloom/IoC/scanners/MetadataScanner";
 import { getMethodParameters } from "@stingerloom/utils/extractor";
 import { HttpRouterParameter } from "../HttpRouterParameter";
-import { PATH } from "./PATH_KEY";
+import { PATH } from "./PathToken";
 
 export const PATCH_KEY = Symbol("PATCH");
 

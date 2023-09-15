@@ -6,7 +6,7 @@ import {
 } from "@stingerloom/IoC/scanners/MetadataScanner";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 import { getMethodParameters } from "@stingerloom/utils/extractor";
-import { PATH } from "./PATH_KEY";
+import { PATH } from "./PathToken";
 
 export function Delete(path = ""): MethodDecorator {
     return function (
