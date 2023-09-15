@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClazzType, HEADER_TOKEN } from "@stingerloom/common";
+import { ClazzType, HEADER_TOKEN, HeaderMetadata } from "@stingerloom/common";
 import { FastifyReply } from "fastify";
 
 /**
@@ -14,13 +14,16 @@ export class HeaderConsumer {
         const { targetController } = this;
 
         // Header Consumer
-        const header = Reflect.getMetadata(
+        const parameters = Reflect.getMetadata(
             HEADER_TOKEN,
             targetController,
             routerName,
-        );
-        if (header) {
-            res.header(header.key, header.value);
+        ) as HeaderMetadata[];
+
+        if (parameters) {
+            parameters.forEach((parameter: HeaderMetadata) => {
+                res.header(parameter.key, parameter.value);
+            });
         }
     }
 }
