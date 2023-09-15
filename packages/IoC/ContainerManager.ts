@@ -100,7 +100,7 @@ export class ContainerManager {
 
             const targetInjectable = new TargetInjectable(...args);
 
-            console.log(createAutoWiredFactory(targetInjectable));
+            createAutoWiredFactory(targetInjectable);
 
             await this.callOnModuleInit(targetInjectable);
 
@@ -148,6 +148,8 @@ export class ContainerManager {
             }
 
             const targetController = new TargetController(...args);
+            createAutoWiredFactory(targetController);
+
             await this.callOnModuleInit(targetController);
 
             this._controllers.push(targetController);

@@ -44,7 +44,7 @@ It also uses reflect-metadata to collect metadata.
 
 # How to use
 
-This framework provides the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render` decorators.
+This framework provides the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired` decorators.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
@@ -328,7 +328,8 @@ So let's see an example.
 @TransactionalZone()
 @Injectable()
 export class AuthService {
-    constructor(private readonly userService: UserService) {}
+    @Autowired()
+    userService!: UserService;
 
     /**
      * QueryRunner를 사용하여 트랜잭션을 제어합니다.
