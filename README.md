@@ -69,10 +69,11 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 ```ts
 @Controller("/user")
 export class UserController {
-    constructor(
-        private readonly point: Point,
-        private readonly userService: UserService,
-    ) {}
+    @Autowired()
+    private readonly point: Point;
+
+    @Autowired()
+    private readonly userService!: UserService;
 
     @Get("/point")
     async getPoint() {

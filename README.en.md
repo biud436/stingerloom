@@ -67,10 +67,11 @@ The `@Controller` decorator collects metadata for directing HTTP requests to con
 ```ts
 @Controller("/user")
 export class UserController {
-    constructor(
-        private readonly point: Point,
-        private readonly userService: UserService,
-    ) {}
+    @Autowired()
+    private readonly point: Point;
+
+    @Autowired()
+    private readonly userService!: UserService;
 
     @Get("/point")
     async getPoint() {

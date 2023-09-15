@@ -16,10 +16,12 @@ import { SessionGuard } from "./guards/SessionGuard";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { User } from "@stingerloom/example/common/decorators/User";
 import { UserId } from "@stingerloom/example/common/decorators/UserId";
+import { Autowired } from "@stingerloom/common/decorators/Autowired";
 
 @Controller("/auth")
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    @Autowired()
+    private readonly authService!: AuthService;
 
     @Post("/login")
     async login(
