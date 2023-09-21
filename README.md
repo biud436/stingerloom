@@ -427,6 +427,20 @@ export class UserService {
 
 대신, 트랜잭션이 필요한 부분은 주입되는 `queryRunner`를 통해 처리해야 합니다.
 
+만약, 롤백 처리 후에 특정 코드를 실행하고싶다면 다음과 같이 할 수 있습니다.
+
+```ts
+    @Rollback()
+    async rollback(txId: string, error: any) {
+        // 트랜잭션이 롤백된 후에 아래 코드가 실행됩니다.
+        // 이 메소드는 오류가 발생했을 때만 실행됩니다.
+    }
+```
+
+`@Rollback()` 데코레이터를 붙이고 메소드의 첫 번째 인자로는 트랜잭션 ID가, 두 번째 인자로는 오류 객체가 전달됩니다.
+
+트랜잭션 ID는 실제 트랜잭션의 ID가 아니며 서버에서 관리하는 트랜잭션 ID입니다.
+
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
 ## Authorization
