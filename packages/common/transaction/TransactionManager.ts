@@ -17,6 +17,9 @@ import { TransactionQueryRunnerConsumer } from "./TransactionQueryRunnerConsumer
 
 export const TRANSACTION_MANAGER_SYMBOL = Symbol("TRANSACTION_MANAGER");
 
+/**
+ * @class TransactionManager
+ */
 export class TransactionManager {
     private static LOGGER = new Logger(TransactionManager.name);
     private static txManagerConsumer = new TransactionEntityManagerConsumer();

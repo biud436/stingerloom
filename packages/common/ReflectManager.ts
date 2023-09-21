@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTROLLER_TOKEN } from "./RouterMapper";
 import {
+    AFTER_TRANSACTION_TOKEN,
+    BEFORE_TRANSACTION_TOKEN,
     REPOSITORY_ENTITY_METADATA,
     TRANSACTIONAL_TOKEN,
     TRANSACTIONAL_ZONE,
+    TRANSACTION_COMMIT_TOKEN,
+    TRANSACTION_ROLLBACK_TOKEN,
     USE_GUARD_OPTION_TOKEN,
 } from "./decorators";
 
@@ -181,6 +185,62 @@ export class ReflectManager {
             return false;
         }
         return Reflect.getMetadata(TRANSACTIONAL_ZONE, target) !== undefined;
+    }
+
+    /**
+     * BeforeTransaction 메서드 여부를 반환합니다.
+     *
+     * @param target
+     * @param key
+     * @returns
+     */
+    public static isBeforeTransactionMethod(target: object, key: string) {
+        return (
+            Reflect.getMetadata(BEFORE_TRANSACTION_TOKEN, target, key) !==
+            undefined
+        );
+    }
+
+    /**
+     * AfterTransaction 메서드 여부를 반환합니다.
+     *
+     * @param target
+     * @param key
+     * @returns
+     */
+    public static isAfterTransactionMethod(target: object, key: string) {
+        return (
+            Reflect.getMetadata(AFTER_TRANSACTION_TOKEN, target, key) !==
+            undefined
+        );
+    }
+
+    /**
+     * 커밋 메서드 여부를 반환합니다.
+     *
+     * @param target
+     * @param key
+     * @returns
+     */
+    public static isCommitMethod(target: object, key: string) {
+        return (
+            Reflect.getMetadata(TRANSACTION_COMMIT_TOKEN, target, key) !==
+            undefined
+        );
+    }
+
+    /**
+     * 롤백 메서드 여부를 반환합니다.
+     *
+     * @param target
+     * @param key
+     * @returns
+     */
+    public static isRollbackMethod(target: object, key: string) {
+        return (
+            Reflect.getMetadata(TRANSACTION_ROLLBACK_TOKEN, target, key) !==
+            undefined
+        );
     }
 
     /**
