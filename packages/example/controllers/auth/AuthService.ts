@@ -1,4 +1,7 @@
 import {
+    AfterTransaction,
+    BeforeTransaction,
+    Commit,
     Injectable,
     SessionObject,
     TransactionIsolationLevel,
@@ -86,6 +89,21 @@ export class AuthService {
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {
             users: plainToClass(User, users),
         });
+    }
+
+    @BeforeTransaction()
+    async beforeTransaction() {
+        console.log("트랜잭션을 시작합니다.");
+    }
+
+    @AfterTransaction()
+    async afterTransaction() {
+        console.log("트랜잭션을 종료합니다.");
+    }
+
+    @Commit()
+    async commit() {
+        console.log("트랜잭션을 커밋합니다.");
     }
 
     /**

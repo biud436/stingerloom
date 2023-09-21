@@ -2,6 +2,7 @@
 import { TRANSACTIONAL_PARAMS, TransactionIsolationLevel } from "../decorators";
 import { Logger } from "../Logger";
 import { EntityManager } from "typeorm";
+import { TransactionStore } from "./TransactionStore";
 
 export class TransactionEntityManagerConsumer {
     public LOGGER: Logger = new Logger(TransactionEntityManagerConsumer.name);
@@ -15,6 +16,7 @@ export class TransactionEntityManagerConsumer {
         originalMethod: (...args: unknown[]) => unknown | Promise<unknown>,
         resolve: (value: unknown) => void,
         reject: (reason?: unknown) => void,
+        store: TransactionStore,
     ) {
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {
@@ -45,6 +47,13 @@ export class TransactionEntityManagerConsumer {
                         ...args,
                     );
 
+                    if (store.isTransactionCommitToken()) {
+                        await store.action(
+                            targetInjectable,
+                            store.getTransactionCommitMethodName()!,
+                        );
+                    }
+
                     // promise인가?
                     if (result instanceof Promise) {
                         return resolve(await result);
@@ -59,7 +68,14 @@ export class TransactionEntityManagerConsumer {
                     const queryRunner = em.queryRunner;
 
                     if (queryRunner) {
-                        queryRunner.rollbackTransaction();
+                        await queryRunner.rollbackTransaction();
+                    }
+
+                    if (store.isTransactionRollbackToken()) {
+                        await store.action(
+                            targetInjectable,
+                            store.getTransactionRollbackMethodName()!,
+                        );
                     }
 
                     reject(err);
@@ -70,6 +86,17 @@ export class TransactionEntityManagerConsumer {
                     `트랜잭션을 실행하는 도중 오류가 발생했습니다1: ${err.message}`,
                 );
                 reject(err);
+            })
+            .finally(() => {
+                // 트랜잭션 이후에 실행할 메소드가 있는가?
+                if (store.isAfterTransactionToken()) {
+                    setTimeout(() => {
+                        store.action(
+                            targetInjectable,
+                            store.getAfterTransactionMethodName()!,
+                        );
+                    }, 0);
+                }
             });
         return args;
     }
