@@ -11,6 +11,7 @@ export class TransactionStore {
     constructor(
         public store: ITransactionStore,
         public methods: string[],
+        public virtualTransactionId: string,
     ) {}
 
     isBeforeTransactionToken(): boolean {
@@ -45,8 +46,17 @@ export class TransactionStore {
         return this.store[TRANSACTION_ROLLBACK_TOKEN];
     }
 
-    async action(targetInjectable: InstanceType<any>, method: string) {
-        const result = targetInjectable[method].call(targetInjectable);
+    async action(
+        targetInjectable: InstanceType<any>,
+        method: string,
+        ...args: unknown[]
+    ) {
+        const txId = this.virtualTransactionId;
+        const result = targetInjectable[method].call(
+            targetInjectable,
+            txId,
+            ...args,
+        );
 
         if (result instanceof Promise) {
             return await result;

@@ -84,6 +84,7 @@ export class TransactionQueryRunnerConsumer {
                     await store.action(
                         targetInjectable,
                         store.getTransactionRollbackMethodName()!,
+                        e,
                     );
                 }
 

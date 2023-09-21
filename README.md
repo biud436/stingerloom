@@ -323,21 +323,6 @@ export class AuthService {
             users: plainToClass(User, users),
         });
     }
-
-    @BeforeTransaction()
-    async beforeTransaction() {
-        console.log("트랜잭션을 시작합니다.");
-    }
-
-    @AfterTransaction()
-    async afterTransaction() {
-        console.log("트랜잭션을 종료합니다.");
-    }
-
-    @Commit()
-    async commit() {
-        console.log("트랜잭션을 커밋합니다.");
-    }
 }
 ```
 
@@ -377,6 +362,27 @@ export class AuthService {
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {
             users: plainToClass(User, users),
         });
+    }
+
+    @BeforeTransaction()
+    async beforeTransaction(txId: string) {
+        // 트랜잭션이 시작되기 전에 아래 코드가 실행됩니다.
+    }
+
+    @AfterTransaction()
+    async afterTransaction(txId: string) {
+        // 트랜잭션이 종료된 후에 아래 코드가 실행됩니다.
+    }
+
+    @Commit()
+    async commit(txId: string) {
+        // 트랜잭션이 커밋된 후에 아래 코드가 실행됩니다.
+    }
+
+    @Rollback()
+    async rollback(txId: string, error: any) {
+        // 트랜잭션이 롤백된 후에 아래 코드가 실행됩니다.
+        // 이 메소드는 오류가 발생했을 때만 실행됩니다.
     }
 }
 ```

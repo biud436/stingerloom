@@ -92,18 +92,18 @@ export class AuthService {
     }
 
     @BeforeTransaction()
-    async beforeTransaction() {
-        console.log("트랜잭션을 시작합니다.");
+    async beforeTransaction(txId: string) {
+        console.log(`[${txId}] 트랜잭션을 시작합니다.`);
     }
 
     @AfterTransaction()
-    async afterTransaction() {
-        console.log("트랜잭션을 종료합니다.");
+    async afterTransaction(txId: string) {
+        console.log(`[${txId}] 트랜잭션을 종료합니다.`);
     }
 
     @Commit()
-    async commit() {
-        console.log("트랜잭션을 커밋합니다.");
+    async commit(txId: string) {
+        console.log(`[${txId}] 트랜잭션을 커밋합니다.`);
     }
 
     /**

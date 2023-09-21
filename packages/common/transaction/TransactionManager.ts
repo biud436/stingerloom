@@ -20,6 +20,7 @@ import { TransactionEntityManagerConsumer } from "./TransactionEntityManagerCons
 import { TransactionQueryRunnerConsumer } from "./TransactionQueryRunnerConsumer";
 import { ITransactionStore } from "./ITransactionStore";
 import { TransactionStore } from "./TransactionStore";
+import { v4 as uuidv4 } from "uuid";
 
 export const TRANSACTION_MANAGER_SYMBOL = Symbol("TRANSACTION_MANAGER");
 
@@ -170,6 +171,7 @@ export class TransactionManager {
         return new TransactionStore(
             store,
             getPrototypeMethods(targetInjectable),
+            uuidv4(),
         );
     }
 
