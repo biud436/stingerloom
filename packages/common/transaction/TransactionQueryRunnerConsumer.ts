@@ -7,6 +7,7 @@ import {
 } from "../decorators";
 import { Logger } from "../Logger";
 import { DataSource } from "typeorm";
+import { TransactionStore } from "./TransactionStore";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
@@ -20,6 +21,7 @@ export class TransactionQueryRunnerConsumer {
         reject: (reason?: unknown) => void,
         resolve: (value: unknown) => void,
         args: unknown[],
+        store: TransactionStore,
     ) {
         const wrapper = async (...args: any[]) => {
             // 단일 트랜잭션을 실행합니다.
@@ -67,15 +69,37 @@ export class TransactionQueryRunnerConsumer {
 
                 await queryRunner.commitTransaction();
 
+                if (store.isTransactionCommitToken()) {
+                    await store.action(
+                        targetInjectable,
+                        store.getTransactionCommitMethodName()!,
+                    );
+                }
+
                 return ret;
             } catch (e: any) {
                 await queryRunner.rollbackTransaction();
+
+                if (store.isTransactionRollbackToken()) {
+                    await store.action(
+                        targetInjectable,
+                        store.getTransactionRollbackMethodName()!,
+                    );
+                }
+
                 this.LOGGER.error(
                     `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${e.message}`,
                 );
                 reject(e);
             } finally {
                 await queryRunner.release();
+
+                if (store.isAfterTransactionToken()) {
+                    await store.action(
+                        targetInjectable,
+                        store.getAfterTransactionMethodName()!,
+                    );
+                }
             }
         };
 

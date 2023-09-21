@@ -44,7 +44,7 @@ It also uses reflect-metadata to collect metadata.
 
 # How to use
 
-This framework provides the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired` decorators.
+This framework provides the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`, `BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` decorators.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
@@ -378,6 +378,21 @@ export class UserService {
         const res = await queryRunner?.manager.save(newUser);
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
+    }
+
+    @BeforeTransaction()
+    async beforeTransaction() {
+        console.log("트랜잭션을 시작합니다.");
+    }
+
+    @AfterTransaction()
+    async afterTransaction() {
+        console.log("트랜잭션을 종료합니다.");
+    }
+
+    @Commit()
+    async commit() {
+        console.log("트랜잭션을 커밋합니다.");
     }
 
     // Skip...

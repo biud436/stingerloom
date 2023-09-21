@@ -4,9 +4,13 @@ import { ClazzType } from "../RouterMapper";
 import { ReflectManager } from "../ReflectManager";
 import Database from "../Database";
 import {
+    AFTER_TRANSACTION_TOKEN,
+    BEFORE_TRANSACTION_TOKEN,
     DEFAULT_ISOLATION_LEVEL,
+    TRANSACTION_COMMIT_TOKEN,
     TRANSACTION_ENTITY_MANAGER,
     TRANSACTION_ISOLATE_LEVEL,
+    TRANSACTION_ROLLBACK_TOKEN,
     TransactionIsolationLevel,
 } from "../decorators";
 
@@ -14,6 +18,8 @@ import { InternalServerException } from "@stingerloom/error";
 import { Logger } from "../Logger";
 import { TransactionEntityManagerConsumer } from "./TransactionEntityManagerConsumer";
 import { TransactionQueryRunnerConsumer } from "./TransactionQueryRunnerConsumer";
+import { ITransactionStore } from "./ITransactionStore";
+import { TransactionStore } from "./TransactionStore";
 
 export const TRANSACTION_MANAGER_SYMBOL = Symbol("TRANSACTION_MANAGER");
 
@@ -31,42 +37,22 @@ export class TransactionManager {
         instanceScanner: InstanceScanner,
     ) {
         if (ReflectManager.isTransactionalZone(TargetInjectable)) {
-            const getPrototypeMethods = (obj: any): string[] => {
-                const properties = new Set<string>();
-                let currentObj = obj;
-                do {
-                    Object.getOwnPropertyNames(currentObj).map((item) =>
-                        properties.add(item),
-                    );
-
-                    currentObj = Object.getPrototypeOf(currentObj);
-                } while (
-                    Object.getPrototypeOf(currentObj) &&
-                    Object.getPrototypeOf(currentObj) !== null
-                );
-
-                return [...properties.keys()].filter(
-                    (item) => typeof obj[item as any] === "function",
-                );
-            };
+            const store = this.createStore(targetInjectable);
+            const methods = store.methods;
 
             // 모든 메소드를 순회합니다.
-            for (const method of getPrototypeMethods(targetInjectable)) {
+            for (const method of methods) {
                 // 데이터베이스 인스턴스를 가져옵니다.
                 const database = instanceScanner.get(Database) as Database;
 
                 // 메소드가 트랜잭셔널이라면
-                if (
-                    ReflectManager.isTransactionalZoneMethod(
-                        targetInjectable,
-                        method,
-                    )
-                ) {
+                // prettier-ignore
+                if (ReflectManager.isTransactionalZoneMethod(targetInjectable, method)) {
                     TransactionManager.LOGGER.info(
                         `{${TargetInjectable.name}/${method}} 트랜잭션 존이 발견됨`,
                     );
-
                     const wrapTransaction = () => {
+
                         const originalMethod = targetInjectable[method as any];
 
                         // 트랜잭션 격리 레벨을 가져옵니다.
@@ -88,6 +74,13 @@ export class TransactionManager {
                             );
 
                         const callback = async (...args: any[]) => {
+                            if (store.isBeforeTransactionToken()) {
+                                TransactionManager.LOGGER.info(
+                                    `${TargetInjectable.name}에서 isBeforeTransactionToken이 있습니다`,
+                                );   
+                                await store.action(targetInjectable, store.getBeforeTransactionMethodName()!);
+                            }    
+
                             return new Promise((resolve, reject) => {
                                 if (transactionalEntityManager) {
                                     // 트랜잭션 엔티티 매니저를 실행합니다.
@@ -100,6 +93,7 @@ export class TransactionManager {
                                         originalMethod,
                                         resolve,
                                         reject,
+                                        store,
                                     );
                                 } else {
                                     this.txQueryRunnerConsumer.execute(
@@ -111,8 +105,9 @@ export class TransactionManager {
                                         reject,
                                         resolve,
                                         args,
+                                        store,
                                     );
-                                }
+                                }                                
                             });
                         };
 
@@ -130,6 +125,52 @@ export class TransactionManager {
                 }
             }
         }
+    }
+
+    private static getPrototypeMethods() {
+        return (obj: any): string[] => {
+            const properties = new Set<string>();
+            let currentObj = obj;
+            do {
+                Object.getOwnPropertyNames(currentObj).map((item) =>
+                    properties.add(item),
+                );
+
+                currentObj = Object.getPrototypeOf(currentObj);
+            } while (
+                Object.getPrototypeOf(currentObj) &&
+                Object.getPrototypeOf(currentObj) !== null
+            );
+
+            return [...properties.keys()].filter(
+                (item) => typeof obj[item as any] === "function",
+            );
+        };
+    }
+
+    private static createStore(
+        targetInjectable: InstanceType<any>,
+    ): TransactionStore {
+        const store: ITransactionStore = {};
+        const getPrototypeMethods = TransactionManager.getPrototypeMethods();
+
+        // prettier-ignore
+        for (const method of getPrototypeMethods(targetInjectable)) {
+            if (ReflectManager.isBeforeTransactionMethod(targetInjectable, method)) {
+                store[BEFORE_TRANSACTION_TOKEN] = method;
+            } else if (ReflectManager.isAfterTransactionMethod(targetInjectable, method)) {
+                store[AFTER_TRANSACTION_TOKEN] = method;
+            } else if (ReflectManager.isCommitMethod(targetInjectable, method)) {
+                store[TRANSACTION_COMMIT_TOKEN] = method;
+            } else if (ReflectManager.isRollbackMethod(targetInjectable, method)) {
+                store[TRANSACTION_ROLLBACK_TOKEN] = method;
+            }
+        }
+
+        return new TransactionStore(
+            store,
+            getPrototypeMethods(targetInjectable),
+        );
     }
 
     /**
