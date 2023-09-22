@@ -106,10 +106,10 @@ export class ServerBootstrapApplication {
         process.on("uncaughtException", handleErrorWather);
         process.on("unhandledRejection", handleErrorWather);
 
-        process.on("exit", () => this.onApplicationShutdown.bind(this));
-        // process.on("SIGINT", () => this.onApplicationShutdown.bind(this));
-        // process.on("SIGTERM", () => this.onApplicationShutdown.bind(this));
-        // process.on("SIGQUIT", () => this.onApplicationShutdown.bind(this));
+        // SIGTERM
+        process.on("SIGTERM", () => {
+            this.onApplicationShutdown.call(this);
+        });
 
         return this;
     }
