@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FastifyInstance, fastify } from "fastify";
+import { FastifyInstance, FastifyListenOptions, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 
@@ -118,9 +118,10 @@ export class ServerBootstrapApplication {
         return this;
     }
 
-    private createServer(): void {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        this.app.listen({ port: process.env.SERVER_PORT }, (err, _address) => {
+    private createServer(
+        options: FastifyListenOptions = { port: process.env.SERVER_PORT },
+    ): void {
+        this.app.listen(options, (err) => {
             if (err) {
                 console.error(err);
             }
