@@ -4,8 +4,8 @@ import { DataSource, DataSourceOptions } from "typeorm";
 /**
  * @class DataSourceFactory
  */
-export class DataSourceAdapter {
-    private readonly logger: Logger = new Logger(DataSourceAdapter.name);
+export class DataSourceProxy {
+    private readonly logger: Logger = new Logger(DataSourceProxy.name);
 
     constructor(private readonly options: DataSourceOptions) {}
 

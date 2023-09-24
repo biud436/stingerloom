@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from "typeorm";
-import { DataSourceAdapter } from "./DataSourceAdapter";
+import { DataSourceProxy } from "./DataSourceProxy";
 
 /**
  * @class DBConnection
@@ -10,6 +10,6 @@ import { DataSourceAdapter } from "./DataSourceAdapter";
  */
 export class DataSourceFactory {
     public static create(options: DataSourceOptions): DataSource {
-        return new DataSourceAdapter(options).create();
+        return new DataSourceProxy(options).create();
     }
 }
