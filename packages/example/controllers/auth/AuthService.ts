@@ -108,6 +108,11 @@ export class AuthService {
 
     /**
      * QueryRunner를 사용하여 트랜잭션을 제어합니다.
+     * 매개변수로 받는 queryRunner는 별도로 생성되는 manager 입니다.
+     *
+     * [링크](https://github.com/typeorm/typeorm/blob/master/src/data-source/DataSource.ts#L589)에 의하면
+     * createQueryRunner에서 manager가 따로 생성되는 것을 알 수 있습니다.
+     *
      * @param queryRunner
      * @returns
      */

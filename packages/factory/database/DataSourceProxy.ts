@@ -23,6 +23,7 @@ export class DataSourceProxy {
                     // if (manager instanceof EntityManager) {
 
                     // }
+
                     this.logger.debug("[manager]에 접근했습니다.");
 
                     return manager;
