@@ -1,5 +1,5 @@
 import { Logger } from "@stingerloom/common";
-import { DataSource, DataSourceOptions } from "typeorm";
+import { DataSource, DataSourceOptions, EntityManager } from "typeorm";
 
 /**
  * @class DataSourceFactory
@@ -20,14 +20,24 @@ export class DataSourceProxy {
                 if (prop === "manager") {
                     const manager = Reflect.get(target, "manager", receiver);
 
-                    // if (manager instanceof EntityManager) {
-
-                    // }
+                    if (manager instanceof EntityManager) {
+                        return this.createEntityManagerProxy(manager);
+                    }
 
                     this.logger.debug("[manager]에 접근했습니다.");
 
                     return manager;
                 }
+
+                return Reflect.get(target, prop, receiver);
+            },
+        });
+    }
+
+    private createEntityManagerProxy(manager: EntityManager) {
+        return new Proxy(manager, {
+            get: (target, prop, receiver) => {
+                this.logger.debug("[EntityManager]에 접근했습니다.");
 
                 return Reflect.get(target, prop, receiver);
             },

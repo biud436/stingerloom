@@ -30,15 +30,15 @@ export class ServerBootstrapApplication {
 
     constructor() {
         this.app = fastify({
-            logger: {
-                transport: {
-                    target: "pino-pretty",
-                    options: {
-                        translateTime: "HH:MM:ss Z",
-                        ignore: "pid,hostname",
-                    },
-                },
-            },
+            // logger: {
+            //     transport: {
+            //         target: "pino-pretty",
+            //         options: {
+            //             translateTime: "HH:MM:ss Z",
+            //             ignore: "pid,hostname",
+            //         },
+            //     },
+            // },
         });
     }
 
