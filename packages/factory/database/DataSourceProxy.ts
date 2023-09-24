@@ -16,7 +16,7 @@ export class DataSourceProxy {
         const dataSource = new DataSource(this.options);
 
         return new Proxy(dataSource, {
-            get: (target, prop, receiver) => {
+            get: (target: DataSource, prop: string | symbol, receiver) => {
                 if (prop === "manager") {
                     const manager = Reflect.get(target, "manager", receiver);
 
@@ -27,6 +27,20 @@ export class DataSourceProxy {
                     this.logger.debug("[manager]에 접근했습니다.");
 
                     return manager;
+                }
+
+                if (
+                    prop === "createQueryRunner" &&
+                    typeof target[prop] === "function"
+                ) {
+                    const targetMethod = target[prop];
+
+                    return (...args: unknown[]) => {
+                        this.logger.debug(
+                            "[createQueryRunner]에 접근했습니다.",
+                        );
+                        return targetMethod.apply(dataSource, args as []);
+                    };
                 }
 
                 return Reflect.get(target, prop, receiver);
