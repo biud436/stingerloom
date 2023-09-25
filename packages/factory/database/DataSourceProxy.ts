@@ -33,14 +33,7 @@ export class DataSourceProxy {
                     prop === "createQueryRunner" &&
                     typeof target[prop] === "function"
                 ) {
-                    const targetMethod = target[prop];
-
-                    return (...args: unknown[]) => {
-                        this.logger.debug(
-                            "[createQueryRunner]에 접근했습니다.",
-                        );
-                        return targetMethod.apply(dataSource, args as []);
-                    };
+                    return this.createQueryRunner(dataSource, target);
                 }
 
                 return Reflect.get(target, prop, receiver);
@@ -48,6 +41,33 @@ export class DataSourceProxy {
         });
     }
 
+    /**
+     * QueryRunner를 생성합니다.
+     *
+     * @param dataSource
+     * @param target
+     * @returns
+     */
+    private createQueryRunner(dataSource: DataSource, target: DataSource) {
+        const targetMethod = target.createQueryRunner;
+
+        return (...args: unknown[]) => {
+            this.logger.debug("[createQueryRunner]에 접근했습니다.");
+            const originalQueryRunner = targetMethod.apply(
+                dataSource,
+                args as [],
+            );
+
+            return originalQueryRunner;
+        };
+    }
+
+    /**
+     * EntityManager에 접근합니다.
+     *
+     * @param manager
+     * @returns
+     */
     private createEntityManagerProxy(manager: EntityManager) {
         return new Proxy(manager, {
             get: (target, prop, receiver) => {
