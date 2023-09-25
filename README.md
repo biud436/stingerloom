@@ -1,5 +1,3 @@
-[[English Docs]](https://github.com/biud436/stingerloom/blob/main/README.en.md)
-
 # Introduction
 
 이 서버 프레임워크는 Nest.js라는 서버 프레임워크의 동작 원리와 기술을 더 깊이 이해하기 위해서 시작되었습니다.
