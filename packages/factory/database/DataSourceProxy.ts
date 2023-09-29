@@ -51,6 +51,12 @@ export class DataSourceProxy {
     private createQueryRunner(dataSource: DataSource, target: DataSource) {
         const targetMethod = target.createQueryRunner;
 
+        if (!targetMethod) {
+            throw new Error(
+                "cannot find createQueryRunner method in DataSource",
+            );
+        }
+
         return (...args: unknown[]) => {
             this.logger.debug("[createQueryRunner]에 접근했습니다.");
             const originalQueryRunner = targetMethod.apply(
