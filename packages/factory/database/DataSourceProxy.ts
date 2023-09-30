@@ -52,7 +52,11 @@ export class DataSourceProxy {
                     return <Entity extends ObjectLiteral>(
                         entity: EntityTarget<Entity>,
                     ) => {
-                        return Reflect.apply(target[prop], target, [entity]);
+                        const repository = Reflect.apply(target[prop], target, [
+                            entity,
+                        ]);
+
+                        return repository;
                     };
                 }
 
