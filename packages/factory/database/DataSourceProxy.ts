@@ -1,5 +1,11 @@
 import { Logger } from "@stingerloom/common";
-import { DataSource, DataSourceOptions, EntityManager } from "typeorm";
+import {
+    DataSource,
+    DataSourceOptions,
+    EntityManager,
+    EntityTarget,
+    ObjectLiteral,
+} from "typeorm";
 
 /**
  * @class DataSourceFactory
@@ -34,6 +40,20 @@ export class DataSourceProxy {
                     typeof target[prop] === "function"
                 ) {
                     return this.createQueryRunner(dataSource, target);
+                }
+
+                // getRepository
+                if (
+                    prop === "getRepository" ||
+                    prop === "getCustomRepository" ||
+                    prop === "getTreeRepository" ||
+                    prop === "getMongoRepository"
+                ) {
+                    return <Entity extends ObjectLiteral>(
+                        entity: EntityTarget<Entity>,
+                    ) => {
+                        return Reflect.apply(target[prop], target, [entity]);
+                    };
                 }
 
                 return Reflect.get(target, prop, receiver);
