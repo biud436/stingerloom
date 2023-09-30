@@ -42,7 +42,7 @@ export class TransactionEntityManagerConsumer {
             return;
         }
 
-        this.transactionScanner.lock(token);
+        this.transactionScanner.lock(token, targetInjectable, method);
 
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {

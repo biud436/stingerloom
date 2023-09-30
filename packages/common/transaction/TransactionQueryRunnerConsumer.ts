@@ -57,7 +57,7 @@ export class TransactionQueryRunnerConsumer {
                 return;
             }
 
-            this.transactionScanner.lock(token);
+            this.transactionScanner.lock(token, targetInjectable, method);
 
             try {
                 // QueryRunner를 찾아서 대체한다.

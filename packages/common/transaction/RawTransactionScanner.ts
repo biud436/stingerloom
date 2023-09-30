@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MetadataScanner } from "@stingerloom/IoC/scanners";
 import { Service } from "typedi";
 
@@ -11,8 +12,15 @@ export class RawTransactionScanner extends MetadataScanner {
         return this.mapper.has(token);
     }
 
-    lock(token: string): void {
-        this.mapper.set(token, true);
+    lock(
+        token: string,
+        targetClass: InstanceType<any>,
+        currentMethod: string,
+    ): void {
+        this.mapper.set(token, {
+            targetClass,
+            currentMethod,
+        });
     }
 
     unlock(token: string): void {
