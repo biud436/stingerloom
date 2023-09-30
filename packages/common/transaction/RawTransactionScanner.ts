@@ -2,6 +2,11 @@
 import { MetadataScanner } from "@stingerloom/IoC/scanners";
 import { Service } from "typedi";
 
+export interface RawTransactionMetadata {
+    targetClass: InstanceType<any>;
+    currentMethod: string;
+}
+
 @Service()
 export class RawTransactionScanner extends MetadataScanner {
     delete(token: string): void {
@@ -20,7 +25,7 @@ export class RawTransactionScanner extends MetadataScanner {
         this.mapper.set(token, {
             targetClass,
             currentMethod,
-        });
+        } as RawTransactionMetadata);
     }
 
     unlock(token: string): void {
