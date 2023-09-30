@@ -8,9 +8,12 @@ import {
 import { Logger } from "../Logger";
 import { DataSource } from "typeorm";
 import { TransactionStore } from "./TransactionStore";
+import Container from "typedi";
+import { RawTransactionScanner } from "./RawTransactionScanner";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
+    private transactionScanner = Container.get(RawTransactionScanner);
 
     /**
      * 트랜잭션을 실행합니다.
@@ -47,6 +50,9 @@ export class TransactionQueryRunnerConsumer {
 
             await queryRunner.connect();
             await queryRunner.startTransaction(transactionIsolationLevel);
+
+            const token = `${targetInjectable.constructor.name}.${method}}`;
+            this.transactionScanner.set(token, queryRunner);
 
             try {
                 // QueryRunner를 찾아서 대체한다.
@@ -116,6 +122,8 @@ export class TransactionQueryRunnerConsumer {
                         store.getAfterTransactionMethodName()!,
                     );
                 }
+
+                this.transactionScanner.delete(token);
             }
         };
 

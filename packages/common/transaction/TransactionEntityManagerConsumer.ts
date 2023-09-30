@@ -3,9 +3,12 @@ import { TRANSACTIONAL_PARAMS, TransactionIsolationLevel } from "../decorators";
 import { Logger } from "../Logger";
 import { EntityManager } from "typeorm";
 import { TransactionStore } from "./TransactionStore";
+import Container from "typedi";
+import { RawTransactionScanner } from "./RawTransactionScanner";
 
 export class TransactionEntityManagerConsumer {
     public LOGGER: Logger = new Logger(TransactionEntityManagerConsumer.name);
+    private readonly transactionScanner = Container.get(RawTransactionScanner);
 
     /**
      * 트랜잭션을 실행합니다.
@@ -33,6 +36,9 @@ export class TransactionEntityManagerConsumer {
         reject: (reason?: unknown) => void,
         store: TransactionStore,
     ) {
+        const token = `${targetInjectable.constructor.name}.${method}}`;
+        this.transactionScanner.set(token, entityManager);
+
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {
                 const params = Reflect.getMetadata(
@@ -112,6 +118,8 @@ export class TransactionEntityManagerConsumer {
                         );
                     }, 0);
                 }
+
+                this.transactionScanner.delete(token);
             });
         return args;
     }
