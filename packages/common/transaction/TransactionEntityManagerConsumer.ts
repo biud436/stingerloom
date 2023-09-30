@@ -37,7 +37,12 @@ export class TransactionEntityManagerConsumer {
         store: TransactionStore,
     ) {
         const token = `${targetInjectable.constructor.name}.${method}}`;
-        this.transactionScanner.set(token, entityManager);
+
+        if (this.transactionScanner.isLock(token)) {
+            return;
+        }
+
+        this.transactionScanner.lock(token);
 
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {
@@ -119,7 +124,7 @@ export class TransactionEntityManagerConsumer {
                     }, 0);
                 }
 
-                this.transactionScanner.delete(token);
+                this.transactionScanner.unlock(token);
             });
         return args;
     }

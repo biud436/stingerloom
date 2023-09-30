@@ -52,7 +52,12 @@ export class TransactionQueryRunnerConsumer {
             await queryRunner.startTransaction(transactionIsolationLevel);
 
             const token = `${targetInjectable.constructor.name}.${method}}`;
-            this.transactionScanner.set(token, queryRunner);
+
+            if (this.transactionScanner.isLock(token)) {
+                return;
+            }
+
+            this.transactionScanner.lock(token);
 
             try {
                 // QueryRunner를 찾아서 대체한다.
@@ -123,7 +128,7 @@ export class TransactionQueryRunnerConsumer {
                     );
                 }
 
-                this.transactionScanner.delete(token);
+                this.transactionScanner.unlock(token);
             }
         };
 

@@ -68,6 +68,7 @@ export class DataSourceProxy {
     /**
      * QueryRunner를 생성합니다.
      *
+     *
      * @param dataSource
      * @param target
      * @returns
@@ -80,6 +81,11 @@ export class DataSourceProxy {
                 "cannot find createQueryRunner method in DataSource",
             );
         }
+
+        // 호출된 클래스와 메소드를 알 수 있어야 합니다.
+        // 즉, @Transactional 데코레이터가 마킹된 메소드가 호출되기 전에 클래스와 메소드에 대한 로그를 남겨야 합니다.
+        // 여러 사용자가 요청할 경우, 동시성 문제가 발생할 수 있습니다.
+        // 따라서, 락이 필요합니다. 락이 되어있는지 확인하고, 락이 되어있지 않다면 락을 걸고, 락이 되어있다면 락이 풀릴 때까지 대기해야 합니다.
 
         return (...args: unknown[]) => {
             this.logger.debug("[createQueryRunner]에 접근했습니다.");
