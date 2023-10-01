@@ -4,6 +4,7 @@ import {
     InjectRepository,
     Injectable,
     OnModuleInit,
+    TransactionContext,
     Transactional,
     TransactionalZone,
 } from "@stingerloom/common";
@@ -16,6 +17,7 @@ import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "../auth/dto/LoginUserDto";
 import bcrypt from "bcrypt";
 import { QueryRunner } from "typeorm";
+import { TransactionContextHelper } from "@stingerloom/common/transaction";
 
 @TransactionalZone()
 @Injectable()
@@ -31,6 +33,14 @@ export class UserService implements OnModuleInit {
      */
     async onModuleInit() {
         await this.userRepository.clear();
+    }
+
+    @TransactionContext()
+    getTransactionContext(): TransactionContextHelper {
+        return new TransactionContextHelper().setContext(
+            "userRepository",
+            this.userRepository,
+        );
     }
 
     @Transactional()

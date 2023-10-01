@@ -27,3 +27,4 @@ export * from "./Commit";
 export * from "./Rollback";
 export * from "./BeforeTransaction";
 export * from "./AfterTransaction";
+export * from "./TransactionContext";
