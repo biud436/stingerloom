@@ -21,6 +21,7 @@ import { TransactionQueryRunnerConsumer } from "./TransactionQueryRunnerConsumer
 import { ITransactionStore } from "./ITransactionStore";
 import { TransactionStore } from "./TransactionStore";
 import { v4 as uuidv4 } from "uuid";
+import { QueryRunnerAdapter } from "./QueryRunnerAdapter";
 
 export const TRANSACTION_MANAGER_SYMBOL = Symbol("TRANSACTION_MANAGER");
 
@@ -65,7 +66,10 @@ export class TransactionManager {
 
                         // 트랜잭션을 시작합니다.
                         const dataSource = database.getDataSource();
-                        const entityManager = dataSource.manager;
+
+                        const adapter = new QueryRunnerAdapter(dataSource);
+
+                        const entityManager = adapter.getManager()!;
 
                         // 트랜잭션 엔티티 매니저가 필요한가?
                         const transactionalEntityManager =
@@ -98,7 +102,7 @@ export class TransactionManager {
                                     );
                                 } else {
                                     this.txQueryRunnerConsumer.execute(
-                                        dataSource,
+                                        adapter,
                                         transactionIsolationLevel,
                                         targetInjectable,
                                         method,

@@ -6,10 +6,10 @@ import {
     TransactionIsolationLevel,
 } from "../decorators";
 import { Logger } from "../Logger";
-import { DataSource } from "typeorm";
 import { TransactionStore } from "./TransactionStore";
 import Container from "typedi";
 import { RawTransactionScanner } from "./RawTransactionScanner";
+import { QueryRunnerAdapter } from "./QueryRunnerAdapter";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
@@ -31,7 +31,7 @@ export class TransactionQueryRunnerConsumer {
      * @param store 트랜잭션 스토어를 지정합니다.
      */
     public execute(
-        dataSource: DataSource,
+        queryRunner: QueryRunnerAdapter,
         transactionIsolationLevel: TransactionIsolationLevel,
         targetInjectable: InstanceType<any>,
         method: string,
@@ -42,9 +42,6 @@ export class TransactionQueryRunnerConsumer {
         store: TransactionStore,
     ) {
         const wrapper = async (...args: any[]) => {
-            // 단일 트랜잭션을 실행합니다.
-            const queryRunner = dataSource.createQueryRunner();
-
             // 에디터가 await using을 지원하지 않아서 주석처리합니다.
             // await using myQueryRunner = new DisposableQueryRunner(dataSource);
 
