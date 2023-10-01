@@ -4,6 +4,8 @@ import { IsolationLevel } from "typeorm/driver/types/IsolationLevel";
 /**
  * @class QueryRunnerAdapter
  * @author biud436
+ * @description
+ * 추후 TypeOrmQueryRunnerAdapter로 이름을 변경할 수도 있다.
  */
 export class QueryRunnerAdapter {
     private queryRunner?: QueryRunner;
