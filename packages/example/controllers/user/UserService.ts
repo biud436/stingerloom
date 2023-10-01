@@ -17,7 +17,7 @@ import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "../auth/dto/LoginUserDto";
 import bcrypt from "bcrypt";
 import { QueryRunner } from "typeorm";
-import { TransactionContextHelper } from "@stingerloom/common/transaction";
+import { TransactionContextMap } from "@stingerloom/common/transaction";
 
 @TransactionalZone()
 @Injectable()
@@ -36,8 +36,8 @@ export class UserService implements OnModuleInit {
     }
 
     @TransactionContext()
-    getTransactionContext(): TransactionContextHelper {
-        return new TransactionContextHelper().setContext("userRepository", {
+    getTransactionContext(): TransactionContextMap {
+        return new TransactionContextMap().set("userRepository", {
             type: Repository<User>,
             value: this.userRepository,
         });

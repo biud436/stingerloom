@@ -11,20 +11,24 @@ export interface TransactionContextValue<T> {
  * @class TransactionContextHelper
  * @author biud436
  */
-export class TransactionContextHelper {
+export class TransactionContextMap {
     public context: Map<string, TransactionContextValue<unknown>> = new Map();
 
-    public setContext<T>(key: string, value: TransactionContextValue<T>): this {
+    public reserve<T>(key: string, value: TransactionContextValue<T>): this {
+        return this.set(key, value);
+    }
+
+    public set<T>(key: string, value: TransactionContextValue<T>): this {
         this.context.set(key, value);
 
         return this;
     }
 
-    public getContext<T>(key: string): TransactionContextValue<T> {
+    public get<T>(key: string): TransactionContextValue<T> {
         return this.context.get(key) as TransactionContextValue<T>;
     }
 
-    public clearContext(): this {
+    public clear(): this {
         this.context.clear();
 
         return this;
