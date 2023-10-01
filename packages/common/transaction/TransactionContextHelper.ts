@@ -1,12 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export class TransactionContextHelper {
-    public context: Map<string, InstanceType<any>> = new Map();
+import { ClazzType } from "../RouterMapper";
 
-    public setContext(key: string, value: InstanceType<any>): this {
+export interface TransactionContextValue<T> {
+    type: ClazzType<T>;
+    value: T;
+}
+
+/**
+ * @class TransactionContextHelper
+ * @author biud436
+ */
+export class TransactionContextHelper {
+    public context: Map<string, TransactionContextValue<unknown>> = new Map();
+
+    public setContext<T>(key: string, value: TransactionContextValue<T>): this {
         this.context.set(key, value);
 
         return this;
+    }
+
+    public getContext<T>(key: string): TransactionContextValue<T> {
+        return this.context.get(key) as TransactionContextValue<T>;
     }
 
     public clearContext(): this {
@@ -19,7 +34,12 @@ export class TransactionContextHelper {
         return Array.from(this.context.values());
     }
 
-    public forEach(callback: (value: InstanceType<any>, key: string) => void) {
+    public forEach(
+        callback: (
+            value: TransactionContextValue<unknown>,
+            key: string,
+        ) => void,
+    ) {
         this.context.forEach(callback);
     }
 }

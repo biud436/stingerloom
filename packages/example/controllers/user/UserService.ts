@@ -37,10 +37,10 @@ export class UserService implements OnModuleInit {
 
     @TransactionContext()
     getTransactionContext(): TransactionContextHelper {
-        return new TransactionContextHelper().setContext(
-            "userRepository",
-            this.userRepository,
-        );
+        return new TransactionContextHelper().setContext("userRepository", {
+            type: Repository<User>,
+            value: this.userRepository,
+        });
     }
 
     @Transactional()
