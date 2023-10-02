@@ -88,6 +88,9 @@ export class DataSourceProxy {
         return (...args: unknown[]) => {
             this.logger.debug("[createQueryRunner]에 접근했습니다.");
 
+            /**
+             * TODO: 다음 코드는 실행되지 않습니다.
+             */
             if (this.transactionScanner.isGlobalLock()) {
                 const txQueryRunner =
                     this.transactionScanner.getTxQueryRunner();
@@ -95,6 +98,11 @@ export class DataSourceProxy {
                 if (!txQueryRunner) {
                     throw new Error("트랜잭션 QueryRunner를 찾을 수 없습니다");
                 }
+
+                console.log(
+                    "txQueryRunner.isTransactionActive",
+                    txQueryRunner.isTransactionActive,
+                );
 
                 return txQueryRunner;
             }
