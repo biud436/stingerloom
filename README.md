@@ -330,17 +330,9 @@ export class AuthService {
 
 제가 자주 사용하는 방법인데요. 바로 `QueryRunner`를 사용하는 방법이 있습니다.
 
-`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
+`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 AOP를 통해 자동으로 트랜잭션 범위 내의 코드를 처리합니다.
 
 또한 오류가 발생하면 자동으로 롤백 처리까지 해줍니다.
-
-처음에 이것을 설계할 때 `QueryRunner`가 인터페이스라서 `QueryRunner`를 주입받는 것이 불가능하다고 생각했었는데요.
-
-이는 `@InjectQueryRunner()`를 통해 해결할 수 있었습니다.
-
-따라서 QueryRunner 인스턴스를 제대로 주입받으려면 `@InjectQueryRunner()` 데코레이터를 사용해야 합니다.
-
-그럼 예제를 볼까요?
 
 ```ts
 @TransactionalZone()
@@ -348,14 +340,9 @@ export class AuthService {
 export class AuthService {
     constructor(private readonly userService: UserService) {}
 
-    /**
-     * QueryRunner를 사용하여 트랜잭션을 제어합니다.
-     * @param queryRunner
-     * @returns
-     */
     @Transactional()
-    async checkTransaction2(@InjectQueryRunner() queryRunner?: QueryRunner) {
-        const users = await queryRunner?.query("SELECT * FROM user;");
+    async checkTransaction2() {
+        const users = await this.userService.findAll();
 
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {
             users: plainToClass(User, users),
@@ -387,8 +374,6 @@ export class AuthService {
 
 예제를 보면 굉장히 심플하다는 것을 알 수 있습니다. 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
-`QueryRunner`는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
-
 다음은 또 다른 예제인 회원 가입 예제입니다.
 
 ```ts
@@ -402,28 +387,25 @@ export class UserService {
     ) {}
 
     @Transactional()
-    async create(
-        createUserDto: CreateUserDto,
-        @InjectQueryRunner() queryRunner?: QueryRunner,
-    ) {
+    async create(createUserDto: CreateUserDto) {
         const safedUserDto = createUserDto as Record<string, any>;
         if (safedUserDto.role) {
             throw new BadRequestException("role 속성은 입력할 수 없습니다.");
         }
 
-        const newUser = await this.userRepository.create(createUserDto);
-        const res = await queryRunner?.manager.save(newUser);
+        const newUser = this.userRepository.create(createUserDto);
+
+        const res = await this.userRepository.save(newUser, {
+            transaction: false,
+        });
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
-
     // Skip...
 }
 ```
 
 중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
-
-대신, 트랜잭션이 필요한 부분은 주입되는 `queryRunner`를 통해 처리해야 합니다.
 
 만약, 롤백 처리 후에 특정 코드를 실행하고싶다면 다음과 같이 할 수 있습니다.
 

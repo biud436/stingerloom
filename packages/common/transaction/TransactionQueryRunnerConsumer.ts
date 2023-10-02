@@ -9,7 +9,7 @@ import { Logger } from "../Logger";
 import { TransactionStore } from "./TransactionStore";
 import Container from "typedi";
 import { RawTransactionScanner } from "./RawTransactionScanner";
-import { QueryRunnerAdapter } from "./QueryRunnerAdapter";
+import { QueryRunner } from "typeorm";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
@@ -31,7 +31,7 @@ export class TransactionQueryRunnerConsumer {
      * @param store 트랜잭션 스토어를 지정합니다.
      */
     public execute(
-        queryRunner: QueryRunnerAdapter,
+        queryRunner: QueryRunner,
         transactionIsolationLevel: TransactionIsolationLevel,
         targetInjectable: InstanceType<any>,
         method: string,

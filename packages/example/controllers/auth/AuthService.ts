@@ -11,10 +11,9 @@ import {
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { UserService } from "../user/UserService";
-import { EntityManager, QueryRunner } from "typeorm";
+import { EntityManager } from "typeorm";
 import { User } from "@stingerloom/example/entity/User";
 import { plainToClass } from "class-transformer";
-import { InjectQueryRunner } from "@stingerloom/common/decorators/InjectQueryRunner";
 import { InternalServerException } from "@stingerloom/error";
 import { FastifyRequest } from "fastify";
 import { Point } from "@stingerloom/example/entity/Point";
@@ -106,19 +105,9 @@ export class AuthService {
         console.log(`[${txId}] 트랜잭션을 커밋합니다.`);
     }
 
-    /**
-     * QueryRunner를 사용하여 트랜잭션을 제어합니다.
-     * 매개변수로 받는 queryRunner는 별도로 생성되는 manager 입니다.
-     *
-     * [링크](https://github.com/typeorm/typeorm/blob/master/src/data-source/DataSource.ts#L589)에 의하면
-     * createQueryRunner에서 manager가 따로 생성되는 것을 알 수 있습니다.
-     *
-     * @param queryRunner
-     * @returns
-     */
     @Transactional()
-    async checkTransaction2(@InjectQueryRunner() queryRunner?: QueryRunner) {
-        const users = await queryRunner?.query("SELECT * FROM user;");
+    async checkTransaction2() {
+        const users = await this.userService.findAll();
 
         return ResultUtils.success("트랜잭션을 확인하였습니다.", {
             users: plainToClass(User, users),

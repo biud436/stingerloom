@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DataSource, EntityManager, QueryRunner } from "typeorm";
+import { DataSource, EntityManager, QueryResult, QueryRunner } from "typeorm";
 import { IsolationLevel } from "typeorm/driver/types/IsolationLevel";
 
 /**
@@ -62,5 +62,27 @@ export class QueryRunnerAdapter {
      */
     public getManager(): EntityManager | undefined {
         return this.queryRunner?.manager;
+    }
+
+    /**
+     * Executes a given SQL query and returns raw database results.
+     */
+    query(query: string, parameters?: any[]): Promise<any>;
+    query(
+        query: string,
+        parameters: any[] | undefined,
+        useStructuredResult: true,
+    ): Promise<QueryResult>;
+
+    public async query(
+        query: string,
+        parameters?: any[] | undefined,
+        useStructuredResult?: true,
+    ): Promise<any> {
+        return await this.queryRunner?.query(
+            query,
+            parameters,
+            useStructuredResult!,
+        );
     }
 }

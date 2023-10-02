@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-    InjectQueryRunner,
     InjectRepository,
     Injectable,
     OnModuleInit,
-    TransactionContext,
     Transactional,
     TransactionalZone,
 } from "@stingerloom/common";
@@ -16,8 +14,6 @@ import { BadRequestException } from "@stingerloom/error/BadRequestException";
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "../auth/dto/LoginUserDto";
 import bcrypt from "bcrypt";
-import { QueryRunner } from "typeorm";
-import { TransactionContextMap } from "@stingerloom/common/transaction";
 
 @TransactionalZone()
 @Injectable()
@@ -35,30 +31,18 @@ export class UserService implements OnModuleInit {
         await this.userRepository.clear();
     }
 
-    @TransactionContext()
-    getTransactionContext(): TransactionContextMap {
-        return new TransactionContextMap().set("userRepository", {
-            type: Repository<User>,
-            value: this.userRepository,
-        });
-    }
-
     @Transactional()
-    async create(
-        createUserDto: CreateUserDto,
-        @InjectQueryRunner() queryRunner?: QueryRunner,
-    ) {
+    async create(createUserDto: CreateUserDto) {
         const safedUserDto = createUserDto as Record<string, any>;
         if (safedUserDto.role) {
             throw new BadRequestException("role 속성은 입력할 수 없습니다.");
         }
 
-        const newUser = await this.userRepository.create(createUserDto);
+        const newUser = this.userRepository.create(createUserDto);
 
-        console.log("newUser", newUser);
-        const res = await queryRunner?.manager.save(newUser);
-
-        console.log("res", res);
+        const res = await this.userRepository.save(newUser, {
+            transaction: false,
+        });
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
@@ -92,5 +76,11 @@ export class UserService implements OnModuleInit {
             user,
             ip,
         });
+    }
+
+    async findAll() {
+        const users = await this.userRepository.find();
+
+        return users;
     }
 }
