@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger } from "@stingerloom/common";
 import { RawTransactionScanner } from "@stingerloom/common/transaction/RawTransactionScanner";
 import Container from "typedi";
@@ -7,6 +8,7 @@ import {
     EntityManager,
     EntityTarget,
     ObjectLiteral,
+    // QueryRunner,
 } from "typeorm";
 
 /**
@@ -68,6 +70,29 @@ export class DataSourceProxy {
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private getQueryRunner(target: any, prop: string | symbol, receiver: any) {
+        /**
+         * TODO: 다음 코드는 실행되지 않습니다.
+         */
+        if (this.transactionScanner.isGlobalLock()) {
+            const txQueryRunner = this.transactionScanner.getTxQueryRunner();
+
+            if (!txQueryRunner) {
+                throw new Error("트랜잭션 QueryRunner를 찾을 수 없습니다");
+            }
+
+            console.log(
+                "txQueryRunner.isTransactionActive",
+                txQueryRunner.isTransactionActive,
+            );
+
+            return txQueryRunner;
+        }
+
+        return Reflect.get(target, prop, receiver);
+    }
+
     /**
      * QueryRunner를 생성합니다.
      *
@@ -87,25 +112,6 @@ export class DataSourceProxy {
 
         return (...args: unknown[]) => {
             this.logger.debug("[createQueryRunner]에 접근했습니다.");
-
-            /**
-             * TODO: 다음 코드는 실행되지 않습니다.
-             */
-            if (this.transactionScanner.isGlobalLock()) {
-                const txQueryRunner =
-                    this.transactionScanner.getTxQueryRunner();
-
-                if (!txQueryRunner) {
-                    throw new Error("트랜잭션 QueryRunner를 찾을 수 없습니다");
-                }
-
-                console.log(
-                    "txQueryRunner.isTransactionActive",
-                    txQueryRunner.isTransactionActive,
-                );
-
-                return txQueryRunner;
-            }
 
             const originalQueryRunner = targetMethod.apply(
                 dataSource,
@@ -145,3 +151,36 @@ export class DataSourceProxy {
         });
     }
 }
+
+// // getter
+// Object.defineProperty(EntityManager.prototype, "queryRunner", {
+//     get: function () {
+//         const scanner = Container.get(RawTransactionScanner);
+
+//         if (scanner.isGlobalLock()) {
+//             const txQueryRunner = scanner.getTxQueryRunner();
+
+//             if (!txQueryRunner) {
+//                 throw new Error("트랜잭션 QueryRunner를 찾을 수 없습니다");
+//             }
+
+//             console.log("queryRunner");
+
+//             return txQueryRunner;
+//         }
+
+//         return this.queryRunner || this.connection.createQueryRunner();
+//     },
+//     configurable: true,
+//     enumerable: true,
+// });
+
+// const originalEntityManager = EntityManager.prototype.constructor;
+// EntityManager.prototype.constructor = function (
+//     connection: DataSource,
+//     queryRunner?: QueryRunner,
+// ) {
+//     originalEntityManager.call(this, connection, queryRunner);
+
+//     console.log("쿼리러너", queryRunner);
+// };
