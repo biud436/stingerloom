@@ -376,10 +376,6 @@ export class AuthService {
 
 예제를 보면 굉장히 심플하다는 것을 알 수 있습니다. 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
-하지만 복잡 쿼리의 경우, `QueryRunner`를 직접 주입받아야 합니다.
-
-쿼리러너는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
-
 다음은 또 다른 예제인 회원 가입 예제입니다.
 
 ```ts
@@ -393,17 +389,17 @@ export class UserService {
     ) {}
 
     @Transactional()
-    async create(
-        createUserDto: CreateUserDto,
-        @InjectQueryRunner() queryRunner?: QueryRunner,
-    ) {
+    async create(createUserDto: CreateUserDto) {
         const safedUserDto = createUserDto as Record<string, any>;
         if (safedUserDto.role) {
             throw new BadRequestException("role 속성은 입력할 수 없습니다.");
         }
 
-        const newUser = await this.userRepository.create(createUserDto);
-        const res = await queryRunner?.manager.save(newUser);
+        const newUser = this.userRepository.create(createUserDto);
+
+        const res = await this.userRepository.save(newUser, {
+            transaction: false,
+        });
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
@@ -413,10 +409,6 @@ export class UserService {
 ```
 
 중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
-
-여러 리포지토리를 하나의 트랜잭션으로 묶으려면 주입되는 `queryRunner`를 통해 대체 처리해줘야 합니다.
-
-현재 이를 프록시 등을 통해 다중 쿼리를 하나의 트랜잭션으로 묶는 방법을 연구하고 있습니다.
 
 만약, 롤백 처리 후에 특정 코드를 실행하고싶다면 다음과 같이 할 수 있습니다.
 
@@ -431,6 +423,37 @@ export class UserService {
 `@Rollback()` 데코레이터를 붙이고 메소드의 첫 번째 인자로는 트랜잭션 ID가, 두 번째 인자로는 오류 객체가 전달됩니다.
 
 트랜잭션 ID는 실제 트랜잭션의 ID가 아니며 서버에서 관리하는 트랜잭션 ID입니다.
+
+```ts
+@Injectable()
+@TransactionalZone()
+export class GameMapService {
+    constructor(
+        @InjectRepository(GameMap)
+        private readonly gameMapRepository: Repository<GameMap>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
+    ) {}
+
+    @Transactional()
+    async createGameMap() {
+        await this.userRepository.clear();
+
+        const qb = this.gameMapRepository.createQueryBuilder("gameMap");
+        const maps = await qb
+            .select()
+            .leftJoinAndSelect("gameMap.users", "user")
+            .getMany();
+
+        return maps;
+    }
+
+    @Commit()
+    async commitOk(txId: string) {
+        console.log("Commit OK:", txId);
+    }
+}
+```
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 

@@ -1,4 +1,5 @@
 import {
+    Commit,
     InjectRepository,
     Injectable,
     Transactional,
@@ -31,5 +32,10 @@ export class GameMapService {
         console.log(maps);
 
         return maps;
+    }
+
+    @Commit()
+    async commitOk(txId: string) {
+        console.log("Commit OK:", txId);
     }
 }
