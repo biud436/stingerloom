@@ -34,6 +34,10 @@ export class QueryRunnerAdapter {
         await this.queryRunner?.release();
     }
 
+    /**
+     * Gets the manager from existing queryRunner.
+     * it retrieved via QueryRunner will be used in the transaction.
+     */
     public getManager(): EntityManager | undefined {
         return this.queryRunner?.manager;
     }
