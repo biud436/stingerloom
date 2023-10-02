@@ -30,8 +30,8 @@ export function createAutoWiredFactory<T extends object>(instance: T) {
         const parameters: DynamicClassWrapper<any>[] = [];
         ParameterListManager.invoke(property.name)?.(property.type, parameters);
 
-        parameters.forEach((param) => {
-            const wrapper = transformBasicParameter(param);
+        parameters.forEach((param, index) => {
+            const wrapper = transformBasicParameter(param, instance, index);
 
             if (!wrapper) {
                 return;

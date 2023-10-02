@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 
 import { ReflectManager } from "../ReflectManager";
@@ -12,12 +14,20 @@ import Database from "../Database";
  * @returns
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-export const transformBasicParameter = (target: any) => {
+export const transformBasicParameter = (
+    target: any,
+    injector?: any,
+    index?: number,
+) => {
     const instanceScanner = Container.get(InstanceScanner);
 
     if (ReflectManager.isRepository(target)) {
         const database = instanceScanner.get(Database) as Database;
-        const entity = ReflectManager.getRepositoryEntity(target);
+        const entity = ReflectManager.getRepositoryEntity(
+            target,
+            injector,
+            index,
+        );
 
         const repository = database.getRepository(entity);
 

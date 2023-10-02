@@ -37,19 +37,25 @@ export class TransactionEntityManagerConsumer {
         reject: (reason?: unknown) => void,
         store: TransactionStore,
     ) {
-        const token = `${targetInjectable.constructor.name}.${method}}`;
-
-        if (this.transactionScanner.isLock(token)) {
+        if (this.transactionScanner.isGlobalLock()) {
+            this.LOGGER.warn(
+                "트랜잭션이 중첩되었습니다. 자식 트랜잭션은 설정할 수 없습니다",
+            );
             return;
         }
-
-        this.transactionScanner.lock(token, targetInjectable, method);
 
         const queryRunner = dataSource.createQueryRunner();
         const entityManager = queryRunner.manager;
 
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {
+                await this.transactionScanner.globalLock({
+                    queryRunner,
+                    entityManager,
+                    transactionIsolationLevel,
+                    isEntityManager: true,
+                });
+
                 const params = Reflect.getMetadata(
                     TRANSACTIONAL_PARAMS,
                     targetInjectable,
@@ -128,7 +134,8 @@ export class TransactionEntityManagerConsumer {
                     }, 0);
                 }
 
-                this.transactionScanner.unlock(token);
+                // this.transactionScanner.unlock(token);
+                this.transactionScanner.globalUnlock();
             });
         return args;
     }

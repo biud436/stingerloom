@@ -43,21 +43,22 @@ export class TransactionQueryRunnerConsumer {
         store: TransactionStore,
     ) {
         const wrapper = async (...args: any[]) => {
-            // 에디터가 await using을 지원하지 않아서 주석처리합니다.
-            // await using myQueryRunner = new DisposableQueryRunner(dataSource);
+            if (this.transactionScanner.isGlobalLock()) {
+                this.LOGGER.warn(
+                    "트랜잭션이 중첩되었습니다. 자식 트랜잭션은 설정할 수 없습니다",
+                );
+                return;
+            }
 
             const queryRunner = dataSource.createQueryRunner();
 
             await queryRunner.connect();
             await queryRunner.startTransaction(transactionIsolationLevel);
 
-            const token = `${targetInjectable.constructor.name}.${method}}`;
-
-            if (this.transactionScanner.isLock(token)) {
-                return;
-            }
-
-            this.transactionScanner.lock(token, targetInjectable, method);
+            await this.transactionScanner.globalLock({
+                queryRunner,
+                transactionIsolationLevel,
+            });
 
             try {
                 // QueryRunner를 찾아서 대체한다.
@@ -128,7 +129,7 @@ export class TransactionQueryRunnerConsumer {
                     );
                 }
 
-                this.transactionScanner.unlock(token);
+                this.transactionScanner.globalUnlock();
             }
         };
 

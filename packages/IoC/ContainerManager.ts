@@ -95,7 +95,9 @@ export class ContainerManager {
             if (Array.isArray(args)) {
                 this.printInjectables(args, TargetInjectable);
 
-                args = args.map((target) => transformBasicParameter(target));
+                args = args.map((target, index) =>
+                    transformBasicParameter(target, TargetInjectable, index),
+                );
             }
 
             const targetInjectable = new TargetInjectable(...args);
@@ -144,7 +146,13 @@ export class ContainerManager {
             if (Array.isArray(args)) {
                 this.printInjectables(args, TargetController);
 
-                args = args.map((target) => transformBasicParameter(target));
+                args = args.map((target, index) => {
+                    return transformBasicParameter(
+                        target,
+                        TargetController,
+                        index,
+                    );
+                });
             }
 
             const targetController = new TargetController(...args);

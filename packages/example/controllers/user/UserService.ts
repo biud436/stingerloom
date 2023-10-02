@@ -28,7 +28,9 @@ export class UserService implements OnModuleInit {
      * 모듈 초기화
      */
     async onModuleInit() {
-        await this.userRepository.clear();
+        // await this.userRepository.clear();
+
+        console.log(this.userRepository);
     }
 
     @Transactional()

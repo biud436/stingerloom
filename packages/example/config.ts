@@ -10,7 +10,7 @@ export const option = <DataSourceOptions>{
     database: configService.get<string>("DB_NAME"),
     password: configService.get<string>("DB_PASSWORD"),
     username: configService.get<string>("DB_USER"),
-    entities: [__dirname + "/entity/*.ts"],
+    entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
     namingStrategy: new SnakeNamingStrategy(),
     synchronize: true,
     logging: true,

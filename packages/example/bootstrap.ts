@@ -3,6 +3,7 @@ import { PostController } from "./controllers/post/PostController";
 import { UserController } from "./controllers/user/UserController";
 import { InternalErrorFilter } from "./exceptions/InternalErrorFilter";
 import { option as databaseOption } from "./config";
+import { GameMapService } from "./entity/map/GameMapService";
 import { UserService } from "./controllers/user/UserService";
 import { ModuleOptions } from "@stingerloom/common";
 import fastifyCookie from "@fastify/cookie";
@@ -40,6 +41,7 @@ export class StingerLoomBootstrapApplication extends ServerBootstrapApplication 
             ],
             providers: [
                 InternalErrorFilter,
+                GameMapService,
                 UserService,
                 AuthService,
                 SessionGuard,

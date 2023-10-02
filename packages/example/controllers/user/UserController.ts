@@ -15,12 +15,14 @@ import { Point } from "../../entity/Point";
 import { UserService } from "./UserService";
 import { TransactionalZone } from "@stingerloom/common/decorators/TransactionalZone";
 import { InjectQueryRunner, Transactional } from "@stingerloom/common";
+import { GameMapService } from "@stingerloom/example/entity/map/GameMapService";
 
 @Controller("/user")
 export class UserController {
     constructor(
         private readonly point: Point,
         private readonly userService: UserService,
+        private readonly gameMapService: GameMapService,
     ) {}
 
     @Get("/point")
@@ -41,5 +43,10 @@ export class UserController {
     @Get()
     public async getUser(@Req() req: FastifyRequest) {
         return await this.userService.getUser(req.ip);
+    }
+
+    @Get("/test2")
+    async test() {
+        return await this.gameMapService.createGameMap();
     }
 }

@@ -4,6 +4,7 @@ import {
     AFTER_TRANSACTION_TOKEN,
     BEFORE_TRANSACTION_TOKEN,
     REPOSITORY_ENTITY_METADATA,
+    RepositoryMetadataItem,
     TRANSACTIONAL_TOKEN,
     TRANSACTIONAL_ZONE,
     TRANSACTION_COMMIT_TOKEN,
@@ -263,7 +264,7 @@ export class ReflectManager {
      * @returns
      */
     public static isRepository(target: any): boolean {
-        if (!Object.getPrototypeOf(target)) return false;
+        // if (!Object.getPrototypeOf(target)) return false;
         return (
             Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target) !==
             undefined
@@ -275,7 +276,33 @@ export class ReflectManager {
      * @param target
      * @returns
      */
-    public static getRepositoryEntity(target: any): any {
-        return Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target);
+    public static getRepositoryEntity(
+        target: any,
+        injector?: any,
+        index?: number,
+    ): any {
+        const store =
+            Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target) ?? [];
+
+        const targets = store.filter((item: RepositoryMetadataItem) => {
+            console.log("item.target", item.target);
+            console.log("injector", injector);
+            console.log("item.target === injector", item.target === injector);
+            console.log("item.index === index", item.index === index);
+
+            console.log("item.index", item.index);
+            console.log("index", index);
+
+            return item.target === injector && item.index === index;
+        });
+        const repository = targets[0] as any;
+
+        console.log("repository:", repository);
+
+        if (!repository) {
+            return undefined;
+        }
+
+        return repository.entity;
     }
 }

@@ -43,10 +43,8 @@ export class TransactionManager {
 
             // 모든 메소드를 순회합니다.
             for (const method of methods) {
-                // 데이터베이스 인스턴스를 가져옵니다.
                 const database = instanceScanner.get(Database) as Database;
 
-                // 메소드가 트랜잭셔널이라면
                 // prettier-ignore
                 if (ReflectManager.isTransactionalZoneMethod(targetInjectable, method)) {
                     TransactionManager.LOGGER.info(
@@ -66,10 +64,6 @@ export class TransactionManager {
                         // 트랜잭션을 시작합니다.
                         const dataSource = database.getDataSource();
 
-                        // let queryRunner = dataSource.createQueryRunner();
-
-                        // const entityManager = queryRunner.manager;
-
                         // 트랜잭션 엔티티 매니저가 필요한가?
                         const transactionalEntityManager =
                             TransactionManager.getTxManager(
@@ -78,10 +72,6 @@ export class TransactionManager {
                             );
 
                         const callback = async (...args: any[]) => {
-
-                            // if (queryRunner.isReleased) {
-                            //     queryRunner = dataSource.createQueryRunner();
-                            // }
 
                             if (store.isBeforeTransactionToken()) {
                                 TransactionManager.LOGGER.info(
