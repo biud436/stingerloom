@@ -330,9 +330,11 @@ export class AuthService {
 
 제가 자주 사용하는 방법인데요. 바로 `QueryRunner`를 사용하는 방법이 있습니다.
 
-`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 AOP를 통해 자동으로 트랜잭션 범위 내의 코드를 처리합니다.
+`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
 
 또한 오류가 발생하면 자동으로 롤백 처리까지 해줍니다.
+
+다음은 가장 심플한 사용법입니다.
 
 ```ts
 @TransactionalZone()
@@ -374,6 +376,10 @@ export class AuthService {
 
 예제를 보면 굉장히 심플하다는 것을 알 수 있습니다. 반환까지 오류가 발생하지 않으면 트랜잭션이 정상적으로 커밋됩니다.
 
+하지만 복잡 쿼리의 경우, `QueryRunner`를 직접 주입받아야 합니다.
+
+쿼리러너는 `@InjectQueryRunner()` 데코레이터를 통해 주입받을 수 있습니다.
+
 다음은 또 다른 예제인 회원 가입 예제입니다.
 
 ```ts
@@ -387,25 +393,30 @@ export class UserService {
     ) {}
 
     @Transactional()
-    async create(createUserDto: CreateUserDto) {
+    async create(
+        createUserDto: CreateUserDto,
+        @InjectQueryRunner() queryRunner?: QueryRunner,
+    ) {
         const safedUserDto = createUserDto as Record<string, any>;
         if (safedUserDto.role) {
             throw new BadRequestException("role 속성은 입력할 수 없습니다.");
         }
 
-        const newUser = this.userRepository.create(createUserDto);
-
-        const res = await this.userRepository.save(newUser, {
-            transaction: false,
-        });
+        const newUser = await this.userRepository.create(createUserDto);
+        const res = await queryRunner?.manager.save(newUser);
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
+
     // Skip...
 }
 ```
 
 중간에 오류 처리 로직이 보이실 겁니다. 심플하게 생각할 수 있는데요. 위 코드에서 오류가 throw되면 자동으로 트랜잭션이 롤백 처리됩니다.
+
+여러 리포지토리를 하나의 트랜잭션으로 묶으려면 주입되는 `queryRunner`를 통해 대체 처리해줘야 합니다.
+
+현재 이를 프록시 등을 통해 다중 쿼리를 하나의 트랜잭션으로 묶는 방법을 연구하고 있습니다.
 
 만약, 롤백 처리 후에 특정 코드를 실행하고싶다면 다음과 같이 할 수 있습니다.
 
