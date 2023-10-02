@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataSource, EntityManager, QueryRunner } from "typeorm";
 import { IsolationLevel } from "typeorm/driver/types/IsolationLevel";
 
 /**
+ * This adapter is used to get some features for the transaction in the TypeORM.
+ *
  * @class QueryRunnerAdapter
  * @author biud436
- * @description
- * 추후 TypeOrmQueryRunnerAdapter로 이름을 변경할 수도 있다.
  */
 export class QueryRunnerAdapter {
     private queryRunner?: QueryRunner;
@@ -14,23 +15,44 @@ export class QueryRunnerAdapter {
         this.queryRunner = this.dataSource.createQueryRunner();
     }
 
-    public async connect() {
-        await this.queryRunner?.connect();
+    /**
+     * Creates/uses database connection from the connection pool to perform further operations.
+     * Returns obtained database connection.
+     */
+    public async connect(): Promise<any> {
+        return await this.queryRunner?.connect();
     }
 
-    public async startTransaction(isolationLevel?: IsolationLevel | undefined) {
+    /**
+     * Starts transaction.
+     *
+     * @param isolationLevel Specify what isolation level you want to use for this transaction.
+     */
+    public async startTransaction(
+        isolationLevel?: IsolationLevel | undefined,
+    ): Promise<void> {
         await this.queryRunner?.startTransaction(isolationLevel);
     }
 
-    public async commitTransaction() {
+    /**
+     * Commits transaction.
+     */
+    public async commitTransaction(): Promise<void> {
         await this.queryRunner?.commitTransaction();
     }
 
-    public async rollbackTransaction() {
+    /**
+     * Rollbacks transaction.
+     */
+    public async rollbackTransaction(): Promise<void> {
         await this.queryRunner?.rollbackTransaction();
     }
 
-    public async release() {
+    /**
+     * Releases used database connection.
+     * You cannot use query runner methods after connection is released.
+     */
+    public async release(): Promise<void> {
         await this.queryRunner?.release();
     }
 
