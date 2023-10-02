@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TRANSACTIONAL_PARAMS, TransactionIsolationLevel } from "../decorators";
 import { Logger } from "../Logger";
-import { EntityManager } from "typeorm";
+import { DataSource, EntityManager } from "typeorm";
 import { TransactionStore } from "./TransactionStore";
 import Container from "typedi";
 import { RawTransactionScanner } from "./RawTransactionScanner";
@@ -26,7 +26,8 @@ export class TransactionEntityManagerConsumer {
      * @returns
      */
     public execute(
-        entityManager: EntityManager,
+        // entityManager: EntityManager,
+        dataSource: DataSource,
         transactionIsolationLevel: TransactionIsolationLevel,
         targetInjectable: InstanceType<any>,
         method: string,
@@ -43,6 +44,9 @@ export class TransactionEntityManagerConsumer {
         }
 
         this.transactionScanner.lock(token, targetInjectable, method);
+
+        const queryRunner = dataSource.createQueryRunner();
+        const entityManager = queryRunner.manager;
 
         entityManager
             .transaction(transactionIsolationLevel, async (em) => {

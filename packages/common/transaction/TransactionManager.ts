@@ -66,9 +66,9 @@ export class TransactionManager {
                         // 트랜잭션을 시작합니다.
                         const dataSource = database.getDataSource();
 
-                        let queryRunner = dataSource.createQueryRunner();
+                        // let queryRunner = dataSource.createQueryRunner();
 
-                        const entityManager = queryRunner.manager;
+                        // const entityManager = queryRunner.manager;
 
                         // 트랜잭션 엔티티 매니저가 필요한가?
                         const transactionalEntityManager =
@@ -79,9 +79,9 @@ export class TransactionManager {
 
                         const callback = async (...args: any[]) => {
 
-                            if (queryRunner.isReleased) {
-                                queryRunner = dataSource.createQueryRunner();
-                            }
+                            // if (queryRunner.isReleased) {
+                            //     queryRunner = dataSource.createQueryRunner();
+                            // }
 
                             if (store.isBeforeTransactionToken()) {
                                 TransactionManager.LOGGER.info(
@@ -94,7 +94,7 @@ export class TransactionManager {
                                 if (transactionalEntityManager) {
                                     // 트랜잭션 엔티티 매니저를 실행합니다.
                                     this.txManagerConsumer.execute(
-                                        entityManager,
+                                        dataSource,
                                         transactionIsolationLevel,
                                         targetInjectable,
                                         method,
@@ -106,7 +106,7 @@ export class TransactionManager {
                                     );
                                 } else {
                                     this.txQueryRunnerConsumer.execute(
-                                        queryRunner,
+                                        dataSource,
                                         transactionIsolationLevel,
                                         targetInjectable,
                                         method,
