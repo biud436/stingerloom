@@ -56,10 +56,7 @@ export class RawTransactionScanner extends MetadataScanner {
         this.mapper.set(RawTransactionScanner.GLOBAL_LOCK, true);
 
         this.txQueryRunner = queryRunner;
-
-        if (isEntityManager) {
-            this.txEntityManager = entityManager;
-        }
+        this.txEntityManager = entityManager ?? undefined;
     }
 
     /**

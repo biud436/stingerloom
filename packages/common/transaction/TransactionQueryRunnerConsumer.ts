@@ -51,6 +51,7 @@ export class TransactionQueryRunnerConsumer {
             }
 
             const queryRunner = dataSource.createQueryRunner();
+            const manager = queryRunner.manager;
 
             await queryRunner.connect();
             await queryRunner.startTransaction(transactionIsolationLevel);
@@ -58,6 +59,7 @@ export class TransactionQueryRunnerConsumer {
             await this.transactionScanner.globalLock({
                 queryRunner,
                 transactionIsolationLevel,
+                entityManager: manager,
             });
 
             try {

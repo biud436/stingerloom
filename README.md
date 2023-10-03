@@ -397,9 +397,7 @@ export class UserService {
 
         const newUser = this.userRepository.create(createUserDto);
 
-        const res = await this.userRepository.save(newUser, {
-            transaction: false,
-        });
+        const res = await this.userRepository.save(newUser);
 
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }

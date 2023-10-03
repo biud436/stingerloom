@@ -8,6 +8,7 @@ import {
     EntityManager,
     EntityTarget,
     ObjectLiteral,
+    Repository,
     // QueryRunner,
 } from "typeorm";
 
@@ -47,6 +48,10 @@ export class DataSourceProxy {
                     return this.createQueryRunner(dataSource, target);
                 }
 
+                if (prop === "query" && typeof target[prop] === "function") {
+                    return this.query(target, prop, receiver);
+                }
+
                 // getRepository
                 if (
                     prop === "getRepository" ||
@@ -57,9 +62,11 @@ export class DataSourceProxy {
                     return <Entity extends ObjectLiteral>(
                         entity: EntityTarget<Entity>,
                     ) => {
-                        const repository = Reflect.apply(target[prop], target, [
+                        const repository = this.createRepositoryProxy(
                             entity,
-                        ]);
+                            target,
+                            prop,
+                        );
 
                         return repository;
                     };
@@ -68,6 +75,56 @@ export class DataSourceProxy {
                 return Reflect.get(target, prop, receiver);
             },
         });
+    }
+
+    private createRepositoryProxy<Entity extends ObjectLiteral>(
+        entity: EntityTarget<Entity>,
+        target: DataSource,
+        prop:
+            | "getRepository"
+            | "getCustomRepository"
+            | "getTreeRepository"
+            | "getMongoRepository",
+    ) {
+        const repository = Reflect.apply(target[prop], target, [
+            entity,
+        ]) as Repository<Entity>;
+
+        return new Proxy(repository, {
+            get: (target, prop, receiver) => {
+                if (prop === "query" && typeof target[prop] === "function") {
+                    return this.query(target, prop, receiver);
+                }
+
+                if (prop === "manager") {
+                    const manager = Reflect.get(target, "manager", receiver);
+
+                    if (this.transactionScanner.isGlobalLock()) {
+                        const txEntityManager =
+                            this.transactionScanner.getTxEntityManager();
+
+                        return txEntityManager;
+                    }
+
+                    return manager;
+                }
+
+                return Reflect.get(target, prop, receiver);
+            },
+        });
+    }
+
+    /**
+     *
+     * @param target
+     * @param prop
+     * @param receiver
+     * @returns
+     */
+    private query(target: any, prop: string | symbol, receiver: any) {
+        console.log("[접근] 쿼리가 실행되었습니다");
+
+        return Reflect.get(target, prop, receiver);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
