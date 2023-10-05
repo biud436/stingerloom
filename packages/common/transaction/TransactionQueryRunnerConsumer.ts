@@ -45,6 +45,7 @@ export class TransactionQueryRunnerConsumer {
     ) {
         const wrapper = async (...args: any[]) => {
             if (this.transactionScanner.isGlobalLock()) {
+                // TODO: 트랜잭션 중첩 시, await queryRunner.startTransaction(transactionIsolationLevel);을 실행하지 않고 넘어가게 해야함.
                 this.LOGGER.warn(
                     "트랜잭션이 중첩되었습니다. 자식 트랜잭션은 설정할 수 없습니다",
                 );
