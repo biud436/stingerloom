@@ -285,14 +285,6 @@ export class ReflectManager {
             Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target) ?? [];
 
         const targets = store.filter((item: RepositoryMetadataItem) => {
-            console.log("item.target", item.target);
-            console.log("injector", injector);
-            console.log("item.target === injector", item.target === injector);
-            console.log("item.index === index", item.index === index);
-
-            console.log("item.index", item.index);
-            console.log("index", index);
-
             return item.target === injector && item.index === index;
         });
         const repository = targets[0] as any;

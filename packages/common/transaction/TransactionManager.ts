@@ -47,9 +47,6 @@ export class TransactionManager {
 
                 // prettier-ignore
                 if (ReflectManager.isTransactionalZoneMethod(targetInjectable, method)) {
-                    TransactionManager.LOGGER.info(
-                        `{${TargetInjectable.name}/${method}} 트랜잭션 존이 발견됨`,
-                    );
                     const wrapTransaction = () => {
 
                         const originalMethod = targetInjectable[method as any];
