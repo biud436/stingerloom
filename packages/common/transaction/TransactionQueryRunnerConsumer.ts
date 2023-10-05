@@ -10,6 +10,7 @@ import { TransactionStore } from "./TransactionStore";
 import Container from "typedi";
 import { RawTransactionScanner } from "./RawTransactionScanner";
 import { DataSource } from "typeorm";
+import { ClazzType } from "../RouterMapper";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
@@ -68,22 +69,16 @@ export class TransactionQueryRunnerConsumer {
                     TRANSACTIONAL_PARAMS,
                     targetInjectable,
                     method,
-                );
+                ) as ClazzType<unknown>[];
 
                 if (Array.isArray(params) && params.length > 0) {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     const paramIndex = Reflect.getMetadata(
                         INJECT_QUERYRUNNER_TOKEN,
                         targetInjectable,
                         method,
                     ) as number;
 
-                    params.forEach(
-                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                        (param, _index) => {
-                            args[paramIndex] = queryRunner;
-                        },
-                    );
+                    params.forEach(() => (args[paramIndex] = queryRunner));
                 }
 
                 const result = originalMethod.call(targetInjectable, ...args);

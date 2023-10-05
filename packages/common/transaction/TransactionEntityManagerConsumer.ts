@@ -5,6 +5,7 @@ import { DataSource, EntityManager } from "typeorm";
 import { TransactionStore } from "./TransactionStore";
 import Container from "typedi";
 import { RawTransactionScanner } from "./RawTransactionScanner";
+import { isArrayOk } from "@stingerloom/utils/isArrayOk";
 
 export class TransactionEntityManagerConsumer {
     public LOGGER: Logger = new Logger(TransactionEntityManagerConsumer.name);
@@ -62,8 +63,8 @@ export class TransactionEntityManagerConsumer {
                     method as any,
                 );
 
-                if (Array.isArray(params) && params.length > 0) {
-                    if (Array.isArray(args) && args.length > 0) {
+                if (isArrayOk(params)) {
+                    if (isArrayOk(args)) {
                         args = args.map((arg, index) => {
                             const param = params[index];
                             if (param instanceof EntityManager) {

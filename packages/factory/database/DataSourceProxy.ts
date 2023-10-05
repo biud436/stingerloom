@@ -36,8 +36,6 @@ export class DataSourceProxy {
                         return this.createEntityManagerProxy(manager);
                     }
 
-                    this.logger.debug("[manager]에 접근했습니다.");
-
                     return manager;
                 }
 
@@ -139,11 +137,6 @@ export class DataSourceProxy {
                 throw new Error("트랜잭션 QueryRunner를 찾을 수 없습니다");
             }
 
-            console.log(
-                "txQueryRunner.isTransactionActive",
-                txQueryRunner.isTransactionActive,
-            );
-
             return txQueryRunner;
         }
 
@@ -168,8 +161,6 @@ export class DataSourceProxy {
         }
 
         return (...args: unknown[]) => {
-            this.logger.debug("[createQueryRunner]에 접근했습니다.");
-
             const originalQueryRunner = targetMethod.apply(
                 dataSource,
                 args as [],
@@ -188,8 +179,6 @@ export class DataSourceProxy {
     private createEntityManagerProxy(manager: EntityManager) {
         return new Proxy(manager, {
             get: (target, prop, receiver) => {
-                this.logger.debug("[EntityManager]에 접근했습니다.");
-
                 if (this.transactionScanner.isGlobalLock()) {
                     const txEntityManager =
                         this.transactionScanner.getTxEntityManager();
