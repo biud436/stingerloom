@@ -25,6 +25,7 @@ export class InstanceScanner {
     /**
      * 인스턴스를 가져옵니다.
      *
+     *
      * @param key
      * @returns
      */
@@ -53,7 +54,7 @@ export class InstanceScanner {
     }
 
     /**
-     * 인스턴스를 생성하고 등록합니다.
+     * 미리 생성된 인스턴스가 없을 경우, 인스턴스를 새로 생성하고 컨테이너에 등록합니다.
      *
      * @param key
      * @returns
