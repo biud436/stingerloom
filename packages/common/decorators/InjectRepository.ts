@@ -37,6 +37,14 @@ export interface RepositoryMetadataItem {
 
 export const REPOSITORY_TOKEN = "repository";
 export const REPOSITORY_ENTITY_METADATA = "repository:metadata";
+
+/**
+ * Repository를 주입받을 수 있는 ParameterDecorator입니다.
+ *
+ * @function InjectRepository
+ * @param entity
+ * @returns
+ */
 export function InjectRepository<T>(entity: ClazzType<T>): ParameterDecorator {
     return (target, _propertyKey, index) => {
         const params = ReflectManager.getParamTypes(target) || [];

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const HEADER_TOKEN = "HEADER_TOKEN";
 export interface HeaderMetadata {
     key: string;
@@ -8,7 +9,7 @@ export function Header(key: string, value: string): MethodDecorator {
         target: object,
         methodName: string | symbol,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const parameters = Reflect.getMetadata(
             HEADER_TOKEN,

@@ -12,7 +12,7 @@ export function Put(path = ""): MethodDecorator {
     return function (
         target: object,
         propertyKey: string | symbol,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const parameters: HttpRouterParameter[] = getMethodParameters(
             target,

@@ -28,10 +28,12 @@ export function Inject(token?: string): ParameterDecorator {
             prototype: injectParam.prototype,
         };
 
-        Reflect.defineMetadata(INJECT_TOKEN, metadata, injectParam.prototype);
+        const storage = Reflect.getMetadata(token, injectParam.prototype);
 
-        if (token) {
-            Reflect.defineMetadata(token, metadata, injectParam.prototype);
-        }
+        Reflect.defineMetadata(
+            token,
+            [...(storage || []), metadata],
+            injectParam.prototype,
+        );
     };
 }

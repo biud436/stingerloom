@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 import {
     Metadata,
@@ -13,7 +14,7 @@ export function Patch(path = ""): MethodDecorator {
     return function (
         target: object,
         propertyKey: string | symbol,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const parameters: HttpRouterParameter[] = getMethodParameters(
             target,

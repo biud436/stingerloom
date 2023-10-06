@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const TRANSACTION_ROLLBACK_TOKEN = Symbol.for("ROLLBACK_TOKEN");
 
 /**
@@ -9,7 +10,7 @@ export function Rollback(): MethodDecorator {
     return function (
         target: object,
         propertyKey: string | symbol,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const methodName = propertyKey || descriptor.value.name;
 

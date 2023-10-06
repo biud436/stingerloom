@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const TRANSACTIONAL_TOKEN = "TRANSACTIONAL_TOKEN";
 export const TRANSACTION_ISOLATE_LEVEL = "TRANSACTION_ISOLATE_LEVEL";
 export const TRANSACTION_PROPAGATION = "TRANSACTION_PROPAGATION";
@@ -27,7 +28,7 @@ export function Transactional(option?: TransactionalOptions): MethodDecorator {
     return function (
         target: object,
         propertyKey: string | symbol,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const methodName = propertyKey || descriptor.value.name;
         Reflect.defineMetadata(

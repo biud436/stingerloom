@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 import {
     Metadata,
@@ -12,7 +13,7 @@ export function Get(path = ""): MethodDecorator {
     return function (
         target: object,
         propertyKey: string | symbol,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         // 메소드 함수의 매개변수 정보를 가져옵니다.
         const parameters: HttpRouterParameter[] = getMethodParameters(

@@ -8,7 +8,7 @@ import { InjectableScanner } from "@stingerloom/IoC/scanners/InjectableScanner";
 
 export const INJECTABLE_TOKEN = "injectable";
 export function Injectable(): ClassDecorator {
-    return function (target) {
+    return function (target: any) {
         const metadata = {
             type: "injectable",
             name: target.name,
