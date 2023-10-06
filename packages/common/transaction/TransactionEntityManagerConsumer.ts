@@ -6,6 +6,7 @@ import { TransactionStore } from "./TransactionStore";
 import Container from "typedi";
 import { RawTransactionScanner } from "./RawTransactionScanner";
 import { isArrayOk } from "@stingerloom/utils/isArrayOk";
+import { isPromise } from "util/types";
 
 export class TransactionEntityManagerConsumer {
     public LOGGER: Logger = new Logger(TransactionEntityManagerConsumer.name);
@@ -91,8 +92,7 @@ export class TransactionEntityManagerConsumer {
                         );
                     }
 
-                    // promise인가?
-                    if (result instanceof Promise) {
+                    if (isPromise(result)) {
                         return resolve(await result);
                     } else {
                         resolve(result);

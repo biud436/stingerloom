@@ -108,9 +108,16 @@ export class AuthService {
     @Transactional()
     async checkTransaction2() {
         const users = await this.userService.findAll();
-
-        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+        return ResultUtils.success("트랜잭션을 확인하였습니다1", {
             users: plainToClass(User, users),
+            other: await this.checkTransaction3(),
         });
+    }
+
+    @Transactional()
+    async checkTransaction3() {
+        const users = await this.userService.findAll();
+
+        return users;
     }
 }

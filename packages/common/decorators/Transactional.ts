@@ -31,6 +31,8 @@ export function Transactional(option?: TransactionalOptions): MethodDecorator {
         descriptor: TypedPropertyDescriptor<any>,
     ) {
         const methodName = propertyKey || descriptor.value.name;
+
+        // 트랜잭션 격리 수준
         Reflect.defineMetadata(
             TRANSACTION_ISOLATE_LEVEL,
             option?.isolationLevel ?? DEFAULT_ISOLATION_LEVEL,
@@ -43,6 +45,8 @@ export function Transactional(option?: TransactionalOptions): MethodDecorator {
             target,
             methodName,
         );
+
+        // 트랜잭션 전파 속성
         Reflect.defineMetadata(
             TRANSACTION_PROPAGATION,
             option?.propagation ?? TransactionPropagation.REQUIRES_NEW,

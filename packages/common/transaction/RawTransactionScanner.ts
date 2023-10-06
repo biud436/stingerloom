@@ -24,6 +24,11 @@ export class RawTransactionScanner extends MetadataScanner {
     private txEntityManager?: EntityManager | undefined;
 
     /**
+     * 논리 트랜잭션의 횟수
+     */
+    private logicalTransactionCount = 0;
+
+    /**
      * 저장된 토큰을 삭제합니다.
      */
     delete(token: string): void {
@@ -66,6 +71,41 @@ export class RawTransactionScanner extends MetadataScanner {
     unlock(token: string): void {
         this.mapper.set(token, false);
         this.delete(token);
+    }
+
+    /**
+     * 새로운 논리 트랜잭션을 추가합니다.
+     */
+    addLogicalTransactionCount(): void {
+        this.logicalTransactionCount++;
+    }
+
+    /**
+     * 논리 트랜잭션 횟수를 구합니다.
+     */
+    getLogicalTransactionCount(): number {
+        return this.logicalTransactionCount;
+    }
+
+    /**
+     * 논리 트랜잭션을 하나 제거합니다.
+     */
+    subtractLogicalTransactionCount(): void {
+        this.logicalTransactionCount--;
+    }
+
+    /**
+     * 논리 트랜잭션 횟수를 초기화합니다.
+     */
+    resetLogicalTransactionCount(): void {
+        this.logicalTransactionCount = 0;
+    }
+
+    /**
+     * 논리 트랜잭션이 모두 커밋되었는지 확인합니다.
+     */
+    isCommittedAllLogicalTransaction(): boolean {
+        return this.logicalTransactionCount === 0;
     }
 
     /**
@@ -112,12 +152,19 @@ export class RawTransactionScanner extends MetadataScanner {
         return this.txEntityManager;
     }
 
+    /**
+     * 프로세스 단위 잠금을 해제합니다.
+     */
     globalUnlock(): void {
         this.mapper.set(RawTransactionScanner.GLOBAL_LOCK, false);
         this.txQueryRunner = undefined;
         this.txEntityManager = undefined;
     }
 
+    /**
+     * 프로세스에 트랜잭션 잠금이 적용되었는지 확인합니다.
+     * @returns
+     */
     isGlobalLock(): boolean {
         return this.mapper.get(RawTransactionScanner.GLOBAL_LOCK) === true;
     }
