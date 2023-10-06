@@ -96,6 +96,13 @@ export class TransactionQueryRunnerConsumer {
                     params.forEach(() => (args[paramIndex] = queryRunner));
                 }
 
+                /**
+                 * 트랜잭션 매니저에서 위 코드를 실행하기 전에 QueryRunner에 대한 복원 지점을 만들어야 합니다.
+                 * 쉽게 말하면 현재 진행되는 물리 트랜잭션을 롤백하고 쿼리가 실행되기 전의 상태까지 재실행해야 합니다.
+                 *
+                 * originalMethod가 실행되는 도중에 논리 트랜잭션이 롤백될 수도 있기 때문입니다.
+                 * 따라서 논리 트랜잭션이 롤백되면 복원 지점으로 QueryRunner를 복구해야 합니다.
+                 */
                 const result = originalMethod.call(targetInjectable, ...args);
 
                 let ret = null;
@@ -126,7 +133,10 @@ export class TransactionQueryRunnerConsumer {
 
                 return ret;
             } catch (e: any) {
-                // 롤백 전략에 따라 모든 논리 트랜잭션과 물리 트랜잭션이 전부 롤백됩니다.
+                // ? 트랜잭션 롤백 전략
+                // 현재의 롤백 전략은 단 하나의 물리 트랜잭션을 롤백합니다.
+                // 하나의 논리 트랜잭션을 롤백하려면 복원 지점을 만들고 되돌려야 합니다.
+                // 이는 논리 트랜잭션을 커밋할 때마다 복원 지점을 만들어야 합니다.
                 await queryRunner.rollbackTransaction();
                 this.transactionScanner.resetLogicalTransactionCount();
 
