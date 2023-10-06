@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const TRANSACTION_COMMIT_TOKEN = Symbol.for("TRANSACTION_COMMIT_TOKEN");
 
 /**
@@ -9,7 +10,7 @@ export function Commit(): MethodDecorator {
     return function (
         target: object,
         propertyKey: string | symbol,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const methodName = propertyKey || descriptor.value.name;
 

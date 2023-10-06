@@ -11,7 +11,7 @@ export function Catch(advice: ErrorAdvice = "throwing"): MethodDecorator {
     return function (
         target: any,
         propertyKey: string,
-        descriptor: PropertyDescriptor,
+        descriptor: TypedPropertyDescriptor<any>,
     ) {
         const scanner = Container.get(ErrorMetadataScanner);
         const uniqueKey = scanner.createUniqueKey();
