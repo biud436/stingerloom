@@ -75,6 +75,14 @@ export class DataSourceProxy {
         });
     }
 
+    /**
+     * Creates a repository proxy.
+     *
+     * @param entity
+     * @param target Specify the DataSource instance
+     * @param prop
+     * @returns
+     */
     private createRepositoryProxy<Entity extends ObjectLiteral>(
         entity: EntityTarget<Entity>,
         target: DataSource,
