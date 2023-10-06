@@ -152,6 +152,7 @@ export class TransactionQueryRunnerConsumer {
                     await queryRunner.release();
                     this.transactionScanner.globalUnlock();
                 } else {
+                    // 논리 트랜잭션이 모두 커밋되지 않았다면, 논리 트랜잭션을 하나 제거합니다.
                     this.transactionScanner.subtractLogicalTransactionCount();
                 }
 
