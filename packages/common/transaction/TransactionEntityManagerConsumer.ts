@@ -46,6 +46,10 @@ export class TransactionEntityManagerConsumer {
             return;
         }
 
+        this.LOGGER.warn(
+            "[DEPRECATED] EntityManager 주입 전략은 이제 사용되지 않습니다!",
+        );
+
         const queryRunner = dataSource.createQueryRunner();
         const entityManager = queryRunner.manager;
 
