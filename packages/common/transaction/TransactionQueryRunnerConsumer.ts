@@ -134,15 +134,15 @@ export class TransactionQueryRunnerConsumer {
                 return ret;
             } catch (e: any) {
                 // ? 트랜잭션 롤백 전략
-                // 현재의 롤백 전략은 단 하나의 물리 트랜잭션을 롤백합니다.
-                // SAVEPOINT를 사용하여 트랜잭션을 롤백하는 방법도 있습니다.
-                // 단, 이 방법은 DBMS에 따라 지원하지 않을 수도 있습니다.
-                // 또는, 논리 트랜잭션 시작 전에 복원 지점을 설정하는 것입니다.
-                // SAVEPOINT와 비슷한 방법이지만, 다른 점은 이는 코드 수준에서 트랜잭션 롤백을 재현하는 것입니다.
-                // 이는 논리 트랜잭션을 커밋할 때마다 복원 지점을 만들어야 합니다.
-                // 다만 이미 START TRANSACTION이 실행된 상태에서는 이 방법을 사용할 수 없습니다.
+                // ? 현재의 롤백 전략은 단 하나의 물리 트랜잭션을 롤백합니다.
+                // ? SAVEPOINT를 사용하여 트랜잭션을 롤백하는 방법도 있습니다.
+                // ? 단, 이 방법은 DBMS에 따라 지원하지 않을 수도 있습니다.
+                // ? 또는, 논리 트랜잭션 시작 전에 복원 지점을 설정하는 것입니다.
+                // ? TypeORM에서는 transactionDepth가 0이 아닌 경우에만 SAVEPOINT를 설정합니다.
                 await queryRunner.rollbackTransaction();
                 this.transactionScanner.resetLogicalTransactionCount();
+
+                // await queryRunner.query("SAVEPOINT ROLLBACK_POINT;")
 
                 if (store.isTransactionRollbackToken()) {
                     await store.action(
