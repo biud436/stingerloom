@@ -139,6 +139,7 @@ export class TransactionQueryRunnerConsumer {
                 // ? 단, 이 방법은 DBMS에 따라 지원하지 않을 수도 있습니다.
                 // ? 또는, 논리 트랜잭션 시작 전에 복원 지점을 설정하는 것입니다.
                 // ? TypeORM은 MySQL과 Postgres의 경우, transactionDepth 값을 통해 중첩 트랜지션을 지원합니다.
+                // ? 중첩 트랜지션을 사용하려면 같은 EntityManager를 사용해야 합니다.
                 await queryRunner.rollbackTransaction();
                 this.transactionScanner.resetLogicalTransactionCount();
 
