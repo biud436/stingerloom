@@ -13,8 +13,23 @@ export enum TransactionIsolationLevel {
 }
 
 export enum TransactionPropagation {
+    /**
+     * 기존 트랜잭션에 참여하고 없으면 새로운 트랜잭션을 생성한다.
+     */
     REQUIRED = "REQUIRED",
+    /**
+     * 트랜잭션 컨텍스트에서 기존 컨텍스트와 다른 트랜잭션이 호출될 때,
+     * 기존 트랜잭션을 일시 중단하고 새로운 트랜잭션을 생성합니다.
+     * 기존 컨텍스트에 트랜잭션이 없으면 새로 생성합니다.
+     *
+     * 새로 생성할 경우, manager 객체도 독립됩니다.
+     */
     REQUIRES_NEW = "REQUIRES_NEW",
+
+    /**
+     * 중첩된 트랜잭션을 생성합니다.
+     * 동일한 매니저로 트랜잭션을 진행합니다.
+     */
     NESTED = "NESTED",
 }
 
