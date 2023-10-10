@@ -13,7 +13,9 @@ export enum TransactionIsolationLevel {
 }
 
 export enum TransactionPropagation {
+    REQUIRED = "REQUIRED",
     REQUIRES_NEW = "REQUIRES_NEW",
+    NESTED = "NESTED",
 }
 
 export interface TransactionalOptions {
@@ -49,7 +51,7 @@ export function Transactional(option?: TransactionalOptions): MethodDecorator {
         // 트랜잭션 전파 속성
         Reflect.defineMetadata(
             TRANSACTION_PROPAGATION,
-            option?.propagation ?? TransactionPropagation.REQUIRES_NEW,
+            option?.propagation ?? TransactionPropagation.REQUIRED,
             target,
             methodName,
         );

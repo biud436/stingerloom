@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
     INJECT_QUERYRUNNER_TOKEN,
     TRANSACTIONAL_PARAMS,
+    TRANSACTION_PROPAGATION,
     TransactionIsolationLevel,
+    TransactionPropagation,
 } from "../decorators";
 import { Logger } from "../Logger";
 import { TransactionStore } from "./TransactionStore";
@@ -49,6 +52,13 @@ export class TransactionQueryRunnerConsumer {
             let queryRunner: QueryRunner | undefined = undefined;
             let manager: EntityManager | undefined = undefined;
 
+            // 트랜잭션 전파 속성
+            const propagation = Reflect.getMetadata(
+                TRANSACTION_PROPAGATION,
+                targetInjectable,
+                method,
+            ) as TransactionPropagation;
+
             // 논리 트랜잭션이 있는지 확인합니다.
             if (this.transactionScanner.isGlobalLock()) {
                 // 새로운 논리 트랜잭션을 시작합니다.
@@ -63,6 +73,15 @@ export class TransactionQueryRunnerConsumer {
 
                 await queryRunner.connect();
                 await queryRunner.startTransaction(transactionIsolationLevel);
+
+                // 기존 트랜잭션에 참여
+                // if (propagation === TransactionPropagation.REQUIRED) {
+                //     await this.transactionScanner.globalLock({
+                //         queryRunner,
+                //         transactionIsolationLevel,
+                //         entityManager: manager,
+                //     });
+                // }
 
                 await this.transactionScanner.globalLock({
                     queryRunner,
