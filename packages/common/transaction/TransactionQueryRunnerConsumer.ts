@@ -74,15 +74,6 @@ export class TransactionQueryRunnerConsumer {
                 await queryRunner.connect();
                 await queryRunner.startTransaction(transactionIsolationLevel);
 
-                // 기존 트랜잭션에 참여
-                // if (propagation === TransactionPropagation.REQUIRED) {
-                //     await this.transactionScanner.globalLock({
-                //         queryRunner,
-                //         transactionIsolationLevel,
-                //         entityManager: manager,
-                //     });
-                // }
-
                 await this.transactionScanner.globalLock({
                     queryRunner,
                     transactionIsolationLevel,
