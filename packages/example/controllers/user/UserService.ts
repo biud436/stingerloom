@@ -47,6 +47,19 @@ export class UserService implements OnModuleInit {
         return ResultUtils.success("유저 생성에 성공하였습니다.", res);
     }
 
+    async createWithNonTransactional(createUserDto: CreateUserDto) {
+        const safedUserDto = createUserDto as Record<string, any>;
+        if (safedUserDto.role) {
+            throw new BadRequestException("role 속성은 입력할 수 없습니다.");
+        }
+
+        const newUser = this.userRepository.create(createUserDto);
+
+        const res = await this.userRepository.save(newUser);
+
+        return ResultUtils.success("유저 생성에 성공하였습니다.", res);
+    }
+
     async validateUser(loginUserDto: LoginUserDto): Promise<User> {
         const { username, password } = loginUserDto;
 

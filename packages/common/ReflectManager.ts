@@ -3,6 +3,7 @@ import { CONTROLLER_TOKEN } from "./RouterMapper";
 import {
     AFTER_TRANSACTION_TOKEN,
     BEFORE_TRANSACTION_TOKEN,
+    INJECT_DATA_SOURCE_TOKEN,
     REPOSITORY_ENTITY_METADATA,
     RepositoryMetadataItem,
     TRANSACTIONAL_TOKEN,
@@ -142,6 +143,12 @@ export class ReflectManager {
             return false;
         }
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
+    }
+
+    public static isDataSource(target: object): boolean {
+        return (
+            Reflect.getMetadata(INJECT_DATA_SOURCE_TOKEN, target) !== undefined
+        );
     }
 
     /**

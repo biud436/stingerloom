@@ -58,4 +58,9 @@ export class AuthController {
             userId,
         });
     }
+
+    @Get("/transaction4")
+    async checkTransaction4() {
+        return await this.authService.checkTransaction4();
+    }
 }

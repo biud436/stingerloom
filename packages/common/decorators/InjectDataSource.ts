@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { ReflectManager } from "../ReflectManager";
 import { ClazzType } from "../RouterMapper";
 

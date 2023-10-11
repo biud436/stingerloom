@@ -1,10 +1,8 @@
 # Introduction
 
-이 서버 프레임워크는 Nest.js라는 서버 프레임워크의 동작 원리와 기술을 더 깊이 이해하기 위해서 시작되었습니다.
+This server framework was started to better understand the mechanics and technology behind a server framework called Nest.js.
 
-`나만의 서버 프레임워크`를 만들어보면서 프레임워크에 대한 이해도를 높이고, Nest.js의 동작 원리를 이해하고자 하였습니다.
-
-`나만의 서버 프레임워크`의 이름은 StingerLoom이며 라우터 맵핑 기능과 StingerLoom Container에 의한 DI와 데이터베이스 접근에 필요한 ORM 등의 기능을 지원합니다.
+StingerLoom supports features such as router mapping and the ORM required to access DI and databases by StingerLoom Containers.
 
 <p align="center"> 
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />

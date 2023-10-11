@@ -5,6 +5,7 @@ import Container from "typedi";
 import { ReflectManager } from "../ReflectManager";
 import { InstanceScanner } from "@stingerloom/IoC";
 import Database from "../Database";
+import { DataSource } from "typeorm";
 
 /**
  * 기본 파라미터를 특정 타입으로 변환하는 기능을 가지는 함수입니다.
@@ -32,6 +33,9 @@ export const transformBasicParameter = (
         const repository = database.getRepository(entity);
 
         return repository;
+    } else if (target === DataSource) {
+        const database = instanceScanner.get(Database) as Database;
+        return database.getDataSource();
     } else if (ReflectManager.isInjectable(target)) {
         const injectable = instanceScanner.get(target);
 

@@ -2,6 +2,7 @@ import {
     AfterTransaction,
     BeforeTransaction,
     Commit,
+    InjectDataSource,
     Injectable,
     SessionObject,
     TransactionIsolationLevel,
@@ -11,7 +12,7 @@ import {
 import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { UserService } from "../user/UserService";
-import { EntityManager } from "typeorm";
+import { DataSource, EntityManager } from "typeorm";
 import { User } from "@stingerloom/example/entity/User";
 import { plainToClass } from "class-transformer";
 import { InternalServerException } from "@stingerloom/error";
@@ -27,6 +28,8 @@ export class AuthService {
 
     @Autowired()
     userService!: UserService;
+
+    constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
     async login(session: SessionObject, loginUserDto: LoginUserDto) {
         const user = await this.userService.validateUser(loginUserDto);
@@ -119,5 +122,35 @@ export class AuthService {
         const users = await this.userService.findAll();
 
         return users;
+    }
+
+    async checkTransaction4() {
+        const queryRunner = this.dataSource.createQueryRunner();
+
+        try {
+            await queryRunner.connect();
+            await queryRunner.startTransaction();
+
+            const test1 = await this.userService.createWithNonTransactional({
+                password: "testtest1aA!!",
+                username: "test1",
+            });
+
+            const test2 = await this.userService.createWithNonTransactional({
+                password: "testtest1aA!!",
+                username: "test2",
+            });
+
+            return {
+                users: {
+                    test1,
+                    test2,
+                },
+            };
+        } catch {
+            await queryRunner.rollbackTransaction();
+        } finally {
+            await queryRunner.release();
+        }
     }
 }
