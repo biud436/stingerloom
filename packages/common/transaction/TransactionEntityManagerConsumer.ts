@@ -8,6 +8,12 @@ import { RawTransactionScanner } from "./RawTransactionScanner";
 import { isArrayOk } from "@stingerloom/utils/isArrayOk";
 import { isPromise } from "util/types";
 
+/**
+ * @class TransactionManagerConsumer
+ * @author 어진석(biud436)
+ * @description This class is a consumer that executes the transaction.
+ * @deprecated
+ */
 export class TransactionEntityManagerConsumer {
     public LOGGER: Logger = new Logger(TransactionEntityManagerConsumer.name);
     private readonly transactionScanner = Container.get(RawTransactionScanner);
