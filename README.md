@@ -287,53 +287,6 @@ StingerLoom에서는 이러한 트랜잭션 처리를 위해서 `@Transactional`
 
 다음은 트랜잭션을 처리하는 심플한 예시입니다.
 
-### Transaction Entity Manager를 사용하는 경우
-
-`transactionalEntityManager` 속성을 `true`로 설정하면, `Transaction Entity Manager`를 자동으로 주입받을 수 있습니다.
-
-`Transaction Entity Manager`를 사용하면 트랜잭션 엔티티 매니저를 사용하여 단일이 아닌 여러 쿼리를 트랜잭션으로 처리를 할 수 있게 됩니다.
-
-```ts
-@TransactionalZone()
-@Injectable()
-export class AuthService {
-    constructor(private readonly userService: UserService) {}
-
-    // Skip...
-
-    /**
-     * Transaction EntityManager를 사용하여 트랜잭션을 제어합니다.
-     * @param em
-     * @returns
-     */
-    @Transactional({
-        isolationLevel: TransactionIsolationLevel.REPEATABLE_READ,
-        transactionalEntityManager: true,
-    })
-    async checkTransaction(em?: EntityManager) {
-        const users = (await em?.queryRunner?.query(
-            "SELECT * FROM user;",
-        )) as User[];
-
-        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
-            users: plainToClass(User, users),
-        });
-    }
-}
-```
-
-위 코드를 보면 주입 받은 트랜잭션 엔티티 매니저의 인스턴스인 `em`을 사용해야 트랜잭션으로 처리가 됩니다.
-
-### `QueryRunner`를 사용하는 경우 (추천)
-
-제가 자주 사용하는 방법인데요. 바로 `QueryRunner`를 사용하는 방법이 있습니다.
-
-`QueryRunner`를 사용하는 경우, 트랜잭션을 상세하게 제어할 수 있는데, `@Transactional()`이라고 표시된 메소드는 자동으로 `QueryRunner`를 주입받습니다.
-
-또한 오류가 발생하면 자동으로 롤백 처리까지 해줍니다.
-
-다음은 가장 심플한 사용법입니다.
-
 ```ts
 @TransactionalZone()
 @Injectable()
