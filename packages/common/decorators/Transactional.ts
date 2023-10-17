@@ -22,7 +22,8 @@ export enum TransactionPropagation {
      * 기존 트랜잭션을 일시 중단하고 새로운 트랜잭션을 생성합니다.
      * 기존 컨텍스트에 트랜잭션이 없으면 새로 생성합니다.
      *
-     * 새로 생성할 경우, manager 객체도 독립됩니다.
+     * 이 전파 속성에서는 queryRunner가 공유되지 않습니다.
+     * queryRunner.connect()를 통해 새로운 커넥션을 생성합니다.
      */
     REQUIRES_NEW = "REQUIRES_NEW",
 

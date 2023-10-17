@@ -59,26 +59,41 @@ export class TransactionQueryRunnerConsumer {
                 method,
             ) as TransactionPropagation;
 
-            // 논리 트랜잭션이 있는지 확인합니다.
-            if (this.transactionScanner.isGlobalLock()) {
-                // 새로운 논리 트랜잭션을 시작합니다.
-                this.transactionScanner.addLogicalTransactionCount();
+            if (propagation === TransactionPropagation.REQUIRED) {
+                // 논리 트랜잭션이 있는지 확인합니다.
+                if (this.transactionScanner.isGlobalLock()) {
+                    // 새로운 논리 트랜잭션을 시작합니다.
+                    this.transactionScanner.addLogicalTransactionCount();
 
-                queryRunner = this.transactionScanner.getTxQueryRunner();
-                manager = this.transactionScanner.getTxEntityManager();
+                    queryRunner = this.transactionScanner.getTxQueryRunner();
+                    manager = this.transactionScanner.getTxEntityManager();
+                } else {
+                    // 새로운 물리 트랜잭션을 생성합니다.
+                    queryRunner = dataSource.createQueryRunner();
+                    manager = queryRunner.manager;
+
+                    await queryRunner.connect();
+                    await queryRunner.startTransaction(
+                        transactionIsolationLevel,
+                    );
+
+                    await this.transactionScanner.globalLock({
+                        queryRunner,
+                        transactionIsolationLevel,
+                        entityManager: manager,
+                        propagation,
+                    });
+                }
+            } else if (propagation === TransactionPropagation.REQUIRES_NEW) {
+                throw new Exception(
+                    "지원하지 않는 트랜잭션 전파 속성입니다",
+                    500,
+                );
             } else {
-                // 새로운 물리 트랜잭션을 생성합니다.
-                queryRunner = dataSource.createQueryRunner();
-                manager = queryRunner.manager;
-
-                await queryRunner.connect();
-                await queryRunner.startTransaction(transactionIsolationLevel);
-
-                await this.transactionScanner.globalLock({
-                    queryRunner,
-                    transactionIsolationLevel,
-                    entityManager: manager,
-                });
+                throw new Exception(
+                    "지원하지 않는 트랜잭션 전파 속성입니다",
+                    500,
+                );
             }
 
             if (!queryRunner) {
