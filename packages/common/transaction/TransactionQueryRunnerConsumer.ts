@@ -60,6 +60,9 @@ export class TransactionQueryRunnerConsumer {
             ) as TransactionPropagation;
 
             if (propagation === TransactionPropagation.REQUIRED) {
+                // ? 트랜잭션 전파 속성이 TransactionPropagation.REQUIRED일 경우,
+                // ? 기존 트랜잭션에 참여합니다.
+
                 // 논리 트랜잭션이 있는지 확인합니다.
                 if (this.transactionScanner.isGlobalLock()) {
                     // 새로운 논리 트랜잭션을 시작합니다.
@@ -67,6 +70,8 @@ export class TransactionQueryRunnerConsumer {
 
                     queryRunner = this.transactionScanner.getTxQueryRunner();
                     manager = this.transactionScanner.getTxEntityManager();
+
+                    this.LOGGER.info("기존 트랜잭션에 참여하였습니다");
                 } else {
                     // 새로운 물리 트랜잭션을 생성합니다.
                     queryRunner = dataSource.createQueryRunner();
@@ -83,12 +88,26 @@ export class TransactionQueryRunnerConsumer {
                         entityManager: manager,
                         propagation,
                     });
+
+                    this.LOGGER.info("트랜잭션이 시작되었습니다");
                 }
             } else if (propagation === TransactionPropagation.REQUIRES_NEW) {
-                throw new Exception(
-                    "지원하지 않는 트랜잭션 전파 속성입니다",
-                    500,
-                );
+                // ? 트랜잭션 전파 속성이 TransactionPropagation.REQUIRES_NEW일 경우,
+                // ? 새로운 트랜잭션을 시작합니다.
+                if (!this.transactionScanner.isGlobalLock()) {
+                    throw new Exception(
+                        "기존에 시작된 트랜잭션이 없는데 REQUIRES_NEW가 지정되었습니다",
+                        500,
+                    );
+                }
+
+                queryRunner = dataSource.createQueryRunner();
+                manager = queryRunner.manager;
+
+                await queryRunner.connect();
+                await queryRunner.startTransaction(transactionIsolationLevel);
+
+                this.LOGGER.info("트랜잭션이 새로 시작되었습니다");
             } else {
                 throw new Exception(
                     "지원하지 않는 트랜잭션 전파 속성입니다",
@@ -142,8 +161,15 @@ export class TransactionQueryRunnerConsumer {
                  * 논리 트랜잭션이 모두 커밋되어야 물리 트랜잭션을 커밋할 수 있습니다.
                  * 따라서 커밋은 물리 트랜잭션이 커밋되어야 하는 상황에서만 커밋됩니다.
                  */
-                if (
-                    this.transactionScanner.isCommittedAllLogicalTransaction()
+                if (propagation === TransactionPropagation.REQUIRED) {
+                    const isCommitted =
+                        this.transactionScanner.isCommittedAllLogicalTransaction();
+
+                    if (isCommitted) {
+                        await queryRunner.commitTransaction();
+                    }
+                } else if (
+                    propagation === TransactionPropagation.REQUIRES_NEW
                 ) {
                     await queryRunner.commitTransaction();
                 }
@@ -158,15 +184,11 @@ export class TransactionQueryRunnerConsumer {
 
                 return ret;
             } catch (e: any) {
-                // ? 트랜잭션 롤백 전략
-                // ? 현재의 롤백 전략은 단 하나의 물리 트랜잭션을 롤백합니다.
-                // ? SAVEPOINT를 사용하여 트랜잭션을 롤백하는 방법도 있습니다.
-                // ? 단, 이 방법은 DBMS에 따라 지원하지 않을 수도 있습니다.
-                // ? 또는, 논리 트랜잭션 시작 전에 복원 지점을 설정하는 것입니다.
-                // ? TypeORM은 MySQL, Postgres, Oracle, SqlServer, CockroachDB의 경우, transactionDepth 값을 통해 중첩 트랜지션을 지원합니다.
-                // ? 중첩 트랜지션을 사용하려면 같은 EntityManager를 사용해야 합니다.
                 await queryRunner.rollbackTransaction();
-                this.transactionScanner.resetLogicalTransactionCount();
+
+                if (propagation === TransactionPropagation.REQUIRED) {
+                    this.transactionScanner.resetLogicalTransactionCount();
+                }
 
                 if (store.isTransactionRollbackToken()) {
                     await store.action(
@@ -181,17 +203,23 @@ export class TransactionQueryRunnerConsumer {
                 );
                 reject(e);
             } finally {
-                /**
-                 * 논리 트랜잭션이 모두 커밋되어야 QueryRunner를 반환할 수 있습니다.
-                 **/
-                if (
-                    this.transactionScanner.isCommittedAllLogicalTransaction()
+                if (propagation === TransactionPropagation.REQUIRED) {
+                    /**
+                     * 논리 트랜잭션이 모두 커밋되어야 QueryRunner를 반환할 수 있습니다.
+                     **/
+                    if (
+                        this.transactionScanner.isCommittedAllLogicalTransaction()
+                    ) {
+                        await queryRunner.release();
+                        this.transactionScanner.globalUnlock();
+                    } else {
+                        // 논리 트랜잭션이 모두 커밋되지 않았다면, 논리 트랜잭션을 하나 제거합니다.
+                        this.transactionScanner.subtractLogicalTransactionCount();
+                    }
+                } else if (
+                    propagation === TransactionPropagation.REQUIRES_NEW
                 ) {
                     await queryRunner.release();
-                    this.transactionScanner.globalUnlock();
-                } else {
-                    // 논리 트랜잭션이 모두 커밋되지 않았다면, 논리 트랜잭션을 하나 제거합니다.
-                    this.transactionScanner.subtractLogicalTransactionCount();
                 }
 
                 if (store.isAfterTransactionToken()) {
