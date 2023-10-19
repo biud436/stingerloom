@@ -92,7 +92,23 @@ export class EntityManagerContextQueue {
         return this.#data.length;
     }
 
-    clear() {
+    async clear() {
+        const isExist = this.#data.length > 0;
+
+        if (!isExist) {
+            this.#data = [];
+            return;
+        }
+
+        // 트랜잭션 컨텍스트의 자원을 해제합니다.
+        for (const context of this.#data) {
+            const { queryRunner } = context;
+
+            if (!queryRunner?.isReleased) {
+                await queryRunner?.release();
+            }
+        }
+
         this.#data = [];
     }
 
