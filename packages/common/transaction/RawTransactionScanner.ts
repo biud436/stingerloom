@@ -7,18 +7,15 @@ import {
     TransactionIsolationLevel,
     TransactionPropagation,
 } from "../decorators/Transactional";
+import {
+    EntityManagerContextQueue,
+    TxContext,
+} from "./EntityManagerContextQueue";
+import { Exception } from "@stingerloom/error/Exception";
 
 export interface RawTransactionMetadata {
     targetClass: InstanceType<any>;
     currentMethod: string;
-}
-
-export interface TxGlobalLockOption {
-    transactionIsolationLevel: TransactionIsolationLevel;
-    isEntityManager?: boolean;
-    queryRunner?: QueryRunner;
-    entityManager?: EntityManager;
-    propagation?: TransactionPropagation;
 }
 
 @Service()
@@ -27,54 +24,12 @@ export class RawTransactionScanner extends MetadataScanner {
     private txQueryRunner?: QueryRunner | undefined;
     private txEntityManager?: EntityManager | undefined;
 
-    private contextMap = new Map<TransactionPropagation, TxGlobalLockOption>();
+    private contextQueue = new EntityManagerContextQueue();
 
     /**
      * 논리 트랜잭션의 횟수
      */
     private logicalTransactionCount = 0;
-
-    /**
-     * 컨텍스트를 설정합니다.
-     * @param propagation 트랜잭션 전파 속성
-     * @param options
-     */
-    public setContext(
-        propagation: TransactionPropagation,
-        options: TxGlobalLockOption,
-    ): void {
-        if (this.contextMap.has(propagation)) {
-            const context = this.contextMap.get(propagation);
-
-            if (context) {
-                this.contextMap.set(propagation, {
-                    ...context,
-                    ...options,
-                });
-            }
-        }
-    }
-
-    /**
-     * 컨텍스트를 삭제합니다.
-     *
-     * @param propagation 트랜잭션 전파 속성
-     */
-    public clearContext(propagation: TransactionPropagation) {
-        this.contextMap.delete(propagation);
-    }
-
-    /**
-     * 컨텍스트를 가져옵니다.
-     *
-     * @param propagation
-     * @returns
-     */
-    public getContext(
-        propagation: TransactionPropagation,
-    ): TxGlobalLockOption | undefined {
-        return this.contextMap.get(propagation);
-    }
 
     /**
      * 저장된 토큰을 삭제합니다.
@@ -172,20 +127,39 @@ export class RawTransactionScanner extends MetadataScanner {
         entityManager,
         isEntityManager = false,
         propagation,
-    }: TxGlobalLockOption): Promise<void> {
+    }: TxContext): Promise<void> {
         this.mapper.set(RawTransactionScanner.GLOBAL_LOCK, true);
 
         this.txQueryRunner = queryRunner;
         this.txEntityManager = entityManager ?? undefined;
+    }
 
-        if (propagation) {
-            this.setContext(propagation, {
-                queryRunner,
-                transactionIsolationLevel,
-                entityManager,
-                isEntityManager,
-                propagation,
-            });
+    /**
+     * 새로운 트랜잭션을 시작합니다.
+     */
+    public async newTransaction({
+        queryRunner,
+        transactionIsolationLevel,
+        propagation,
+        entityManager,
+    }: TxContext) {
+        if (!this.isGlobalLock()) {
+            throw new Exception(
+                "기존에 시작된 트랜잭션이 없는데 REQUIRES_NEW가 지정되었습니다",
+                500,
+            );
+        }
+
+        this.contextQueue.enqueue({
+            queryRunner,
+            transactionIsolationLevel,
+            propagation,
+            entityManager,
+        });
+
+        if (queryRunner) {
+            await queryRunner.connect();
+            await queryRunner.startTransaction(transactionIsolationLevel);
         }
     }
 
