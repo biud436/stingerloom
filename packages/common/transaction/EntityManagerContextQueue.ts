@@ -101,7 +101,7 @@ export class EntityManagerContextQueue {
         }
 
         // 트랜잭션 컨텍스트의 자원을 해제합니다.
-        for (const context of this.#data) {
+        for (const context of this) {
             const { queryRunner } = context;
 
             if (!queryRunner?.isReleased) {
