@@ -18,6 +18,8 @@ export function Body(): ParameterDecorator {
 
         const paramTypes = ReflectManager.getParamTypes(target, methodName)!;
 
+        // TODO: @Body를 하나만 쓸 수 있게 해놨는데, 여러개로 나눠서 쓸 수도 있어야 하니 배열로 변경되어야 합니다.
+
         // 몇번째 매개변수 인지 마킹
         Reflect.defineMetadata(
             BODY_TOKEN,
