@@ -132,6 +132,10 @@ export class RawTransactionScanner extends MetadataScanner {
 
         this.txQueryRunner = queryRunner;
         this.txEntityManager = entityManager ?? undefined;
+
+        if (this.txQueryRunner?.isTransactionActive) {
+            //
+        }
     }
 
     /**
@@ -143,13 +147,6 @@ export class RawTransactionScanner extends MetadataScanner {
         propagation,
         entityManager,
     }: TxContext) {
-        if (!this.isGlobalLock()) {
-            throw new Exception(
-                "기존에 시작된 트랜잭션이 없는데 REQUIRES_NEW가 지정되었습니다",
-                500,
-            );
-        }
-
         this.contextQueue.enqueue({
             queryRunner,
             transactionIsolationLevel,

@@ -77,10 +77,17 @@ export class TransactionQueryRunnerConsumer {
                     queryRunner = dataSource.createQueryRunner();
                     manager = queryRunner.manager;
 
-                    await queryRunner.connect();
-                    await queryRunner.startTransaction(
+                    await this.transactionScanner.newTransaction({
+                        queryRunner,
                         transactionIsolationLevel,
-                    );
+                        entityManager: manager,
+                        propagation,
+                    });
+
+                    // await queryRunner.connect();
+                    // await queryRunner.startTransaction(
+                    //     transactionIsolationLevel,
+                    // );
 
                     await this.transactionScanner.globalLock({
                         queryRunner,
@@ -94,6 +101,12 @@ export class TransactionQueryRunnerConsumer {
             } else if (propagation === TransactionPropagation.REQUIRES_NEW) {
                 // ? 트랜잭션 전파 속성이 TransactionPropagation.REQUIRES_NEW일 경우,
                 // ? 새로운 트랜잭션을 시작합니다.
+                if (!this.transactionScanner.isGlobalLock()) {
+                    throw new Exception(
+                        "기존에 시작된 트랜잭션이 없는데 REQUIRES_NEW가 지정되었습니다",
+                        500,
+                    );
+                }
 
                 // TODO: 프록시 객체에서 다음 엔티티 매니저가 사용되어야 하므로, 트랜잭션 스캐너에 엔티티 매니저가 저장되어야 합니다.
                 queryRunner = dataSource.createQueryRunner();
