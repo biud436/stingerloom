@@ -52,6 +52,8 @@ StingerLoom supports features such as router mapping and the ORM required to acc
     - AfterTransaction
     - Commit
     - Rollback
+    - Query
+    - Param
 
 ## 개발 일지
 
@@ -85,7 +87,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`,`BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`,`BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` , `Query`, `Param` 데코레이터를 지원합니다.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
@@ -364,6 +366,17 @@ export class AuthService {
     async rollback(txId: string, error: any) {
         // 트랜잭션이 롤백된 후에 아래 코드가 실행됩니다.
         // 이 메소드는 오류가 발생했을 때만 실행됩니다.
+    }
+
+    @Transactional({
+        rollback: () => new Exception("트랜잭션이 롤백되었어요", 500),
+    })
+    async rollbackCheck() {
+        const user = await this.userService.findOneByPk("test");
+
+        return ResultUtils.success("롤백 테스트", {
+            user,
+        });
     }
 }
 ```

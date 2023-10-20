@@ -5,7 +5,9 @@ import {
     Controller,
     Get,
     OnApplicationShutdown,
+    Param,
     Post,
+    Query,
     UseGuard,
 } from "@stingerloom/common";
 import { Session } from "@stingerloom/common/decorators/Session";
@@ -64,8 +66,11 @@ export class AuthController {
         return await this.authService.checkTransaction4();
     }
 
-    @Get("/rollback-check")
-    async checkRollback() {
+    @Get("/rollback-check/:name")
+    async checkRollback(@Query("id") id: string, @Param("name") name: string) {
+        console.log(id);
+        console.log(name);
+
         return await this.authService.rollbackCheck();
     }
 }
