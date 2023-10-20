@@ -14,7 +14,7 @@ import { CreateUserDto } from "./dto/CreateUserDto";
 import { Point } from "../../entity/Point";
 import { UserService } from "./UserService";
 import { TransactionalZone } from "@stingerloom/common/decorators/TransactionalZone";
-import { InjectQueryRunner, Transactional } from "@stingerloom/common";
+import { InjectQueryRunner, Ip, Transactional } from "@stingerloom/common";
 import { GameMapService } from "@stingerloom/example/entity/map/GameMapService";
 
 @Controller("/user")
@@ -41,8 +41,8 @@ export class UserController {
 
     @Header("Content-Type", "application/json")
     @Get()
-    public async getUser(@Req() req: FastifyRequest) {
-        return await this.userService.getUser(req.ip);
+    public async getUser(@Ip() ip: string) {
+        return await this.userService.getUser(ip);
     }
 
     @Get("/test2")
