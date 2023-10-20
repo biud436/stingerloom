@@ -116,6 +116,18 @@ export class UserController {
     @Autowired()
     private readonly userService!: UserService;
 
+    @Get("/:id")
+    public async getUserById(
+        @Param("id") id: string,
+        @Query("name") name: string,
+    ) {
+        if (!name) {
+            throw new BadRequestException("name 속성은 필수입니다.");
+        }
+
+        return await this.userService.findOneByPk(id);
+    }
+
     @Get("/point")
     async getPoint() {
         this.point.move(5, 5);
@@ -426,6 +438,21 @@ export class UserService {
 ```
 
 `@Rollback()` 데코레이터를 붙이고 메소드의 첫 번째 인자로는 트랜잭션 ID가, 두 번째 인자로는 오류 객체가 전달됩니다.
+
+또는 트랜잭션이 롤백되었을 때, 특정 오류를 반환하고 싶다면 다음과 같이 할 수 있습니다.
+
+```ts
+    @Transactional({
+        rollback: () => new Exception("트랜잭션이 롤백되었어요", 500),
+    })
+    async rollbackCheck() {
+        const user = await this.userService.findOneByPk("test");
+
+        return ResultUtils.success("롤백 테스트", {
+            user,
+        });
+    }
+```
 
 트랜잭션 ID는 실제 트랜잭션의 ID가 아니며 서버에서 관리하는 트랜잭션 ID입니다.
 
