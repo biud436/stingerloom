@@ -58,7 +58,7 @@
         "webpack": "^5.88.2"
     },
     "scripts": {
-        "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example -V -L",
+        "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example -q",
         "build": "rimraf dist && tsc",
         "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L",
         "test": "jest --config jest.config.js"
