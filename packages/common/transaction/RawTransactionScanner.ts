@@ -4,8 +4,10 @@ import { MetadataScanner } from "@stingerloom/IoC/scanners";
 import { Service } from "typedi";
 import { EntityManager, QueryRunner } from "typeorm";
 import {
+    TRANSACTION_LAZY_ROLLBACK,
     TransactionIsolationLevel,
     TransactionPropagation,
+    TransactionalRollbackException,
 } from "../decorators/Transactional";
 import {
     EntityManagerContextQueue,
@@ -197,5 +199,38 @@ export class RawTransactionScanner extends MetadataScanner {
      */
     isGlobalLock(): boolean {
         return this.mapper.get(RawTransactionScanner.GLOBAL_LOCK) === true;
+    }
+
+    /**
+     * 트랜잭션 롤백 Exception 여부를 확인합니다.
+     *
+     * @param targetInjectable
+     * @param method
+     * @returns
+     */
+    getTransactionRollbackException(
+        targetInjectable: any,
+        method: string,
+    ): TransactionalRollbackException | null {
+        return Reflect.getMetadata(
+            TRANSACTION_LAZY_ROLLBACK,
+            targetInjectable,
+            method as any,
+        ) as TransactionalRollbackException | null;
+    }
+
+    checkRollbackException(targetInjectable: any, method: string) {
+        const exceptionCallback = this.getTransactionRollbackException(
+            targetInjectable,
+            method,
+        );
+
+        if (exceptionCallback) {
+            const exception = exceptionCallback();
+
+            if (exception instanceof Exception) {
+                throw exception;
+            }
+        }
     }
 }

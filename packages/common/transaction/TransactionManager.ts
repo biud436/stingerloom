@@ -10,13 +10,11 @@ import {
     TRANSACTION_COMMIT_TOKEN,
     TRANSACTION_ENTITY_MANAGER,
     TRANSACTION_ISOLATE_LEVEL,
-    TRANSACTION_LAZY_ROLLBACK,
     TRANSACTION_ROLLBACK_TOKEN,
     TransactionIsolationLevel,
-    TransactionalRollbackException,
 } from "../decorators";
 
-import { Exception, InternalServerException } from "@stingerloom/error";
+import { InternalServerException } from "@stingerloom/error";
 import { Logger } from "../Logger";
 import { TransactionEntityManagerConsumer } from "./TransactionEntityManagerConsumer";
 import { TransactionQueryRunnerConsumer } from "./TransactionQueryRunnerConsumer";
@@ -206,42 +204,5 @@ export class TransactionManager {
             targetInjectable,
             method as any,
         ) || DEFAULT_ISOLATION_LEVEL) as TransactionIsolationLevel;
-    }
-
-    /**
-     * 트랜잭션 롤백 Exception 여부를 확인합니다.
-     *
-     * @param targetInjectable
-     * @param method
-     * @returns
-     */
-    public static getTransactionRollbackException(
-        targetInjectable: any,
-        method: string,
-    ): TransactionalRollbackException | null {
-        return Reflect.getMetadata(
-            TRANSACTION_LAZY_ROLLBACK,
-            targetInjectable,
-            method as any,
-        ) as TransactionalRollbackException | null;
-    }
-
-    public static checkRollbackException(
-        targetInjectable: any,
-        method: string,
-    ) {
-        const exceptionCallback =
-            TransactionManager.getTransactionRollbackException(
-                targetInjectable,
-                method,
-            );
-
-        if (exceptionCallback) {
-            const exception = exceptionCallback();
-
-            if (exception instanceof Exception) {
-                throw exception;
-            }
-        }
     }
 }

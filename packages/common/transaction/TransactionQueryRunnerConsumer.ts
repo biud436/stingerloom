@@ -211,7 +211,7 @@ export class TransactionQueryRunnerConsumer {
                     );
                 }
 
-                TransactionManager.checkRollbackException(
+                this.transactionScanner.checkRollbackException(
                     targetInjectable,
                     method,
                 );
