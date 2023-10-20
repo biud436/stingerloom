@@ -17,6 +17,7 @@ import { ClazzType } from "../RouterMapper";
 import { isArrayOk } from "@stingerloom/utils";
 import { isPromise } from "util/types";
 import { Exception } from "@stingerloom/error/Exception";
+import { TransactionManager } from "./TransactionManager";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
@@ -209,6 +210,11 @@ export class TransactionQueryRunnerConsumer {
                         e,
                     );
                 }
+
+                TransactionManager.checkRollbackException(
+                    targetInjectable,
+                    method,
+                );
 
                 this.LOGGER.error(
                     `트랜잭션을 실행하는 도중 오류가 발생했습니다: ${e.message}`,

@@ -15,7 +15,7 @@ import { UserService } from "../user/UserService";
 import { DataSource, EntityManager } from "typeorm";
 import { User } from "@stingerloom/example/entity/User";
 import { plainToClass } from "class-transformer";
-import { InternalServerException } from "@stingerloom/error";
+import { Exception, InternalServerException } from "@stingerloom/error";
 import { FastifyRequest } from "fastify";
 import { Point } from "@stingerloom/example/entity/Point";
 import { Autowired } from "@stingerloom/common/decorators/Autowired";
@@ -152,5 +152,16 @@ export class AuthService {
         } finally {
             await queryRunner.release();
         }
+    }
+
+    @Transactional({
+        rollback: () => new Exception("트랜잭션이 롤백되었어요", 500),
+    })
+    async rollbackCheck() {
+        const user = await this.userService.findOneByPk("test");
+
+        return ResultUtils.success("롤백 테스트", {
+            user,
+        });
     }
 }

@@ -96,4 +96,14 @@ export class UserService implements OnModuleInit {
 
         return users;
     }
+
+    async findOneByPk(id: string) {
+        const user = await this.userRepository.findOneOrFail({
+            where: {
+                id,
+            },
+        });
+
+        return user;
+    }
 }

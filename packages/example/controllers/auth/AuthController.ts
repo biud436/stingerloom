@@ -63,4 +63,9 @@ export class AuthController {
     async checkTransaction4() {
         return await this.authService.checkTransaction4();
     }
+
+    @Get("/rollback-check")
+    async checkRollback() {
+        return await this.authService.rollbackCheck();
+    }
 }
