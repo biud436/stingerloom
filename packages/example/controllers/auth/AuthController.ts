@@ -19,6 +19,7 @@ import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { User } from "@stingerloom/example/common/decorators/User";
 import { UserId } from "@stingerloom/example/common/decorators/UserId";
 import { Autowired } from "@stingerloom/common/decorators/Autowired";
+import { Hostname } from "@stingerloom/common/decorators/Hostname";
 
 @Controller("/auth")
 export class AuthController {
@@ -67,9 +68,14 @@ export class AuthController {
     }
 
     @Get("/rollback-check/:name")
-    async checkRollback(@Query("id") id: string, @Param("name") name: string) {
-        console.log(id);
-        console.log(name);
+    async checkRollback(
+        @Query("id") id: string,
+        @Param("name") name: string,
+        @Hostname() hostname: string,
+    ) {
+        console.log("id", id);
+        console.log("name", name);
+        console.log("hostname", hostname);
 
         return await this.authService.rollbackCheck();
     }
