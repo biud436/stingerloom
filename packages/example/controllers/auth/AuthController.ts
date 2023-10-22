@@ -3,6 +3,7 @@
 import {
     Body,
     Controller,
+    Cookie,
     Get,
     OnApplicationShutdown,
     Param,
@@ -29,8 +30,10 @@ export class AuthController {
     @Post("/login")
     async login(
         @Session() session: SessionObject,
+        @Cookie("sessionId") sessionId: string,
         @Body() loginUserDto: LoginUserDto,
     ) {
+        console.log("sessionId", sessionId);
         return await this.authService.login(session, loginUserDto);
     }
 
