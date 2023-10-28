@@ -10,7 +10,6 @@ export * from "./Logger";
 export * from "./LoggerState";
 export * from "./ParameterListManager";
 export * from "./ReflectManager";
-export * from "./ReplyBuilder";
 export * from "./ResponseBuilder";
 export * from "./RouterMapper";
 export * from "./ValidationHandler";
