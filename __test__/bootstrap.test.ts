@@ -45,13 +45,11 @@ describe("서버 세팅 및 시작 테스트", () => {
 
     beforeAll((done) => {
         application = new TestServerApplication();
-        application.start();
-
-        setTimeout(() => {
-            console.log("Server started");
-
+        application.on("start", () => {
             done();
-        }, 2000);
+        });
+
+        application.start();
     });
 
     it("/를 호출한다", async () => {

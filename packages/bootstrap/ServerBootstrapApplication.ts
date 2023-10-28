@@ -12,6 +12,7 @@ import Database from "@stingerloom/common/Database";
 import Container from "typedi";
 import { InstanceScanner } from "@stingerloom/IoC";
 import { DiscoveryService } from "@stingerloom/services";
+import { EventEmitter } from "events";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 ParameterListManager.initAllocator();
@@ -22,13 +23,15 @@ ParameterListManager.initAllocator();
  * 이 클래스는 서버를 시작하는 역할을 하며 `Stingerloom`의 핵심 클래스입니다.
  * 컨트롤러를 스캔하고 라우터를 동적으로 등록하여 서버를 구동시키는 역할을 합니다.
  */
-export class ServerBootstrapApplication {
+export class ServerBootstrapApplication extends EventEmitter {
     protected app!: FastifyInstance;
     private containerManager!: ContainerManager;
     protected moduleOptions!: ModuleOptions;
     private logger = new Logger(ServerBootstrapApplication.name);
 
     constructor() {
+        super();
+
         this.app = fastify({
             // logger: {
             //     transport: {
@@ -125,6 +128,7 @@ export class ServerBootstrapApplication {
             if (err) {
                 console.error(err);
             }
+            this.emit("start");
         });
     }
 
