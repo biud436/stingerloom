@@ -52,6 +52,10 @@ describe("서버 세팅 및 시작 테스트", () => {
         application.start();
     });
 
+    afterAll(async () => {
+        await application.stop();
+    });
+
     it("/를 호출한다", async () => {
         const res = await axios.get("http://localhost:3002");
 

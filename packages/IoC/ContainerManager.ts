@@ -61,9 +61,9 @@ export class ContainerManager {
         for (const consumer of consumers) {
             const handler = consumer as OnApplicationShutdown;
             if (handler.onApplicationShutdown instanceof Promise) {
-                await handler.onApplicationShutdown();
+                await handler.onApplicationShutdown?.();
             } else {
-                handler.onApplicationShutdown();
+                handler.onApplicationShutdown?.();
             }
         }
     }

@@ -132,6 +132,21 @@ export class ServerBootstrapApplication extends EventEmitter {
         });
     }
 
+    /**
+     * 서버를 종료합니다.
+     */
+    public async stop(): Promise<void> {
+        this.app.close();
+
+        this.emit("stop");
+
+        await this.onApplicationShutdown();
+    }
+
+    public async close(): Promise<void> {
+        await this.stop();
+    }
+
     private async connectDatabase(): Promise<void> {
         if (!this.moduleOptions) {
             throw new Error("Database configuration is undefined.");
