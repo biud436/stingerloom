@@ -23,9 +23,15 @@ module.exports = {
         "node",
     ],
 
+    transform: {
+        "^.+\\.(t|j)s$": "ts-jest",
+    },
+
     // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
-        "^@/(.*)$": "<rootDir>/$1",
+        "^@stingerloom/(.*)$": "<rootDir>/packages/$1",
+        "^@stingerloom/compiler/(.*)$": "<rootDir>/packages/compiler/$1",
+        "^@stingerloom/bootstrap/(.*)$": "<rootDir>/packages/bootstrap/$1",
     },
 
     // The test environment that will be used for testing

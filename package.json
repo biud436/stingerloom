@@ -51,6 +51,7 @@
         "@types/uuid": "^9.0.4",
         "@typescript-eslint/eslint-plugin": "^6.3.0",
         "@typescript-eslint/parser": "^6.3.0",
+        "axios": "^1.6.0",
         "babel-jest": "^29.6.4",
         "eslint": "^8.46.0",
         "lerna": "^7.1.5",
@@ -62,25 +63,5 @@
         "build": "rimraf dist && tsc",
         "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L",
         "test": "jest --config jest.config.js"
-    },
-    "jest": {
-        "moduleFileExtensions": [
-            "js",
-            "json",
-            "ts"
-        ],
-        "rootDir": ".",
-        "roots": [
-            "<rootDir>/packages/",
-            "<rootDir>/cli/",
-            "<rootDir>/__test__/"
-        ],
-        "transform": {
-            "^.+\\.(t|j)s$": "ts-jest"
-        },
-        "testEnvironment": "node",
-        "moduleNameMapper": {
-            "^@stingerloom/compiler/(.*)$": "<rootDir>/packages/compiler/$1"
-        }
     }
 }
