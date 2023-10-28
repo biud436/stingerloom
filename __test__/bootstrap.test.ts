@@ -1,5 +1,5 @@
 import { ServerBootstrapApplication } from "@stingerloom/bootstrap";
-import { Controller, Get, ModuleOptions } from "@stingerloom/common";
+import { Controller, Get, Module, ModuleOptions } from "@stingerloom/common";
 import { DataSourceOptions } from "typeorm";
 import configService from "@stingerloom/common/ConfigService";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
@@ -33,10 +33,14 @@ describe("서버 세팅 및 시작 테스트", () => {
         }
     }
 
+    @Module({
+        controllers: [AppController],
+        providers: [],
+    })
     class TestServerApplication extends ServerBootstrapApplication {
         override beforeStart(): void {
             this.moduleOptions = ModuleOptions.merge({
-                controllers: [AppController],
+                controllers: [],
                 providers: [],
                 configuration: option,
             });
