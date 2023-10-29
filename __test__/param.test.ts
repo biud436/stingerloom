@@ -106,10 +106,10 @@ describe("파라미터 테스트", () => {
         expect(res.data).toEqual({ id: 1, title: "test" });
     });
 
-    it(":id가 숫자가 아닌 경우, null을 반환하는지 테스트", async () => {
-        const res = await axios.get("http://localhost:3002/blog/test/test");
-
-        expect(res.data).toEqual({ id: null, title: "test" });
+    it(":id가 숫자가 아닌 경우, 400 오류를 반환하는지 테스트", async () => {
+        expect(async () => {
+            await axios.get("http://localhost:3002/blog/test/test");
+        }).rejects.toThrow("Request failed with status code 400");
     });
 
     it(":id가 실수인 경우, 실수로 변환하는지 테스트", async () => {

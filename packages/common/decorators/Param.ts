@@ -1,5 +1,6 @@
 import { FastifyRequest } from "fastify";
 import { createCustomParamDecorator } from "./decoratorFactory";
+import { BadRequestException } from "@stingerloom/error";
 
 export const Param = (rawName: string) =>
     createCustomParamDecorator((data, context) => {
@@ -14,7 +15,15 @@ export const Param = (rawName: string) =>
             const type = context.type();
 
             if (type === Number) {
-                return Number(result) ?? Number(defaultValue);
+                const r = Number(result) ?? Number(defaultValue);
+
+                if (isNaN(r)) {
+                    throw new BadRequestException(
+                        `매개변수 ${r}은 숫자가 아닙니다.`,
+                    );
+                }
+
+                return r;
             }
 
             if (type === String) {
