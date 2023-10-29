@@ -18,7 +18,9 @@ export const Param = (rawName: string) =>
             }
 
             if (type === String) {
-                return result ?? defaultValue;
+                return result === ""
+                    ? defaultValue
+                    : String(result) ?? String(defaultValue);
             }
 
             if (type === Boolean) {

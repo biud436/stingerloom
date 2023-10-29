@@ -120,7 +120,7 @@ export class UserController {
 
     @Get("/:id")
     public async getUserById(
-        @Param("id") id: string,
+        @Param("id|8E1527BA-2C2A-4A6F-9C32-9567A867050A") id: string,
         @Query("name") name: string,
     ) {
         if (!name) {
