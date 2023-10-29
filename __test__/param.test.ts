@@ -26,6 +26,18 @@ describe("파라미터 테스트", () => {
         logging: true,
     };
 
+    class Point {
+        private x: number;
+
+        constructor(x: string) {
+            this.x = Number(x);
+        }
+
+        getX() {
+            return this.x;
+        }
+    }
+
     @Controller("/")
     class AppController {
         @Get("/blog/:id/:title")
@@ -34,6 +46,11 @@ describe("파라미터 테스트", () => {
             @Param("title") title: string,
         ) {
             return { id, title };
+        }
+
+        @Get("/point/:x")
+        async resolveNameAndTitle(@Param("x") point: Point) {
+            return point;
         }
     }
 
@@ -86,5 +103,11 @@ describe("파라미터 테스트", () => {
         const res = await axios.get("http://localhost:3002/blog/-1/test");
 
         expect(res.data).toEqual({ id: -1, title: "test" });
+    });
+
+    it(":x 파라미터를 받아서 객체로 반환하는지 테스트", async () => {
+        const res = await axios.get("http://localhost:3002/point/50");
+
+        expect(res.data).toEqual({ x: 50 });
     });
 });

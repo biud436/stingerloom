@@ -14,6 +14,16 @@ export const Param = (name: string) =>
             if (type === Number) {
                 return Number(result);
             }
+
+            if (type === String) {
+                return String(result);
+            }
+
+            if (type === Boolean) {
+                return Boolean(result);
+            }
+
+            return new type(result);
         }
 
         return result;
