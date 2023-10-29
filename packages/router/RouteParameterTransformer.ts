@@ -43,7 +43,7 @@ export class RouteParameterTransformer {
                     routerName,
                 ) as CustomParamDecoratorMetadata;
 
-                const context = new ServerContext(req);
+                const context = new ServerContext(req, param.type!);
                 return callback[
                     getParamDecoratorUniqueKey(
                         targetController,

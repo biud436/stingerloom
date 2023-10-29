@@ -3,9 +3,13 @@ import { FastifyRequest } from "fastify/types/request";
 import { ClazzType } from "../RouterMapper";
 export class ServerContext {
     req!: FastifyRequest;
+    type?: () => ClazzType<any>;
 
-    constructor(req: FastifyRequest) {
+    constructor(req: FastifyRequest, type?: () => ClazzType<any>) {
         this.req = req;
+        if (type) {
+            this.type = type;
+        }
     }
 }
 

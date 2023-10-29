@@ -30,4 +30,6 @@ export type HttpRouterParameter = {
      * 바디 파라미터인지 여부
      */
     body?: HttpBodyParameter;
+
+    type?: () => ClazzType<any>;
 };

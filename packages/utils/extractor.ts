@@ -44,6 +44,14 @@ export function getMethodParameters(target: any, propertyKey: string) {
             propertyKey,
         ) as CustomParamDecoratorMetadata | undefined;
 
+        const types = Reflect.getMetadata(
+            "design:paramtypes",
+            target,
+            propertyKey,
+        );
+
+        const type = types[index];
+
         parameters.push({
             index,
             value: param,
@@ -54,6 +62,7 @@ export function getMethodParameters(target: any, propertyKey: string) {
                     getParamDecoratorUniqueKey(target, propertyKey, index)
                 ],
             body: bodyParam,
+            type: () => type,
         });
     });
     return parameters;

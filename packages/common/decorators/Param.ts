@@ -6,5 +6,15 @@ export const Param = (name: string) =>
         const request = context.req as FastifyRequest;
         const params = request?.params as Record<string, unknown>;
 
-        return params[name];
+        const result = params[name];
+
+        if (context.type) {
+            const type = context.type();
+
+            if (type === Number) {
+                return Number(result);
+            }
+        }
+
+        return result;
     })();
