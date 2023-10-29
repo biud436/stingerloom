@@ -182,6 +182,7 @@ class AppController {
     ) {
         return id;
     }
+
     @Get("/admin/:id")
     async resolveAdmin(@Param("id") id: string) {
         return id;
@@ -213,6 +214,26 @@ class Point {
 
     getY() {
         return this.y;
+    }
+}
+```
+
+`@Query`에 대한 처리도 이와 마찬가지로 `number` 타입이 지정되어있을 경우, 내부적으로 문자열을 숫자로 변환하여 할당합니다.
+
+```ts
+@Controller("/")
+class AppController {
+    @Get("/blog")
+    async resolveIdAndTitle(
+        @Query("id") id: number,
+        @Query("title") title: string,
+    ) {
+        return { id, title };
+    }
+
+    @Get("/point")
+    async resolveNameAndTitle(@Query("point") point: Point) {
+        return { x: point.getX(), y: point.getY() };
     }
 }
 ```
