@@ -1,10 +1,12 @@
 import { FastifyRequest } from "fastify";
 import { createCustomParamDecorator } from "./decoratorFactory";
 
-export const Param = (name: string) =>
+export const Param = (rawName: string) =>
     createCustomParamDecorator((data, context) => {
         const request = context.req as FastifyRequest;
         const params = request?.params as Record<string, unknown>;
+
+        const [name, defaultValue] = rawName.split("|").map((x) => x.trim());
 
         const result = params[name];
 
@@ -12,18 +14,18 @@ export const Param = (name: string) =>
             const type = context.type();
 
             if (type === Number) {
-                return Number(result);
+                return Number(result) ?? Number(defaultValue);
             }
 
             if (type === String) {
-                return result;
+                return result ?? defaultValue;
             }
 
             if (type === Boolean) {
-                return Boolean(result);
+                return Boolean(result) ?? Boolean(defaultValue);
             }
 
-            return new type(result);
+            return new type(result) ?? new type(defaultValue);
         }
 
         return result;

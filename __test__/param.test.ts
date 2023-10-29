@@ -50,7 +50,7 @@ describe("파라미터 테스트", () => {
     class AppController {
         @Get("/blog/:id/:title")
         async resolveIdAndTitle(
-            @Param("id") id: number,
+            @Param("id|0") id: number,
             @Param("title") title: string,
         ) {
             return { id, title };
@@ -117,5 +117,10 @@ describe("파라미터 테스트", () => {
         const res = await axios.get("http://localhost:3002/point/50,25");
 
         expect(res.data).toEqual({ x: 50, y: 25 });
+    });
+    it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트", async () => {
+        const res = await axios.get("http://localhost:3002/blog//test");
+
+        expect(res.data).toEqual({ id: 0, title: "test" });
     });
 });
