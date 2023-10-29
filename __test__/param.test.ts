@@ -28,13 +28,21 @@ describe("파라미터 테스트", () => {
 
     class Point {
         private x: number;
+        private y: number;
 
-        constructor(x: string) {
-            this.x = Number(x);
+        constructor(args: string) {
+            const [x, y] = args.split(",");
+
+            this.x = parseInt(x, 10);
+            this.y = parseInt(y, 10);
         }
 
         getX() {
             return this.x;
+        }
+
+        getY() {
+            return this.y;
         }
     }
 
@@ -106,8 +114,8 @@ describe("파라미터 테스트", () => {
     });
 
     it(":x 파라미터를 받아서 객체로 반환하는지 테스트", async () => {
-        const res = await axios.get("http://localhost:3002/point/50");
+        const res = await axios.get("http://localhost:3002/point/50,25");
 
-        expect(res.data).toEqual({ x: 50 });
+        expect(res.data).toEqual({ x: 50, y: 25 });
     });
 });
