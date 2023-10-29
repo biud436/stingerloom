@@ -160,7 +160,64 @@ export class UserController {
 
 또한 `@Header()` 데코레이터는 응답 헤더를 설정합니다. 이 데코레이터는 메소드에만 붙일 수 있고 생략할 경우 기본적으로 `Content-Type: application/json` 헤더가 설정됩니다.
 
-주의해야 할 점은 생성자 부분인데요.
+```ts
+@Controller("/")
+class AppController {
+    @Get("/blog/:id/:title")
+    async resolveIdAndTitle(
+        @Param("id|0") id: number,
+        @Param("title") title: string,
+    ) {
+        return { id, title };
+    }
+
+    @Get("/point/:x")
+    async resolveNameAndTitle(@Param("x") point: Point) {
+        return point;
+    }
+
+    @Get("/user/:id")
+    async resolveUser(
+        @Param("id|8E1527BA-2C2A-4A6F-9C32-9567A867050A") id: string,
+    ) {
+        return id;
+    }
+    @Get("/admin/:id")
+    async resolveAdmin(@Param("id") id: string) {
+        return id;
+    }
+}
+```
+
+StingerLoom에서는 `@Param()` 데코레이터를 사용하여 경로 매개변수를 쉽게 취득할 수 있고 타입에 따라 자동으로 캐스팅을 수행합니다.
+
+기본값을 주입하고 싶다면 `@Param()` 데코레이터의 인자로 `타입|기본값` 형식으로 입력하면 됩니다.
+
+커스텀 타입을 만들고 싶다면 아래와 같이 문자열을 처리하여 타입으로 반환하는 변환 객체를 정의해야 합니다.
+
+```ts
+class Point {
+    private x: number;
+    private y: number;
+
+    constructor(args: string) {
+        const [x, y] = args.split(",");
+
+        this.x = parseInt(x, 10);
+        this.y = parseInt(y, 10);
+    }
+
+    getX() {
+        return this.x;
+    }
+
+    getY() {
+        return this.y;
+    }
+}
+```
+
+StingerLoom 서버 프레임워크에서 주의해야 할 점은 생성자 부분입니다.
 
 ```ts
 @Controller("/user")
