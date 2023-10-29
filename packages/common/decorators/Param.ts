@@ -16,7 +16,7 @@ export const Param = (name: string) =>
             }
 
             if (type === String) {
-                return String(result);
+                return result;
             }
 
             if (type === Boolean) {
