@@ -69,4 +69,22 @@ describe("파라미터 테스트", () => {
 
         expect(res.data).toEqual({ id: 1, title: "test" });
     });
+
+    it(":id가 숫자가 아닌 경우, null을 반환하는지 테스트", async () => {
+        const res = await axios.get("http://localhost:3002/blog/test/test");
+
+        expect(res.data).toEqual({ id: null, title: "test" });
+    });
+
+    it(":id가 실수인 경우, 실수로 변환하는지 테스트", async () => {
+        const res = await axios.get("http://localhost:3002/blog/1.5/test");
+
+        expect(res.data).toEqual({ id: 1.5, title: "test" });
+    });
+
+    it(":id가 음수 값인 경우, 음수로 변환하는지 테스트", async () => {
+        const res = await axios.get("http://localhost:3002/blog/-1/test");
+
+        expect(res.data).toEqual({ id: -1, title: "test" });
+    });
 });
