@@ -10,6 +10,8 @@ import { DataSourceOptions } from "typeorm";
 import configService from "@stingerloom/common/ConfigService";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import axios from "axios";
+import { IsNumber, IsString } from "class-validator";
+import { Transform } from "class-transformer";
 
 describe("Query 테스트", () => {
     let application: TestServerApplication;
@@ -46,6 +48,18 @@ describe("Query 테스트", () => {
         }
     }
 
+    class Person {
+        @IsString()
+        id!: string;
+
+        @IsString()
+        name!: string;
+
+        @IsNumber()
+        @Transform(({ value }) => parseInt(value, 10))
+        age!: number;
+    }
+
     @Controller("/")
     class AppController {
         @Get("/blog")
@@ -59,6 +73,11 @@ describe("Query 테스트", () => {
         @Get("/point")
         async resolveNameAndTitle(@Query("point") point: Point) {
             return { x: point.getX(), y: point.getY() };
+        }
+
+        @Get("/person")
+        async resolvePerson(@Query() person: Person) {
+            return person;
         }
     }
 
@@ -89,17 +108,30 @@ describe("Query 테스트", () => {
         await application.stop();
     });
 
-    it("쿼리 매개변수를 정수형으로 변환하는가?", async () => {
+    it("쿼리 매개변수를 정수형으로 변환하는가? -- 1", async () => {
         const { data } = await axios.get(
             "http://localhost:3002/blog?id=1&title=2",
         );
         expect(data).toEqual({ id: 1, title: "2" });
     });
 
-    it("쿼리 매개변수를 객체형으로 변환하는가?", async () => {
+    it("쿼리 매개변수를 객체형으로 변환하는가? -- 2", async () => {
         const { data } = await axios.get(
             "http://localhost:3002/point?point=1,2",
         );
+
+        console.log(data);
+
         expect(data).toEqual({ x: 1, y: 2 });
+    });
+
+    it("쿼리 매개변수 생략 시, DTO 객체로 변환되는가?", async () => {
+        const { data } = await axios.get(
+            "http://localhost:3002/person?id=1&name=아저씨&age=10",
+        );
+
+        console.log(data);
+
+        expect(data).toEqual({ id: "1", name: "아저씨", age: 10 });
     });
 });
