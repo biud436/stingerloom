@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const transformer = (context: ts.TransformationContext) => {
-    return (sourceFile) => {
+    return (sourceFile: ts.SourceFile) => {
         const visitor: ts.Visitor = (rootNode: ts.Node) => {
             if (ts.isExpressionStatement(rootNode)) {
                 const expression = rootNode.expression;
@@ -64,7 +64,8 @@ export function updateModuleOptions() {
 
     const transformationResult = ts.transform(
         sourceFile,
-        [transformer],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [transformer as any],
         program.getCompilerOptions(),
     );
 
