@@ -64,9 +64,10 @@ export class RouterExecutionContext {
                     );
 
                     // Parameters Consumer
-                    const args = routeParameterTransformer.transform(
+                    const args = await routeParameterTransformer.transform(
                         routerName,
                         req,
+                        res,
                         parameters,
                         bodyValidationActions,
                     );

@@ -1,12 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { FastifyRequest } from "fastify/types/request";
 import { ClazzType } from "../RouterMapper";
+import { FastifyReply } from "fastify";
 export class ServerContext {
     req!: FastifyRequest;
+    res!: FastifyReply;
     type?: () => ClazzType<any>;
 
-    constructor(req: FastifyRequest, type?: () => ClazzType<any>) {
+    constructor(
+        req: FastifyRequest,
+        res?: FastifyReply,
+        type?: () => ClazzType<any>,
+    ) {
         this.req = req;
+
+        if (res) {
+            this.res = res;
+        }
+
         if (type) {
             this.type = type;
         }
