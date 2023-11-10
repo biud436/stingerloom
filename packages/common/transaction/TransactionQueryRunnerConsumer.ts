@@ -214,6 +214,7 @@ export class TransactionQueryRunnerConsumer {
                 this.transactionScanner.checkRollbackException(
                     targetInjectable,
                     method,
+                    e,
                 );
 
                 this.LOGGER.error(

@@ -37,7 +37,7 @@ export enum TransactionPropagation {
     NESTED = "NESTED",
 }
 
-export type TransactionalRollbackException = () => Exception;
+export type TransactionalRollbackException = (e?: any) => Exception;
 
 export interface TransactionalOptions {
     isolationLevel?: TransactionIsolationLevel;

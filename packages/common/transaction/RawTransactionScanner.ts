@@ -219,14 +219,14 @@ export class RawTransactionScanner extends MetadataScanner {
         ) as TransactionalRollbackException | null;
     }
 
-    checkRollbackException(targetInjectable: any, method: string) {
+    checkRollbackException(targetInjectable: any, method: string, error?: any) {
         const exceptionCallback = this.getTransactionRollbackException(
             targetInjectable,
             method,
         );
 
         if (exceptionCallback) {
-            const exception = exceptionCallback();
+            const exception = exceptionCallback(error);
 
             if (exception instanceof Exception) {
                 throw exception;
