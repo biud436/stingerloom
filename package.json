@@ -6,10 +6,10 @@
     "private": true,
     "dependencies": {
         "@esm2cjs/execa": "^6.1.1-cjs.1",
-        "@fastify/cookie": "^9.1.0",
+        "@fastify/cookie": "^9.2.0",
         "@fastify/formbody": "^7.4.0",
         "@fastify/passport": "^2.4.0",
-        "@fastify/session": "^10.5.0",
+        "@fastify/session": "^10.6.1",
         "@fastify/view": "^8.2.0",
         "bcrypt": "^5.1.1",
         "chalk": "^4",
@@ -51,12 +51,12 @@
         "@types/uuid": "^9.0.4",
         "@typescript-eslint/eslint-plugin": "^6.3.0",
         "@typescript-eslint/parser": "^6.3.0",
-        "axios": "^1.6.0",
+        "axios": "^1.6.2",
         "babel-jest": "^29.6.4",
         "eslint": "^8.46.0",
         "lerna": "^7.1.5",
         "nodemon": "^3.0.1",
-        "webpack": "^5.88.2"
+        "webpack": "^5.89.0"
     },
     "scripts": {
         "start": "nodemon --exec ts-node -r tsconfig-paths/register packages/example -q",
