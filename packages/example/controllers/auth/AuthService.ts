@@ -110,10 +110,23 @@ export class AuthService {
 
     @Transactional()
     async checkTransaction2() {
-        const users = await this.userService.findAll();
-        return ResultUtils.success("트랜잭션을 확인하였습니다1", {
-            users: plainToClass(User, users),
-            other: await this.checkTransaction3(),
+        const user1 = await this.userService.create({
+            username: "test1",
+            password: "testtest1aA!!",
+        });
+        const user2 = await this.userService.create({
+            username: "test2",
+            password: "testtest1aA!!",
+        });
+        const user3 = await this.userService.create({
+            username: "test3",
+            password: "testtest1aA!!",
+        });
+
+        return ResultUtils.success("트랜잭션을 확인하였습니다.", {
+            user1,
+            user2,
+            user3,
         });
     }
 

@@ -105,6 +105,8 @@ export class DataSourceProxy {
                 if (prop === "manager") {
                     const manager = Reflect.get(target, "manager", receiver);
 
+                    this.logger.info("manager가 호출되었습니다");
+
                     if (this.transactionScanner.isGlobalLock()) {
                         const txEntityManager =
                             this.transactionScanner.getTxEntityManager();

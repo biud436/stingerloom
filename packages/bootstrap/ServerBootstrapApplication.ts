@@ -32,17 +32,7 @@ export class ServerBootstrapApplication extends EventEmitter {
     constructor() {
         super();
 
-        this.app = fastify({
-            // logger: {
-            //     transport: {
-            //         target: "pino-pretty",
-            //         options: {
-            //             translateTime: "HH:MM:ss Z",
-            //             ignore: "pid,hostname",
-            //         },
-            //     },
-            // },
-        });
+        this.app = fastify();
     }
 
     /**

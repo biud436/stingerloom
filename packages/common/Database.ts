@@ -5,7 +5,6 @@ import { databaseFactory } from "@stingerloom/factory/database/DatabaseFactory";
 import { ModuleOptions } from "./ModuleOptions";
 import { OnApplicationShutdown } from "./OnApplicationShutdown";
 import { Logger } from "./Logger";
-
 /**
  * @class Database
  * @description
