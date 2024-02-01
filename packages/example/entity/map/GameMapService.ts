@@ -6,8 +6,8 @@ import {
     TransactionalZone,
 } from "@stingerloom/common";
 import { Repository } from "typeorm/repository/Repository";
-import { GameMap } from "./GameMap";
-import { User } from "../User";
+import { GameMap } from "./GameMap.entity";
+import { User } from "../User.entity";
 
 @Injectable()
 @TransactionalZone()

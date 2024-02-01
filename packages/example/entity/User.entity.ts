@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 import bcrypt from "bcrypt";
 import { Exclude } from "class-transformer";
-import { GameMap } from "./map/GameMap";
+import { GameMap } from "./map/GameMap.entity";
 
 @Entity()
 export class User {

@@ -1,7 +1,7 @@
 import { Controller, UseGuard, View } from "@stingerloom/common";
 import { SessionGuard } from "../auth/guards/SessionGuard";
 import { User } from "@stingerloom/example/common/decorators/User";
-import { User as UserEntity } from "@stingerloom/example/entity/User";
+import { User as UserEntity } from "@stingerloom/example/entity/User.entity";
 
 @Controller("/")
 export class AppController {

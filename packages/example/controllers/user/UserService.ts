@@ -6,7 +6,7 @@ import {
     Transactional,
     TransactionalZone,
 } from "@stingerloom/common";
-import { User } from "@stingerloom/example/entity/User";
+import { User } from "@stingerloom/example/entity/User.entity";
 import { Repository } from "typeorm/repository/Repository";
 import { CreateUserDto } from "./dto/CreateUserDto";
 import { DiscoveryService } from "@stingerloom/services";

@@ -13,7 +13,7 @@ import { ResultUtils } from "@stingerloom/example/common/ResultUtils";
 import { LoginUserDto } from "./dto/LoginUserDto";
 import { UserService } from "../user/UserService";
 import { DataSource, EntityManager } from "typeorm";
-import { User } from "@stingerloom/example/entity/User";
+import { User } from "@stingerloom/example/entity/User.entity";
 import { plainToClass } from "class-transformer";
 import { Exception, InternalServerException } from "@stingerloom/error";
 import { FastifyRequest } from "fastify";

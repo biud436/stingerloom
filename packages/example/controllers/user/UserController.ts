@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryRunner, Repository } from "typeorm";
-import { User } from "../../entity/User";
+import { User } from "../../entity/User.entity";
 import { Controller } from "@stingerloom/common/decorators/Controller";
 import { Get } from "@stingerloom/common/decorators/Get";
 import { Header } from "@stingerloom/common/decorators/Header";

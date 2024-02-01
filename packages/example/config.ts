@@ -2,6 +2,8 @@ import "reflect-metadata";
 import { DataSourceOptions } from "typeorm";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import configService from "@stingerloom/common/ConfigService";
+import { User } from "./entity/User.entity";
+import { GameMap } from "./entity/map/GameMap.entity";
 
 export const option = <DataSourceOptions>{
     type: "mariadb",
@@ -10,7 +12,7 @@ export const option = <DataSourceOptions>{
     database: configService.get<string>("DB_NAME"),
     password: configService.get<string>("DB_PASSWORD"),
     username: configService.get<string>("DB_USER"),
-    entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
+    entities: [User, GameMap],
     namingStrategy: new SnakeNamingStrategy(),
     synchronize: true,
     logging: true,

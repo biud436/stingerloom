@@ -99,6 +99,20 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 -   [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
 -   [템플릿 엔진](https://github.com/biud436/stingerloom#template-engine)
 
+## 빌드 및 실행
+
+본 프로젝트는 TypeScript로 작성되었으므로 빌드를 위해서는 터미널에 아래와 같이 입력해야 합니다.
+
+```bash
+yarn build
+```
+
+빌드가 완료되면 `dist` 폴더에 빌드된 파일이 생성되며 다음과 같은 명령어로 서버를 실행할 수 있습니다.
+
+```bash
+yarn start:dev
+```
+
 ## Controller
 
 컨트롤러는 클라이언트가 보내는 요청을 처리하고 응답하는 클래스입니다.
