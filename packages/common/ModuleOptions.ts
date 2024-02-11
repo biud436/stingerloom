@@ -18,7 +18,6 @@ export class ModuleOptions<T = any> {
         ...others: Omit<ModuleOptions, "configuration">[]
     ): ModuleOptions<T> {
         return {
-            // imports: [...options.imports, ...others.flatMap((o) => o.imports)],
             controllers: [
                 ...options.controllers,
                 ...others.flatMap((o) => o.controllers),

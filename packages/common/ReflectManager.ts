@@ -296,8 +296,6 @@ export class ReflectManager {
         });
         const repository = targets[0] as any;
 
-        console.log("repository:", repository);
-
         if (!repository) {
             return undefined;
         }

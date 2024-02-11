@@ -29,8 +29,6 @@ export class GameMapService {
             .leftJoinAndSelect("gameMap.users", "user")
             .getMany();
 
-        console.log(maps);
-
         return maps;
     }
 

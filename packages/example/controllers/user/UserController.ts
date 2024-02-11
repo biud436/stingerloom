@@ -20,19 +20,9 @@ import { GameMapService } from "@stingerloom/example/entity/map/GameMapService";
 @Controller("/user")
 export class UserController {
     constructor(
-        private readonly point: Point,
         private readonly userService: UserService,
         private readonly gameMapService: GameMapService,
     ) {}
-
-    @Get("/point")
-    async getPoint() {
-        this.point.move(5, 5);
-        return {
-            x: this.point.x,
-            y: this.point.y,
-        };
-    }
 
     @Post()
     public async create(@Body() createUserDto: CreateUserDto) {

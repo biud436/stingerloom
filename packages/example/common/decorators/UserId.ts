@@ -1,7 +1,7 @@
 import { SessionObject } from "@stingerloom/common";
 import { createCustomParamDecorator } from "@stingerloom/common/decorators/decoratorFactory";
 
-export const UserId = createCustomParamDecorator((data, context) => {
+export const UserId = createCustomParamDecorator((_data, context) => {
     const req = context.req;
     const session = req.session as SessionObject;
 
