@@ -6,6 +6,7 @@ import { ReflectManager } from "../ReflectManager";
 import { InstanceScanner } from "@stingerloom/IoC";
 import Database from "../Database";
 import { DataSource } from "typeorm";
+import { BadRequestException } from "@stingerloom/error";
 
 /**
  * 기본 파라미터를 특정 타입으로 변환하는 기능을 가지는 함수입니다.
@@ -38,6 +39,13 @@ export const transformBasicParameter = (
         return database.getDataSource();
     } else if (ReflectManager.isInjectable(target)) {
         const injectable = instanceScanner.get(target);
+
+        // 순황 의존성 참조가 발생하는 경우 에러를 발생시킵니다.
+        if (!injectable) {
+            throw new BadRequestException(
+                `Cannot create an instance of ${target.name}. Please check for circular dependencies or double-check the module loading order.`,
+            );
+        }
 
         return injectable;
     }
