@@ -37,11 +37,11 @@ describe("CircularDependency 테스트", () => {
 
     @Injectable()
     class CircularService {
-        constructor(private readonly appService: AppService) /**
-         * 활성화하면 테스트가 실패합니다.
-         */
-        // private readonly circularService: CircularService,
-        {}
+        constructor(
+            private readonly appService: AppService /**
+             * 활성화하면 테스트가 실패합니다.
+             */, // private readonly circularService: CircularService,
+        ) {}
 
         getHello() {
             return this.appService.getHello();
@@ -100,5 +100,15 @@ describe("CircularDependency 테스트", () => {
     it("AppService.getCircular() 호출 시 'hello'를 반환한다.", async () => {
         const { data } = await axios.get("http://localhost:3002/circular");
         expect(data).toBe("hello");
+    });
+
+    it("AppService.getHello() 호출 시 'hello'를 반환한다2", async () => {
+        const appService = await application.get<AppService>(AppService);
+        expect(appService.getHello()).toBe("hello");
+    });
+    it("AppService.getCircular() 호출 시 'hello'를 반환한다2", async () => {
+        const circularService =
+            await application.get<CircularService>(CircularService);
+        expect(circularService.getHello()).toBe("hello");
     });
 });

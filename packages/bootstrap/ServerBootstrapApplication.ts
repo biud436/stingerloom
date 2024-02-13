@@ -123,6 +123,18 @@ export class ServerBootstrapApplication extends EventEmitter {
     }
 
     /**
+     * 테스트를 위해 컨테이너에 등록된 인스턴스를 가져옵니다.
+     *
+     * @param type 가져올 인스턴스의 타입
+     * @returns
+     */
+    public get<T>(type: new (...args: any[]) => T): T {
+        const instanceScanner = Container.get(InstanceScanner);
+
+        return instanceScanner.get(type);
+    }
+
+    /**
      * 서버를 종료합니다.
      */
     public async stop(): Promise<void> {
@@ -143,7 +155,6 @@ export class ServerBootstrapApplication extends EventEmitter {
         }
 
         const database = new Database(this.moduleOptions.configuration);
-
         const instanceScanner = Container.get(InstanceScanner);
         instanceScanner.set(Database, database);
 
