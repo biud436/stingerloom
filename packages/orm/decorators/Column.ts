@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReflectManager } from "@stingerloom/common";
 import { ColumnMetadata } from "../scanner/ColumnScanner";
-import { CustomColumn } from "./CustomColumn";
 
 export type ColumnType =
     /** Number */
@@ -35,7 +34,7 @@ export interface ColumnOption {
     /**
      * 데이터베이스에서 컬럼의 값을 가져올 때, 오브젝트에 매핑되는 컬럼의 타입을 변환할 수 있는 함수입니다.
      */
-    transform?: <T = any>(raw: unknown) => CustomColumn<T>;
+    transform?: <T = any>(raw: unknown) => T;
 }
 
 export const COLUMN_TOKEN = "COLUMN";
