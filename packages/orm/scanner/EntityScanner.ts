@@ -8,6 +8,7 @@ export type EntityMetadata = {
     target: ClazzType<any>;
     name?: string;
     columns: any[];
+    indexes?: any[];
 };
 
 @Service()

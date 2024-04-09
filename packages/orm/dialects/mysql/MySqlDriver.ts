@@ -71,15 +71,15 @@ export class MySqlDriver implements ISqlDriver {
         );
     }
 
-    addIndex(tableName: string, columnName: string) {
+    addIndex(tableName: string, columnName: string, indexName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} ADD INDEX (${columnName})`,
+            `ALTER TABLE ${tableName} ADD INDEX ${indexName} (${columnName})`,
         );
     }
 
-    dropIndex(tableName: string, columnName: string) {
+    dropIndex(tableName: string, indexName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} DROP INDEX ${columnName}`,
+            `ALTER TABLE ${tableName} DROP INDEX ${indexName}`,
         );
     }
 
@@ -110,11 +110,11 @@ export class MySqlDriver implements ISqlDriver {
         const columnsMap = columns.map((column) => {
             const option = column.options as ColumnOption;
             return raw(
-                `\`${column.name}\` ${option.type}(${option.length}) ${option.nullable ? "NULL" : "NOT NULL"}`,
+                `\`${column.name}\` ${option.type}(${option.length}) ${option.nullable ? "NULL" : "NOT NULL"} ${option.primary ? "PRIMARY KEY" : ""} ${option.autoIncrement ? "AUTO_INCREMENT" : ""}`,
             );
         });
 
-        const result = sql`CREATE TABLE ${raw(tableName)} (${join(
+        const result = sql`CREATE TABLE IF NOT EXISTS ${raw(tableName)} (${join(
             columnsMap,
             ",",
         )})`;

@@ -4,7 +4,7 @@ import { ColumnMetadata, ColumnScanner } from "../scanner/ColumnScanner";
 import Container from "typedi";
 
 export type ColumnType =
-    /** Number */
+    | "int"
     | "number"
     | "float"
     | "double"
@@ -30,6 +30,10 @@ export interface ColumnOption {
     name?: string;
     length: number;
     nullable: boolean;
+
+    /**
+     * ColumnType에 속하면 ColumnType을 사용하고, 아니면 string을 사용합니다.
+     */
     type: ColumnType;
     primary?: boolean;
     autoIncrement?: boolean;

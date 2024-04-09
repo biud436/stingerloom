@@ -17,6 +17,7 @@ import { DatabaseClient } from "@stingerloom/orm";
 import { MySqlDriver } from "@stingerloom/orm/dialects";
 import { Entity } from "@stingerloom/orm/decorators/Entity";
 import { Column } from "@stingerloom/orm/decorators";
+import { Index } from "@stingerloom/orm/decorators/Indexer";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;
@@ -38,6 +39,16 @@ describe("커스텀 ORM 테스트", () => {
     })
     class Node {
         @Column({
+            length: 11,
+            name: "id",
+            nullable: false,
+            primary: true,
+            autoIncrement: true,
+            type: "int",
+        })
+        id!: number;
+
+        @Column({
             length: 255,
             nullable: false,
             type: "varchar",
@@ -56,6 +67,7 @@ describe("커스텀 ORM 테스트", () => {
             nullable: false,
             type: "varchar",
         })
+        @Index()
         description!: string;
     }
 

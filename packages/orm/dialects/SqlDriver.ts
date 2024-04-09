@@ -22,8 +22,12 @@ export interface ISqlDriver<T = any> {
         foreignColumnName: string,
     ): Promise<T>;
     dropForeignKey(tableName: string, columnName: string): Promise<T>;
-    addIndex(tableName: string, columnName: string): Promise<T>;
-    dropIndex(tableName: string, columnName: string): Promise<T>;
+    addIndex(
+        tableName: string,
+        columnName: string,
+        indexName: string,
+    ): Promise<T>;
+    dropIndex(tableName: string, indexName: string): Promise<T>;
     getSchemas(tableName: string): Promise<MysqlSchemaInterface[]>;
     getIndexes(tableName: string): Promise<MysqlSchemaInterface[]>;
     getForeignKeys(tableName: string): Promise<MysqlSchemaInterface[]>;

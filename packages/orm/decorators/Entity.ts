@@ -22,6 +22,7 @@ export function Entity(options?: EntityOption): ClassDecorator {
             target,
             columns: columnScanner.allMetadata(),
             options,
+            name,
         });
 
         columnScanner.clear();

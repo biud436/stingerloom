@@ -6,6 +6,7 @@ import { DatabaseClient } from "../DatabaseClient";
 import configService from "@stingerloom/common/ConfigService";
 import { MySqlDriver } from "../dialects/mysql/MySqlDriver";
 import { ISqlDriver } from "../dialects/SqlDriver";
+import { INDEX_TOKEN, IndexMetadata } from "../decorators/Indexer";
 
 export class EntityManager {
     private _entities: ClazzType<any>[] = [];
@@ -71,6 +72,22 @@ export class EntityManager {
                     TargetEntity.name,
                     metadata.columns,
                 );
+            }
+
+            const indexer = Reflect.getMetadata(
+                INDEX_TOKEN,
+                TargetEntity.prototype,
+            ) as IndexMetadata[];
+
+            if (indexer) {
+                for (const index of indexer) {
+                    const indexName = `INDEX_${entityScanner.createUniqueKey()}`;
+                    await this.driver?.addIndex(
+                        TargetEntity.name,
+                        index.name,
+                        indexName,
+                    );
+                }
             }
         }
     }
