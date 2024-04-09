@@ -61,6 +61,18 @@ export class MySqlDriver {
         );
     }
 
+    addIndex(tableName: string, columnName: string) {
+        return this.connector.query(
+            `ALTER TABLE ${tableName} ADD INDEX (${columnName})`,
+        );
+    }
+
+    dropIndex(tableName: string, columnName: string) {
+        return this.connector.query(
+            `ALTER TABLE ${tableName} DROP INDEX ${columnName}`,
+        );
+    }
+
     getSchemas(tableName: string): Promise<MysqlSchemaInterface[]> {
         return this.connector.query(`SHOW COLUMNS FROM ${tableName}`);
     }

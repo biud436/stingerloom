@@ -46,6 +46,8 @@
             "@stingerloom/factory/*": ["packages/factory/*"],
             "@stingerloom/services": ["packages/services"],
             "@stingerloom/services/*": ["packages/services/*"],
+            "@stingerloom/orm": ["packages/orm"],
+            "@stingerloom/orm/*": ["packages/orm/*"],
             "@stingerloom/router": ["packages/router"],
             "@stingerloom/router/*": ["packages/router/*"],
             "@stingerloom/compiler": ["packages/compiler"],

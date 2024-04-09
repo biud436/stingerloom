@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MySqlConnector } from "@stingerloom/common/orm/dialects/mysql/MySqlConnector";
+
+import { MySqlConnector } from "./dialects";
 import { DatabaseClientOptions } from "./types/DatabaseClientOptions";
 import { IConnector } from "./types/IConnector";
 

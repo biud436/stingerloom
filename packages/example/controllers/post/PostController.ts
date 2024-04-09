@@ -4,9 +4,10 @@ import { Header } from "@stingerloom/common/decorators/Header";
 import { InternalServerException } from "@stingerloom/error/InternalServerException";
 import { Point } from "../../entity/Point";
 import { OnModuleInit } from "@stingerloom/common";
-import { DatabaseClient } from "@stingerloom/common/orm/DatabaseClient";
+
 import configService from "@stingerloom/common/ConfigService";
-import { MySqlDriver } from "@stingerloom/common/orm/dialects/mysql/MySqlDriver";
+import { DatabaseClient } from "@stingerloom/orm";
+import { MySqlDriver } from "@stingerloom/orm/dialects";
 
 /**
  * @class PostController

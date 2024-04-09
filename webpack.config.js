@@ -32,6 +32,7 @@ module.exports = {
                 "packages/services",
             ),
             "@stingerloom/router": path.resolve(__dirname, "packages/router"),
+            "@stingerloom/orm": path.resolve(__dirname, "packages/orm"),
             "@stingerloom/compiler": path.resolve(
                 __dirname,
                 "packages/compiler",
