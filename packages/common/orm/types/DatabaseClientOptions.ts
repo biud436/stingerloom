@@ -1,4 +1,4 @@
-import { IDatabaseType, Entity } from "../mysql/Connector";
+import { IDatabaseType, Entity } from "../dialects/mysql/MySqlConnector";
 
 export interface DatabaseClientOptions {
     type: IDatabaseType;
@@ -7,15 +7,10 @@ export interface DatabaseClientOptions {
     username: string;
     password: string;
     database: string;
-    synchronize: boolean;
-    logging: boolean;
+    synchronize?: boolean;
+    logging?: boolean;
     entities: Entity[];
-    datesStrings: boolean /** MySQL Only */;
-    connectionLimit: number /** MySQL Only */;
-    charset: string /** MySQL Only */;
-
-    /**
-     * SQL을 출력할지 여부
-     */
-    printSql: boolean;
+    datesStrings?: boolean /** MySQL Only */;
+    connectionLimit?: number /** MySQL Only */;
+    charset?: string /** MySQL Only */;
 }

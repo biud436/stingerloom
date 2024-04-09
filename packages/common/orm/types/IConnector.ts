@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Sql } from "sql-template-tag";
 import { DatabaseClientOptions } from "./DatabaseClientOptions";
 
@@ -10,5 +11,6 @@ export abstract class IConnector {
      */
     abstract runTestSql(): void;
 
-    abstract query(sql: Sql): void;
+    abstract query(sql: string): Promise<any>;
+    abstract query<T = any>(sql: Sql): Promise<T>;
 }

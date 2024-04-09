@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MySqlConnector } from "./mysql";
+import { MySqlConnector } from "@stingerloom/common/orm/dialects/mysql/MySqlConnector";
 import { DatabaseClientOptions } from "./types/DatabaseClientOptions";
 import { IConnector } from "./types/IConnector";
 
@@ -17,7 +17,7 @@ export class DatabaseClient {
         return DatabaseClient.instance;
     }
 
-    public async connect(options: DatabaseClientOptions): Promise<void> {
+    public async connect(options: DatabaseClientOptions): Promise<IConnector> {
         const { type } = options;
 
         switch (type) {
@@ -28,6 +28,8 @@ export class DatabaseClient {
             default:
                 throw new Error("지원하지 않는 데이터베이스 타입입니다.");
         }
+
+        return this.connector;
     }
 
     public async close(): Promise<void> {

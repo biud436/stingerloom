@@ -14,6 +14,6 @@ export const option = <DataSourceOptions>{
     username: configService.get<string>("DB_USER"),
     entities: [User, GameMap],
     namingStrategy: new SnakeNamingStrategy(),
-    synchronize: true,
+    synchronize: false,
     logging: true,
 };
