@@ -10,6 +10,7 @@ export type ColumnMetadata = {
     name?: string;
     options?: ColumnOption;
     type: any;
+    transform?: (raw: unknown) => any;
 };
 
 @Service()
