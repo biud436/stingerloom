@@ -3,8 +3,9 @@ import { IConnector } from "../../types/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
 import { ColumnOption } from "@stingerloom/orm/decorators";
 import { ColumnMetadata } from "@stingerloom/orm/scanner/ColumnScanner";
+import { ISqlDriver } from "../SqlDriver";
 
-export class MySqlDriver {
+export class MySqlDriver implements ISqlDriver {
     constructor(private readonly connector: IConnector) {}
 
     hasCollection(name: string) {

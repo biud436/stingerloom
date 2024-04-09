@@ -8,6 +8,7 @@ import { IConnector } from "./types/IConnector";
 export class DatabaseClient {
     private static instance: DatabaseClient;
     private connector?: IConnector;
+    public type?: string;
     private constructor() {}
 
     public static getInstance(): DatabaseClient {
@@ -20,6 +21,8 @@ export class DatabaseClient {
 
     public async connect(options: DatabaseClientOptions): Promise<IConnector> {
         const { type } = options;
+
+        this.type = type;
 
         switch (type) {
             case "mysql":

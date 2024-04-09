@@ -5,11 +5,12 @@ import Container from "typedi";
 import { DatabaseClient } from "../DatabaseClient";
 import configService from "@stingerloom/common/ConfigService";
 import { MySqlDriver } from "../dialects/mysql/MySqlDriver";
+import { ISqlDriver } from "../dialects/SqlDriver";
 
 export class EntityManager {
     private _entities: ClazzType<any>[] = [];
     private readonly logger = new Logger(EntityManager.name);
-    private driver?: MySqlDriver;
+    private driver?: ISqlDriver;
 
     public async register() {
         await this.connect();
@@ -30,7 +31,13 @@ export class EntityManager {
             logging: true,
         });
 
-        this.driver = new MySqlDriver(connector);
+        switch (client.type) {
+            case "mysql":
+                this.driver = new MySqlDriver(connector);
+                break;
+            default:
+                throw new Error("지원하지 않는 데이터베이스 타입입니다.");
+        }
     }
 
     public async propagateShutdown() {
