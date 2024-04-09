@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mysql, { Pool } from "mysql2";
+import mysql, { Pool, PoolConnection } from "mysql2";
 import sql, { Sql } from "sql-template-tag";
 import { DatabaseClientOptions } from "../../types/DatabaseClientOptions";
 import { IConnector } from "../../types/IConnector";
@@ -31,6 +31,25 @@ export class MySqlConnector implements IConnector {
         } catch (e: unknown) {
             throw new Error(`MySQL 연결에 실패했습니다. ${e}`);
         }
+    }
+
+    /**
+     * 트랜잭션 처리를 위해 커넥션 풀에서 커넥션을 하나 가져옵니다.
+     */
+    async getConnection(): Promise<PoolConnection> {
+        if (!this.pool) {
+            throw new Error("pool이 존재하지 않습니다.");
+        }
+
+        return new Promise((resolve, reject) => {
+            this.pool?.getConnection((error, connection) => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(connection);
+            });
+        });
     }
 
     async runTestSql(): Promise<void> {

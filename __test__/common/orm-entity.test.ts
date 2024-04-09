@@ -18,6 +18,7 @@ import { MySqlDriver } from "@stingerloom/orm/dialects";
 import { Entity } from "@stingerloom/orm/decorators/Entity";
 import { Column } from "@stingerloom/orm/decorators";
 import { Index } from "@stingerloom/orm/decorators/Indexer";
+import { ISelectEngine } from "@stingerloom/orm/dialects/QueryEngine";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;
