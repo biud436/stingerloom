@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReflectManager } from "@stingerloom/common";
-import { ColumnMetadata } from "../scanner/ColumnScanner";
+import { ColumnMetadata, ColumnScanner } from "../scanner/ColumnScanner";
+import Container from "typedi";
 
 export type ColumnType =
     /** Number */
@@ -62,10 +63,6 @@ export function Column(option?: ColumnOption): PropertyDecorator {
             transform: option?.transform,
         };
 
-        /**
-         * primitive type이 아닌 경우, ColumnTypeFactory를 통해 타입을 가져와야 합니다.
-         */
-
         const columns = Reflect.getMetadata(COLUMN_TOKEN, target);
 
         Reflect.defineMetadata(
@@ -73,5 +70,10 @@ export function Column(option?: ColumnOption): PropertyDecorator {
             [...(columns || []), metadata],
             target,
         );
+
+        const scanner = Container.get(ColumnScanner);
+        const uniqueKey = scanner.createUniqueKey();
+
+        scanner.set<ColumnMetadata>(uniqueKey, metadata);
     };
 }

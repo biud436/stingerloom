@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ENTITY_TOKEN } from "@stingerloom/orm/decorators/Entity";
 import { CONTROLLER_TOKEN } from "./RouterMapper";
 import {
     AFTER_TRANSACTION_TOKEN,
@@ -143,6 +144,14 @@ export class ReflectManager {
             return false;
         }
         return Reflect.getMetadata(INJECTABLE_TOKEN, target) !== undefined;
+    }
+
+    public static isEntity(target: object): boolean {
+        if (!Object.getPrototypeOf(target)) {
+            return false;
+        }
+
+        return Reflect.getMetadata(ENTITY_TOKEN, target) !== undefined;
     }
 
     public static isDataSource(target: object): boolean {

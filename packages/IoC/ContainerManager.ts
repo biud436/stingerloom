@@ -22,6 +22,7 @@ import {
 import { RouterExecutionContext } from "@stingerloom/router/RouterExecutionContext";
 import chalk from "chalk";
 import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
+import { EntityManager } from "@stingerloom/orm/manager/EntityManager";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
 /**
@@ -31,6 +32,7 @@ export class ContainerManager {
     private _controllers: ClazzType<any>[] = [];
     private _injectables: ClazzType<any>[] = [];
     private app!: FastifyInstance;
+    private entityManager!: EntityManager;
 
     private readonly logger = new Logger(ContainerManager.name);
     private readonly routerExecutionContext;
@@ -41,9 +43,11 @@ export class ContainerManager {
     constructor(app: FastifyInstance) {
         this.app = app;
         this.routerExecutionContext = new RouterExecutionContext(this.app);
+        this.entityManager = new EntityManager();
     }
 
     public async register() {
+        await this.registerEntities();
         await this.registerInjectables();
         await this.registerControllers();
         await this.registerExceptions();
@@ -58,6 +62,8 @@ export class ContainerManager {
             this._controllers,
         );
 
+        await this.entityManager.propagateShutdown();
+
         for (const consumer of consumers) {
             const handler = consumer as OnApplicationShutdown;
             if (handler.onApplicationShutdown instanceof Promise) {
@@ -66,6 +72,11 @@ export class ContainerManager {
                 handler.onApplicationShutdown?.();
             }
         }
+    }
+
+    private async registerEntities() {
+        console.log("registerEntities");
+        await this.entityManager.register();
     }
 
     /**

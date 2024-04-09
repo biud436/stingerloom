@@ -154,6 +154,10 @@ export class ServerBootstrapApplication extends EventEmitter {
             throw new Error("Database configuration is undefined.");
         }
 
+        if (!this.moduleOptions.configuration) {
+            return;
+        }
+
         const database = new Database(this.moduleOptions.configuration);
         const instanceScanner = Container.get(InstanceScanner);
         instanceScanner.set(Database, database);
