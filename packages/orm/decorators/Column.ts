@@ -31,6 +31,8 @@ export interface ColumnOption {
     length: number;
     nullable: boolean;
     type: ColumnType;
+    primary?: boolean;
+    autoIncrement?: boolean;
 
     /**
      * 데이터베이스에서 컬럼의 값을 가져올 때, 오브젝트에 매핑되는 컬럼의 타입을 변환할 수 있는 함수입니다.

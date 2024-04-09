@@ -4,11 +4,6 @@ import { Header } from "@stingerloom/common/decorators/Header";
 import { InternalServerException } from "@stingerloom/error/InternalServerException";
 import { Point } from "../../entity/Point";
 import { OnModuleInit } from "@stingerloom/common";
-
-import configService from "@stingerloom/common/ConfigService";
-import { DatabaseClient } from "@stingerloom/orm";
-import { MySqlDriver } from "@stingerloom/orm/dialects";
-
 /**
  * @class PostController
  */
@@ -17,31 +12,39 @@ export class PostController implements OnModuleInit {
     constructor(private readonly point: Point) {}
 
     async onModuleInit() {
-        const client = DatabaseClient.getInstance();
-
-        const connector = await client.connect({
-            host: configService.get<string>("DB_HOST"),
-            port: configService.get<number>("DB_PORT"),
-            database: configService.get<string>("DB_NAME"),
-            password: configService.get<string>("DB_PASSWORD"),
-            username: configService.get<string>("DB_USER"),
-            type: "mysql",
-            entities: [],
-            logging: true,
-        });
-
-        const driver = new MySqlDriver(connector);
-
-        const userInformation = await driver.getSchemas("test.user");
-
+        // const userInformation = await driver.getSchemas("test.user");
         // await driver.addColumn("test.user", "age", "int");
         // await driver.dropColumn("test.user", "age");
-
-        console.log(userInformation);
-
-        const hasCollection = await driver.hasCollection("user");
-
-        console.log(hasCollection);
+        // console.log(userInformation);
+        // const hasCollection = await driver.hasCollection("user");
+        // console.log(hasCollection);
+        // await driver.createCollection("node", [
+        //     {
+        //         name: "id",
+        //         options: {
+        //             type: "int" as ColumnType,
+        //             nullable: false,
+        //             length: 11,
+        //             primary: true,
+        //         },
+        //     },
+        //     {
+        //         name: "name",
+        //         options: {
+        //             type: "varchar" as ColumnType,
+        //             nullable: false,
+        //             length: 255,
+        //         },
+        //     },
+        //     {
+        //         name: "age",
+        //         options: {
+        //             type: "int" as ColumnType,
+        //             nullable: false,
+        //             length: 11,
+        //         },
+        //     },
+        // ]);
     }
 
     /**

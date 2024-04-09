@@ -1,6 +1,8 @@
-import sql from "sql-template-tag";
+import sql, { join, raw } from "sql-template-tag";
 import { IConnector } from "../../types/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
+import { ColumnOption } from "@stingerloom/orm/decorators";
+import { ColumnMetadata } from "@stingerloom/orm/scanner/ColumnScanner";
 
 export class MySqlDriver {
     constructor(private readonly connector: IConnector) {}
@@ -12,6 +14,12 @@ export class MySqlDriver {
     addPrimaryKey(tableName: string, columnName: string) {
         return this.connector.query(
             `ALTER TABLE ${tableName} ADD PRIMARY KEY (${columnName})`,
+        );
+    }
+
+    addAutoIncrement(tableName: string, columnName: string) {
+        return this.connector.query(
+            `ALTER TABLE ${tableName} MODIFY ${columnName} INT AUTO_INCREMENT`,
         );
     }
 
@@ -76,5 +84,40 @@ export class MySqlDriver {
 
     getSchemas(tableName: string): Promise<MysqlSchemaInterface[]> {
         return this.connector.query(`SHOW COLUMNS FROM ${tableName}`);
+    }
+
+    getIndexes(tableName: string): Promise<MysqlSchemaInterface[]> {
+        return this.connector.query(`SHOW INDEXES FROM ${tableName}`);
+    }
+
+    getForeignKeys(tableName: string): Promise<MysqlSchemaInterface[]> {
+        return this.connector.query(
+            `SELECT COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = ${tableName}`,
+        );
+    }
+
+    getPrimaryKeys(tableName: string): Promise<MysqlSchemaInterface[]> {
+        return this.connector.query(
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = ${tableName} AND CONSTRAINT_NAME = 'PRIMARY'`,
+        );
+    }
+
+    createCollection(
+        tableName: string,
+        columns: Omit<ColumnMetadata, "target" | "type">[],
+    ) {
+        const columnsMap = columns.map((column) => {
+            const option = column.options as ColumnOption;
+            return raw(
+                `\`${column.name}\` ${option.type}(${option.length}) ${option.nullable ? "NULL" : "NOT NULL"}`,
+            );
+        });
+
+        const result = sql`CREATE TABLE ${raw(tableName)} (${join(
+            columnsMap,
+            ",",
+        )})`;
+
+        return this.connector.query(result.text);
     }
 }

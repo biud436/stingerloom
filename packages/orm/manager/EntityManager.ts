@@ -2,13 +2,35 @@
 import { ClazzType, Logger, ReflectManager } from "@stingerloom/common";
 import { EntityMetadata, EntityScanner } from "../scanner";
 import Container from "typedi";
+import { DatabaseClient } from "../DatabaseClient";
+import configService from "@stingerloom/common/ConfigService";
+import { MySqlDriver } from "../dialects/mysql/MySqlDriver";
 
 export class EntityManager {
     private _entities: ClazzType<any>[] = [];
     private readonly logger = new Logger(EntityManager.name);
+    private driver?: MySqlDriver;
 
     public async register() {
+        await this.connect();
         await this.registerEntities();
+    }
+
+    public async connect() {
+        const client = DatabaseClient.getInstance();
+
+        const connector = await client.connect({
+            host: configService.get<string>("DB_HOST"),
+            port: configService.get<number>("DB_PORT"),
+            database: configService.get<string>("DB_NAME"),
+            password: configService.get<string>("DB_PASSWORD"),
+            username: configService.get<string>("DB_USER"),
+            type: "mysql",
+            entities: [],
+            logging: true,
+        });
+
+        this.driver = new MySqlDriver(connector);
     }
 
     public async propagateShutdown() {
@@ -33,11 +55,16 @@ export class EntityManager {
                 );
             }
 
-            metadata.columns.forEach((column) => {
-                this.logger.info(
-                    `Entity: ${TargetEntity.name} - Column: ${column.name} - Nullable: ${column.options?.nullable} - Length: ${column.options?.length} - Type: ${column.options?.type}`,
+            const hasCollection = await this.driver?.hasCollection(
+                TargetEntity.name,
+            );
+
+            if (!hasCollection || hasCollection.length === 0) {
+                await this.driver?.createCollection(
+                    TargetEntity.name,
+                    metadata.columns,
                 );
-            });
+            }
         }
     }
 }
