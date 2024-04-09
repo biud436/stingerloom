@@ -1,3 +1,4 @@
+import sql from "sql-template-tag";
 import { IConnector } from "../../types/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
 
@@ -5,7 +6,7 @@ export class MySqlDriver {
     constructor(private readonly connector: IConnector) {}
 
     hasCollection(name: string) {
-        return this.connector.query(`SHOW TABLES LIKE '${name}'`);
+        return this.connector.query(sql`SHOW TABLES LIKE ${name}`);
     }
 
     addPrimaryKey(tableName: string, columnName: string) {

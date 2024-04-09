@@ -38,6 +38,10 @@ export class PostController implements OnModuleInit {
         // await driver.dropColumn("test.user", "age");
 
         console.log(userInformation);
+
+        const hasCollection = await driver.hasCollection("user");
+
+        console.log(hasCollection);
     }
 
     /**
