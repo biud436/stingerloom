@@ -53,7 +53,9 @@ export class MySqlConnector implements IConnector {
                 }
 
                 if (this.isDebug) {
-                    this.logger.info(`Query: ${sql}`);
+                    this.logger.info(
+                        `Query: ${sql}, #-- ${JSON.stringify(values)} --#`,
+                    );
                 }
 
                 resolve(results);
