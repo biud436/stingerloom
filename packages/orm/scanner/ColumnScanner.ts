@@ -8,7 +8,7 @@ export type ColumnMetadata = {
 
 @Service()
 export class ColumnScanner extends MetadataScanner {
-    public *makeEntities(): IterableIterator<ColumnMetadata> {
+    public *makeColumns(): IterableIterator<ColumnMetadata> {
         for (const [_, value] of this.mapper) {
             yield value;
         }
