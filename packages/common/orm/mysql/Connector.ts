@@ -28,7 +28,9 @@ export class MySqlConnector implements IConnector {
             this.isDebug = options.printSql;
 
             this.pool = pool;
-        } catch (e: unknown) {}
+        } catch (e: unknown) {
+            throw new Error(`MySQL 연결에 실패했습니다. ${e}`);
+        }
     }
 
     async runTestSql(): Promise<void> {
