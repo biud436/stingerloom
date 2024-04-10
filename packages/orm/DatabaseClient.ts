@@ -19,6 +19,14 @@ export class DatabaseClient {
         return DatabaseClient.instance;
     }
 
+    public getConnection(): IConnector {
+        if (!this.connector) {
+            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+        }
+
+        return this.connector;
+    }
+
     public async connect(options: DatabaseClientOptions): Promise<IConnector> {
         const { type } = options;
 

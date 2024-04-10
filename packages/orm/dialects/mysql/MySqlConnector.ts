@@ -4,6 +4,8 @@ import sql, { Sql } from "sql-template-tag";
 import { DatabaseClientOptions } from "../../types/DatabaseClientOptions";
 import { IConnector } from "../../types/IConnector";
 import { Logger } from "@stingerloom/common/Logger";
+import { Connection } from "@stingerloom/orm/types/Connection";
+import { TRANSACTION_ISOLATION_LEVEL } from "../TransactionHolder";
 export type Entity = any;
 export type IDatabaseType = "mysql" | "mariadb" | "postgres" | "sqlite";
 
@@ -11,6 +13,7 @@ export class MySqlConnector implements IConnector {
     pool?: Pool;
     private isDebug = false;
     private readonly logger = new Logger("MySqlConnector");
+    private originalTransactionIsolationLevel?: string;
 
     async connect(options: DatabaseClientOptions): Promise<void> {
         try {
@@ -111,6 +114,89 @@ export class MySqlConnector implements IConnector {
                     reject(error);
                 }
 
+                resolve();
+            });
+        });
+    }
+
+    async setTransactionIsolationLevel(
+        connection: Connection,
+        level: TRANSACTION_ISOLATION_LEVEL,
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!connection) {
+                reject(new Error("connection이 존재하지 않습니다."));
+            }
+
+            /**
+             * 커넥션에 설정된 트랜잭션 격리 수준은 해당 커넥션에서 수행되는 모든 트랜잭션에만 적용됨
+             */
+            connection.query(
+                `SET TRANSACTION ISOLATION LEVEL ${level}`,
+                (error) => {
+                    if (error) {
+                        reject(error);
+                    }
+
+                    resolve();
+                },
+            );
+        });
+    }
+
+    async startTransaction(
+        connection: Connection,
+        level: TRANSACTION_ISOLATION_LEVEL = "READ COMMITTED",
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!connection) {
+                reject(new Error("connection이 존재하지 않습니다."));
+            }
+
+            this.setTransactionIsolationLevel(connection, level)
+                .then(() => {
+                    connection.beginTransaction((error) => {
+                        if (error) {
+                            reject(error);
+                        }
+
+                        resolve();
+                    });
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    }
+
+    async rollback(connection: Connection): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!connection) {
+                reject(new Error("connection이 존재하지 않습니다."));
+            }
+
+            connection.rollback(() => {
+                connection.release();
+                resolve();
+            });
+        });
+    }
+
+    async commit(connection: Connection): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!connection) {
+                reject(new Error("connection이 존재하지 않습니다."));
+            }
+
+            connection.commit((error) => {
+                if (error) {
+                    connection.rollback(() => {
+                        connection.release();
+                        reject(error);
+                    });
+                }
+
+                connection.release();
                 resolve();
             });
         });
