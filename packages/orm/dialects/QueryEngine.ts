@@ -1,8 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Sql } from "sql-template-tag";
 
 type ISelectEntity<T> = T extends { [key: string]: infer R } ? R : never;
+type IOrderBy<T> = {
+    [K in keyof T]: "ASC" | "DESC";
+};
+type ISelectOption<T> =
+    | (keyof T)[]
+    | {
+          [K in keyof T]?: boolean;
+      }
+    | {
+          [K in keyof T]?: FindOption<T[K]>;
+      };
 
 export abstract class ISelectEngine<T> {
     abstract select<R>(
@@ -38,7 +48,13 @@ export abstract class IQueryEngine<T>
     abstract close(): Promise<void>;
 }
 
-export interface FindQueryOption<T extends keyof ISelectEntity<T>> {
-    select: T[];
-}
-
+export type FindOption<T> = {
+    select: ISelectOption<T>;
+    where: {
+        [K in keyof T]?: T[K];
+    };
+    limit: number;
+    take: number;
+    orderBy: IOrderBy<Partial<T>>;
+    groupBy: (keyof T)[];
+};

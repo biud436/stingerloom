@@ -52,7 +52,9 @@ export class EntityManager {
         let entity: IteratorResult<EntityMetadata>;
 
         while ((entity = entities.next())) {
-            if (entity.done) break;
+            if (entity.done) {
+                break;
+            }
 
             const metadata = entity.value as EntityMetadata;
 
@@ -66,7 +68,6 @@ export class EntityManager {
             const hasCollection = await this.driver?.hasCollection(
                 TargetEntity.name,
             );
-
             if (!hasCollection || hasCollection.length === 0) {
                 await this.driver?.createCollection(
                     TargetEntity.name,
@@ -78,7 +79,6 @@ export class EntityManager {
                 INDEX_TOKEN,
                 TargetEntity.prototype,
             ) as IndexMetadata[];
-
             if (indexer) {
                 for (const index of indexer) {
                     const indexName = `INDEX_${entityScanner.createUniqueKey()}`;
