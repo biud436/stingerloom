@@ -15,6 +15,7 @@ import {
 } from "./decorators";
 
 import { INJECTABLE_TOKEN } from "./decorators/Injectable";
+import { ENTITY_METADATA_TOKEN } from "@stingerloom/orm/decorators";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Type = Function | string | symbol | undefined;
@@ -285,6 +286,10 @@ export class ReflectManager {
             Reflect.getMetadata(REPOSITORY_ENTITY_METADATA, target) !==
             undefined
         );
+    }
+
+    public static isEntityManager(target: any): boolean {
+        return Reflect.getMetadata(ENTITY_METADATA_TOKEN, target) !== undefined;
     }
 
     /**

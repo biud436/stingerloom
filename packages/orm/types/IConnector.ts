@@ -13,8 +13,8 @@ export abstract class IConnector {
      */
     abstract runTestSql(): void;
 
-    abstract query(sql: string): Promise<any>;
-    abstract query<T = any>(sql: Sql): Promise<T>;
+    abstract query(sql: string, connection?: Connection): Promise<any>;
+    abstract query<T = any>(sql: Sql, connection?: Connection): Promise<T>;
 
     abstract getConnection(): Promise<Connection>;
 

@@ -63,16 +63,18 @@ export class MySqlConnector implements IConnector {
         await this.query(sql`SELECT 1 + 1`);
     }
 
-    async query(sql: string): Promise<any>;
-    async query({ sql, values }: Sql): Promise<any>;
-    async query(rawSql: Sql | string): Promise<any> {
+    async query(sql: string, connection?: Connection): Promise<any>;
+    async query({ sql, values }: Sql, connection?: Connection): Promise<any>;
+    async query(rawSql: Sql | string, connection?: Connection): Promise<any> {
         return new Promise((resolve, reject) => {
             if (!this.pool) {
                 return;
             }
 
+            const qb = connection ? connection : this.pool;
+
             if (typeof rawSql === "string") {
-                this.pool.query(rawSql, (error, results) => {
+                qb.query(rawSql, (error, results, fields) => {
                     if (error) {
                         reject(error);
                     }
@@ -81,23 +83,33 @@ export class MySqlConnector implements IConnector {
                         this.logger.info(`Query: ${rawSql}`);
                     }
 
-                    resolve(results);
+                    if (connection) {
+                        resolve({ results, fields, error });
+                    } else {
+                        resolve(results);
+                    }
                 });
             } else {
                 const { sql, values } = rawSql;
 
-                this.pool.query(sql, values, (error, results) => {
+                qb.query(sql, values, (error, results, fields) => {
                     if (error) {
                         reject(error);
                     }
 
                     if (this.isDebug) {
                         this.logger.info(
-                            `Query: ${sql}, #-- ${JSON.stringify(values)} --#`,
+                            `Query: ${sql}, # ${JSON.stringify(values)}`,
                         );
+                        this.logger.info(`Results: ${results}`);
+                        this.logger.info(`Error: ${JSON.stringify(error)}`);
                     }
 
-                    resolve(results);
+                    if (connection) {
+                        resolve({ results, fields, error });
+                    } else {
+                        resolve(results);
+                    }
                 });
             }
         });

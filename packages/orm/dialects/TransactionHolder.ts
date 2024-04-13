@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Sql } from "sql-template-tag";
 import { DatabaseClient } from "../DatabaseClient";
-import { ClazzType } from "@stingerloom/common";
 import { IConnector } from "../types/IConnector";
 import { MySqlDataSource } from "./mysql/MySqlDataSource";
 import { IDataSource } from "./IDataSource";
@@ -77,21 +76,21 @@ export abstract class IQueryEngine implements ITxEngine {
 }
 
 export type FindOption<T> = {
-    select: ISelectOption<T>;
-    where: {
+    select?: ISelectOption<T>;
+    where?: {
         [K in keyof T]?: T[K];
     };
-    limit: number;
-    take: number;
-    orderBy: IOrderBy<Partial<T>>;
-    groupBy: (keyof T)[];
+    limit?: number;
+    take?: number;
+    orderBy?: IOrderBy<Partial<T>>;
+    groupBy?: (keyof T)[];
 };
 
-export class TransactionHolder<T = any> extends IQueryEngine {
+export class TransactionHolder extends IQueryEngine {
     private connection?: IConnector;
     private dataSource?: IDataSource;
 
-    constructor(private readonly entity: ClazzType<T>) {
+    constructor() {
         super();
     }
 
@@ -112,9 +111,9 @@ export class TransactionHolder<T = any> extends IQueryEngine {
         if (!this.connection) {
             throw new Error("데이터베이스 연결이 되어있지 않습니다.");
         }
-        const queryResult = this.dataSource?.query(sql as string);
+        const queryResult = await this.dataSource?.query(sql as string);
 
-        return queryResult as Promise<T>;
+        return queryResult;
     }
 
     public async startTransaction(
@@ -149,6 +148,5 @@ export class TransactionHolder<T = any> extends IQueryEngine {
         }
 
         await this.dataSource?.close();
-        await this.connection.close();
     }
 }

@@ -142,6 +142,12 @@ export class MySqlDriver implements ISqlDriver {
         );
     }
 
+    hasIndex(tableName: string, indexName: string) {
+        return this.connector.query(
+            `SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_NAME = ${tableName} AND INDEX_NAME = ${indexName}`,
+        );
+    }
+
     /**
      * 인덱스를 제거합니다.
      *

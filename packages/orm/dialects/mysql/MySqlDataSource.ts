@@ -54,7 +54,7 @@ export class MySqlDataSource implements IDataSource {
             throw new Error("데이터베이스 연결이 되어있지 않습니다.");
         }
 
-        return this.connector.query(sql);
+        return await this.connector.query(sql, this.connection);
     }
 
     async savepoint(name: string) {

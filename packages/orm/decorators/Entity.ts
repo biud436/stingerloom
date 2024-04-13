@@ -16,14 +16,15 @@ export function Entity(options?: EntityOption): ClassDecorator {
 
         const name = createEntityKey(target.name, scanner);
 
-        Reflect.defineMetadata(ENTITY_TOKEN, name, target);
-
-        scanner.set(name, {
+        const metadata = {
             target,
             columns: columnScanner.allMetadata(),
             options,
-            name,
-        });
+            name: target.name,
+        };
+        scanner.set(name, metadata);
+
+        Reflect.defineMetadata(ENTITY_TOKEN, metadata, target);
 
         columnScanner.clear();
     };

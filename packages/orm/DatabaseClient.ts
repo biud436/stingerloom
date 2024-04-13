@@ -8,7 +8,9 @@ import { IConnector } from "./types/IConnector";
 export class DatabaseClient {
     private static instance: DatabaseClient;
     private connector?: IConnector;
+    private options?: DatabaseClientOptions;
     public type?: string;
+
     private constructor() {}
 
     public static getInstance(): DatabaseClient {
@@ -31,6 +33,7 @@ export class DatabaseClient {
         const { type } = options;
 
         this.type = type;
+        this.options = options;
 
         switch (type) {
             case "mysql":
@@ -50,5 +53,13 @@ export class DatabaseClient {
         }
 
         await this.connector.close();
+    }
+
+    public getOptions(): DatabaseClientOptions {
+        if (!this.options) {
+            throw new Error("옵션이 존재하지 않습니다.");
+        }
+
+        return this.options;
     }
 }

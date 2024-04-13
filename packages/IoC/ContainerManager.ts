@@ -22,7 +22,7 @@ import {
 import { RouterExecutionContext } from "@stingerloom/router/RouterExecutionContext";
 import chalk from "chalk";
 import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
-import { EntityManager } from "@stingerloom/orm/manager/EntityManager";
+import { EntityManager } from "@stingerloom/orm/core/EntityManager";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
 /**
@@ -43,7 +43,14 @@ export class ContainerManager {
     constructor(app: FastifyInstance) {
         this.app = app;
         this.routerExecutionContext = new RouterExecutionContext(this.app);
+        this.initEntityManager();
+    }
+
+    initEntityManager() {
         this.entityManager = new EntityManager();
+
+        const instanceScanner = Container.get(InstanceScanner);
+        instanceScanner.set(EntityManager, this.entityManager);
     }
 
     public async register() {

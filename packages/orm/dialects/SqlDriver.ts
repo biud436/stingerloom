@@ -104,6 +104,8 @@ export interface ISqlDriver<T = any> {
         indexName: string,
     ): Promise<T>;
 
+    hasIndex(tableName: string, indexName: string): Promise<T>;
+
     /**
      * 인덱스를 제거합니다.
      *

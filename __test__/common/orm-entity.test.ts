@@ -16,8 +16,10 @@ import axios from "axios";
 import { DatabaseClient } from "@stingerloom/orm";
 import { MySqlDriver } from "@stingerloom/orm/dialects";
 import { Entity } from "@stingerloom/orm/decorators/Entity";
-import { Column } from "@stingerloom/orm/decorators";
+import { Column, InjectEntityManager } from "@stingerloom/orm/decorators";
 import { Index } from "@stingerloom/orm/decorators/Indexer";
+import { EntityManager } from "@stingerloom/orm/core";
+import { FindOption } from "@stingerloom/orm/dialects/TransactionHolder";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;
@@ -37,7 +39,7 @@ describe("커스텀 ORM 테스트", () => {
     @Entity({
         name: "node",
     })
-    class Node {
+    class MyNode {
         @Column({
             length: 11,
             name: "id",
@@ -73,29 +75,31 @@ describe("커스텀 ORM 테스트", () => {
 
     @Controller("/")
     class AppController implements OnModuleInit {
-        async onModuleInit(): Promise<void> {
-            const client = DatabaseClient.getInstance();
+        constructor(
+            @InjectEntityManager()
+            private readonly entityManager: EntityManager,
+        ) {}
 
-            const connector = await client.connect({
-                host: configService.get<string>("DB_HOST"),
-                port: configService.get<number>("DB_PORT"),
-                database: configService.get<string>("DB_NAME"),
-                password: configService.get<string>("DB_PASSWORD"),
-                username: configService.get<string>("DB_USER"),
-                type: "mysql",
-                entities: [Node],
-                logging: true,
-            });
-
-            const driver = new MySqlDriver(connector);
-
-            const userInformation = await driver.getSchemas("test.user");
-
-            console.log(userInformation);
-        }
+        async onModuleInit(): Promise<void> {}
 
         @Get("/hello")
         async resolvePerson() {
+            const nodeRepository = this.entityManager.getRepository(MyNode);
+
+            const node = await nodeRepository.findOne({
+                where: {
+                    id: 1,
+                },
+            });
+
+            if (!node) {
+                await nodeRepository.save({
+                    description: "test2",
+                    name: "test",
+                    type: "test",
+                });
+            }
+
             return "Hello, World!";
         }
     }
