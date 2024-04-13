@@ -65,11 +65,11 @@ export class EntityManager {
                 );
             }
 
-            const hasCollection = await this.driver?.hasCollection(
+            const hasCollection = await this.driver?.hasTable(
                 TargetEntity.name,
             );
             if (!hasCollection || hasCollection.length === 0) {
-                await this.driver?.createCollection(
+                await this.driver?.createTable(
                     TargetEntity.name,
                     metadata.columns,
                 );
