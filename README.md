@@ -14,7 +14,7 @@ StingerLoom supports features such as router mapping and the ORM required to acc
 
 이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
 
--   [MySQL 용 ORM 만들기 - Node.js 서버 프레임워크 개발기 5편](https://blog.naver.com/biud436/223226954673)
+-   [MySQL 용 ORM 만들기 - Node.js 서버 프레임워크 개발기 5편](https://blog.naver.com/biud436/223410953258)
 -   [트랜잭션의 전파 - Node.js 서버 프레임워크 개발기 4편](https://blog.naver.com/biud436/223226954673)
 -   [인증과 트랜잭션의 처리 - Node.js 서버 프레임워크 개발기 3편](https://blog.naver.com/biud436/223198108682)
 -   [기본적인 서버 코어 만들기 - Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
