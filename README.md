@@ -8,8 +8,17 @@ StingerLoom supports features such as router mapping and the ORM required to acc
 
 <p align="center"> 
 <img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
-<span>▲ 로깅 화면 </span>
 </p>
+
+## 개발 일지
+
+이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
+
+-   [MySQL 용 ORM 만들기 - Node.js 서버 프레임워크 개발기 5편](https://blog.naver.com/biud436/223226954673)
+-   [트랜잭션의 전파 - Node.js 서버 프레임워크 개발기 4편](https://blog.naver.com/biud436/223226954673)
+-   [인증과 트랜잭션의 처리 - Node.js 서버 프레임워크 개발기 3편](https://blog.naver.com/biud436/223198108682)
+-   [기본적인 서버 코어 만들기 - Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
+-   [라우터 함수 자동으로 만들기 - Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
 
 # 개요
 
@@ -56,17 +65,6 @@ StingerLoom supports features such as router mapping and the ORM required to acc
     - Param
     - Ip
     - Cookie
-
-## 개발 일지
-
-이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
-
--   [나만의 Node.js 서버 프레임워크 개발기 4편](https://blog.naver.com/biud436/223226954673)
--   [나만의 Node.js 서버 프레임워크 개발기 3편](https://blog.naver.com/biud436/223198108682)
--   [나만의 Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
--   [나만의 Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
-
-Fastify나 Express에 종속성 없는 설계, Redis, Cache, OpenAPI (Swagger) 등 다양한 기능을 지원하기 위해서는 아직도 많은 고민이 필요합니다.
 
 ## 사용한 기술
 
