@@ -146,7 +146,7 @@ export class EntityManager {
     ): Promise<EntityResult<T>> {
         return this.find<T>(entity, {
             ...findOption,
-            take: 1,
+            limit: 1,
         });
     }
 
@@ -154,7 +154,7 @@ export class EntityManager {
         entity: ClazzType<T>,
         findOption: FindOption<T>,
     ): Promise<EntityResult<T>> {
-        const { select, orderBy, where, take } = findOption;
+        const { select, orderBy, where, limit } = findOption;
 
         const transactionHolder = new TransactionHolder();
 
@@ -211,7 +211,7 @@ export class EntityManager {
                 [
                     selectFromQuery, 
                     whereQuery, 
-                    take === 1 ? sql`LIMIT 1` : sql``,
+                    limit === 1 ? sql`LIMIT 1` : sql``,
                 ],
                 " ",
             )}`;
@@ -228,7 +228,7 @@ export class EntityManager {
 
             const tagetEntity = plainToClass(
                 entity,
-                take === 1 ? results?.[0] || {} : results || [{}],
+                limit === 1 ? results?.[0] || {} : results || [{}],
             );
 
             return tagetEntity;
