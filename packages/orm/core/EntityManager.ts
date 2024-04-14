@@ -17,6 +17,7 @@ import { plainToClass } from "class-transformer";
 import { BaseRepository } from "./BaseRepository";
 
 export type EntityResult<T> = InstanceType<ClazzType<T>> | undefined;
+export type QueryResult<T = any> = { results: T[] };
 
 export class EntityManager {
     private _entities: ClazzType<any>[] = [];
@@ -207,7 +208,7 @@ export class EntityManager {
 
             const { results } = (await transactionHolder.query<T>(
                 resultQuery,
-            )) as { results: any[] };
+            )) as QueryResult;
 
             await transactionHolder.commit();
 
