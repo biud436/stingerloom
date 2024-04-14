@@ -169,7 +169,6 @@ export class EntityManager {
                 );
             }
 
-            // where 조건을 만듭니다.
             const whereMap = [];
             for (const key in where) {
                 const value = where[key];
@@ -178,7 +177,6 @@ export class EntityManager {
                 }
             }
 
-            // orderBy 조건을 만듭니다.
             const orderByMap = [];
             for (const key in orderBy) {
                 const value = orderBy[key];
@@ -187,15 +185,28 @@ export class EntityManager {
                 }
             }
 
-            const rawQuery = sql`
+            // SELECT 쿼리
+            const selectFromQuery = sql`
                     SELECT ${join(selectMap, ", ")}
                     FROM ${raw(`${metadata.name!} as \`${metadata.name}\``)}
-                    WHERE ${where ? join(whereMap, " AND ") : "1=1"}
-                    LIMIT 1
                 `;
 
+            // WHERE 쿼리
+            const whereQuery = sql`WHERE ${where ? join(whereMap, " AND ") : "1=1"}`;
+
+            // 최종 쿼리
+            const resultQuery = sql`${join(
+                // prettier-ignore
+                [
+                    selectFromQuery, 
+                    whereQuery, 
+                    sql`LIMIT 1`
+                ],
+                " ",
+            )}`;
+
             const { results } = (await transactionHolder.query<T>(
-                rawQuery,
+                resultQuery,
             )) as { results: any[] };
 
             await transactionHolder.commit();

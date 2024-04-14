@@ -84,6 +84,7 @@ export type FindOption<T> = {
     take?: number;
     orderBy?: IOrderBy<Partial<T>>;
     groupBy?: (keyof T)[];
+    relations?: (keyof T)[];
 };
 
 export class TransactionHolder extends IQueryEngine {

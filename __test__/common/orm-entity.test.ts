@@ -92,6 +92,8 @@ describe("커스텀 ORM 테스트", () => {
                 },
             });
 
+            console.log(node);
+
             if (!node) {
                 await nodeRepository.save({
                     description: "test2",
