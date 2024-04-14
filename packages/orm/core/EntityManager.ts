@@ -144,7 +144,17 @@ export class EntityManager {
         entity: ClazzType<T>,
         findOption: FindOption<T>,
     ): Promise<EntityResult<T>> {
-        const { select, orderBy, where } = findOption;
+        return this.find<T>(entity, {
+            ...findOption,
+            take: 1,
+        });
+    }
+
+    async find<T>(
+        entity: ClazzType<T>,
+        findOption: FindOption<T>,
+    ): Promise<EntityResult<T>> {
+        const { select, orderBy, where, take } = findOption;
 
         const transactionHolder = new TransactionHolder();
 
@@ -201,7 +211,7 @@ export class EntityManager {
                 [
                     selectFromQuery, 
                     whereQuery, 
-                    sql`LIMIT 1`
+                    take === 1 ? sql`LIMIT 1` : sql``,
                 ],
                 " ",
             )}`;
@@ -216,7 +226,10 @@ export class EntityManager {
                 return undefined;
             }
 
-            const tagetEntity = plainToClass(entity, results?.[0] || {});
+            const tagetEntity = plainToClass(
+                entity,
+                take === 1 ? results?.[0] || {} : results || [{}],
+            );
 
             return tagetEntity;
         } catch (e: unknown) {
