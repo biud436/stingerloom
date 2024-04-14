@@ -4,7 +4,7 @@ import { ClazzType } from "./RouterMapper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class ModuleOptions<T = any> {
-    // imports!: Omit<ModuleOptions, "configuration">[];
+    imports?: Omit<ModuleOptions, "configuration">[];
     controllers!: ClazzType<T>[];
     providers!: (ClazzType<T> | Function)[];
     configuration!: ReturnType<() => DBConnectionOption>;
