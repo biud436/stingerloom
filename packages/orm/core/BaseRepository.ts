@@ -13,6 +13,10 @@ export class BaseRepository<T> {
         return await this.em.save<T>(this.entity, item);
     }
 
+    async find(findOption: FindOption<T>): Promise<EntityResult<T>> {
+        return await this.em.find<T>(this.entity, findOption);
+    }
+
     async findOne(findOption: FindOption<T>): Promise<EntityResult<T>> {
         return await this.em.findOne<T>(this.entity, findOption);
     }

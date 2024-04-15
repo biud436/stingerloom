@@ -16,7 +16,10 @@ import { ENTITY_TOKEN } from "../decorators";
 import { plainToClass } from "class-transformer";
 import { BaseRepository } from "./BaseRepository";
 
-export type EntityResult<T> = InstanceType<ClazzType<T>> | undefined;
+export type EntityResult<T> =
+    | InstanceType<ClazzType<T>>
+    | InstanceType<ClazzType<T>>[]
+    | undefined;
 export type QueryResult<T = any> = { results: T[] };
 
 export class EntityManager {
@@ -226,12 +229,17 @@ export class EntityManager {
                 return undefined;
             }
 
-            const tagetEntity = plainToClass(
-                entity,
-                limit === 1 ? results?.[0] || {} : results || [{}],
-            );
+            if (results.length > 1) {
+                const targetEntities = results.map((result) => {
+                    return plainToClass(entity, result || {});
+                });
 
-            return tagetEntity;
+                return targetEntities;
+            } else {
+                const tagetEntity = plainToClass(entity, results?.[0] || {});
+
+                return tagetEntity;
+            }
         } catch (e: unknown) {
             await transactionHolder.rollback();
         } finally {
@@ -241,6 +249,9 @@ export class EntityManager {
         }
     }
 
+    /**
+     * 업데이트 쿼리
+     */
     async save<T>(entity: ClazzType<T>, item: Partial<T>): Promise<any> {
         const metadata = Reflect.getMetadata(
             ENTITY_TOKEN,
