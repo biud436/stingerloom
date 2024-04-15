@@ -915,6 +915,8 @@ StingerLoom에서는 자체적으로 ORM을 제공하기 때문에 써드 파티
 
 ORM은 `@Entity` 데코레이터를 사용하여 엔티티를 정의할 수 있습니다. 엔티티는 데이터베이스의 테이블과 매핑됩니다. 동기화(syncronize) 옵션을 사용하면 작성한 엔티티를 데이터베이스에 동기화할 수 있습니다.
 
+`@stingerloom/orm/decorators` 패키지에서 제공하는 `@Column`, `@Entity`, `@Index`를 사용하여 엔티티를 정의할 수 있습니다.
+
 ```ts
 @Entity()
 class MyNode {
