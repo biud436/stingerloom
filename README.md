@@ -911,7 +911,7 @@ export class AppController {
 
 ORM은 객체와 관계형 데이터베이스 간의 매핑을 지원하는 도구입니다.
 
-StingerLoom에서는 써드 파티 라이브러리(Third Party Library)가 없이 데이터베이스에 접근할 수 있도록 자체적으로 ORM을 구현하였습니다.
+StingerLoom에서는 자체적으로 ORM을 제공하기 때문에 써드 파티 라이브러리(Third Party Library)가 없어도 데이터베이스에 접근할 수 있습니다.
 
 ORM은 `@Entity` 데코레이터를 사용하여 엔티티를 정의할 수 있습니다. 엔티티는 데이터베이스의 테이블과 매핑됩니다.
 
