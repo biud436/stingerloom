@@ -23,17 +23,17 @@ StingerLoom supports features such as router mapping and the ORM required to acc
 # 개요
 
 1. 주요 기능
-    - [Controller](https://github.com/biud436/stingerloom#controller)
-    - [Injectable](https://github.com/biud436/stingerloom#injectable)
+    - [Controller](https://github.com/biud436/stingerloom?tab=readme-ov-file#controller)
+    - [Injectable](https://github.com/biud436/stingerloom?tab=readme-ov-file#injectable)
     - [예외처리](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
-    - [트랜잭션](https://github.com/biud436/stingerloom#handling-database-transactions)
-    - [템플릿엔진](https://github.com/biud436/stingerloom#template-engine)
-    - [ORM](https://github.com/biud436/stingerloom#orm)
-    - [파일 자동 생성](https://github.com/biud436/stingerloom#cli)
-2. [인증과 인가](https://github.com/biud436/stingerloom#authorization)
-    - [Session](https://github.com/biud436/stingerloom#handling-session)
-    - [Session Guard](https://github.com/biud436/stingerloom#session-guard)
-    - [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
+    - [트랜잭션](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-database-transactions)
+    - [템플릿엔진](https://github.com/biud436/stingerloom?tab=readme-ov-file#template-engine)
+    - [ORM](https://github.com/biud436/stingerloom?tab=readme-ov-file#orm)
+    - [파일 자동 생성](https://github.com/biud436/stingerloom?tab=readme-ov-file#cli)
+2. [인증과 인가](https://github.com/biud436/stingerloom?tab=readme-ov-file#authorization)
+    - [Session](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-session)
+    - [Session Guard](https://github.com/biud436/stingerloom?tab=readme-ov-file#session-guard)
+    - [Custom Parameter Decorator](https://github.com/biud436/stingerloom?tab=readme-ov-file#custom-parameter-decorator)
 3. 지원 데코레이터
     - Controller
     - Get
@@ -93,13 +93,13 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`,`BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` , `Query`, `Param`, `Ip`, `Cookie`, `Column`, `Entity`, `Index` 데코레이터를 지원합니다.
 
--   [Controller](https://github.com/biud436/stingerloom#controller)
--   [Injectable](https://github.com/biud436/stingerloom#injectable)
+-   [Controller](https://github.com/biud436/stingerloom?tab=readme-ov-file#controller)
+-   [Injectable](https://github.com/biud436/stingerloom?tab=readme-ov-file#injectable)
 -   [Exception Filter와 실행 컨텍스트](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
--   [트랜잭션의 처리](https://github.com/biud436/stingerloom#handling-database-transactions)
--   [인증](https://github.com/biud436/stingerloom#authorization)
--   [Custom Parameter Decorator](https://github.com/biud436/stingerloom#custom-parameter-decorator)
--   [템플릿 엔진](https://github.com/biud436/stingerloom#template-engine)
+-   [트랜잭션의 처리](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-database-transactions)
+-   [인증](https://github.com/biud436/stingerloom?tab=readme-ov-file#authorization)
+-   [Custom Parameter Decorator](https://github.com/biud436/stingerloom?tab=readme-ov-file#custom-parameter-decorator)
+-   [템플릿 엔진](https://github.com/biud436/stingerloom?tab=readme-ov-file#template-engine)
 
 ## 빌드 및 실행
 
