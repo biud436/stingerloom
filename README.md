@@ -28,6 +28,7 @@ StingerLoom supports features such as router mapping and the ORM required to acc
     - [예외처리](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
     - [트랜잭션](https://github.com/biud436/stingerloom#handling-database-transactions)
     - [템플릿엔진](https://github.com/biud436/stingerloom#template-engine)
+    - [ORM](https://github.com/biud436/stingerloom#orm)
     - [파일 자동 생성](https://github.com/biud436/stingerloom#cli)
 2. [인증과 인가](https://github.com/biud436/stingerloom#authorization)
     - [Session](https://github.com/biud436/stingerloom#handling-session)
@@ -65,6 +66,9 @@ StingerLoom supports features such as router mapping and the ORM required to acc
     - Param
     - Ip
     - Cookie
+    - Column
+    - Entity
+    - Index
 
 ## 사용한 기술
 
@@ -87,7 +91,7 @@ ORM은 typeorm을 사용하였으며, Body 데코레이터의 직렬화/역직�
 
 # 사용법
 
-이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`,`BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` , `Query`, `Param`, `Ip`, `Cookie` 데코레이터를 지원합니다.
+이 프레임워크는 `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`,`BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` , `Query`, `Param`, `Ip`, `Cookie`, `Column`, `Entity`, `Index` 데코레이터를 지원합니다.
 
 -   [Controller](https://github.com/biud436/stingerloom#controller)
 -   [Injectable](https://github.com/biud436/stingerloom#injectable)
@@ -900,6 +904,88 @@ export class AppController {
     </body>
 </html>
 ```
+
+[▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
+
+## ORM
+
+ORM은 객체와 관계형 데이터베이스 간의 매핑을 지원하는 도구입니다.
+
+StingerLoom에서는 써드 파티 라이브러리(Third Party Library)가 없이 데이터베이스에 접근할 수 있도록 자체적으로 ORM을 구현하였습니다.
+
+ORM은 `@Entity` 데코레이터를 사용하여 엔티티를 정의할 수 있습니다. 엔티티는 데이터베이스의 테이블과 매핑됩니다.
+
+```ts
+@Entity()
+class MyNode {
+    @Column({
+        length: 11,
+        name: "id",
+        nullable: false,
+        primary: true,
+        autoIncrement: true,
+        type: "int",
+    })
+    id!: number;
+
+    @Column({
+        length: 255,
+        nullable: false,
+        type: "varchar",
+    })
+    name!: string;
+
+    @Column({
+        length: 255,
+        nullable: false,
+        type: "varchar",
+    })
+    type!: string;
+
+    @Column({
+        length: 255,
+        nullable: false,
+        type: "varchar",
+    })
+    @Index()
+    description!: string;
+}
+```
+
+데이터베이스에는 리포지토리를 통해 접근할 수 있습니다. 리포지토리를 만드는 방법은 `EntityManager`를 주입받아서 `getRepository` 메소드를 사용하는 방법과 `@InjectRepository` 데코레이터를 사용하는 방법이 있습니다. 후자의 방법은 아직 구현되지 않았기 때문에 전자를 소개하겠습니다.
+
+```ts
+@Injectable()
+class MyNodeService {
+    constructor(
+        @InjectEntityManager()
+        private readonly entityManager: EntityManager,
+    )
+
+    async findOne(id: number): Promise<MyNode[]> {
+
+        // MyNode 엔티티에 대한 리포지토리를 가져옵니다
+        const myNodeRepository = this.entityManager.getRepository(MyNode);
+
+        // id가 1인 노드를 찾습니다.
+        const myNode = await myNodeRepository.findOne({
+            where: {
+                id
+            }
+        });
+
+        if (!myNode) {
+            throw new NotFoundException("해당 노드를 찾을 수 없습니다.");
+        }
+
+        return myNode;
+    }
+}
+```
+
+위와 같이 `@InjectEntityManager` 데코레이터를 사용하여 `EntityManager`를 주입받아서 리포지토리를 가져올 수 있습니다.
+
+리포지토리 패턴을 통해 데이터베이스에 접근할 수 있습니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
 
