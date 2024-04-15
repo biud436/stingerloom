@@ -962,7 +962,7 @@ class MyNodeService {
         private readonly entityManager: EntityManager,
     )
 
-    async findOne(id: number): Promise<MyNode[]> {
+    async findOne(id: number): Promise<MyNode> {
 
         // MyNode 엔티티에 대한 리포지토리를 가져옵니다
         const myNodeRepository = this.entityManager.getRepository(MyNode);
