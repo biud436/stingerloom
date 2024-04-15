@@ -954,7 +954,7 @@ class MyNode {
 }
 ```
 
-데이터베이스에는 리포지토리를 통해 접근할 수 있습니다. 리포지토리를 만드는 방법은 `EntityManager`를 주입받아서 `getRepository` 메소드를 사용하는 방법과 `@InjectRepository` 데코레이터를 사용하는 방법이 있습니다. 후자의 방법은 아직 구현되지 않았기 때문에 전자를 소개하겠습니다.
+데이터베이스에는 리포지토리를 통해 접근할 수 있습니다. 리포지토리를 만드는 방법은 `EntityManager`를 주입받아서 `getRepository` 메소드를 사용하는 방법과 `@InjectRepository` 데코레이터를 사용하는 방법이 있습니다. 후자의 방법은 TypeORM에서만 지원하고 아직 자체 ORM에서는 지원하지 않습니다. 어떻게 하면 두 ORM에서 모두 사용할 수 있게 할 지는 추후 고민해보겠습니다.
 
 ```ts
 @Injectable()

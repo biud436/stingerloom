@@ -36,9 +36,7 @@ describe("커스텀 ORM 테스트", () => {
         logging: true,
     };
 
-    @Entity({
-        name: "node",
-    })
+    @Entity()
     class MyNode {
         @Column({
             length: 11,
