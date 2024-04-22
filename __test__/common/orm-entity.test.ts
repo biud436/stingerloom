@@ -16,7 +16,11 @@ import axios from "axios";
 import { DatabaseClient } from "@stingerloom/orm";
 import { MySqlDriver } from "@stingerloom/orm/dialects";
 import { Entity } from "@stingerloom/orm/decorators/Entity";
-import { Column, InjectEntityManager } from "@stingerloom/orm/decorators";
+import {
+    Column,
+    InjectEntityManager,
+    PrimaryGeneratedColumn,
+} from "@stingerloom/orm/decorators";
 import { Index } from "@stingerloom/orm/decorators/Indexer";
 import { EntityManager } from "@stingerloom/orm/core";
 import { FindOption } from "@stingerloom/orm/dialects/TransactionHolder";
@@ -38,14 +42,7 @@ describe("커스텀 ORM 테스트", () => {
 
     @Entity()
     class MyNode {
-        @Column({
-            length: 11,
-            name: "id",
-            nullable: false,
-            primary: true,
-            autoIncrement: true,
-            type: "int",
-        })
+        @PrimaryGeneratedColumn()
         id!: number;
 
         @Column({
@@ -90,7 +87,7 @@ describe("커스텀 ORM 테스트", () => {
                 },
             });
 
-            console.log(node);
+            console.log("node", node);
 
             if (!node) {
                 await nodeRepository.save({
@@ -99,6 +96,13 @@ describe("커스텀 ORM 테스트", () => {
                     type: "test",
                 });
             }
+
+            await nodeRepository.save({
+                id: 1,
+                description: "test5",
+                name: "test",
+                type: "test",
+            });
 
             return "Hello, World!";
         }

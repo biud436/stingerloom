@@ -267,7 +267,6 @@ export class EntityManager {
         try {
             await transactionHolder.connect();
             await transactionHolder.startTransaction();
-
             await transactionHolder.query("SET autocommit = 0");
 
             const columns = metadata.columns.map((column) => {
@@ -278,11 +277,37 @@ export class EntityManager {
                 return (item as any)[column.name!];
             });
 
+            const pk = metadata.columns.find(
+                (column) => column.options.primary,
+            );
+
+            const pkValue = (item as any)[pk.name!];
+
+            // 기본키(PK)가 존재하지 않으면 새로운 엔티티를 생성합니다.
+            if (!pkValue) {
+                const result = await transactionHolder.query<T>(
+                    sql`
+                        INSERT INTO ${raw(metadata.name!)}
+                        (${join(columns, ", ")})
+                        VALUES (${join(values, ", ")})
+                    `,
+                );
+
+                await transactionHolder.commit();
+
+                return result as T;
+            }
+
+            // 기본키가 존재하면 업데이트 쿼리를 실행합니다.
+            const updateMap = metadata.columns.map((column: ColumnMetadata) => {
+                return sql`${raw(column.name!)} = ${(item as any)[column.name!]}`;
+            });
+
             const result = await transactionHolder.query<T>(
                 sql`
-                    INSERT INTO ${raw(metadata.name!)}
-                    (${join(columns, ", ")})
-                    VALUES (${join(values, ", ")})
+                    UPDATE ${raw(metadata.name!)}
+                    SET ${join(updateMap, ", ")}
+                    WHERE ${raw(pk.name!)} = ${pkValue}
                 `,
             );
 
