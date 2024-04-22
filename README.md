@@ -920,14 +920,7 @@ ORM은 `@Entity` 데코레이터를 사용하여 엔티티를 정의할 수 있�
 ```ts
 @Entity()
 class MyNode {
-    @Column({
-        length: 11,
-        name: "id",
-        nullable: false,
-        primary: true,
-        autoIncrement: true,
-        type: "int",
-    })
+    @PrimaryGeneratedColumn()
     id!: number;
 
     @Column({

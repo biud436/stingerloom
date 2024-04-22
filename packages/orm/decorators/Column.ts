@@ -44,7 +44,7 @@ export interface ColumnOption {
     transform?: <T = any>(raw: unknown) => T;
 }
 
-export const COLUMN_TOKEN = "COLUMN";
+export const COLUMN_TOKEN = Symbol.for("COLUMN");
 
 /**
  * 컬럼 데코레이터에서는 컬럼에 대한 메타데이터를 설정합니다.

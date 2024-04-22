@@ -24,4 +24,8 @@ export class BaseRepository<T> {
     static of<T>(entity: ClazzType<T>, em: EntityManager): BaseRepository<T> {
         return new BaseRepository(entity, em);
     }
+
+    async persist(item: T): Promise<EntityResult<T>> {
+        return await this.em.save<T>(this.entity, item);
+    }
 }

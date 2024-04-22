@@ -7,7 +7,7 @@ export interface EntityOption {
     name?: string;
 }
 
-export const ENTITY_TOKEN = "ENTITY";
+export const ENTITY_TOKEN = Symbol.for("ENTITY");
 
 export function Entity(options?: EntityOption): ClassDecorator {
     return function (target) {
