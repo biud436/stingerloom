@@ -278,7 +278,7 @@ export class EntityManager {
             });
 
             const pk = metadata.columns.find(
-                (column) => column.options.primary,
+                (column: ColumnMetadata) => column.options?.primary,
             );
 
             const pkValue = (item as any)[pk.name!];
