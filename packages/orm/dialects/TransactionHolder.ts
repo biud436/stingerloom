@@ -4,6 +4,7 @@ import { DatabaseClient } from "../DatabaseClient";
 import { IConnector } from "../types/IConnector";
 import { MySqlDataSource } from "./mysql/MySqlDataSource";
 import { IDataSource } from "./IDataSource";
+import { Logger } from "@stingerloom/common";
 
 type IOrderBy<T> = {
     [K in keyof T]: "ASC" | "DESC";
@@ -90,6 +91,7 @@ export type FindOption<T> = {
 export class TransactionHolder extends IQueryEngine {
     private connection?: IConnector;
     private dataSource?: IDataSource;
+    private readonly logger: Logger = new Logger(TransactionHolder.name);
 
     constructor() {
         super();
@@ -97,6 +99,8 @@ export class TransactionHolder extends IQueryEngine {
 
     public async connect() {
         try {
+            // @Transactional을 사용한다면 TransactionManager를 통해,
+            // 데이터 소스(DataSource)를 같은 컨텍스트 내에서 공유할 수 있도록 해야 합니다.
             this.connection =
                 await DatabaseClient.getInstance().getConnection();
             this.dataSource = new MySqlDataSource(this.connection);
@@ -113,6 +117,8 @@ export class TransactionHolder extends IQueryEngine {
             throw new Error("데이터베이스 연결이 되어있지 않습니다.");
         }
         const queryResult = await this.dataSource?.query(sql as string);
+
+        // this.logger.info(`Query> ${sql instanceof Sql ? sql.text : sql}`);
 
         return queryResult;
     }
