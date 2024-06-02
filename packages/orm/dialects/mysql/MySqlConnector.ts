@@ -5,7 +5,7 @@ import { DatabaseClientOptions } from "../../types/DatabaseClientOptions";
 import { IConnector } from "../../types/IConnector";
 import { Logger } from "@stingerloom/common/Logger";
 import { Connection } from "@stingerloom/orm/types/Connection";
-import { TRANSACTION_ISOLATION_LEVEL } from "../TransactionHolder";
+import { TRANSACTION_ISOLATION_LEVEL } from "../IsolationLevel";
 export type Entity = any;
 export type IDatabaseType = "mysql" | "mariadb" | "postgres" | "sqlite";
 

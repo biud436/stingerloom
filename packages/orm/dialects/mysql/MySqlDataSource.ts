@@ -2,7 +2,7 @@
 import { Connection } from "@stingerloom/orm/types/Connection";
 import { IConnector } from "../../types/IConnector";
 import { IDataSource } from "../IDataSource";
-import { TRANSACTION_ISOLATION_LEVEL } from "../TransactionHolder";
+import { TRANSACTION_ISOLATION_LEVEL } from "../IsolationLevel";
 
 export class MySqlDataSource implements IDataSource {
     private connection?: Connection;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClazzType } from "@stingerloom/common";
-import { FindOption } from "../dialects/TransactionHolder";
+import { FindOption } from "../dialects/FindOption";
 import { EntityManager, EntityResult } from "./EntityManager";
 
 export class BaseRepository<T> {

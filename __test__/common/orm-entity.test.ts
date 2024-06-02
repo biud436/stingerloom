@@ -23,7 +23,7 @@ import {
 } from "@stingerloom/orm/decorators";
 import { Index } from "@stingerloom/orm/decorators/Indexer";
 import { EntityManager } from "@stingerloom/orm/core";
-import { FindOption } from "@stingerloom/orm/dialects/TransactionHolder";
+import { FindOption } from "@stingerloom/orm/dialects/FindOption";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;

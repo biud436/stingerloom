@@ -2,7 +2,7 @@
 import { Sql } from "sql-template-tag";
 import { DatabaseClientOptions } from "./DatabaseClientOptions";
 import { Connection } from "./Connection";
-import { TRANSACTION_ISOLATION_LEVEL } from "../dialects/TransactionHolder";
+import { TRANSACTION_ISOLATION_LEVEL } from "../dialects/IsolationLevel";
 
 export abstract class IConnector {
     abstract connect(options: DatabaseClientOptions): Promise<void>;

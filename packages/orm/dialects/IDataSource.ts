@@ -1,4 +1,4 @@
-import { TRANSACTION_ISOLATION_LEVEL } from "./TransactionHolder";
+import { TRANSACTION_ISOLATION_LEVEL } from "./IsolationLevel";
 
 export interface IDataSource {
     createConnection(): Promise<void>;
