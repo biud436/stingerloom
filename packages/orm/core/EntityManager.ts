@@ -16,6 +16,7 @@ import sql, { Sql, join, raw } from "sql-template-tag";
 import { ENTITY_TOKEN } from "../decorators";
 import { plainToClass } from "class-transformer";
 import { BaseRepository } from "./BaseRepository";
+import { IEntityManager } from "./IEntityManager";
 
 export type EntityResult<T> =
     | InstanceType<ClazzType<T>>
@@ -23,7 +24,7 @@ export type EntityResult<T> =
     | undefined;
 export type QueryResult<T = any> = { results: T[] };
 
-export class EntityManager {
+export class EntityManager implements IEntityManager {
     private _entities: ClazzType<any>[] = [];
     private readonly logger = new Logger(EntityManager.name);
     private driver?: ISqlDriver;
