@@ -254,7 +254,10 @@ export class EntityManager implements IEntityManager {
     /**
      * 업데이트 쿼리
      */
-    async save<T>(entity: ClazzType<T>, item: Partial<T>): Promise<any> {
+    async save<T>(
+        entity: ClazzType<T>,
+        item: Partial<T>,
+    ): Promise<InstanceType<ClazzType<T>>> {
         const metadata = Reflect.getMetadata(
             ENTITY_TOKEN,
             entity,
@@ -269,6 +272,8 @@ export class EntityManager implements IEntityManager {
         try {
             await transactionHolder.connect();
             await transactionHolder.startTransaction();
+
+            // TODO: dialects에서 구현해야할 필요가 있습니다.
             await transactionHolder.query("SET autocommit = 0");
 
             const columns = metadata.columns.map((column) => {
@@ -321,6 +326,8 @@ export class EntityManager implements IEntityManager {
         } finally {
             await transactionHolder.close();
         }
+
+        return {} as T;
     }
 
     getRepository<T>(entity: ClazzType<T>) {

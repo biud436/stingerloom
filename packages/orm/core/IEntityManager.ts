@@ -22,7 +22,10 @@ export abstract class IEntityManager {
      * @param entity
      * @param item
      */
-    abstract save<T>(entity: ClazzType<T>, item: Partial<T>): Promise<any>;
+    abstract save<T>(
+        entity: ClazzType<T>,
+        item: Partial<T>,
+    ): Promise<InstanceType<ClazzType<T>>>;
 
     /**
      * 전달된 Entity의 BaseRepository를 생성합니다.
