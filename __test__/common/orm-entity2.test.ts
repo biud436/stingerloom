@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-import { ServerBootstrapApplication } from "@stingerloom/bootstrap";
+import "reflect-metadata";
 import {
     Controller,
     Get,
@@ -8,21 +6,23 @@ import {
     ModuleOptions,
     OnModuleInit,
 } from "@stingerloom/common";
-import { DataSourceOptions } from "typeorm";
-import configService from "@stingerloom/common/ConfigService";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import axios from "axios";
-import { Entity } from "@stingerloom/orm/decorators/Entity";
 import {
     Column,
+    Entity,
     InjectEntityManager,
     PrimaryGeneratedColumn,
 } from "@stingerloom/orm/decorators";
-import { Index } from "@stingerloom/orm/decorators/Indexer";
-import { EntityManager } from "@stingerloom/orm/core";
+import configService from "@stingerloom/common/ConfigService";
+import { EntityManager } from "@stingerloom/orm/core/EntityManager";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
+import { DataSourceOptions } from "typeorm";
+import axios from "axios";
+import { ServerBootstrapApplication } from "@stingerloom/bootstrap/ServerBootstrapApplication";
 
-describe("커스텀 ORM 테스트", () => {
+describe("테스트", () => {
     let application: TestServerApplication;
+
+    // TODO: typeorm의 의존성을 제거해야 함
     const option: DataSourceOptions = {
         type: "mariadb",
         host: configService.get<string>("DB_HOST"),
@@ -36,8 +36,11 @@ describe("커스텀 ORM 테스트", () => {
         logging: true,
     };
 
+    /**
+     * 상품 엔티티
+     */
     @Entity()
-    class MyNode {
+    class Product {
         @PrimaryGeneratedColumn()
         id!: number;
 
@@ -49,19 +52,12 @@ describe("커스텀 ORM 테스트", () => {
         name!: string;
 
         @Column({
-            length: 255,
+            type: "int",
             nullable: false,
-            type: "varchar",
+            length: 11,
+            // default: 0,
         })
-        type!: string;
-
-        @Column({
-            length: 255,
-            nullable: false,
-            type: "varchar",
-        })
-        @Index()
-        description!: string;
+        price!: number;
     }
 
     @Controller("/")
@@ -75,30 +71,13 @@ describe("커스텀 ORM 테스트", () => {
 
         @Get("/hello")
         async resolvePerson() {
-            const nodeRepository = this.entityManager.getRepository(MyNode);
+            const productRepository = this.entityManager.getRepository(Product);
 
-            const node = await nodeRepository.findOne({
-                where: {
-                    id: 1,
-                },
-            });
+            const product = new Product();
+            product.name = "테스트 상품";
+            product.price = 10000;
 
-            console.log("node", node);
-
-            if (!node) {
-                await nodeRepository.save({
-                    description: "test2",
-                    name: "test",
-                    type: "test",
-                });
-            }
-
-            await nodeRepository.save({
-                id: 1,
-                description: "test5",
-                name: "test",
-                type: "test",
-            });
+            await productRepository.save(product);
 
             return "Hello, World!";
         }
