@@ -92,7 +92,11 @@ export class EntityManager implements IEntityManager {
             const metadata = entity.value as EntityMetadata;
 
             const TargetEntity = metadata.target as ClazzType<any>;
-            const tableName = this.getNameStrategy(TargetEntity);
+            let tableName = metadata.name;
+            if (!tableName) {
+                tableName = this.getNameStrategy(TargetEntity);
+            }
+
             if (!ReflectManager.isEntity(TargetEntity)) {
                 throw new Error(`${tableName}은 Entity가 아닙니다.`);
             }
