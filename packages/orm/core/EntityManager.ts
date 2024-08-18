@@ -72,6 +72,10 @@ export class EntityManager implements IEntityManager {
         // TODO: 나중에 추가
     }
 
+    getNameStrategy<T>(clazz: ClazzType<T>): string {
+        return clazz.name;
+    }
+
     private async registerEntities() {
         const entityScanner = Container.get(EntityScanner);
         const entities = entityScanner.makeEntities();
@@ -88,8 +92,9 @@ export class EntityManager implements IEntityManager {
             const metadata = entity.value as EntityMetadata;
 
             const TargetEntity = metadata.target as ClazzType<any>;
+            const tableName = this.getNameStrategy(TargetEntity);
             if (!ReflectManager.isEntity(TargetEntity)) {
-                throw new Error(`${TargetEntity.name}은 Entity가 아닙니다.`);
+                throw new Error(`${tableName}은 Entity가 아닙니다.`);
             }
 
             // 동기화 옵션이 켜져있을 경우에만 동작합니다.
@@ -97,12 +102,10 @@ export class EntityManager implements IEntityManager {
                 console.log("동기화 옵션이 켜져있습니다");
 
                 // DB에 테이블이 존재하지 않으면 새로운 테이블을 생성합니다.
-                const hasTable = await this.driver?.hasTable(TargetEntity.name);
+                const hasTable = await this.driver?.hasTable(tableName);
                 if (!hasTable || hasTable.length === 0) {
-                    await this.driver?.createTable(
-                        TargetEntity.name,
-                        metadata.columns,
-                    );
+                    // TODO: TargetEntity.name에 직접 접근하지 말고, 전략에 따라 접근해야 합니다.
+                    await this.driver?.createTable(tableName, metadata.columns);
                 }
 
                 const indexer = Reflect.getMetadata(
@@ -111,10 +114,10 @@ export class EntityManager implements IEntityManager {
                 ) as IndexMetadata[];
                 if (indexer) {
                     for (const index of indexer) {
-                        const indexName = `INDEX_${TargetEntity.name}_${index.name}`;
+                        const indexName = `INDEX_${tableName}_${index.name}`;
 
                         const indexes = (await this.driver?.getIndexes(
-                            TargetEntity.name,
+                            tableName,
                         )) as any[];
 
                         let isExist = false;
@@ -127,7 +130,7 @@ export class EntityManager implements IEntityManager {
 
                         if (!isExist) {
                             await this.driver?.addIndex(
-                                TargetEntity.name,
+                                tableName,
                                 index.name,
                                 indexName,
                             );
