@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import Container, { Service } from "typedi";
 import "dotenv/config";
 
@@ -15,7 +17,7 @@ class ConfigService<K extends Record<string, unknown> = ConfigKey> {
      * @param key
      * @returns
      */
-    get<T extends string>(key: keyof K): T {
+    get<T extends unknown = any>(key: keyof K): T {
         return process.env[key] as unknown as T;
     }
 
