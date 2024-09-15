@@ -7,7 +7,7 @@ StingerLoom supports features such as router mapping and the ORM required to acc
 ---
 
 <p align="center"> 
-<img src="https://github.com/biud436/stingerloom/assets/13586185/44f8f16a-d4b0-4beb-bb8c-78128da6265f" />
+<img src="https://github.com/user-attachments/assets/77a2f5e0-69b5-43d2-bc43-ab9bde52cc5b">
 </p>
 
 ## 개발 일지
