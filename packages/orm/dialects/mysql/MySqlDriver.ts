@@ -265,11 +265,15 @@ export class MySqlDriver implements ISqlDriver {
         }
     }
 
+    private isMySqlFamily() {
+        return ["mysql", "mariadb"].includes(this.clientType);
+    }
+
     /**
      * 비관적 잠금을 위한 SQL을 반환합니다.
      */
     getForUpdateNoWait(): string {
-        if (!["mysql", "mariadb"].includes(this.clientType)) {
+        if (!this.isMySqlFamily()) {
             return " FOR UPDATE";
         }
 
