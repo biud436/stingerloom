@@ -5,6 +5,7 @@ import { MysqlSchemaInterface } from "./BaseSchema";
 import { ColumnOption, ColumnType } from "@stingerloom/orm/decorators";
 import { ColumnMetadata } from "@stingerloom/orm/scanner/ColumnScanner";
 import { ISqlDriver } from "../SqlDriver";
+import { Exception } from "@stingerloom/error";
 
 export class MySqlDriver implements ISqlDriver {
     constructor(
@@ -220,6 +221,16 @@ export class MySqlDriver implements ISqlDriver {
 
             // DECIMAL 타입의 경우, precision과 scale을 설정합니다.
             if (type.startsWith("DECIMAL")) {
+                if (option.precision !== undefined) {
+                    // 65 이상의 값은 MySQL에서 지원하지 않습니다.
+                    if (option.precision > 65) {
+                        throw new Exception(
+                            "MySQL에서 지원하는 DECIMAL 타입의 precision은 65 이하입니다.",
+                            400,
+                        );
+                    }
+                }
+
                 type = type.replace(
                     "$precision",
                     option.precision?.toString() || "10",
