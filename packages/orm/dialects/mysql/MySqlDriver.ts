@@ -302,6 +302,44 @@ export class MySqlDriver implements ISqlDriver {
      * 비관적 잠금을 위한 SQL을 반환합니다.
      *
      * Locking Reads - https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html
+     *
+     * ## InnoDB 잠금 읽기
+     *
+     * InnoDB에서는 SELECT 문을 사용해 읽을 때, 여러 종류의 잠금을 설정할 수 있습니다. 기본적으로 SELECT 문은 공유 잠금을 얻지 않고 데이터에 접근하지만, 특정 상황에서는 잠금을 명시적으로 설정하는 것이 필요합니다. 이를 통해 트랜잭션이 안전하게 데이터를 읽고 수정할 수 있습니다. InnoDB의 잠금 읽기에는 다음과 같은 주요 유형이 있습니다.
+     *
+     * 1. SELECT ... FOR UPDATE
+     * 이 구문은 데이터를 읽으면서 해당 행에 대해 배타적 잠금을 설정합니다. 다른 트랜잭션이 이 행을 수정하거나 삭제하는 것을 방지하기 위해 사용됩니다. FOR UPDATE는 일반적으로 UPDATE, DELETE 문과 함께 사용되며, 해당 트랜잭션이 완료될 때까지 다른 트랜잭션은 해당 행을 변경할 수 없습니다.
+     *
+     * 예시:
+     *
+     * ```sql
+     * SELECT * FROM employees WHERE employee_id = 1 FOR UPDATE;
+     * ```
+     *
+     * 이 구문은 트랜잭션이 종료될 때까지 다른 트랜잭션이 해당 행을 수정하거나 삭제하지 못하게 보장합니다.
+     *
+     * 2. SELECT ... LOCK IN SHARE MODE
+     * 이 구문은 행에 대해 공유 잠금을 설정하여 다른 트랜잭션이 해당 행을 수정하거나 삭제하는 것을 방지합니다. 다만 다른 트랜잭션이 동일한 행에 대해 공유 잠금을 획득하고 읽는 것은 가능합니다. 공유 잠금은 주로 참조 무결성을 보장할 때 사용됩니다.
+     *
+     * 예시:
+     *
+     * ```sql
+     * SELECT * FROM employees WHERE employee_id = 1 LOCK IN SHARE MODE;
+     * ```
+     *
+     * 이 구문은 다른 트랜잭션이 공유 잠금을 통해 데이터를 읽을 수 있게 하되, 해당 행에 대한 수정이나 삭제는 불가능하게 만듭니다.
+     * 차이점 정리
+     * FOR UPDATE: 선택한 행에 대해 배타적 잠금을 설정하여 다른 트랜잭션이 행을 수정하거나 삭제하는 것을 막음.
+     * LOCK IN SHARE MODE: 선택한 행에 대해 공유 잠금을 설정하여 다른 트랜잭션이 수정하거나 삭제하는 것을 막지만, 읽기는 허용함.
+     *
+     * 이러한 잠금 읽기는 트랜잭션의 일관성과 무결성을 보장하기 위한 중요한 도구로 사용됩니다.
+     * InnoDB는 잠금을 효율적으로 처리하여 데이터의 안전한 동시 접근을 지원합니다.
+     *
+     * ## NOWAIT
+     * `NOWAIT`를 사용하는 잠금 읽기는 절대 행 잠금을 획득하기 위해 기다리지 않습니다. 쿼리는 즉시 실행되며, 요청된 행이 잠긴 경우 오류와 함께 실패합니다.
+     *
+     * ## SKIP LOCKED
+     * `SKIP LOCKED`를 사용하는 잠금 읽기는 행 잠금을 획득하기 위해 절대 기다리지 않습니다. 쿼리는 즉시 실행되며, 잠긴 행을 결과 집합에서 제외합니다.
      */
     getForUpdateNoWait(): string {
         if (!this.isMySqlFamily()) {
