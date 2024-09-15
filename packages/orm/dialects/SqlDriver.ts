@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ColumnType } from "../decorators/Column";
 import { ColumnMetadata } from "../scanner/ColumnScanner";
 import { MysqlSchemaInterface } from "./mysql/BaseSchema";
 
@@ -152,4 +153,14 @@ export interface ISqlDriver<T = any> {
         tableName: string,
         columns: Omit<ColumnMetadata, "target" | "type">[],
     ): Promise<T>;
+
+    /**
+     * TS 타입으로부터 데이터베이스 컬럼 타입을 추론합니다.
+     */
+    getColumnType(type: any): string;
+
+    /**
+     * ColumnType을 데이터베이스 컬럼 타입으로 변환합니다.
+     */
+    castType(type: ColumnType): string;
 }

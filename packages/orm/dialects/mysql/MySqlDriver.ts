@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import sql, { join, raw } from "sql-template-tag";
 import { IConnector } from "../../types/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
-import { ColumnOption } from "@stingerloom/orm/decorators";
+import { ColumnOption, ColumnType } from "@stingerloom/orm/decorators";
 import { ColumnMetadata } from "@stingerloom/orm/scanner/ColumnScanner";
 import { ISqlDriver } from "../SqlDriver";
 
@@ -223,5 +224,41 @@ export class MySqlDriver implements ISqlDriver {
         )})`;
 
         return this.connector.query(result.text);
+    }
+
+    /**
+     * TS 타입으로부터 데이터베이스 컬럼 타입을 추론합니다.
+     */
+    getColumnType(type: any): string {
+        switch (type) {
+            case String:
+                return "VARCHAR";
+            case Number:
+                return "INT";
+            case Boolean:
+                return "BOOLEAN";
+            case Date:
+                return "DATETIME";
+            case Buffer:
+                return "BLOB";
+            default:
+                return "TEXT";
+        }
+    }
+
+    /**
+     * ColumnType을 데이터베이스 컬럼 타입으로 변환합니다.
+     */
+    castType(type: ColumnType): string {
+        switch (type) {
+            case "boolean":
+                return "TINYINT(4)";
+            case "float":
+                return "FLOAT";
+            case "double":
+                return "DECIMAL(10, 2)";
+            default:
+                return type;
+        }
     }
 }
