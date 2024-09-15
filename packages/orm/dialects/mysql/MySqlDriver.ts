@@ -217,7 +217,14 @@ export class MySqlDriver implements ISqlDriver {
     ) {
         const columnsMap = columns.map((column) => {
             const option = column.options as ColumnOption;
+
             let type = this.castType(option.type);
+
+            // BOOLEAN 타입의 길이를 설정합니다.
+            // 길이가 설정되어 있지 않다면 기본값은 1입니다.
+            if (option.type === "boolean") {
+                type = type.replace("$n", option.length?.toString() ?? "1");
+            }
 
             // DECIMAL 타입의 경우, precision과 scale을 설정합니다.
             if (type.startsWith("DECIMAL")) {
@@ -277,7 +284,7 @@ export class MySqlDriver implements ISqlDriver {
     castType(type: ColumnType): string {
         switch (type) {
             case "boolean":
-                return "TINYINT(4)";
+                return "TINYINT($n)";
             case "float":
                 return "FLOAT";
             case "double":
@@ -293,6 +300,8 @@ export class MySqlDriver implements ISqlDriver {
 
     /**
      * 비관적 잠금을 위한 SQL을 반환합니다.
+     *
+     * Locking Reads - https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html
      */
     getForUpdateNoWait(): string {
         if (!this.isMySqlFamily()) {
