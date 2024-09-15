@@ -7,7 +7,10 @@ import { ColumnMetadata } from "@stingerloom/orm/scanner/ColumnScanner";
 import { ISqlDriver } from "../SqlDriver";
 
 export class MySqlDriver implements ISqlDriver {
-    constructor(private readonly connector: IConnector) {}
+    constructor(
+        private readonly connector: IConnector,
+        private readonly clientType: string = "mysql",
+    ) {}
 
     /**
      * 테이블이 존재하는지 확인합니다.
@@ -260,5 +263,16 @@ export class MySqlDriver implements ISqlDriver {
             default:
                 return type;
         }
+    }
+
+    /**
+     * 비관적 잠금을 위한 SQL을 반환합니다.
+     */
+    getForUpdateNoWait(): string {
+        if (!["mysql", "mariadb"].includes(this.clientType)) {
+            return " FOR UPDATE";
+        }
+
+        return " FOR UPDATE NOWAIT";
     }
 }

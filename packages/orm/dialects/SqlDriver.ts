@@ -163,4 +163,9 @@ export interface ISqlDriver<T = any> {
      * ColumnType을 데이터베이스 컬럼 타입으로 변환합니다.
      */
     castType(type: ColumnType): string;
+
+    /**
+     * 비관적 잠금을 위한 SQL을 반환합니다.
+     */
+    getForUpdateNoWait(): string;
 }

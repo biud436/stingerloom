@@ -60,7 +60,7 @@ export class EntityManager implements IEntityManager {
 
         switch (client.type as IDatabaseType) {
             case "mysql":
-                this.driver = new MySqlDriver(connector);
+                this.driver = new MySqlDriver(connector, client.type);
                 this.dataSource = new MySqlDataSource(connector);
                 break;
             default:
