@@ -216,8 +216,19 @@ export class MySqlDriver implements ISqlDriver {
     ) {
         const columnsMap = columns.map((column) => {
             const option = column.options as ColumnOption;
+            let type = this.castType(option.type);
+
+            // DECIMAL 타입의 경우, precision과 scale을 설정합니다.
+            if (type.startsWith("DECIMAL")) {
+                type = type.replace(
+                    "$precision",
+                    option.precision?.toString() || "10",
+                );
+                type = type.replace("$scale", option.scale?.toString() || "2");
+            }
+
             return raw(
-                `\`${column.name}\` ${option.type}(${option.length}) ${option.nullable ? "NULL" : "NOT NULL"} ${option.primary ? "PRIMARY KEY" : ""} ${option.autoIncrement ? "AUTO_INCREMENT" : ""}`,
+                `\`${column.name}\` ${type}(${option.length}) ${option.nullable ? "NULL" : "NOT NULL"} ${option.primary ? "PRIMARY KEY" : ""} ${option.autoIncrement ? "AUTO_INCREMENT" : ""}`,
             );
         });
 
@@ -259,7 +270,7 @@ export class MySqlDriver implements ISqlDriver {
             case "float":
                 return "FLOAT";
             case "double":
-                return "DECIMAL(10, 2)";
+                return "DECIMAL($precision, $scale)";
             default:
                 return type;
         }

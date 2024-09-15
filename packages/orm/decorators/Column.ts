@@ -42,6 +42,9 @@ export interface ColumnOption {
      * 데이터베이스에서 컬럼의 값을 가져올 때, 오브젝트에 매핑되는 컬럼의 타입을 변환할 수 있는 함수입니다.
      */
     transform?: <T = any>(raw: unknown) => T;
+
+    precision?: number;
+    scale?: number;
 }
 
 export const COLUMN_TOKEN = Symbol.for("COLUMN");
