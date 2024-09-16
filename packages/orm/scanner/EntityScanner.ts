@@ -18,4 +18,14 @@ export class EntityScanner extends MetadataScanner {
             yield value;
         }
     }
+
+    public scan(target: ClazzType<unknown>): EntityMetadata | null {
+        for (const [_, value] of this.mapper) {
+            if (value.target === target) {
+                return value;
+            }
+        }
+
+        return null;
+    }
 }

@@ -23,12 +23,12 @@ export type ManyToOneMetadata = {
     /**
      * 연관관계의 엔티티를 가져오는 함수입니다
      */
-    getMasterEntity: RetrieveEntity;
+    getMappingEntity: RetrieveEntity;
 
     /**
      * 매핑할 엔티티를 가져오는 함수입니다
      */
-    getMappingEntity: SetRelatedEntity<EntityLike>;
+    getMappingProperty: SetRelatedEntity<EntityLike>;
 
     option?: ManyToOneOption;
 };
@@ -43,8 +43,8 @@ export type ManyToOneMetadata = {
  * user: User;
  */
 export function ManyToOne(
-    getMasterEntity: RetrieveEntity,
-    getForeignEntity: SetRelatedEntity<EntityLike>,
+    getMappingEntity: RetrieveEntity,
+    getMappingProperty: SetRelatedEntity<EntityLike>,
     option?: ManyToOneOption,
 ): PropertyDecorator {
     return (target, propertyKey) => {
@@ -55,8 +55,8 @@ export function ManyToOne(
             target,
             type: injectParam,
             columnName,
-            getMasterEntity,
-            getMappingEntity: getForeignEntity,
+            getMappingEntity,
+            getMappingProperty,
             option,
         };
 
