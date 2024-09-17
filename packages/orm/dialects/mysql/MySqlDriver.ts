@@ -105,6 +105,7 @@ export class MySqlDriver implements ISqlDriver {
 
     /**
      * 외래키를 추가합니다.
+     * TODO: 추후, 사용자 지정 외래키 이름을 지정할 수 있게 해야 합니다.
      *
      * @param tableName
      * @param columnName
@@ -117,9 +118,34 @@ export class MySqlDriver implements ISqlDriver {
         foreignTableName: string,
         foreignColumnName: string,
     ) {
-        return this.connector.query(
-            `ALTER TABLE ${tableName} ADD FOREIGN KEY (${columnName}) REFERENCES ${foreignTableName}(${foreignColumnName})`,
+        // 외래키 이름을 프레임워크 규칙에 맞게 생성합니다.
+        // 별도의 키 이름이 지정될 수도 있습니다. 이 경우, 사용자가 지정한 이름을 사용해야 합니다.
+        const foreignKeyName = this.generateForeignKeyName(
+            tableName,
+            foreignTableName,
+            columnName,
         );
+
+        // 추후 ON DELETE 와 ON UPDATE 옵션을 지정할 수 있게 해야 합니다.
+        // 현재는 NO ACTION으로 설정되어 있습니다.
+        return this.connector.query(
+            `ALTER TABLE ${tableName} ADD CONSTRAINT ${foreignKeyName} FOREIGN KEY (${columnName}) REFERENCES ${foreignTableName}(${foreignColumnName}) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+        );
+    }
+
+    /**
+     * 외래키 이름을 생성합니다.
+     *
+     * @param sourceTable
+     * @param targetTable
+     * @param sourceColumn
+     */
+    generateForeignKeyName(
+        sourceTable: string,
+        targetTable: string,
+        sourceColumn: string,
+    ): string {
+        return `fk_${sourceTable}_${targetTable}_${sourceColumn}`;
     }
 
     /**

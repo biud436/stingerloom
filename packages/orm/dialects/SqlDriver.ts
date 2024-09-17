@@ -84,6 +84,12 @@ export interface ISqlDriver<T = any> {
         foreignColumnName: string,
     ): Promise<T>;
 
+    generateForeignKeyName(
+        sourceTable: string,
+        targetTable: string,
+        sourceColumn: string,
+    ): string;
+
     /**
      * 외래키를 제거합니다.
      *
