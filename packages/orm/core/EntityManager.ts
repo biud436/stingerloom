@@ -117,11 +117,7 @@ export class EntityManager implements IEntityManager {
                 }
 
                 // 외래키를 생성합니다.
-                await this.registerForeignKeys(
-                    TargetEntity,
-                    tableName,
-                    entityScanner,
-                );
+                await this.registerForeignKeys(TargetEntity, tableName);
 
                 // 인덱스를 생성합니다.
                 await this.registerIndex(TargetEntity, tableName);
@@ -132,18 +128,22 @@ export class EntityManager implements IEntityManager {
     private async registerForeignKeys(
         TargetEntity: ClazzType<any>,
         tableName: string,
-        entityScanner: EntityScanner,
     ) {
+        // 엔티티 매니저를 가지고 옵니다.
+        const entityScanner = Container.get(EntityScanner);
+
         // ManyToOne 관계를 가져옵니다.
         const manyToOneItems = Reflect.getMetadata(
             MANY_TO_ONE_TOKEN,
             TargetEntity,
         ) as ManyToOneMetadata[];
 
+        const isValidManyToOne = manyToOneItems && manyToOneItems.length > 0;
+
         // ManyToOne 관계가 존재할 경우, 외래키를 생성합니다.
-        if (manyToOneItems && manyToOneItems.length > 0) {
+        if (isValidManyToOne) {
             for (const manyToOneItem of manyToOneItems) {
-                const columnName = manyToOneItem.columnName;
+                const { columnName } = manyToOneItem;
 
                 // 매핑할 엔티티를 가져옵니다.
                 const mappingEntity = manyToOneItem.getMappingEntity();
