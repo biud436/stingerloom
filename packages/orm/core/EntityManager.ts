@@ -172,34 +172,47 @@ export class EntityManager implements IEntityManager {
                     }
                 }
 
-                const indexer = Reflect.getMetadata(
-                    INDEX_TOKEN,
-                    TargetEntity.prototype,
-                ) as IndexMetadata[];
-                if (indexer) {
-                    for (const index of indexer) {
-                        const indexName = `INDEX_${tableName}_${index.name}`;
+                await this.registerIndex(TargetEntity, tableName);
+            }
+        }
+    }
 
-                        const indexes = (await this.driver?.getIndexes(
-                            tableName,
-                        )) as any[];
+    /**
+     * 인덱스를 생성합니다.
+     *
+     * @param TargetEntity
+     * @param tableName
+     */
+    private async registerIndex(
+        TargetEntity: ClazzType<any>,
+        tableName: string,
+    ) {
+        const indexer = Reflect.getMetadata(
+            INDEX_TOKEN,
+            TargetEntity.prototype,
+        ) as IndexMetadata[];
+        if (indexer) {
+            for (const index of indexer) {
+                const indexName = `INDEX_${tableName}_${index.name}`;
 
-                        let isExist = false;
-                        for (const idx of indexes || []) {
-                            if (idx["Key_name"] === indexName) {
-                                isExist = true;
-                                break;
-                            }
-                        }
+                const indexes = (await this.driver?.getIndexes(
+                    tableName,
+                )) as any[];
 
-                        if (!isExist) {
-                            await this.driver?.addIndex(
-                                tableName,
-                                index.name,
-                                indexName,
-                            );
-                        }
+                let isExist = false;
+                for (const idx of indexes || []) {
+                    if (idx["Key_name"] === indexName) {
+                        isExist = true;
+                        break;
                     }
+                }
+
+                if (!isExist) {
+                    await this.driver?.addIndex(
+                        tableName,
+                        index.name,
+                        indexName,
+                    );
                 }
             }
         }
