@@ -116,63 +116,74 @@ export class EntityManager implements IEntityManager {
                     await this.driver?.createTable(tableName, metadata.columns);
                 }
 
-                // ManyToOne 관계를 가져옵니다.
-                const manyToOneItems = Reflect.getMetadata(
-                    MANY_TO_ONE_TOKEN,
+                // 외래키를 생성합니다.
+                await this.registerForeignKeys(
                     TargetEntity,
-                ) as ManyToOneMetadata[];
+                    tableName,
+                    entityScanner,
+                );
 
-                // ManyToOne 관계가 존재할 경우, 외래키를 생성합니다.
-                if (manyToOneItems && manyToOneItems.length > 0) {
-                    for (const manyToOneItem of manyToOneItems) {
-                        const columnName = manyToOneItem.columnName;
+                // 인덱스를 생성합니다.
+                await this.registerIndex(TargetEntity, tableName);
+            }
+        }
+    }
 
-                        // 매핑할 엔티티를 가져옵니다.
-                        const mappingEntity = manyToOneItem.getMappingEntity();
-                        if (!mappingEntity) {
-                            throw new Error(
-                                "매핑할 엔티티가 존재하지 않습니다.",
-                            );
-                        }
+    private async registerForeignKeys(
+        TargetEntity: ClazzType<any>,
+        tableName: string,
+        entityScanner: EntityScanner,
+    ) {
+        // ManyToOne 관계를 가져옵니다.
+        const manyToOneItems = Reflect.getMetadata(
+            MANY_TO_ONE_TOKEN,
+            TargetEntity,
+        ) as ManyToOneMetadata[];
 
-                        // 메타데이터를 검색합니다.
-                        const mappingTableMetadata =
-                            entityScanner.scan(mappingEntity);
-                        if (!mappingTableMetadata) {
-                            throw new Error(
-                                "매핑할 엔티티의 메타데이터가 존재하지 않습니다.",
-                            );
-                        }
+        // ManyToOne 관계가 존재할 경우, 외래키를 생성합니다.
+        if (manyToOneItems && manyToOneItems.length > 0) {
+            for (const manyToOneItem of manyToOneItems) {
+                const columnName = manyToOneItem.columnName;
 
-                        // 매핑할 테이블의 기본키를 가져옵니다.
-                        const mappingTablePrimaryKey =
-                            mappingTableMetadata.columns.find(
-                                (e) => e.options?.primary,
-                            )?.name;
-
-                        // 기본키가 없으면 에러를 발생시킵니다.
-                        if (!mappingTablePrimaryKey) {
-                            throw new Error(
-                                "매핑 엔티티의 기본키가 존재하지 않습니다.",
-                            );
-                        }
-
-                        const mappingTableName = mappingEntity.name;
-
-                        await this.driver?.addForeignKey(
-                            // 현재 테이블 이름
-                            tableName,
-                            // 현재 테이블의 컬럼 이름
-                            columnName,
-                            // 매핑할 테이블 이름
-                            mappingTableName,
-                            // 매핑할 테이블의 기본키
-                            mappingTablePrimaryKey,
-                        );
-                    }
+                // 매핑할 엔티티를 가져옵니다.
+                const mappingEntity = manyToOneItem.getMappingEntity();
+                if (!mappingEntity) {
+                    throw new Error("매핑할 엔티티가 존재하지 않습니다.");
                 }
 
-                await this.registerIndex(TargetEntity, tableName);
+                // 메타데이터를 검색합니다.
+                const mappingTableMetadata = entityScanner.scan(mappingEntity);
+                if (!mappingTableMetadata) {
+                    throw new Error(
+                        "매핑할 엔티티의 메타데이터가 존재하지 않습니다.",
+                    );
+                }
+
+                // 매핑할 테이블의 기본키를 가져옵니다.
+                const mappingTablePrimaryKey =
+                    mappingTableMetadata.columns.find(
+                        (e) => e.options?.primary,
+                    )?.name;
+
+                // 기본키가 없으면 에러를 발생시킵니다.
+                if (!mappingTablePrimaryKey) {
+                    throw new Error(
+                        "매핑 엔티티의 기본키가 존재하지 않습니다.",
+                    );
+                }
+
+                const mappingTableName = mappingEntity.name;
+
+                await this.driver?.addForeignKey(
+                    // 현재 테이블 이름
+                    tableName,
+                    // 현재 테이블의 컬럼 이름
+                    columnName,
+                    // 매핑할 테이블 이름
+                    mappingTableName,
+                    // 매핑할 테이블의 기본키
+                    mappingTablePrimaryKey,
+                );
             }
         }
     }
