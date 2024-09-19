@@ -75,7 +75,9 @@ describe("ORM Entity 외래키 생성 테스트", () => {
         })
         productId!: number;
 
-        @ManyToOne(() => Product, (product) => product.id)
+        @ManyToOne(() => Product, (product) => product.id, {
+            joinColumn: "productId",
+        })
         product!: Product;
     }
 

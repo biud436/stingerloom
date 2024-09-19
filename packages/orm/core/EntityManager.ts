@@ -145,7 +145,7 @@ export class EntityManager implements IEntityManager {
         // ManyToOne 관계가 존재할 경우, 외래키를 생성합니다.
         if (isValidManyToOne) {
             for (const manyToOneItem of manyToOneItems) {
-                const { columnName } = manyToOneItem;
+                const { joinColumn } = manyToOneItem;
 
                 // 매핑할 엔티티를 가져옵니다.
                 const mappingEntity = manyToOneItem.getMappingEntity();
@@ -159,6 +159,10 @@ export class EntityManager implements IEntityManager {
                     throw new Error(
                         "매핑할 엔티티의 메타데이터가 존재하지 않습니다.",
                     );
+                }
+
+                if (!joinColumn) {
+                    throw new Error("JoinColumn이 존재하지 않습니다.");
                 }
 
                 // 매핑할 테이블의 기본키를 가져옵니다.
@@ -180,7 +184,7 @@ export class EntityManager implements IEntityManager {
                     // 현재 테이블 이름
                     tableName,
                     // 현재 테이블의 키 이름
-                    columnName,
+                    joinColumn,
                     // 매핑할 테이블 이름
                     mappingTableName,
                     // 매핑할 테이블의 기본키

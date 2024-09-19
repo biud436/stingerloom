@@ -15,6 +15,7 @@ export type ManyToOneOption = {
      * 데이터베이스에서 컬럼의 값을 가져올 때, 오브젝트에 매핑되는 컬럼의 타입을 변환할 수 있는 함수입니다.
      */
     transform?: <T = any>(raw: unknown) => T;
+    joinColumn?: string;
 };
 
 export type ManyToOneMetadata<T> = {
@@ -60,6 +61,7 @@ export function ManyToOne<T extends EntityLike>(
             target,
             type: injectParam,
             columnName, // 조인 컬럼이 필요... 이건 productId가 되어야 하는데, product가 되어버림...
+            joinColumn: option?.joinColumn,
             getMappingEntity,
             getMappingProperty,
             option,
