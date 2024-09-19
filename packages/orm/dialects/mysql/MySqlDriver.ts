@@ -129,7 +129,7 @@ export class MySqlDriver implements ISqlDriver {
         // 추후 ON DELETE 와 ON UPDATE 옵션을 지정할 수 있게 해야 합니다.
         // 현재는 NO ACTION으로 설정되어 있습니다.
         return this.connector.query(
-            `ALTER TABLE ${tableName} ADD CONSTRAINT ${foreignKeyName} FOREIGN KEY (${columnName}) REFERENCES ${foreignTableName}(${foreignColumnName}) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+            `ALTER TABLE ${this.wrap(tableName)} ADD CONSTRAINT ${foreignKeyName} FOREIGN KEY (${columnName}) REFERENCES ${foreignTableName}(${foreignColumnName}) ON DELETE NO ACTION ON UPDATE NO ACTION`,
         );
     }
 

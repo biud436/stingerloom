@@ -135,10 +135,12 @@ export class EntityManager implements IEntityManager {
         // ManyToOne 관계를 가져옵니다.
         const manyToOneItems = Reflect.getMetadata(
             MANY_TO_ONE_TOKEN,
-            TargetEntity,
+            TargetEntity.prototype,
         ) as ManyToOneMetadata<any>[];
 
         const isValidManyToOne = manyToOneItems && manyToOneItems.length > 0;
+
+        console.log("isValidManyToOne", isValidManyToOne);
 
         // ManyToOne 관계가 존재할 경우, 외래키를 생성합니다.
         if (isValidManyToOne) {
@@ -177,7 +179,7 @@ export class EntityManager implements IEntityManager {
                 await this.driver?.addForeignKey(
                     // 현재 테이블 이름
                     tableName,
-                    // 현재 테이블의 컬럼 이름
+                    // 현재 테이블의 키 이름
                     columnName,
                     // 매핑할 테이블 이름
                     mappingTableName,

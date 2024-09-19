@@ -2,6 +2,7 @@ import { ClazzType, ReflectManager } from "@stingerloom/common";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const MANY_TO_ONE_TOKEN = Symbol.for("MANY_TO_ONE");
+export const JOIN_COLUMN_TOKEN = Symbol.for("JOIN_COLUMN");
 
 export type EntityLike<T = any> = ClazzType<T>;
 export type RetrieveEntity<T> = () => T;
@@ -21,6 +22,8 @@ export type ManyToOneMetadata<T> = {
     type: EntityLike;
 
     columnName: string;
+
+    joinColumn?: string;
 
     /**
      * 연관관계의 엔티티를 가져오는 함수입니다
@@ -56,7 +59,7 @@ export function ManyToOne<T extends EntityLike>(
         const metadata = <ManyToOneMetadata<T>>{
             target,
             type: injectParam,
-            columnName,
+            columnName, // 조인 컬럼이 필요... 이건 productId가 되어야 하는데, product가 되어버림...
             getMappingEntity,
             getMappingProperty,
             option,
