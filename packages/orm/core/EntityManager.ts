@@ -136,7 +136,7 @@ export class EntityManager implements IEntityManager {
         const manyToOneItems = Reflect.getMetadata(
             MANY_TO_ONE_TOKEN,
             TargetEntity,
-        ) as ManyToOneMetadata[];
+        ) as ManyToOneMetadata<any>[];
 
         const isValidManyToOne = manyToOneItems && manyToOneItems.length > 0;
 
@@ -250,7 +250,8 @@ export class EntityManager implements IEntityManager {
         entity: ClazzType<T>,
         findOption: FindOption<T>,
     ): Promise<EntityResult<T>> {
-        const { select, orderBy, where, limit } = findOption;
+        const { select, orderBy, where, take } = findOption;
+        let { limit } = findOption;
 
         const transactionHolder = new TransactionHolder();
 
@@ -288,8 +289,21 @@ export class EntityManager implements IEntityManager {
             for (const key in orderBy) {
                 const value = orderBy[key];
                 if (value) {
-                    orderByMap.push(sql`${raw(key)} ${value}`);
+                    // orderByMap.push(sql`${raw(key)} ${value}`);
+                    orderByMap.push({
+                        sql: key,
+                        order: value,
+                    });
                 }
+            }
+
+            // limit 또는 take가 존재할 경우, limit를 설정합니다.
+            let isLimit = false;
+            if (limit) {
+                isLimit = true;
+            }
+            if (limit && take) {
+                limit = take;
             }
 
             // SELECT 쿼리
@@ -301,13 +315,27 @@ export class EntityManager implements IEntityManager {
             // WHERE 쿼리
             const whereQuery = sql`WHERE ${where ? join(whereMap, " AND ") : "1=1"}`;
 
+            const orderByQuery = sql`${
+                orderBy
+                    ? sql`ORDER BY ${join(
+                          orderByMap.map((item) =>
+                              raw(`${item.sql} ${item.order}`),
+                          ),
+                          ", ",
+                      )}`
+                    : sql``
+            }`;
+
+            const limitQuery = sql`${isLimit ? sql`LIMIT ${limit}` : sql``}`;
+
             // 최종 쿼리
             const resultQuery = sql`${join(
                 // prettier-ignore
                 [
                     selectFromQuery, 
                     whereQuery, 
-                    limit === 1 ? sql`LIMIT 1` : sql``,
+                    orderByQuery,
+                    limitQuery,
                 ],
                 " ",
             )}`;
@@ -340,6 +368,13 @@ export class EntityManager implements IEntityManager {
 
             console.log("연결이 종료되었습니다.");
         }
+    }
+
+    /**
+     * 백틱으로 감싸지 않은 컬럼 이름을 백틱으로 감싸서 반환합니다.
+     */
+    wrap(columnName: string) {
+        return `\`${columnName}\``;
     }
 
     /**
@@ -385,7 +420,7 @@ export class EntityManager implements IEntityManager {
             if (!pkValue) {
                 const result = await transactionHolder.query<T>(
                     sql`
-                        INSERT INTO ${raw(metadata.name!)}
+                        INSERT INTO ${raw(this.wrap(metadata.name!))}
                         (${join(columns, ", ")})
                         VALUES (${join(values, ", ")})
                     `,
@@ -403,7 +438,7 @@ export class EntityManager implements IEntityManager {
 
             const result = await transactionHolder.query<T>(
                 sql`
-                    UPDATE ${raw(metadata.name!)}
+                    UPDATE ${raw(this.wrap(metadata.name!))}
                     SET ${join(updateMap, ", ")}
                     WHERE ${raw(pk.name!)} = ${pkValue}
                 `,

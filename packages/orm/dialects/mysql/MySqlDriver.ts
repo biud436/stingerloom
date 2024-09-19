@@ -276,12 +276,19 @@ export class MySqlDriver implements ISqlDriver {
             );
         });
 
-        const result = sql`CREATE TABLE IF NOT EXISTS ${raw(tableName)} (${join(
+        const result = sql`CREATE TABLE IF NOT EXISTS ${raw(this.wrap(tableName))} (${join(
             columnsMap,
             ",",
         )})`;
 
         return this.connector.query(result.text);
+    }
+
+    /**
+     * 백틱으로 감싸지 않은 컬럼 이름을 백틱으로 감싸서 반환합니다.
+     */
+    wrap(columnName: string) {
+        return `\`${columnName}\``;
     }
 
     /**

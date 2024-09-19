@@ -3,9 +3,11 @@ import { ClazzType, ReflectManager } from "@stingerloom/common";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const MANY_TO_ONE_TOKEN = Symbol.for("MANY_TO_ONE");
 
-export type EntityLike<T = any> = { new (): T };
-export type RetrieveEntity = () => EntityLike;
-export type SetRelatedEntity<T extends EntityLike> = (entity: T) => void;
+export type EntityLike<T = any> = ClazzType<T>;
+export type RetrieveEntity<T> = () => T;
+export type SetRelatedEntity<T extends EntityLike> = (
+    entity: InstanceType<T>,
+) => void;
 
 export type ManyToOneOption = {
     /**
@@ -14,7 +16,7 @@ export type ManyToOneOption = {
     transform?: <T = any>(raw: unknown) => T;
 };
 
-export type ManyToOneMetadata = {
+export type ManyToOneMetadata<T> = {
     target: ClazzType<unknown>;
     type: EntityLike;
 
@@ -23,7 +25,7 @@ export type ManyToOneMetadata = {
     /**
      * 연관관계의 엔티티를 가져오는 함수입니다
      */
-    getMappingEntity: RetrieveEntity;
+    getMappingEntity: RetrieveEntity<T>;
 
     /**
      * 매핑할 엔티티를 가져오는 함수입니다
@@ -42,8 +44,8 @@ export type ManyToOneMetadata = {
  * @ManyToOne(() => User, (entity) => entity.user)
  * user: User;
  */
-export function ManyToOne(
-    getMappingEntity: RetrieveEntity,
+export function ManyToOne<T extends EntityLike>(
+    getMappingEntity: RetrieveEntity<T>,
     getMappingProperty: SetRelatedEntity<EntityLike>,
     option?: ManyToOneOption,
 ): PropertyDecorator {
@@ -51,7 +53,7 @@ export function ManyToOne(
         const injectParam = ReflectManager.getType<any>(target, propertyKey);
 
         const columnName = propertyKey.toString();
-        const metadata = <ManyToOneMetadata>{
+        const metadata = <ManyToOneMetadata<T>>{
             target,
             type: injectParam,
             columnName,
