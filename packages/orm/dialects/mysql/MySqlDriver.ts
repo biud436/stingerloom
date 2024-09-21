@@ -28,7 +28,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     addPrimaryKey(tableName: string, columnName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} ADD PRIMARY KEY (${columnName})`,
+            `ALTER TABLE ${this.wrap(tableName)} ADD PRIMARY KEY (${this.wrap(columnName)})`,
         );
     }
 
@@ -40,7 +40,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     addAutoIncrement(tableName: string, columnName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} MODIFY ${columnName} INT AUTO_INCREMENT`,
+            `ALTER TABLE ${this.wrap(tableName)} MODIFY ${this.wrap(columnName)} INT AUTO_INCREMENT`,
         );
     }
 
@@ -51,7 +51,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     dropPrimaryKey(tableName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} DROP PRIMARY KEY`,
+            `ALTER TABLE ${this.wrap(tableName)} DROP PRIMARY KEY`,
         );
     }
 
@@ -63,7 +63,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     addUniqueKey(tableName: string, columnName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} ADD UNIQUE (${columnName})`,
+            `ALTER TABLE ${this.wrap(tableName)} ADD UNIQUE (${this.wrap(columnName)})`,
         );
     }
 
@@ -75,7 +75,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     dropUniqueKey(tableName: string, columnName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} DROP INDEX ${columnName}`,
+            `ALTER TABLE ${this.wrap(tableName)} DROP INDEX ${this.wrap(columnName)}`,
         );
     }
 
@@ -87,7 +87,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     addColumn(tableName: string, columnName: string, columnType: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} ADD ${columnName} ${columnType}`,
+            `ALTER TABLE ${this.wrap(tableName)} ADD ${this.wrap(columnName)} ${columnType}`,
         );
     }
 
@@ -99,7 +99,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     dropColumn(tableName: string, columnName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} DROP COLUMN ${columnName}`,
+            `ALTER TABLE ${this.wrap(tableName)} DROP COLUMN ${this.wrap(columnName)}`,
         );
     }
 
@@ -129,7 +129,7 @@ export class MySqlDriver implements ISqlDriver {
         // 추후 ON DELETE 와 ON UPDATE 옵션을 지정할 수 있게 해야 합니다.
         // 현재는 NO ACTION으로 설정되어 있습니다.
         return this.connector.query(
-            `ALTER TABLE ${this.wrap(tableName)} ADD CONSTRAINT ${foreignKeyName} FOREIGN KEY (${columnName}) REFERENCES ${foreignTableName}(${foreignColumnName}) ON DELETE NO ACTION ON UPDATE NO ACTION`,
+            `ALTER TABLE ${this.wrap(tableName)} ADD CONSTRAINT ${foreignKeyName} FOREIGN KEY (${this.wrap(columnName)}) REFERENCES ${this.wrap(foreignTableName)}(${this.wrap(foreignColumnName)}) ON DELETE NO ACTION ON UPDATE NO ACTION`,
         );
     }
 
@@ -156,7 +156,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     dropForeignKey(tableName: string, columnName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} DROP FOREIGN KEY ${columnName}`,
+            `ALTER TABLE ${this.wrap(tableName)} DROP FOREIGN KEY ${this.wrap(columnName)}`,
         );
     }
 
@@ -169,13 +169,13 @@ export class MySqlDriver implements ISqlDriver {
      */
     addIndex(tableName: string, columnName: string, indexName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} ADD INDEX ${indexName} (${columnName})`,
+            `ALTER TABLE ${this.wrap(tableName)} ADD INDEX ${indexName} (${this.wrap(columnName)})`,
         );
     }
 
     hasIndex(tableName: string, indexName: string) {
         return this.connector.query(
-            `SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_NAME = ${tableName} AND INDEX_NAME = ${indexName}`,
+            `SELECT COUNT(*) as count FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_NAME = ${this.wrap(tableName)} AND INDEX_NAME = ${indexName}`,
         );
     }
 
@@ -187,7 +187,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     dropIndex(tableName: string, indexName: string) {
         return this.connector.query(
-            `ALTER TABLE ${tableName} DROP INDEX ${indexName}`,
+            `ALTER TABLE ${this.wrap(tableName)} DROP INDEX ${indexName}`,
         );
     }
 
@@ -197,7 +197,9 @@ export class MySqlDriver implements ISqlDriver {
      * @param tableName
      */
     getSchemas(tableName: string): Promise<MysqlSchemaInterface[]> {
-        return this.connector.query(`SHOW COLUMNS FROM ${tableName}`);
+        return this.connector.query(
+            `SHOW COLUMNS FROM ${this.wrap(tableName)}`,
+        );
     }
 
     /**
@@ -206,7 +208,9 @@ export class MySqlDriver implements ISqlDriver {
      * @param tableName
      */
     getIndexes(tableName: string): Promise<MysqlSchemaInterface[]> {
-        return this.connector.query(`SHOW INDEXES FROM ${tableName}`);
+        return this.connector.query(
+            `SHOW INDEXES FROM ${this.wrap(tableName)}`,
+        );
     }
 
     /**
@@ -216,7 +220,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     getForeignKeys(tableName: string): Promise<MysqlSchemaInterface[]> {
         return this.connector.query(
-            `SELECT COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = ${tableName}`,
+            `SELECT COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = ${this.wrap(tableName)}`,
         );
     }
 
@@ -227,7 +231,7 @@ export class MySqlDriver implements ISqlDriver {
      */
     getPrimaryKeys(tableName: string): Promise<MysqlSchemaInterface[]> {
         return this.connector.query(
-            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = ${tableName} AND CONSTRAINT_NAME = 'PRIMARY'`,
+            `SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = ${this.wrap(tableName)} AND CONSTRAINT_NAME = 'PRIMARY'`,
         );
     }
 
