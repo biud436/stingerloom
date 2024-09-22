@@ -93,12 +93,14 @@ describe("커스텀 ORM 테스트", () => {
                 });
             }
 
-            await nodeRepository.save({
+            const node2 = await nodeRepository.save({
                 id: 1,
                 description: "test5",
                 name: "test",
                 type: "test",
             });
+
+            console.log("node2", node2);
 
             return "Hello, World!";
         }

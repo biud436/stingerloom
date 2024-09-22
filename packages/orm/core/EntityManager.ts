@@ -21,6 +21,7 @@ import {
 import { plainToClass } from "class-transformer";
 import { BaseRepository } from "./BaseRepository";
 import { IEntityManager } from "./IEntityManager";
+import { ResultSetHeader } from "mysql2";
 
 export type EntityResult<T> =
     | InstanceType<ClazzType<T>>
@@ -139,8 +140,6 @@ export class EntityManager implements IEntityManager {
         ) as ManyToOneMetadata<any>[];
 
         const isValidManyToOne = manyToOneItems && manyToOneItems.length > 0;
-
-        console.log("isValidManyToOne", isValidManyToOne);
 
         // ManyToOne 관계가 존재할 경우, 외래키를 생성합니다.
         if (isValidManyToOne) {
@@ -383,6 +382,10 @@ export class EntityManager implements IEntityManager {
         return `\`${columnName}\``;
     }
 
+    private isMySqlFamily() {
+        return ["mysql", "mariadb"].includes(this.client.type as IDatabaseType);
+    }
+
     /**
      * 업데이트 쿼리
      */
@@ -424,17 +427,27 @@ export class EntityManager implements IEntityManager {
 
             // 기본키(PK)가 존재하지 않으면 새로운 엔티티를 생성합니다.
             if (!pkValue) {
-                const result = await transactionHolder.query<T>(
+                const packet = (await transactionHolder.query<T>(
                     sql`
                         INSERT INTO ${raw(this.wrap(metadata.name!))}
                         (${join(columns, ", ")})
                         VALUES (${join(values, ", ")})
                     `,
-                );
+                )) as { results: ResultSetHeader; fields: any };
 
                 await transactionHolder.commit();
 
-                return result as T;
+                if (this.isMySqlFamily()) {
+                    const result = await this.findOne(entity, {
+                        where: {
+                            [pk.name!]: packet?.results?.insertId,
+                        },
+                    } as any);
+
+                    return result as T;
+                }
+
+                return packet as T;
             }
 
             // 기본키가 존재하면 업데이트 쿼리를 실행합니다.
@@ -442,7 +455,7 @@ export class EntityManager implements IEntityManager {
                 return sql`${raw(column.name!)} = ${(item as any)[column.name!]}`;
             });
 
-            const result = await transactionHolder.query<T>(
+            await transactionHolder.query<T>(
                 sql`
                     UPDATE ${raw(this.wrap(metadata.name!))}
                     SET ${join(updateMap, ", ")}
@@ -451,6 +464,13 @@ export class EntityManager implements IEntityManager {
             );
 
             await transactionHolder.commit();
+
+            // 업데이트된 엔티티를 다시 조회하여 반환합니다.
+            const result = await this.findOne(entity, {
+                where: {
+                    [pk.name!]: pkValue,
+                },
+            } as any);
 
             return result as T;
         } catch (e: unknown) {
