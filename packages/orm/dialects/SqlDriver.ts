@@ -174,4 +174,6 @@ export interface ISqlDriver<T = any> {
      * 비관적 잠금을 위한 SQL을 반환합니다.
      */
     getForUpdateNoWait(): string;
+
+    isMySqlFamily(): boolean;
 }

@@ -331,7 +331,7 @@ export class MySqlDriver implements ISqlDriver {
         }
     }
 
-    private isMySqlFamily() {
+    public isMySqlFamily() {
         return ["mysql", "mariadb"].includes(this.clientType);
     }
 

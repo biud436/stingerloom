@@ -77,7 +77,9 @@ describe("테스트", () => {
             product.name = "테스트 상품";
             product.price = 10000;
 
-            await productRepository.save(product);
+            const result = await productRepository.save(product);
+
+            console.log("myresult", result);
 
             return "Hello, World!";
         }
