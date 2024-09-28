@@ -350,7 +350,11 @@ export class EntityManager implements IEntityManager {
                     count = take;
                 }
 
-                limitQuery = sql`LIMIT ${offset}, ${count}`;
+                if (this.isMySqlFamily()) {
+                    limitQuery = sql`LIMIT ${offset}, ${count}`;
+                } else {
+                    limitQuery = sql`LIMIT ${count} OFFSET ${offset}`;
+                }
             } else {
                 limitQuery = sql`${isLimit ? sql`LIMIT ${limit}` : sql``}`;
             }
