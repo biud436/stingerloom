@@ -256,7 +256,7 @@ export class EntityManager implements IEntityManager {
         findOption: FindOption<T>,
     ): Promise<EntityResult<T>> {
         const { select, orderBy, where, take } = findOption;
-        let { limit } = findOption;
+        const { limit } = findOption;
 
         const transactionHolder = new TransactionHolder();
 
@@ -307,9 +307,6 @@ export class EntityManager implements IEntityManager {
             if (limit) {
                 isLimit = true;
             }
-            if (limit && take) {
-                limit = take;
-            }
 
             // SELECT 쿼리
             const selectFromQuery = sql`
@@ -331,7 +328,32 @@ export class EntityManager implements IEntityManager {
                     : sql``
             }`;
 
-            const limitQuery = sql`${isLimit ? sql`LIMIT ${limit}` : sql``}`;
+            let limitQuery = sql``;
+
+            // LIMIT 쿼리가 튜플일 경우
+            if (Array.isArray(limit)) {
+                let [offset, count] = limit;
+
+                if (offset < 0) {
+                    offset = 0;
+                }
+
+                if (count < 0) {
+                    count = 0;
+                }
+
+                if (count === 0) {
+                    count = 1;
+                }
+
+                if (take && take > 0) {
+                    count = take;
+                }
+
+                limitQuery = sql`LIMIT ${offset}, ${count}`;
+            } else {
+                limitQuery = sql`${isLimit ? sql`LIMIT ${limit}` : sql``}`;
+            }
 
             // 최종 쿼리
             const resultQuery = sql`${join(
