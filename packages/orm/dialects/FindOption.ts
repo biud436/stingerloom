@@ -6,7 +6,7 @@ export type FindOption<T> = {
     where?: {
         [K in keyof T]?: T[K];
     };
-    limit?: number;
+    limit?: [number, number] | number;
     take?: number;
     orderBy?: IOrderBy<Partial<T>>;
     groupBy?: (keyof T)[];
