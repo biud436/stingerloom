@@ -3,6 +3,7 @@ import { Connection } from "@stingerloom/orm/types/Connection";
 import { IConnector } from "../../types/IConnector";
 import { IDataSource } from "../IDataSource";
 import { TRANSACTION_ISOLATION_LEVEL } from "../IsolationLevel";
+import { MySqlConnectionError } from "./MySqlConnectionError";
 
 export class MySqlDataSource implements IDataSource {
     private connection?: Connection;
@@ -13,7 +14,7 @@ export class MySqlDataSource implements IDataSource {
         this.connection = await this.connector.getConnection();
 
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
     }
 
@@ -27,7 +28,7 @@ export class MySqlDataSource implements IDataSource {
 
     async startTransaction(level?: TRANSACTION_ISOLATION_LEVEL) {
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
 
         await this.connector.startTransaction(this.connection, level);
@@ -35,7 +36,7 @@ export class MySqlDataSource implements IDataSource {
 
     async rollback() {
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
 
         await this.connector.rollback(this.connection);
@@ -43,7 +44,7 @@ export class MySqlDataSource implements IDataSource {
 
     async commit() {
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
 
         await this.connector.commit(this.connection);
@@ -51,7 +52,7 @@ export class MySqlDataSource implements IDataSource {
 
     async query(sql: string) {
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
 
         return await this.connector.query(sql, this.connection);
@@ -59,7 +60,7 @@ export class MySqlDataSource implements IDataSource {
 
     async savepoint(name: string) {
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
 
         await this.query(`SAVEPOINT ${name}`);
@@ -67,7 +68,7 @@ export class MySqlDataSource implements IDataSource {
 
     async rollbackTo(name: string) {
         if (!this.connection) {
-            throw new Error("데이터베이스 연결이 되어있지 않습니다.");
+            throw new MySqlConnectionError();
         }
 
         await this.query(`ROLLBACK TO ${name}`);
