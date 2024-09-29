@@ -6,6 +6,8 @@ import { IConnector } from "../../types/IConnector";
 import { Logger } from "@stingerloom/common/Logger";
 import { Connection } from "@stingerloom/orm/types/Connection";
 import { TRANSACTION_ISOLATION_LEVEL } from "../IsolationLevel";
+import { ConnectionNotFound } from "./ConnectionNotFound";
+import { PoolNotFound } from "./PoolNotFound";
 export type Entity = any;
 export type IDatabaseType = "mysql" | "mariadb" | "postgres" | "sqlite";
 
@@ -13,7 +15,6 @@ export class MySqlConnector implements IConnector {
     pool?: Pool;
     private isDebug = false;
     private readonly logger = new Logger("MySqlConnector");
-    private originalTransactionIsolationLevel?: string;
 
     async connect(options: DatabaseClientOptions): Promise<void> {
         try {
@@ -41,7 +42,7 @@ export class MySqlConnector implements IConnector {
      */
     async getConnection(): Promise<PoolConnection> {
         if (!this.pool) {
-            throw new Error("pool이 존재하지 않습니다.");
+            throw new PoolNotFound();
         }
 
         return new Promise((resolve, reject) => {
@@ -137,7 +138,7 @@ export class MySqlConnector implements IConnector {
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!connection) {
-                reject(new Error("connection이 존재하지 않습니다."));
+                reject(new ConnectionNotFound());
             }
 
             /**
@@ -162,7 +163,7 @@ export class MySqlConnector implements IConnector {
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!connection) {
-                reject(new Error("connection이 존재하지 않습니다."));
+                reject(new ConnectionNotFound());
             }
 
             this.setTransactionIsolationLevel(connection, level)
@@ -184,7 +185,7 @@ export class MySqlConnector implements IConnector {
     async rollback(connection: Connection): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!connection) {
-                reject(new Error("connection이 존재하지 않습니다."));
+                reject(new ConnectionNotFound());
             }
 
             connection.rollback(() => {
@@ -197,7 +198,7 @@ export class MySqlConnector implements IConnector {
     async commit(connection: Connection): Promise<void> {
         return new Promise((resolve, reject) => {
             if (!connection) {
-                reject(new Error("connection이 존재하지 않습니다."));
+                reject(new ConnectionNotFound());
             }
 
             connection.commit((error) => {
