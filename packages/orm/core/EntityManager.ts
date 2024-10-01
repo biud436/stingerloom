@@ -22,6 +22,7 @@ import { plainToClass } from "class-transformer";
 import { BaseRepository } from "./BaseRepository";
 import { IEntityManager } from "./IEntityManager";
 import { ResultSetHeader } from "mysql2";
+import { EntityNotFound } from "../dialects/EntityNotFound";
 
 export type EntityResult<T> =
     | InstanceType<ClazzType<T>>
@@ -149,7 +150,7 @@ export class EntityManager implements IEntityManager {
                 // 매핑할 엔티티를 가져옵니다.
                 const mappingEntity = manyToOneItem.getMappingEntity();
                 if (!mappingEntity) {
-                    throw new Error("매핑할 엔티티가 존재하지 않습니다.");
+                    throw new EntityNotFound(mappingEntity);
                 }
 
                 // 메타데이터를 검색합니다.
