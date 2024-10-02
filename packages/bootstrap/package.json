@@ -4,12 +4,19 @@
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "fastify": "^4.24.3",
         "dotenv": "^16.3.1",
+        "fastify": "^4.24.3",
         "reflect-metadata": "^0.1.13",
-        "@stingerloom/ioc": "^1.0.0",
-        "@stingerloom/common": "^1.0.0",
-        "typedi": "^0.10.0",
-        "@stingerloom/services": "^1.0.0"
+        "typedi": "^0.10.0"
+    },
+    "peerDependencies": {
+        "@stingerloom/common": "*",
+        "@stingerloom/ioc": "*",
+        "@stingerloom/services": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "file:../common",
+        "@stingerloom/ioc": "file:../ioc",
+        "@stingerloom/services": "file:../services"
     }
 }

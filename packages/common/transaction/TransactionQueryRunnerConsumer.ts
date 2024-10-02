@@ -17,7 +17,6 @@ import { ClazzType } from "../RouterMapper";
 import { isArrayOk } from "@stingerloom/utils";
 import { isPromise } from "util/types";
 import { Exception } from "@stingerloom/error/Exception";
-import { TransactionManager } from "./TransactionManager";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();

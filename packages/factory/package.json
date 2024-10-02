@@ -4,8 +4,14 @@
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "typeorm": "^0.3.17",
         "typedi": "^0.10.0",
-        "@stingerloom/common": "^1.0.0"
+        "typeorm": "^0.3.17"
+    },
+    "peerDependencies": {
+        "@stingerloom/common": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "file:../common",
+        "@types/node": "^20.4.8"
     }
 }

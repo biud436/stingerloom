@@ -3,13 +3,18 @@
     "version": "1.0.0",
     "main": "index.js",
     "dependencies": {
-        "typescript": "^5.5.4",
+        "chalk": "^4",
         "fastify": "^4.24.3",
         "typedi": "^0.10.0",
-        "chalk": "^4",
-        "@stingerloom/common": "^1.0.0",
-        "@stingerloom/router": "^1.0.0",
-        "@stingerloom/orm": "^1.0.0",
-        "typeorm": "^0.3.17"
+        "typeorm": "^0.3.17",
+        "typescript": "^5.5.4"
+    },
+    "peerDependencies": {
+        "@stingerloom/common": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/orm": "file:../orm",
+        "@stingerloom/router": "file:../router",
+        "@types/node": "^20.4.8"
     }
 }

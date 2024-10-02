@@ -4,12 +4,15 @@
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "typeorm": "^0.3.17",
-        "typedi": "^0.10.0",
-        "@stingerloom/common": "^1.0.0",
-        "@stingerloom/error": "^1.0.0",
-        "@stingerloom/ioc": "^1.0.0",
         "mysql2": "^3.9.3",
-        "sql-template-tag": "^4"
+        "sql-template-tag": "^4",
+        "typedi": "^0.10.0",
+        "typeorm": "^0.3.17"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "file:../common",
+        "@stingerloom/error": "file:../error",
+        "@stingerloom/ioc": "file:../ioc",
+        "@types/mysql": "^2.15.26"
     }
 }
