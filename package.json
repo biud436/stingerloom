@@ -4,6 +4,9 @@
     "main": "index.js",
     "license": "MIT",
     "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
     "dependencies": {
         "@esm2cjs/execa": "^6.1.1-cjs.1",
         "@fastify/cookie": "^9.2.0",
