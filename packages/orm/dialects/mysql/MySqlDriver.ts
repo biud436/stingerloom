@@ -2,8 +2,8 @@
 import sql, { join, raw } from "sql-template-tag";
 import { IConnector } from "../../types/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
-import { ColumnOption, ColumnType } from "@stingerloom/orm/decorators";
-import { ColumnMetadata } from "@stingerloom/orm/scanner/ColumnScanner";
+import { ColumnOption, ColumnType } from "../../decorators";
+import { ColumnMetadata } from "../../scanner/ColumnScanner";
 import { ISqlDriver } from "../SqlDriver";
 import { Exception } from "@stingerloom/error";
 

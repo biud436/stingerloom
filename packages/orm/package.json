@@ -1,0 +1,15 @@
+{
+    "name": "@stingerloom/orm",
+    "version": "1.0.0",
+    "author": "biud436 <biud436@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "typeorm": "^0.3.17",
+        "typedi": "^0.10.0",
+        "@stingerloom/common": "^1.0.0",
+        "@stingerloom/error": "^1.0.0",
+        "@stingerloom/ioc": "^1.0.0",
+        "mysql2": "^3.9.3",
+        "sql-template-tag": "^4"
+    }
+}

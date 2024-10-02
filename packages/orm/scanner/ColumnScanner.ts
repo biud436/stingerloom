@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MetadataScanner } from "packages/ioc";
+import { MetadataScanner } from "@stingerloom/ioc";
 import { ClazzType } from "@stingerloom/common/RouterMapper";
 import { Service } from "typedi";
 import { ColumnOption } from "../decorators/Column";
