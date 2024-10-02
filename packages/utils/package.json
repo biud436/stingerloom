@@ -3,5 +3,9 @@
     "version": "1.0.0",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
-    "dependencies": {}
+    "dependencies": {
+        "@stingerloom/common": "^1.0.0",
+        "@stingerloom/ioc": "^1.0.0",
+        "@stingerloom/orm": "^1.0.0"
+    }
 }

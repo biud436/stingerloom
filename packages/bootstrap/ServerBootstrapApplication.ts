@@ -3,12 +3,12 @@ import { FastifyInstance, FastifyListenOptions, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 
-import { ContainerManager } from "packages/ioc/ContainerManager";
+import { ContainerManager } from "@stingerloom/ioc/ContainerManager";
 import { ParameterListManager } from "@stingerloom/common/ParameterListManager";
 import { Logger, ModuleOptions } from "@stingerloom/common";
 import Database from "@stingerloom/common/Database";
 import Container from "typedi";
-import { InstanceScanner } from "packages/ioc";
+import { InstanceScanner } from "@stingerloom/ioc";
 import { DiscoveryService } from "@stingerloom/services";
 import { EventEmitter } from "events";
 
