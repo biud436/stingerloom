@@ -2,7 +2,6 @@ export * from "./bootstrap";
 export * from "./common";
 export * from "./compiler";
 export * from "./error";
-export * from "./example";
 export * from "./factory";
 export * from "./router";
 export * from "./services";

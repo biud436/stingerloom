@@ -1,4 +1,3 @@
-export * from "./DatabaseContext";
 export * from "./DatabaseFactory";
 export * from "./DataSourceProxy";
 export * from "./DataSourceFactory";
