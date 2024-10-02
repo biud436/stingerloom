@@ -1,20 +1,20 @@
 {
-    "name": "@stringerloom/ioc",
-    "version": "1.0.0",
-    "main": "index.js",
-    "dependencies": {
-        "chalk": "^4",
-        "fastify": "^4.24.3",
-        "typedi": "^0.10.0",
-        "typeorm": "^0.3.17",
-        "typescript": "^5.5.4"
-    },
-    "peerDependencies": {
-        "@stingerloom/common": "*"
-    },
-    "devDependencies": {
-        "@stingerloom/orm": "file:../orm",
-        "@stingerloom/router": "file:../router",
-        "@types/node": "^20.4.8"
-    }
+  "name": "@stringerloom/ioc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "chalk": "^4",
+    "fastify": "^4.24.3",
+    "typedi": "^0.10.0",
+    "typeorm": "^0.3.17",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "@stingerloom/common": "*"
+  },
+  "devDependencies": {
+    "@stingerloom/orm": "file:../orm",
+    "@stingerloom/router": "file:../router",
+    "@types/node": "^20.4.8"
+  }
 }

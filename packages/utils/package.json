@@ -1,15 +1,15 @@
 {
-    "name": "@stingerloom/utils",
-    "version": "1.0.0",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "peerDependencies": {
-        "@stingerloom/common": "*",
-        "@stingerloom/ioc": "*"
-    },
-    "devDependencies": {
-        "@stingerloom/common": "file:../common",
-        "@stingerloom/ioc": "file:../ioc",
-        "@stingerloom/orm": "file:../orm"
-    }
+  "name": "@stingerloom/utils",
+  "version": "1.0.0",
+  "author": "biud436 <biud436@gmail.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "@stingerloom/common": "*",
+    "@stingerloom/ioc": "*"
+  },
+  "devDependencies": {
+    "@stingerloom/common": "file:../common",
+    "@stingerloom/ioc": "file:../ioc",
+    "@stingerloom/orm": "file:../orm"
+  }
 }

@@ -1,17 +1,17 @@
 {
-    "name": "@stingerloom/router",
-    "version": "1.0.0",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "class-transformer": "^0.5.1",
-        "class-validator": "^0.14.0",
-        "fastify": "^4.24.3",
-        "typedi": "^0.10.0"
-    },
-    "devDependencies": {
-        "@stingerloom/common": "file:../common",
-        "@stingerloom/error": "file:../error",
-        "@stingerloom/ioc": "file:../ioc"
-    }
+  "name": "@stingerloom/router",
+  "version": "1.0.0",
+  "author": "biud436 <biud436@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "fastify": "^4.24.3",
+    "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "@stingerloom/common": "file:../common",
+    "@stingerloom/error": "file:../error",
+    "@stingerloom/ioc": "file:../ioc"
+  }
 }

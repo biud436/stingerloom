@@ -1,22 +1,22 @@
 {
-    "name": "@stingerloom/bootstrap",
-    "version": "1.0.0",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "dotenv": "^16.3.1",
-        "fastify": "^4.24.3",
-        "reflect-metadata": "^0.1.13",
-        "typedi": "^0.10.0"
-    },
-    "peerDependencies": {
-        "@stingerloom/common": "*",
-        "@stingerloom/ioc": "*",
-        "@stingerloom/services": "*"
-    },
-    "devDependencies": {
-        "@stingerloom/common": "file:../common",
-        "@stingerloom/ioc": "file:../ioc",
-        "@stingerloom/services": "file:../services"
-    }
+  "name": "@stingerloom/bootstrap",
+  "version": "1.0.0",
+  "author": "biud436 <biud436@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "fastify": "^4.24.3",
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0"
+  },
+  "peerDependencies": {
+    "@stingerloom/common": "*",
+    "@stingerloom/ioc": "*",
+    "@stingerloom/services": "*"
+  },
+  "devDependencies": {
+    "@stingerloom/common": "file:../common",
+    "@stingerloom/ioc": "file:../ioc",
+    "@stingerloom/services": "file:../services"
+  }
 }

@@ -1,18 +1,18 @@
 {
-    "name": "@stingerloom/orm",
-    "version": "1.0.0",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "mysql2": "^3.9.3",
-        "sql-template-tag": "^4",
-        "typedi": "^0.10.0",
-        "typeorm": "^0.3.17"
-    },
-    "devDependencies": {
-        "@stingerloom/common": "file:../common",
-        "@stingerloom/error": "file:../error",
-        "@stingerloom/ioc": "file:../ioc",
-        "@types/mysql": "^2.15.26"
-    }
+  "name": "@stingerloom/orm",
+  "version": "1.0.0",
+  "author": "biud436 <biud436@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mysql2": "^3.9.3",
+    "sql-template-tag": "^4",
+    "typedi": "^0.10.0",
+    "typeorm": "^0.3.17"
+  },
+  "devDependencies": {
+    "@stingerloom/common": "file:../common",
+    "@stingerloom/error": "file:../error",
+    "@stingerloom/ioc": "file:../ioc",
+    "@types/mysql": "^2.15.26"
+  }
 }
