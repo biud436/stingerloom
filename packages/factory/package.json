@@ -3,5 +3,9 @@
     "version": "1.0.0",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
-    "dependencies": {}
+    "dependencies": {
+        "typeorm": "^0.3.17",
+        "typedi": "^0.10.0",
+        "@stingerloom/common": "^1.0.0"
+    }
 }

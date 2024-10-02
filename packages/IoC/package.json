@@ -2,11 +2,14 @@
     "name": "@stringerloom/ioc",
     "version": "1.0.0",
     "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": ""
+    "dependencies": {
+        "typescript": "^5.5.4",
+        "fastify": "^4.24.3",
+        "typedi": "^0.10.0",
+        "chalk": "^4",
+        "@stingerloom/common": "^1.0.0",
+        "@stingerloom/router": "^1.0.0",
+        "@stingerloom/orm": "^1.0.0",
+        "typeorm": "^0.3.17"
+    }
 }
