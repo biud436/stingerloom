@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger } from "@stingerloom/common/Logger";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { ContainerMetadata } from "../ioc/scanners/MetadataScanner";
+import { ContainerMetadata } from "@stingerloom/ioc/scanners/MetadataScanner";
 import { ClazzType, HttpMethod, ValidationHandler } from "@stingerloom/common";
 import { ValidationError } from "class-validator";
 import { classToPlain } from "class-transformer";
