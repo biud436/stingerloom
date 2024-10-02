@@ -25,7 +25,6 @@ module.exports = {
             "@stingerloom/error": path.resolve(__dirname, "packages/error"),
             "@stingerloom/IoC": path.resolve(__dirname, "packages/IoC"),
             "@stingerloom/utils": path.resolve(__dirname, "packages/utils"),
-            "@stingerloom/example": path.resolve(__dirname, "packages/example"),
             "@stingerloom/factory": path.resolve(__dirname, "packages/factory"),
             "@stingerloom/services": path.resolve(
                 __dirname,

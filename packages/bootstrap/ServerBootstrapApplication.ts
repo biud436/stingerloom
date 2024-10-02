@@ -3,8 +3,6 @@ import { FastifyInstance, FastifyListenOptions, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 
-// import { InstanceLoader } from "@stingerloom/example/InstanceLoader";
-
 import { ContainerManager } from "@stingerloom/IoC/ContainerManager";
 import { ParameterListManager } from "@stingerloom/common/ParameterListManager";
 import { Logger, ModuleOptions } from "@stingerloom/common";

@@ -40,8 +40,6 @@
             "@stingerloom/IoC/*": ["packages/IoC/*"],
             "@stingerloom/utils": ["packages/utils"],
             "@stingerloom/utils/*": ["packages/utils/*"],
-            "@stingerloom/example": ["packages/example"],
-            "@stingerloom/example/*": ["packages/example/*"],
             "@stingerloom/factory": ["packages/factory"],
             "@stingerloom/factory/*": ["packages/factory/*"],
             "@stingerloom/services": ["packages/services"],
