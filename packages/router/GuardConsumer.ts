@@ -7,7 +7,7 @@ import {
     USE_GUARD_OPTION_TOKEN,
 } from "@stingerloom/common";
 import Container from "typedi";
-import { InstanceScanner } from "../IoC/scanners";
+import { InstanceScanner } from "../ioc/scanners";
 import { FastifyRequest } from "fastify";
 import { UnauthorizedException } from "@stingerloom/error";
 

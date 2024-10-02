@@ -12,7 +12,6 @@ import { InstanceScanner } from "./scanners/InstanceScanner";
 import { HttpStatus } from "@stingerloom/common/HttpStatus";
 import { ReflectManager } from "@stingerloom/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/common/allocators";
-import { InjectableScanner } from "./scanners/InjectableScanner";
 import { AdviceType } from "./AdviceType";
 import {
     Logger,
@@ -23,6 +22,7 @@ import { RouterExecutionContext } from "@stingerloom/router/RouterExecutionConte
 import chalk from "chalk";
 import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
 import { EntityManager } from "@stingerloom/orm/core/EntityManager";
+import { InjectableScanner } from "./scanners";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
 /**

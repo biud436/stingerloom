@@ -3,7 +3,7 @@
 import Container from "typedi";
 
 import { ReflectManager } from "../ReflectManager";
-import { InstanceScanner } from "@stingerloom/IoC";
+import { InstanceScanner } from "packages/ioc";
 import Database from "../Database";
 import { DataSource } from "typeorm";
 import { BadRequestException } from "@stingerloom/error";

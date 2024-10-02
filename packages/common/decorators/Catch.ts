@@ -3,8 +3,8 @@ import Container from "typedi";
 import {
     ErrorAdvice,
     ErrorMetadata,
-} from "@stingerloom/IoC/scanners/MetadataScanner";
-import { ErrorMetadataScanner } from "@stingerloom/IoC/scanners/ErrorMetadataScanner";
+} from "packages/ioc/scanners/MetadataScanner";
+import { ErrorMetadataScanner } from "packages/ioc/scanners/ErrorMetadataScanner";
 
 export const CATCH_METADATA = "CATCH_METADATA";
 export function Catch(advice: ErrorAdvice = "throwing"): MethodDecorator {

@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { DynamicClassWrapper } from "@stingerloom/IoC/scanners/MetadataScanner";
+import { DynamicClassWrapper } from "packages/ioc/scanners/MetadataScanner";
 import { ParameterListManager } from "../ParameterListManager";
 import { createUniqueInjectableKey } from "@stingerloom/utils/scanner";
-import { InjectableScanner } from "@stingerloom/IoC/scanners/InjectableScanner";
+import { InjectableScanner } from "packages/ioc/scanners/InjectableScanner";
 
 export const INJECTABLE_TOKEN = "injectable";
 export function Injectable(): ClassDecorator {

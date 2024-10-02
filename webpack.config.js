@@ -23,7 +23,7 @@ module.exports = {
                 "packages/bootstrap",
             ),
             "@stingerloom/error": path.resolve(__dirname, "packages/error"),
-            "@stingerloom/IoC": path.resolve(__dirname, "packages/IoC"),
+            "@stingerloom/ioc": path.resolve(__dirname, "packages/ioc"),
             "@stingerloom/utils": path.resolve(__dirname, "packages/utils"),
             "@stingerloom/factory": path.resolve(__dirname, "packages/factory"),
             "@stingerloom/services": path.resolve(

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MetadataScanner } from "@stingerloom/IoC";
+import { MetadataScanner } from "packages/ioc";
 import { ClazzType } from "@stingerloom/common";
 import { Service } from "typedi";
 

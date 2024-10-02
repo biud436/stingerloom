@@ -3,7 +3,7 @@ import Container from "typedi";
 import {
     Metadata,
     MetadataScanner,
-} from "@stingerloom/IoC/scanners/MetadataScanner";
+} from "packages/ioc/scanners/MetadataScanner";
 import { HttpRouterParameter } from "../HttpRouterParameter";
 import { getMethodParameters } from "@stingerloom/utils/extractor";
 import { PATH } from "./PathToken";

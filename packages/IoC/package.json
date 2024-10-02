@@ -1,7 +1,12 @@
 {
-    "name": "@stingerloom/IoC",
+    "name": "@stringerloom/ioc",
     "version": "1.0.0",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "dependencies": {}
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
 }
