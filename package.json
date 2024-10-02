@@ -75,6 +75,8 @@
         "build": "rimraf dist && webpack --config webpack.config.js",
         "cli": "ts-node -r tsconfig-paths/register cli/index.ts -V -L",
         "test": "jest --config jest.config.js",
-        "start:dev": "node dist/bundle.js"
+        "start:dev": "node dist/bundle.js",
+        "ready": "node scripts/ready.js",
+        "ready:dev": "node scripts/ready-dev.js"
     }
 }
