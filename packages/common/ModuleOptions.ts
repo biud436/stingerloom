@@ -7,6 +7,7 @@ export class ModuleOptions<T = any> {
     imports?: Omit<ModuleOptions, "configuration">[];
     controllers!: ClazzType<T>[];
     providers!: (ClazzType<T> | Function)[];
+    exports?: ClazzType<T>[];
     configuration!: ReturnType<() => DBConnectionOption>;
 
     static of<T>(options: ModuleOptions): ModuleOptions<T> {

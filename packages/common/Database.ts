@@ -5,11 +5,8 @@ import { databaseFactory } from "@stingerloom/factory/database/DatabaseFactory";
 import { ModuleOptions } from "./ModuleOptions";
 import { OnApplicationShutdown } from "./OnApplicationShutdown";
 import { Logger } from "./Logger";
-/**
- * @class Database
- * @description
- * 데이터베이스 연결을 관리하는 TypeORM을 위한 클래스입니다.
- */
+
+
 class Database implements OnApplicationShutdown {
     private readonly logger: Logger = new Logger(Database.name);
     private dataSource: DataSource;
