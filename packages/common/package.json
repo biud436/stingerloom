@@ -16,8 +16,16 @@
     "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
-    "@stingerloom/error": "file:../error",
-    "@stingerloom/ioc": "file:../ioc",
-    "@stingerloom/utils": "file:../utils"
+    "@stingerloom/error": "^1.0.0",
+    "@stingerloom/ioc": "^1.0.0",
+    "@stingerloom/utils": "^1.0.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   }
 }

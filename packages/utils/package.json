@@ -8,8 +8,16 @@
     "@stingerloom/ioc": "*"
   },
   "devDependencies": {
-    "@stingerloom/common": "file:../common",
-    "@stingerloom/ioc": "file:../ioc",
-    "@stingerloom/orm": "file:../orm"
+    "@stingerloom/common": "^1.0.0",
+    "@stingerloom/ioc": "^1.0.0",
+    "@stingerloom/orm": "^1.0.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   }
 }

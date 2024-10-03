@@ -1,7 +1,6 @@
 {
   "name": "@stingerloom/services",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "dependencies": {
     "typedi": "^0.10.0"
@@ -11,7 +10,15 @@
     "@stingerloom/ioc": "*"
   },
   "devDependencies": {
-    "@stingerloom/common": "file:../common",
-    "@stingerloom/ioc": "file:../ioc"
+    "@stingerloom/common": "^1.0.0",
+    "@stingerloom/ioc": "^1.0.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -2,5 +2,13 @@
     "name": "@stingerloom/error",
     "version": "1.0.0",
     "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT"
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    }
 }

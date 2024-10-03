@@ -11,7 +11,15 @@
     "@stingerloom/common": "*"
   },
   "devDependencies": {
-    "@stingerloom/common": "file:../common",
+    "@stingerloom/common": "^1.0.0",
     "@types/node": "^20.4.8"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   }
 }

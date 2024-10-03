@@ -1,7 +1,6 @@
 {
   "name": "@stringerloom/ioc",
   "version": "1.0.0",
-  "main": "index.js",
   "dependencies": {
     "chalk": "^4",
     "fastify": "^4.24.3",
@@ -13,8 +12,16 @@
     "@stingerloom/common": "*"
   },
   "devDependencies": {
-    "@stingerloom/orm": "file:../orm",
-    "@stingerloom/router": "file:../router",
+    "@stingerloom/orm": "^1.0.0",
+    "@stingerloom/router": "^1.0.0",
     "@types/node": "^20.4.8"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   }
 }

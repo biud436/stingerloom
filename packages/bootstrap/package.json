@@ -15,8 +15,16 @@
     "@stingerloom/services": "*"
   },
   "devDependencies": {
-    "@stingerloom/common": "file:../common",
-    "@stingerloom/ioc": "file:../ioc",
-    "@stingerloom/services": "file:../services"
+    "@stingerloom/common": "^1.0.0",
+    "@stingerloom/ioc": "^1.0.0",
+    "@stingerloom/services": "^1.0.0"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
   }
 }
