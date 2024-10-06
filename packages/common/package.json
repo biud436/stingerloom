@@ -31,7 +31,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "gitHead": "2ae3a6749757069725a2b044d257c9c0451f6c58",
+    "gitHead": "18702d8006c2ebf3158eee5980ffbc203316c89f",
     "files": [
         "dist/common"
     ]

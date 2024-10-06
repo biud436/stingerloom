@@ -11,6 +11,11 @@ import { RouteParameterTransformer } from "./RouteParameterTransformer";
 import { HeaderConsumer } from "./HeaderConsumer";
 import { RenderConsumer } from "./RenderConsumer";
 
+type FastifyFPHandler = (
+    _request: FastifyRequest,
+    _reply: FastifyReply,
+) => void;
+
 /**
  * @class RouterExecutionContext
  * @author 어진석(biud436)
