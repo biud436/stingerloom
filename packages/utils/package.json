@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/utils",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "peerDependencies": {
@@ -8,9 +8,9 @@
         "@stingerloom/ioc": "*"
     },
     "devDependencies": {
-        "@stingerloom/common": "^1.0.4",
-        "@stingerloom/ioc": "^1.0.4",
-        "@stingerloom/orm": "^1.0.4"
+        "@stingerloom/common": "^1.0.5",
+        "@stingerloom/ioc": "^1.0.5",
+        "@stingerloom/orm": "^1.0.5"
     },
     "scripts": {
         "build:tsc": "tsc",

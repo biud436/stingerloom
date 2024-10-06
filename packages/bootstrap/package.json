@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/bootstrap",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
@@ -15,9 +15,9 @@
         "@stingerloom/services": "*"
     },
     "devDependencies": {
-        "@stingerloom/common": "^1.0.4",
-        "@stingerloom/ioc": "^1.0.4",
-        "@stingerloom/services": "^1.0.4",
+        "@stingerloom/common": "^1.0.5",
+        "@stingerloom/ioc": "^1.0.5",
+        "@stingerloom/services": "^1.0.5",
         "ts-loader": "^9.5.1",
         "typescript": "^5.6.2",
         "webpack": "^5.95.0",
