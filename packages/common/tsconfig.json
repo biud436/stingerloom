@@ -3,9 +3,9 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "./dist",
+        "rootDir": "./",
+        "declarationDir": "./types",
         "paths": {
-            "@stingerloom/common": ["../common"],
-            "@stingerloom/common/*": ["../common/*"],
             "@stingerloom/bootstrap": ["../bootstrap"],
             "@stingerloom/bootstrap/*": ["../bootstrap/*"],
             "@stingerloom/error": ["../error"],
@@ -24,7 +24,19 @@
             "@stingerloom/router/*": ["../router/*"],
             "@stingerloom/compiler": ["../compiler"],
             "@stingerloom/compiler/*": ["../compiler/*"]
-        }
+        },
+        "composite": true /* Enable project references */
     },
-    "exclude": ["dist", "node_modules"]
+    "include": ["*.ts", "**/*.ts"],
+    "exclude": ["dist", "node_modules", "types", "dist/**/*.ts"],
+    "references": [
+        { "path": "../error" },
+        { "path": "../ioc" },
+        { "path": "../utils" },
+        { "path": "../factory" },
+        { "path": "../services" },
+        { "path": "../orm" },
+        { "path": "../router" },
+        { "path": "../compiler" }
+    ]
 }

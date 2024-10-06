@@ -25,14 +25,14 @@
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
-        "build:tsc": "rimraf dist && tsc -p tsconfig.json",
+        "build:tsc": "rimraf dist && tsc --build",
         "build:webpack": "webpack",
         "build": "npm run build:tsc",
         "prepublish": "npm run build",
         "clean": "rm -rf dist"
     },
     "main": "dist/bootstrap/index.js",
-    "types": "dist/bootstrap/index.d.ts",
+    "types": "types/bootstrap/index.d.ts",
     "publishConfig": {
         "access": "public"
     },
