@@ -17,15 +17,25 @@
     "devDependencies": {
         "@stingerloom/common": "^1.0.2",
         "@stingerloom/ioc": "^1.0.2",
-        "@stingerloom/services": "^1.0.2"
+        "@stingerloom/services": "^1.0.2",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.6.2",
+        "webpack": "^5.95.0",
+        "webpack-cli": "^5.1.4"
     },
     "scripts": {
-        "build": "tsc"
+        "build:tsc": "tsc",
+        "build:webpack": "webpack",
+        "build": "npm run build:tsc",
+        "prepublish": "npm run build"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "publishConfig": {
         "access": "public"
     },
-    "gitHead": "49f6f001d1dfad08d53d6d2f2b32c9bc589522ab"
+    "gitHead": "49f6f001d1dfad08d53d6d2f2b32c9bc589522ab",
+    "files": [
+        "dist"
+    ]
 }
