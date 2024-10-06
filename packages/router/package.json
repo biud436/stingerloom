@@ -1,25 +1,25 @@
 {
-  "name": "@stingerloom/router",
-  "version": "1.0.1",
-  "author": "biud436 <biud436@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0",
-    "fastify": "^4.24.3",
-    "typedi": "^0.10.0"
-  },
-  "devDependencies": {
-    "@stingerloom/common": "^1.0.1",
-    "@stingerloom/error": "^1.0.1",
-    "@stingerloom/ioc": "^1.0.0"
-  },
-  "scripts": {
-    "build": "tsc"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@stingerloom/router",
+    "version": "1.0.2",
+    "author": "biud436 <biud436@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.0",
+        "fastify": "^4.24.3",
+        "typedi": "^0.10.0"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "^1.0.2",
+        "@stingerloom/error": "^1.0.2",
+        "@stingerloom/ioc": "^1.0.2"
+    },
+    "scripts": {
+        "build": "tsc"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    }
 }

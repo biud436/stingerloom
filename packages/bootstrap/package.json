@@ -1,30 +1,30 @@
 {
-  "name": "@stingerloom/bootstrap",
-  "version": "1.0.0",
-  "author": "biud436 <biud436@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "dotenv": "^16.3.1",
-    "fastify": "^4.24.3",
-    "reflect-metadata": "^0.1.13",
-    "typedi": "^0.10.0"
-  },
-  "peerDependencies": {
-    "@stingerloom/common": "*",
-    "@stingerloom/ioc": "*",
-    "@stingerloom/services": "*"
-  },
-  "devDependencies": {
-    "@stingerloom/common": "^1.0.1",
-    "@stingerloom/ioc": "^1.0.0",
-    "@stingerloom/services": "^1.0.1"
-  },
-  "scripts": {
-    "build": "tsc"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@stingerloom/bootstrap",
+    "version": "1.0.1",
+    "author": "biud436 <biud436@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^16.3.1",
+        "fastify": "^4.24.3",
+        "reflect-metadata": "^0.1.13",
+        "typedi": "^0.10.0"
+    },
+    "peerDependencies": {
+        "@stingerloom/common": "*",
+        "@stingerloom/ioc": "*",
+        "@stingerloom/services": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "^1.0.2",
+        "@stingerloom/ioc": "^1.0.2",
+        "@stingerloom/services": "^1.0.2"
+    },
+    "scripts": {
+        "build": "tsc"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    }
 }

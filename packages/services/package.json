@@ -1,24 +1,24 @@
 {
-  "name": "@stingerloom/services",
-  "version": "1.0.1",
-  "license": "MIT",
-  "dependencies": {
-    "typedi": "^0.10.0"
-  },
-  "peerDependencies": {
-    "@stingerloom/common": "*",
-    "@stingerloom/ioc": "*"
-  },
-  "devDependencies": {
-    "@stingerloom/common": "^1.0.1",
-    "@stingerloom/ioc": "^1.0.0"
-  },
-  "scripts": {
-    "build": "tsc"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@stingerloom/services",
+    "version": "1.0.2",
+    "license": "MIT",
+    "dependencies": {
+        "typedi": "^0.10.0"
+    },
+    "peerDependencies": {
+        "@stingerloom/common": "*",
+        "@stingerloom/ioc": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "^1.0.2",
+        "@stingerloom/ioc": "^1.0.2"
+    },
+    "scripts": {
+        "build": "tsc"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    }
 }

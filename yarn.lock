@@ -2601,9 +2601,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@stingerloom/bootstrap@workspace:packages/bootstrap"
   dependencies:
-    "@stingerloom/common": "file:../common"
-    "@stingerloom/ioc": "file:../ioc"
-    "@stingerloom/services": "file:../services"
+    "@stingerloom/common": "npm:^1.0.2"
+    "@stingerloom/ioc": "npm:^1.0.2"
+    "@stingerloom/services": "npm:^1.0.2"
     dotenv: "npm:^16.3.1"
     fastify: "npm:^4.24.3"
     reflect-metadata: "npm:^0.1.13"
@@ -2615,122 +2615,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/common@file:../common::locator=%40stingerloom%2Fbootstrap%40workspace%3Apackages%2Fbootstrap":
-  version: 1.0.0
-  resolution: "@stingerloom/common@file:../common#../common::hash=838e47&locator=%40stingerloom%2Fbootstrap%40workspace%3Apackages%2Fbootstrap"
-  dependencies:
-    "@fastify/session": "npm:^10.7.0"
-    chalk: "npm:^4"
-    class-validator: "npm:^0.14.0"
-    dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
-    http-status: "npm:^1.7.3"
-    reflect-metadata: "npm:^0.1.13"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typeorm-naming-strategies: "npm:^4.1.0"
-  checksum: 10c0/d329b36aa31ed25b14ff8830f97975a35d62c34e3b8dfb49747710549f00f600d79a5973e89d1e8549792616446ac3779175124bf7c8d72d144fd3d8303e8108
-  languageName: node
-  linkType: hard
-
-"@stingerloom/common@file:../common::locator=%40stingerloom%2Ffactory%40workspace%3Apackages%2Ffactory":
-  version: 1.0.0
-  resolution: "@stingerloom/common@file:../common#../common::hash=838e47&locator=%40stingerloom%2Ffactory%40workspace%3Apackages%2Ffactory"
-  dependencies:
-    "@fastify/session": "npm:^10.7.0"
-    chalk: "npm:^4"
-    class-validator: "npm:^0.14.0"
-    dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
-    http-status: "npm:^1.7.3"
-    reflect-metadata: "npm:^0.1.13"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typeorm-naming-strategies: "npm:^4.1.0"
-  checksum: 10c0/d329b36aa31ed25b14ff8830f97975a35d62c34e3b8dfb49747710549f00f600d79a5973e89d1e8549792616446ac3779175124bf7c8d72d144fd3d8303e8108
-  languageName: node
-  linkType: hard
-
-"@stingerloom/common@file:../common::locator=%40stingerloom%2Form%40workspace%3Apackages%2Form":
-  version: 1.0.0
-  resolution: "@stingerloom/common@file:../common#../common::hash=838e47&locator=%40stingerloom%2Form%40workspace%3Apackages%2Form"
-  dependencies:
-    "@fastify/session": "npm:^10.7.0"
-    chalk: "npm:^4"
-    class-validator: "npm:^0.14.0"
-    dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
-    http-status: "npm:^1.7.3"
-    reflect-metadata: "npm:^0.1.13"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typeorm-naming-strategies: "npm:^4.1.0"
-  checksum: 10c0/d329b36aa31ed25b14ff8830f97975a35d62c34e3b8dfb49747710549f00f600d79a5973e89d1e8549792616446ac3779175124bf7c8d72d144fd3d8303e8108
-  languageName: node
-  linkType: hard
-
-"@stingerloom/common@file:../common::locator=%40stingerloom%2Frouter%40workspace%3Apackages%2Frouter":
-  version: 1.0.0
-  resolution: "@stingerloom/common@file:../common#../common::hash=838e47&locator=%40stingerloom%2Frouter%40workspace%3Apackages%2Frouter"
-  dependencies:
-    "@fastify/session": "npm:^10.7.0"
-    chalk: "npm:^4"
-    class-validator: "npm:^0.14.0"
-    dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
-    http-status: "npm:^1.7.3"
-    reflect-metadata: "npm:^0.1.13"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typeorm-naming-strategies: "npm:^4.1.0"
-  checksum: 10c0/d329b36aa31ed25b14ff8830f97975a35d62c34e3b8dfb49747710549f00f600d79a5973e89d1e8549792616446ac3779175124bf7c8d72d144fd3d8303e8108
-  languageName: node
-  linkType: hard
-
-"@stingerloom/common@file:../common::locator=%40stingerloom%2Fservices%40workspace%3Apackages%2Fservices":
-  version: 1.0.0
-  resolution: "@stingerloom/common@file:../common#../common::hash=838e47&locator=%40stingerloom%2Fservices%40workspace%3Apackages%2Fservices"
-  dependencies:
-    "@fastify/session": "npm:^10.7.0"
-    chalk: "npm:^4"
-    class-validator: "npm:^0.14.0"
-    dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
-    http-status: "npm:^1.7.3"
-    reflect-metadata: "npm:^0.1.13"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typeorm-naming-strategies: "npm:^4.1.0"
-  checksum: 10c0/d329b36aa31ed25b14ff8830f97975a35d62c34e3b8dfb49747710549f00f600d79a5973e89d1e8549792616446ac3779175124bf7c8d72d144fd3d8303e8108
-  languageName: node
-  linkType: hard
-
-"@stingerloom/common@file:../common::locator=%40stingerloom%2Futils%40workspace%3Apackages%2Futils":
-  version: 1.0.0
-  resolution: "@stingerloom/common@file:../common#../common::hash=838e47&locator=%40stingerloom%2Futils%40workspace%3Apackages%2Futils"
-  dependencies:
-    "@fastify/session": "npm:^10.7.0"
-    chalk: "npm:^4"
-    class-validator: "npm:^0.14.0"
-    dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
-    http-status: "npm:^1.7.3"
-    reflect-metadata: "npm:^0.1.13"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typeorm-naming-strategies: "npm:^4.1.0"
-  checksum: 10c0/d329b36aa31ed25b14ff8830f97975a35d62c34e3b8dfb49747710549f00f600d79a5973e89d1e8549792616446ac3779175124bf7c8d72d144fd3d8303e8108
-  languageName: node
-  linkType: hard
-
-"@stingerloom/common@workspace:packages/common":
+"@stingerloom/common@npm:^1.0.2, @stingerloom/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@stingerloom/common@workspace:packages/common"
   dependencies:
     "@fastify/session": "npm:^10.7.0"
-    "@stingerloom/error": "file:../error"
-    "@stingerloom/ioc": "file:../ioc"
-    "@stingerloom/utils": "file:../utils"
+    "@stingerloom/error": "npm:^1.0.2"
+    "@stingerloom/ioc": "npm:^1.0.2"
+    "@stingerloom/utils": "npm:^1.0.2"
     chalk: "npm:^4"
     class-validator: "npm:^0.14.0"
     dotenv: "npm:^16.3.1"
@@ -2752,28 +2644,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/error@file:../error::locator=%40stingerloom%2Fcommon%40workspace%3Apackages%2Fcommon":
-  version: 1.0.0
-  resolution: "@stingerloom/error@file:../error#../error::hash=0e1e2d&locator=%40stingerloom%2Fcommon%40workspace%3Apackages%2Fcommon"
-  checksum: 10c0/0af9d6d339209a1cb0e996340b60ee4f324a0c79bbc509e8f05e8cfa6031dcfad7c690a88677e62cb109aebcc7203162c19cc14cc90435bbbdc55ddd90ba449a
-  languageName: node
-  linkType: hard
-
-"@stingerloom/error@file:../error::locator=%40stingerloom%2Form%40workspace%3Apackages%2Form":
-  version: 1.0.0
-  resolution: "@stingerloom/error@file:../error#../error::hash=0e1e2d&locator=%40stingerloom%2Form%40workspace%3Apackages%2Form"
-  checksum: 10c0/0af9d6d339209a1cb0e996340b60ee4f324a0c79bbc509e8f05e8cfa6031dcfad7c690a88677e62cb109aebcc7203162c19cc14cc90435bbbdc55ddd90ba449a
-  languageName: node
-  linkType: hard
-
-"@stingerloom/error@file:../error::locator=%40stingerloom%2Frouter%40workspace%3Apackages%2Frouter":
-  version: 1.0.0
-  resolution: "@stingerloom/error@file:../error#../error::hash=0e1e2d&locator=%40stingerloom%2Frouter%40workspace%3Apackages%2Frouter"
-  checksum: 10c0/0af9d6d339209a1cb0e996340b60ee4f324a0c79bbc509e8f05e8cfa6031dcfad7c690a88677e62cb109aebcc7203162c19cc14cc90435bbbdc55ddd90ba449a
-  languageName: node
-  linkType: hard
-
-"@stingerloom/error@workspace:packages/error":
+"@stingerloom/error@npm:^1.0.2, @stingerloom/error@workspace:packages/error":
   version: 0.0.0-use.local
   resolution: "@stingerloom/error@workspace:packages/error"
   languageName: unknown
@@ -2783,7 +2654,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@stingerloom/factory@workspace:packages/factory"
   dependencies:
-    "@stingerloom/common": "file:../common"
+    "@stingerloom/common": "npm:^1.0.2"
     "@types/node": "npm:^20.4.8"
     typedi: "npm:^0.10.0"
     typeorm: "npm:^0.3.17"
@@ -2792,10 +2663,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/ioc@file:../ioc::locator=%40stingerloom%2Fbootstrap%40workspace%3Apackages%2Fbootstrap":
-  version: 1.0.0
-  resolution: "@stingerloom/ioc@file:../ioc#../ioc::hash=dcdd95&locator=%40stingerloom%2Fbootstrap%40workspace%3Apackages%2Fbootstrap"
+"@stingerloom/ioc@npm:^1.0.2, @stingerloom/ioc@workspace:packages/ioc":
+  version: 0.0.0-use.local
+  resolution: "@stingerloom/ioc@workspace:packages/ioc"
   dependencies:
+    "@stingerloom/orm": "npm:^1.0.2"
+    "@stingerloom/router": "npm:^1.0.2"
+    "@types/node": "npm:^20.4.8"
     chalk: "npm:^4"
     fastify: "npm:^4.24.3"
     typedi: "npm:^0.10.0"
@@ -2803,116 +2677,16 @@ __metadata:
     typescript: "npm:^5.5.4"
   peerDependencies:
     "@stingerloom/common": "*"
-  checksum: 10c0/4e44c8b73832d58e32962832d381ed581d20a426a84da6b5137dbabd79a1e69e4b9196959c92dee9281d57d165f04b6773126f8e27980ef3fa8bea0fb93d27d2
-  languageName: node
-  linkType: hard
+  languageName: unknown
+  linkType: soft
 
-"@stingerloom/ioc@file:../ioc::locator=%40stingerloom%2Fcommon%40workspace%3Apackages%2Fcommon":
-  version: 1.0.0
-  resolution: "@stingerloom/ioc@file:../ioc#../ioc::hash=dcdd95&locator=%40stingerloom%2Fcommon%40workspace%3Apackages%2Fcommon"
-  dependencies:
-    chalk: "npm:^4"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typescript: "npm:^5.5.4"
-  peerDependencies:
-    "@stingerloom/common": "*"
-  checksum: 10c0/4e44c8b73832d58e32962832d381ed581d20a426a84da6b5137dbabd79a1e69e4b9196959c92dee9281d57d165f04b6773126f8e27980ef3fa8bea0fb93d27d2
-  languageName: node
-  linkType: hard
-
-"@stingerloom/ioc@file:../ioc::locator=%40stingerloom%2Form%40workspace%3Apackages%2Form":
-  version: 1.0.0
-  resolution: "@stingerloom/ioc@file:../ioc#../ioc::hash=dcdd95&locator=%40stingerloom%2Form%40workspace%3Apackages%2Form"
-  dependencies:
-    chalk: "npm:^4"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typescript: "npm:^5.5.4"
-  peerDependencies:
-    "@stingerloom/common": "*"
-  checksum: 10c0/4e44c8b73832d58e32962832d381ed581d20a426a84da6b5137dbabd79a1e69e4b9196959c92dee9281d57d165f04b6773126f8e27980ef3fa8bea0fb93d27d2
-  languageName: node
-  linkType: hard
-
-"@stingerloom/ioc@file:../ioc::locator=%40stingerloom%2Frouter%40workspace%3Apackages%2Frouter":
-  version: 1.0.0
-  resolution: "@stingerloom/ioc@file:../ioc#../ioc::hash=dcdd95&locator=%40stingerloom%2Frouter%40workspace%3Apackages%2Frouter"
-  dependencies:
-    chalk: "npm:^4"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typescript: "npm:^5.5.4"
-  peerDependencies:
-    "@stingerloom/common": "*"
-  checksum: 10c0/4e44c8b73832d58e32962832d381ed581d20a426a84da6b5137dbabd79a1e69e4b9196959c92dee9281d57d165f04b6773126f8e27980ef3fa8bea0fb93d27d2
-  languageName: node
-  linkType: hard
-
-"@stingerloom/ioc@file:../ioc::locator=%40stingerloom%2Fservices%40workspace%3Apackages%2Fservices":
-  version: 1.0.0
-  resolution: "@stingerloom/ioc@file:../ioc#../ioc::hash=dcdd95&locator=%40stingerloom%2Fservices%40workspace%3Apackages%2Fservices"
-  dependencies:
-    chalk: "npm:^4"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typescript: "npm:^5.5.4"
-  peerDependencies:
-    "@stingerloom/common": "*"
-  checksum: 10c0/4e44c8b73832d58e32962832d381ed581d20a426a84da6b5137dbabd79a1e69e4b9196959c92dee9281d57d165f04b6773126f8e27980ef3fa8bea0fb93d27d2
-  languageName: node
-  linkType: hard
-
-"@stingerloom/ioc@file:../ioc::locator=%40stingerloom%2Futils%40workspace%3Apackages%2Futils":
-  version: 1.0.0
-  resolution: "@stingerloom/ioc@file:../ioc#../ioc::hash=dcdd95&locator=%40stingerloom%2Futils%40workspace%3Apackages%2Futils"
-  dependencies:
-    chalk: "npm:^4"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typescript: "npm:^5.5.4"
-  peerDependencies:
-    "@stingerloom/common": "*"
-  checksum: 10c0/4e44c8b73832d58e32962832d381ed581d20a426a84da6b5137dbabd79a1e69e4b9196959c92dee9281d57d165f04b6773126f8e27980ef3fa8bea0fb93d27d2
-  languageName: node
-  linkType: hard
-
-"@stingerloom/orm@file:../orm::locator=%40stingerloom%2Futils%40workspace%3Apackages%2Futils":
-  version: 1.0.0
-  resolution: "@stingerloom/orm@file:../orm#../orm::hash=6bc006&locator=%40stingerloom%2Futils%40workspace%3Apackages%2Futils"
-  dependencies:
-    mysql2: "npm:^3.9.3"
-    sql-template-tag: "npm:^4"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-  checksum: 10c0/4656cc8235bdd0a63be771a7880aaefb2694ca3db9a778cec5400fd31ac90575a0fa846061c2fe453c51a0f739bdb045d1485cd99dcde57251b5093940cee925
-  languageName: node
-  linkType: hard
-
-"@stingerloom/orm@file:../orm::locator=%40stringerloom%2Fioc%40workspace%3Apackages%2Fioc":
-  version: 1.0.0
-  resolution: "@stingerloom/orm@file:../orm#../orm::hash=6bc006&locator=%40stringerloom%2Fioc%40workspace%3Apackages%2Fioc"
-  dependencies:
-    mysql2: "npm:^3.9.3"
-    sql-template-tag: "npm:^4"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-  checksum: 10c0/4656cc8235bdd0a63be771a7880aaefb2694ca3db9a778cec5400fd31ac90575a0fa846061c2fe453c51a0f739bdb045d1485cd99dcde57251b5093940cee925
-  languageName: node
-  linkType: hard
-
-"@stingerloom/orm@workspace:packages/orm":
+"@stingerloom/orm@npm:^1.0.2, @stingerloom/orm@workspace:packages/orm":
   version: 0.0.0-use.local
   resolution: "@stingerloom/orm@workspace:packages/orm"
   dependencies:
-    "@stingerloom/common": "file:../common"
-    "@stingerloom/error": "file:../error"
-    "@stingerloom/ioc": "file:../ioc"
+    "@stingerloom/common": "npm:^1.0.2"
+    "@stingerloom/error": "npm:^1.0.2"
+    "@stingerloom/ioc": "npm:^1.0.2"
     "@types/mysql": "npm:^2.15.26"
     mysql2: "npm:^3.9.3"
     sql-template-tag: "npm:^4"
@@ -2921,25 +2695,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/router@file:../router::locator=%40stringerloom%2Fioc%40workspace%3Apackages%2Fioc":
-  version: 1.0.0
-  resolution: "@stingerloom/router@file:../router#../router::hash=e5843e&locator=%40stringerloom%2Fioc%40workspace%3Apackages%2Fioc"
-  dependencies:
-    class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.0"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-  checksum: 10c0/5551259c94afafc382c7c8660c00984c7cd8eed3ae38abb2b0cea584a8805fbe4a304707b4c6b8eccf42c19b387b84906fff4cce16c88aac168318db84914fb2
-  languageName: node
-  linkType: hard
-
-"@stingerloom/router@workspace:packages/router":
+"@stingerloom/router@npm:^1.0.2, @stingerloom/router@workspace:packages/router":
   version: 0.0.0-use.local
   resolution: "@stingerloom/router@workspace:packages/router"
   dependencies:
-    "@stingerloom/common": "file:../common"
-    "@stingerloom/error": "file:../error"
-    "@stingerloom/ioc": "file:../ioc"
+    "@stingerloom/common": "npm:^1.0.2"
+    "@stingerloom/error": "npm:^1.0.2"
+    "@stingerloom/ioc": "npm:^1.0.2"
     class-transformer: "npm:^0.5.1"
     class-validator: "npm:^0.14.0"
     fastify: "npm:^4.24.3"
@@ -2947,24 +2709,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/services@file:../services::locator=%40stingerloom%2Fbootstrap%40workspace%3Apackages%2Fbootstrap":
-  version: 1.0.0
-  resolution: "@stingerloom/services@file:../services#../services::hash=41c3cd&locator=%40stingerloom%2Fbootstrap%40workspace%3Apackages%2Fbootstrap"
-  dependencies:
-    typedi: "npm:^0.10.0"
-  peerDependencies:
-    "@stingerloom/common": "*"
-    "@stingerloom/ioc": "*"
-  checksum: 10c0/5b283aaa6bfa5c92eb3aed52f45103ae42c14468ba924c26f66fd6d5b56775c600af3c04b762188097319b8a350f6614ecbd7e1657497a15415dbc62a9e0708c
-  languageName: node
-  linkType: hard
-
-"@stingerloom/services@workspace:packages/services":
+"@stingerloom/services@npm:^1.0.2, @stingerloom/services@workspace:packages/services":
   version: 0.0.0-use.local
   resolution: "@stingerloom/services@workspace:packages/services"
   dependencies:
-    "@stingerloom/common": "file:../common"
-    "@stingerloom/ioc": "file:../ioc"
+    "@stingerloom/common": "npm:^1.0.2"
+    "@stingerloom/ioc": "npm:^1.0.2"
     typedi: "npm:^0.10.0"
   peerDependencies:
     "@stingerloom/common": "*"
@@ -2972,43 +2722,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/utils@file:../utils::locator=%40stingerloom%2Fcommon%40workspace%3Apackages%2Fcommon":
-  version: 1.0.0
-  resolution: "@stingerloom/utils@file:../utils#../utils::hash=315039&locator=%40stingerloom%2Fcommon%40workspace%3Apackages%2Fcommon"
-  peerDependencies:
-    "@stingerloom/common": "*"
-    "@stingerloom/ioc": "*"
-  checksum: 10c0/76181e00de182c8bc789c56ef2692fbf039095687af307adc286ef3932a737cb8220dc27dc0e1774e5b3f3f08623404d5531b8e506a2c4491688a615ef3e8832
-  languageName: node
-  linkType: hard
-
-"@stingerloom/utils@workspace:packages/utils":
+"@stingerloom/utils@npm:^1.0.2, @stingerloom/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@stingerloom/utils@workspace:packages/utils"
   dependencies:
-    "@stingerloom/common": "file:../common"
-    "@stingerloom/ioc": "file:../ioc"
-    "@stingerloom/orm": "file:../orm"
+    "@stingerloom/common": "npm:^1.0.2"
+    "@stingerloom/ioc": "npm:^1.0.2"
+    "@stingerloom/orm": "npm:^1.0.2"
   peerDependencies:
     "@stingerloom/common": "*"
     "@stingerloom/ioc": "*"
-  languageName: unknown
-  linkType: soft
-
-"@stringerloom/ioc@workspace:packages/ioc":
-  version: 0.0.0-use.local
-  resolution: "@stringerloom/ioc@workspace:packages/ioc"
-  dependencies:
-    "@stingerloom/orm": "file:../orm"
-    "@stingerloom/router": "file:../router"
-    "@types/node": "npm:^20.4.8"
-    chalk: "npm:^4"
-    fastify: "npm:^4.24.3"
-    typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
-    typescript: "npm:^5.5.4"
-  peerDependencies:
-    "@stingerloom/common": "*"
   languageName: unknown
   linkType: soft
 

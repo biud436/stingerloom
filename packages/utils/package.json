@@ -1,23 +1,23 @@
 {
-  "name": "@stingerloom/utils",
-  "version": "1.0.1",
-  "author": "biud436 <biud436@gmail.com>",
-  "license": "MIT",
-  "peerDependencies": {
-    "@stingerloom/common": "*",
-    "@stingerloom/ioc": "*"
-  },
-  "devDependencies": {
-    "@stingerloom/common": "^1.0.1",
-    "@stingerloom/ioc": "^1.0.0",
-    "@stingerloom/orm": "^1.0.1"
-  },
-  "scripts": {
-    "build": "tsc"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@stingerloom/utils",
+    "version": "1.0.2",
+    "author": "biud436 <biud436@gmail.com>",
+    "license": "MIT",
+    "peerDependencies": {
+        "@stingerloom/common": "*",
+        "@stingerloom/ioc": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/common": "^1.0.2",
+        "@stingerloom/ioc": "^1.0.2",
+        "@stingerloom/orm": "^1.0.2"
+    },
+    "scripts": {
+        "build": "tsc"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    }
 }
