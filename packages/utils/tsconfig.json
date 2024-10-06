@@ -12,8 +12,6 @@
             "@stingerloom/error/*": ["../error/*"],
             "@stingerloom/ioc": ["../ioc"],
             "@stingerloom/ioc/*": ["../ioc/*"],
-            "@stingerloom/utils": ["../utils"],
-            "@stingerloom/utils/*": ["../utils/*"],
             "@stingerloom/factory": ["../factory"],
             "@stingerloom/factory/*": ["../factory/*"],
             "@stingerloom/services": ["../services"],
@@ -25,5 +23,6 @@
             "@stingerloom/compiler": ["../compiler"],
             "@stingerloom/compiler/*": ["../compiler/*"]
         }
-    }
+    },
+    "exclude": ["dist", "node_modules"]
 }

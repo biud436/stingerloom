@@ -20,10 +20,9 @@
             "@stingerloom/services/*": ["../services/*"],
             "@stingerloom/orm": ["../orm"],
             "@stingerloom/orm/*": ["../orm/*"],
-            "@stingerloom/router": ["../router"],
-            "@stingerloom/router/*": ["../router/*"],
             "@stingerloom/compiler": ["../compiler"],
             "@stingerloom/compiler/*": ["../compiler/*"]
         }
-    }
+    },
+    "exclude": ["dist", "node_modules"]
 }

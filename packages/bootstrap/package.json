@@ -18,23 +18,25 @@
         "@stingerloom/common": "^1.0.5",
         "@stingerloom/ioc": "^1.0.5",
         "@stingerloom/services": "^1.0.5",
+        "rimraf": "^6.0.1",
         "ts-loader": "^9.5.1",
         "typescript": "^5.6.2",
         "webpack": "^5.95.0",
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
-        "build:tsc": "tsc -p tsconfig.json",
+        "build:tsc": "rimraf dist && tsc -p tsconfig.json",
         "build:webpack": "webpack",
         "build": "npm run build:tsc",
-        "prepublish": "npm run build"
+        "prepublish": "npm run build",
+        "clean": "rm -rf dist"
     },
     "main": "dist/bootstrap/index.js",
     "types": "dist/bootstrap/index.d.ts",
     "publishConfig": {
         "access": "public"
     },
-    "gitHead": "18702d8006c2ebf3158eee5980ffbc203316c89f",
+    "gitHead": "65d5841c4ddccaeb5c7a9f9421c03f74495f23da",
     "files": [
         "dist"
     ]

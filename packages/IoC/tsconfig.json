@@ -1,8 +1,8 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "baseUrl": "",
-        "outDir": "dist",
+        "baseUrl": ".",
+        "outDir": "./dist",
         "paths": {
             "@stingerloom/common": ["../common"],
             "@stingerloom/common/*": ["../common/*"],
@@ -10,8 +10,6 @@
             "@stingerloom/bootstrap/*": ["../bootstrap/*"],
             "@stingerloom/error": ["../error"],
             "@stingerloom/error/*": ["../error/*"],
-            "@stingerloom/ioc": [""],
-            "@stingerloom/ioc/*": ["*"],
             "@stingerloom/utils": ["../utils"],
             "@stingerloom/utils/*": ["../utils/*"],
             "@stingerloom/factory": ["../factory"],
@@ -25,5 +23,6 @@
             "@stingerloom/compiler": ["../compiler"],
             "@stingerloom/compiler/*": ["../compiler/*"]
         }
-    }
+    },
+    "exclude": ["dist", "node_modules"]
 }

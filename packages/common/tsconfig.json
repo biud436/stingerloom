@@ -25,5 +25,6 @@
             "@stingerloom/compiler": ["../compiler"],
             "@stingerloom/compiler/*": ["../compiler/*"]
         }
-    }
+    },
+    "exclude": ["dist", "node_modules"]
 }

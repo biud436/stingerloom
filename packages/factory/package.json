@@ -15,7 +15,7 @@
         "@types/node": "^20.4.8"
     },
     "scripts": {
-        "build:tsc": "tsc",
+        "build:tsc": "rimraf dist && tsc",
         "build:webpack": "webpack",
         "build": "npm run build:tsc",
         "prepublish": "npm run build"
@@ -25,7 +25,7 @@
     "publishConfig": {
         "access": "public"
     },
-    "gitHead": "18702d8006c2ebf3158eee5980ffbc203316c89f",
+    "gitHead": "65d5841c4ddccaeb5c7a9f9421c03f74495f23da",
     "files": [
         "dist"
     ]
