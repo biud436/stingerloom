@@ -2601,9 +2601,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@stingerloom/bootstrap@workspace:packages/bootstrap"
   dependencies:
-    "@stingerloom/common": "npm:^1.0.3"
-    "@stingerloom/ioc": "npm:^1.0.3"
-    "@stingerloom/services": "npm:^1.0.3"
+    "@stingerloom/common": "npm:^1.0.4"
+    "@stingerloom/ioc": "npm:^1.0.4"
+    "@stingerloom/services": "npm:^1.0.4"
     dotenv: "npm:^16.3.1"
     fastify: "npm:^4.24.3"
     reflect-metadata: "npm:^0.1.13"
@@ -2619,14 +2619,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/common@npm:^1.0.3, @stingerloom/common@workspace:packages/common":
+"@stingerloom/common@npm:^1.0.4, @stingerloom/common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@stingerloom/common@workspace:packages/common"
   dependencies:
     "@fastify/session": "npm:^10.7.0"
-    "@stingerloom/error": "npm:^1.0.3"
-    "@stingerloom/ioc": "npm:^1.0.3"
-    "@stingerloom/utils": "npm:^1.0.3"
+    "@stingerloom/error": "npm:^1.0.4"
+    "@stingerloom/ioc": "npm:^1.0.4"
+    "@stingerloom/utils": "npm:^1.0.4"
     chalk: "npm:^4"
     class-validator: "npm:^0.14.0"
     dotenv: "npm:^16.3.1"
@@ -2648,7 +2648,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/error@npm:^1.0.3, @stingerloom/error@workspace:packages/error":
+"@stingerloom/error@npm:^1.0.4, @stingerloom/error@workspace:packages/error":
   version: 0.0.0-use.local
   resolution: "@stingerloom/error@workspace:packages/error"
   languageName: unknown
@@ -2658,7 +2658,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@stingerloom/factory@workspace:packages/factory"
   dependencies:
-    "@stingerloom/common": "npm:^1.0.3"
+    "@stingerloom/common": "npm:^1.0.4"
     "@types/node": "npm:^20.4.8"
     typedi: "npm:^0.10.0"
     typeorm: "npm:^0.3.17"
@@ -2667,12 +2667,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/ioc@npm:^1.0.3, @stingerloom/ioc@workspace:packages/ioc":
+"@stingerloom/ioc@npm:^1.0.4, @stingerloom/ioc@workspace:packages/ioc":
   version: 0.0.0-use.local
   resolution: "@stingerloom/ioc@workspace:packages/ioc"
   dependencies:
-    "@stingerloom/orm": "npm:^1.0.3"
-    "@stingerloom/router": "npm:^1.0.3"
+    "@stingerloom/orm": "npm:^1.0.4"
+    "@stingerloom/router": "npm:^1.0.4"
     "@types/node": "npm:^20.4.8"
     chalk: "npm:^4"
     fastify: "npm:^4.24.3"
@@ -2684,13 +2684,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/orm@npm:^1.0.3, @stingerloom/orm@workspace:packages/orm":
+"@stingerloom/orm@npm:^1.0.4, @stingerloom/orm@workspace:packages/orm":
   version: 0.0.0-use.local
   resolution: "@stingerloom/orm@workspace:packages/orm"
   dependencies:
-    "@stingerloom/common": "npm:^1.0.3"
-    "@stingerloom/error": "npm:^1.0.3"
-    "@stingerloom/ioc": "npm:^1.0.3"
+    "@stingerloom/common": "npm:^1.0.4"
+    "@stingerloom/error": "npm:^1.0.4"
+    "@stingerloom/ioc": "npm:^1.0.4"
     "@types/mysql": "npm:^2.15.26"
     mysql2: "npm:^3.9.3"
     sql-template-tag: "npm:^4"
@@ -2699,13 +2699,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/router@npm:^1.0.3, @stingerloom/router@workspace:packages/router":
+"@stingerloom/router@npm:^1.0.4, @stingerloom/router@workspace:packages/router":
   version: 0.0.0-use.local
   resolution: "@stingerloom/router@workspace:packages/router"
   dependencies:
-    "@stingerloom/common": "npm:^1.0.3"
-    "@stingerloom/error": "npm:^1.0.3"
-    "@stingerloom/ioc": "npm:^1.0.3"
+    "@stingerloom/common": "npm:^1.0.4"
+    "@stingerloom/error": "npm:^1.0.4"
+    "@stingerloom/ioc": "npm:^1.0.4"
     class-transformer: "npm:^0.5.1"
     class-validator: "npm:^0.14.0"
     fastify: "npm:^4.24.3"
@@ -2713,12 +2713,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/services@npm:^1.0.3, @stingerloom/services@workspace:packages/services":
+"@stingerloom/services@npm:^1.0.4, @stingerloom/services@workspace:packages/services":
   version: 0.0.0-use.local
   resolution: "@stingerloom/services@workspace:packages/services"
   dependencies:
-    "@stingerloom/common": "npm:^1.0.3"
-    "@stingerloom/ioc": "npm:^1.0.3"
+    "@stingerloom/common": "npm:^1.0.4"
+    "@stingerloom/ioc": "npm:^1.0.4"
     typedi: "npm:^0.10.0"
   peerDependencies:
     "@stingerloom/common": "*"
@@ -2726,13 +2726,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@stingerloom/utils@npm:^1.0.3, @stingerloom/utils@workspace:packages/utils":
+"@stingerloom/utils@npm:^1.0.4, @stingerloom/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@stingerloom/utils@workspace:packages/utils"
   dependencies:
-    "@stingerloom/common": "npm:^1.0.3"
-    "@stingerloom/ioc": "npm:^1.0.3"
-    "@stingerloom/orm": "npm:^1.0.3"
+    "@stingerloom/common": "npm:^1.0.4"
+    "@stingerloom/ioc": "npm:^1.0.4"
+    "@stingerloom/orm": "npm:^1.0.4"
   peerDependencies:
     "@stingerloom/common": "*"
     "@stingerloom/ioc": "*"

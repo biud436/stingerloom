@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/services",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "license": "MIT",
     "dependencies": {
         "typedi": "^0.10.0"
@@ -10,8 +10,8 @@
         "@stingerloom/ioc": "*"
     },
     "devDependencies": {
-        "@stingerloom/common": "^1.0.3",
-        "@stingerloom/ioc": "^1.0.3"
+        "@stingerloom/common": "^1.0.4",
+        "@stingerloom/ioc": "^1.0.4"
     },
     "scripts": {
         "build:tsc": "tsc",
