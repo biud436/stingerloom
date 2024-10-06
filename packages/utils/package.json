@@ -19,5 +19,6 @@
     "types": "dist/index.d.ts",
     "publishConfig": {
         "access": "public"
-    }
+    },
+    "gitHead": "49f6f001d1dfad08d53d6d2f2b32c9bc589522ab"
 }

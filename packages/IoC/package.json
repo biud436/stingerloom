@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/ioc",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "dependencies": {
         "chalk": "^4",
         "fastify": "^4.24.3",
@@ -12,8 +12,8 @@
         "@stingerloom/common": "*"
     },
     "devDependencies": {
-        "@stingerloom/orm": "^1.0.1",
-        "@stingerloom/router": "^1.0.1",
+        "@stingerloom/orm": "^1.0.2",
+        "@stingerloom/router": "^1.0.2",
         "@types/node": "^20.4.8"
     },
     "scripts": {
@@ -23,5 +23,6 @@
     "types": "dist/index.d.ts",
     "publishConfig": {
         "access": "public"
-    }
+    },
+    "gitHead": "49f6f001d1dfad08d53d6d2f2b32c9bc589522ab"
 }
