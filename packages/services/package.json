@@ -1,6 +1,6 @@
 {
   "name": "@stingerloom/services",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "dependencies": {
     "typedi": "^0.10.0"
@@ -10,7 +10,7 @@
     "@stingerloom/ioc": "*"
   },
   "devDependencies": {
-    "@stingerloom/common": "^1.0.0",
+    "@stingerloom/common": "^1.0.1",
     "@stingerloom/ioc": "^1.0.0"
   },
   "scripts": {

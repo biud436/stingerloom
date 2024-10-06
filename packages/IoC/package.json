@@ -1,27 +1,27 @@
 {
-  "name": "@stringerloom/ioc",
-  "version": "1.0.0",
-  "dependencies": {
-    "chalk": "^4",
-    "fastify": "^4.24.3",
-    "typedi": "^0.10.0",
-    "typeorm": "^0.3.17",
-    "typescript": "^5.5.4"
-  },
-  "peerDependencies": {
-    "@stingerloom/common": "*"
-  },
-  "devDependencies": {
-    "@stingerloom/orm": "^1.0.0",
-    "@stingerloom/router": "^1.0.0",
-    "@types/node": "^20.4.8"
-  },
-  "scripts": {
-    "build": "tsc"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  }
+    "name": "@stingerloom/ioc",
+    "version": "1.0.1",
+    "dependencies": {
+        "chalk": "^4",
+        "fastify": "^4.24.3",
+        "typedi": "^0.10.0",
+        "typeorm": "^0.3.17",
+        "typescript": "^5.5.4"
+    },
+    "peerDependencies": {
+        "@stingerloom/common": "*"
+    },
+    "devDependencies": {
+        "@stingerloom/orm": "^1.0.1",
+        "@stingerloom/router": "^1.0.1",
+        "@types/node": "^20.4.8"
+    },
+    "scripts": {
+        "build": "tsc"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    }
 }

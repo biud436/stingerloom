@@ -1,6 +1,6 @@
 {
   "name": "@stingerloom/orm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "biud436 <biud436@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -10,8 +10,8 @@
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@stingerloom/common": "^1.0.0",
-    "@stingerloom/error": "^1.0.0",
+    "@stingerloom/common": "^1.0.1",
+    "@stingerloom/error": "^1.0.1",
     "@stingerloom/ioc": "^1.0.0",
     "@types/mysql": "^2.15.26"
   },

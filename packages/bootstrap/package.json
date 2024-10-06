@@ -15,9 +15,9 @@
     "@stingerloom/services": "*"
   },
   "devDependencies": {
-    "@stingerloom/common": "^1.0.0",
+    "@stingerloom/common": "^1.0.1",
     "@stingerloom/ioc": "^1.0.0",
-    "@stingerloom/services": "^1.0.0"
+    "@stingerloom/services": "^1.0.1"
   },
   "scripts": {
     "build": "tsc"
