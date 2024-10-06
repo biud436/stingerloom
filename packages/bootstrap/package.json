@@ -24,18 +24,18 @@
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
-        "build:tsc": "tsc",
+        "build:tsc": "tsc -p tsconfig.json",
         "build:webpack": "webpack",
         "build": "npm run build:tsc",
         "prepublish": "npm run build"
     },
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "dist/bootstrap/index.js",
+    "types": "dist/bootstrap/index.d.ts",
     "publishConfig": {
         "access": "public"
     },
     "gitHead": "18702d8006c2ebf3158eee5980ffbc203316c89f",
     "files": [
-        "dist/bootstrap"
+        "dist"
     ]
 }

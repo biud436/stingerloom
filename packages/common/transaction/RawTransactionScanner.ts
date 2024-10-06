@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MetadataScanner } from "@stingerloom/ioc/scanners";
+import { MetadataScanner } from "scanners";
 import { Service } from "typedi";
 import { EntityManager, QueryRunner } from "typeorm";
 import {

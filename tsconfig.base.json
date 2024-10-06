@@ -10,31 +10,6 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "declaration": true,
-        "baseUrl": ".",
-        "skipLibCheck": true /* Skip type checking all .d.ts files. */,
-        "paths": {
-            "@stingerloom/common": ["packages/common"],
-            "@stingerloom/common/*": ["packages/common/*"],
-            "@stingerloom/bootstrap": ["packages/bootstrap"],
-            "@stingerloom/bootstrap/*": ["packages/bootstrap/*"],
-            "@stingerloom/error": ["packages/error"],
-            "@stingerloom/error/*": ["packages/error/*"],
-            "@stingerloom/ioc": ["packages/ioc"],
-            "@stingerloom/ioc/*": ["packages/ioc/*"],
-            "@stingerloom/utils": ["packages/utils"],
-            "@stingerloom/utils/*": ["packages/utils/*"],
-            "@stingerloom/factory": ["packages/factory"],
-            "@stingerloom/factory/*": ["packages/factory/*"],
-            "@stingerloom/services": ["packages/services"],
-            "@stingerloom/services/*": ["packages/services/*"],
-            "@stingerloom/orm": ["packages/orm"],
-            "@stingerloom/orm/*": ["packages/orm/*"],
-            "@stingerloom/router": ["packages/router"],
-            "@stingerloom/router/*": ["packages/router/*"],
-            "@stingerloom/compiler": ["packages/compiler"],
-            "@stingerloom/compiler/*": ["packages/compiler/*"],
-            "@stingerloom/cli": ["cli/"],
-            "@stingerloom/cli/*": ["cli/*"]
-        }
+        "skipLibCheck": true /* Skip type checking all .d.ts files. */
     }
 }

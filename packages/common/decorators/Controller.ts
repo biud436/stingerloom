@@ -4,8 +4,8 @@ import Container from "typedi";
 import {
     DynamicClassWrapper,
     MetadataScanner,
-} from "packages/ioc/scanners/MetadataScanner";
-import { ControllerScanner } from "packages/ioc/scanners/ControllerScanner";
+} from "@stingerloom/ioc/scanners/MetadataScanner";
+import { ControllerScanner } from "@stingerloom/ioc/scanners/ControllerScanner";
 import { createUniqueControllerKey } from "@stingerloom/utils/scanner";
 import { ParameterListManager } from "../ParameterListManager";
 import { ReflectManager } from "../ReflectManager";

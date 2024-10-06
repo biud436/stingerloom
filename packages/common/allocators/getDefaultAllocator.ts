@@ -1,6 +1,6 @@
 import Container from "typedi";
 import { ParameterAllocator } from "../ParameterListManager";
-import { InstanceScanner } from "packages/ioc/scanners/InstanceScanner";
+import { InstanceScanner } from "@stingerloom/ioc/scanners/InstanceScanner";
 import { ReflectManager } from "../ReflectManager";
 
 import { DataSource } from "typeorm";

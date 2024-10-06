@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { InstanceScanner } from "packages/ioc";
+import { InstanceScanner } from "@stingerloom/ioc";
 import { ClazzType } from "../RouterMapper";
 import { ReflectManager } from "../ReflectManager";
 import Database from "../Database";

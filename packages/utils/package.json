@@ -18,13 +18,13 @@
         "build": "npm run build:tsc",
         "prepublish": "npm run build"
     },
-    "main": "index.js",
-    "types": "index.d.ts",
+    "main": "dist/utils/index.js",
+    "types": "dist/utils/index.d.ts",
     "publishConfig": {
         "access": "public"
     },
     "gitHead": "18702d8006c2ebf3158eee5980ffbc203316c89f",
     "files": [
-        "dist/utils"
+        "dist"
     ]
 }

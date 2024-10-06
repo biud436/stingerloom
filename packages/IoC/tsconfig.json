@@ -1,6 +1,29 @@
 {
     "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "outDir": "./dist"
+        "baseUrl": "",
+        "outDir": "dist",
+        "paths": {
+            "@stingerloom/common": ["../common"],
+            "@stingerloom/common/*": ["../common/*"],
+            "@stingerloom/bootstrap": ["../bootstrap"],
+            "@stingerloom/bootstrap/*": ["../bootstrap/*"],
+            "@stingerloom/error": ["../error"],
+            "@stingerloom/error/*": ["../error/*"],
+            "@stingerloom/ioc": [""],
+            "@stingerloom/ioc/*": ["*"],
+            "@stingerloom/utils": ["../utils"],
+            "@stingerloom/utils/*": ["../utils/*"],
+            "@stingerloom/factory": ["../factory"],
+            "@stingerloom/factory/*": ["../factory/*"],
+            "@stingerloom/services": ["../services"],
+            "@stingerloom/services/*": ["../services/*"],
+            "@stingerloom/orm": ["../orm"],
+            "@stingerloom/orm/*": ["../orm/*"],
+            "@stingerloom/router": ["../router"],
+            "@stingerloom/router/*": ["../router/*"],
+            "@stingerloom/compiler": ["../compiler"],
+            "@stingerloom/compiler/*": ["../compiler/*"]
+        }
     }
 }

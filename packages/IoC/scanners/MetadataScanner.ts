@@ -3,7 +3,7 @@
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
 import { ObjectLiteral, Repository } from "typeorm";
-import { HttpRouterParameter } from "../../common/HttpRouterParameter";
+import { HttpRouterParameter } from "@stingerloom/common/HttpRouterParameter";
 
 export type DynamicClassWrapper<T> = {
     new (...args: any[]): T;
