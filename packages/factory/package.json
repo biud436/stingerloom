@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/factory",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
@@ -11,7 +11,7 @@
         "@stingerloom/common": "*"
     },
     "devDependencies": {
-        "@stingerloom/common": "^1.0.5",
+        "@stingerloom/common": "^1.0.6",
         "@types/node": "^20.4.8"
     },
     "scripts": {
