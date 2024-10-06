@@ -110,7 +110,9 @@ export class ServerBootstrapApplication extends EventEmitter {
     }
 
     private createServer(
-        options: FastifyListenOptions = { port: process.env.SERVER_PORT },
+        options: FastifyListenOptions = {
+            port: +(process.env.SERVER_PORT || 3000),
+        },
     ): void {
         this.app.listen(options, (err) => {
             if (err) {
