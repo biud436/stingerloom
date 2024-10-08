@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 
 import { execSync } from "child_process";
 import * as path from "path";
@@ -59,8 +59,8 @@ function createProject() {
     });
 
     console.log("Removing Git metadata and unnecessary directories...");
-    execSync("rimraf .git", { stdio: "inherit" });
-    execSync(`rimraf ${path.join(projectPath, "sample")}`, {
+    execSync("npx rimraf .git", { stdio: "inherit" });
+    execSync(`npx rimraf ${path.join(projectPath, "sample")}`, {
         stdio: "inherit",
     });
 
