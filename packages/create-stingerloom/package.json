@@ -1,6 +1,6 @@
 {
     "name": "create-stingerloom",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "CLI tool to create a stingerloom sample project",
     "bin": {
         "create-stingerloom": "./dist/index.js"
