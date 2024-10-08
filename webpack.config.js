@@ -17,20 +17,7 @@ module.exports = {
     resolve: {
         extensions: [".ts", ".js"],
         alias: {
-            "@stingerloom/common": path.resolve(__dirname, "packages/common"),
-            "@stingerloom/bootstrap": path.resolve(
-                __dirname,
-                "packages/bootstrap",
-            ),
-            "@stingerloom/error": path.resolve(__dirname, "packages/error"),
-            "@stingerloom/ioc": path.resolve(__dirname, "packages/ioc"),
-            "@stingerloom/utils": path.resolve(__dirname, "packages/utils"),
-            "@stingerloom/factory": path.resolve(__dirname, "packages/factory"),
-            "@stingerloom/services": path.resolve(
-                __dirname,
-                "packages/services",
-            ),
-            "@stingerloom/router": path.resolve(__dirname, "packages/router"),
+            "@stingerloom/core": path.resolve(__dirname, "packages/core"),
             "@stingerloom/orm": path.resolve(__dirname, "packages/orm"),
             "@stingerloom/compiler": path.resolve(
                 __dirname,

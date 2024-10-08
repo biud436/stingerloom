@@ -5,7 +5,7 @@ import { MysqlSchemaInterface } from "./BaseSchema";
 import { ColumnOption, ColumnType } from "../../decorators";
 import { ColumnMetadata } from "../../scanner/ColumnScanner";
 import { ISqlDriver } from "../SqlDriver";
-import { Exception } from "@stingerloom/error";
+import { Exception } from "@stingerloom/core/error";
 
 export class MySqlDriver implements ISqlDriver {
     constructor(

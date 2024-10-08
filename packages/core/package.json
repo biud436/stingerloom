@@ -1,0 +1,42 @@
+{
+    "name": "@stingerloom/core",
+    "version": "1.0.0",
+    "author": "biud436 <biud436@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@fastify/session": "^10.7.0",
+        "chalk": "^4",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.0",
+        "dotenv": "^16.3.1",
+        "fastify": "^4.24.3",
+        "http-status": "^1.7.3",
+        "reflect-metadata": "^0.1.13",
+        "typedi": "^0.10.0",
+        "typeorm": "^0.3.17",
+        "typeorm-naming-strategies": "^4.1.0"
+    },
+    "devDependencies": {
+        "rimraf": "^6.0.1",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.6.2",
+        "webpack": "^5.95.0",
+        "webpack-cli": "^5.1.4",
+        "@types/node": "^20.4.8"
+    },
+    "scripts": {
+        "build:tsc": "rimraf dist && tsc",
+        "build:webpack": "webpack",
+        "build": "npm run build:tsc",
+        "prepublish": "npm run build"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "publishConfig": {
+        "access": "public"
+    },
+    "gitHead": "735b05d4e586a8d9eca088690092a7b3a0f04c85",
+    "files": [
+        "dist"
+    ]
+}

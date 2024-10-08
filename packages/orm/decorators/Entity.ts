@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
 import { ColumnScanner, EntityScanner } from "../scanner";
-import { createEntityKey } from "@stingerloom/utils";
+import { createEntityKey } from "@stingerloom/core/utils";
 
 export interface EntityOption {
     name?: string;

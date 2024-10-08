@@ -1,0 +1,19 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "./dist",
+        "rootDir": "./",
+        "declarationDir": "./types",
+        "paths": {
+            "@stingerloom/core": ["../core"],
+            "@stingerloom/core/*": ["../core/*"],
+            "@stingerloom/orm": ["../orm"],
+            "@stingerloom/orm/*": ["../orm/*"]
+        },
+        "composite": true /* Enable project references */
+    },
+    "include": ["*.ts", "**/*.ts"],
+    "exclude": ["dist", "node_modules", "types", "dist/**/*.ts"],
+    "references": [{ "path": "../orm" }]
+}

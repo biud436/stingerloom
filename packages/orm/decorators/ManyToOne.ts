@@ -1,4 +1,4 @@
-import { ClazzType, ReflectManager } from "@stingerloom/common";
+import { ClazzType, ReflectManager } from "@stingerloom/core/common";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const MANY_TO_ONE_TOKEN = Symbol.for("MANY_TO_ONE");

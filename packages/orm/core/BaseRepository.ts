@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClazzType } from "@stingerloom/common";
+import { ClazzType } from "@stingerloom/core/common";
 import { FindOption } from "../dialects/FindOption";
 import { EntityManager, EntityResult } from "./EntityManager";
 

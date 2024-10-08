@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { DatabaseNotConnectedError } from "@stingerloom/error/DatabaseNotConnectedError";
+import { DatabaseNotConnectedError } from "@stingerloom/core/error/DatabaseNotConnectedError";
 import { MySqlConnector } from "./dialects";
 import { DatabaseClientOptions } from "./types/DatabaseClientOptions";
 import { IConnector } from "./types/IConnector";
-import { NotSupportedDatabaseTypeError } from "@stingerloom/error/NotSupportedDatabaseTypeError";
-import { Exception } from "@stingerloom/error";
+import { NotSupportedDatabaseTypeError } from "@stingerloom/core/error/NotSupportedDatabaseTypeError";
+import { Exception } from "@stingerloom/core/error";
 
 export class DatabaseClient {
     private static instance: DatabaseClient;

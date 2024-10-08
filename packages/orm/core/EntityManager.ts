@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClazzType, Logger, ReflectManager } from "@stingerloom/common";
+import { ClazzType, Logger, ReflectManager } from "@stingerloom/core/common";
 import { ColumnMetadata, EntityMetadata, EntityScanner } from "../scanner";
 import Container from "typedi";
 import { DatabaseClient } from "../DatabaseClient";
-import configService from "@stingerloom/common/ConfigService";
+import configService from "@stingerloom/core/common/ConfigService";
 import { MySqlDriver } from "../dialects/mysql/MySqlDriver";
 import { ISqlDriver } from "../dialects/SqlDriver";
 import { INDEX_TOKEN, IndexMetadata } from "../decorators/Indexer";

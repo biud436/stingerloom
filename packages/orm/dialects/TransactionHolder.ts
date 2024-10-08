@@ -4,9 +4,9 @@ import { DatabaseClient } from "../DatabaseClient";
 import { IConnector } from "../types/IConnector";
 import { MySqlDataSource } from "./mysql/MySqlDataSource";
 import { IDataSource } from "./IDataSource";
-import { Logger } from "@stingerloom/common";
-import { DatabaseConnectionFailedError } from "@stingerloom/error/DatabaseConnectionFailedError";
-import { DatabaseNotConnectedError } from "@stingerloom/error/DatabaseNotConnectedError";
+import { Logger } from "@stingerloom/core/common";
+import { DatabaseConnectionFailedError } from "@stingerloom/core/error/DatabaseConnectionFailedError";
+import { DatabaseNotConnectedError } from "@stingerloom/core/error/DatabaseNotConnectedError";
 import { IQueryEngine } from "./IQueryEngine";
 import { TRANSACTION_ISOLATION_LEVEL } from "./IsolationLevel";
 

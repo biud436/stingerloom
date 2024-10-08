@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ReflectManager } from "@stingerloom/common";
+import { ReflectManager } from "@stingerloom/core/common";
 import { ColumnMetadata, ColumnScanner } from "../scanner/ColumnScanner";
 import Container from "typedi";
 

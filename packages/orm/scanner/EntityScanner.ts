@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { MetadataScanner } from "@stingerloom/ioc";
-import { ClazzType } from "@stingerloom/common";
+import { MetadataScanner } from "@stingerloom/core/IoC";
+import { ClazzType } from "@stingerloom/core/common";
 import { Service } from "typedi";
 
 export type EntityMetadata = {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { ReflectManager } from "@stingerloom/common/ReflectManager";
+import { ReflectManager } from "@stingerloom/core/common/ReflectManager";
 
 export interface IndexOption {
     name?: string;
