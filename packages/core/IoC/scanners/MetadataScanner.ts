@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 import { Service } from "typedi";
-import { ObjectLiteral, Repository } from "typeorm";
 import { HttpRouterParameter } from "../../common/HttpRouterParameter";
 
 export type DynamicClassWrapper<T> = {

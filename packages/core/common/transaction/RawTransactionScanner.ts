@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { MetadataScanner } from "@stingerloom/core/IoC";
+import { MetadataScanner } from "@stingerloom/core/IoC/scanners/MetadataScanner";
 import { Service } from "typedi";
 import { EntityManager, QueryRunner } from "typeorm";
 import {
     TRANSACTION_LAZY_ROLLBACK,
-    TransactionIsolationLevel,
-    TransactionPropagation,
     TransactionalRollbackException,
 } from "../decorators/Transactional";
 import {
