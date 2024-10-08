@@ -10,7 +10,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "declaration": true,
-        "sourceMap": true,
+        "sourceMap": false,
         "skipLibCheck": true /* Skip type checking all .d.ts files. */,
         "composite": true /* Enable project references */
     }

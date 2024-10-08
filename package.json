@@ -78,6 +78,6 @@
         "start:dev": "node dist/bundle.js",
         "ready": "node scripts/ready.js",
         "ready:dev": "node scripts/ready-dev.js",
-        "clean": "tsc -b --clean packages/core"
+        "clean": "tsc -b --clean packages"
     }
 }
