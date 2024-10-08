@@ -4,7 +4,6 @@
         "baseUrl": ".",
         "outDir": "./dist",
         "rootDir": "./",
-        "declarationDir": "./types",
         "composite": true /* Enable project references */
     },
     "include": ["*.ts", "**/*.ts"],

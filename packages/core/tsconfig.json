@@ -4,7 +4,6 @@
         "baseUrl": ".",
         "outDir": "./dist",
         "rootDir": "./",
-        "declarationDir": "./types",
         "paths": {
             "@stingerloom/core": ["../core"],
             "@stingerloom/core/*": ["../core/*"]
