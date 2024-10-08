@@ -9,6 +9,11 @@
     "devDependencies": {
         "@types/node": "^20.4.8"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/biud436/stingerloom",
+        "directory": "packages/compiler"
+    },
     "scripts": {
         "build:tsc": "rimraf dist && tsc",
         "build:webpack": "webpack",
