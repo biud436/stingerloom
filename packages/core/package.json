@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/core",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
@@ -11,21 +11,21 @@
         "dotenv": "^16.3.1",
         "fastify": "^4.24.3",
         "http-status": "^1.7.3",
+        "mysql2": "^3.9.3",
         "reflect-metadata": "^0.1.13",
+        "sql-template-tag": "^4",
         "typedi": "^0.10.0",
         "typeorm": "^0.3.17",
-        "typeorm-naming-strategies": "^4.1.0",
-        "mysql2": "^3.9.3",
-        "sql-template-tag": "^4"
+        "typeorm-naming-strategies": "^4.1.0"
     },
     "devDependencies": {
+        "@types/mysql": "^2.15.26",
+        "@types/node": "^20.4.8",
         "rimraf": "^6.0.1",
         "ts-loader": "^9.5.1",
         "typescript": "^5.6.2",
         "webpack": "^5.95.0",
-        "webpack-cli": "^5.1.4",
-        "@types/node": "^20.4.8",
-        "@types/mysql": "^2.15.26"
+        "webpack-cli": "^5.1.4"
     },
     "scripts": {
         "build:tsc": "rimraf dist && tsc -b",
