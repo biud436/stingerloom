@@ -1,6 +1,6 @@
 {
     "name": "@stingerloom/compiler",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
