@@ -38,26 +38,10 @@
         "build": "npm run build:tsc",
         "prepublish": "npm run build"
     },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "main": "index.js",
+    "types": "index.d.ts",
     "publishConfig": {
-        "access": "public",
-        "directory": "dist"
+        "access": "public"
     },
-    "gitHead": "a9c9d708edc93fbf36bfc2e402dddbc1e36772f7",
-    "files": [
-        "dist"
-    ],
-    "exports": {
-        ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.js",
-            "types": "./dist/index.d.ts",
-            "node": {
-                "import": "./dist/index.js",
-                "require": "./dist/index.js",
-                "types": "./dist/index.d.ts"
-            }
-        }
-    }
+    "gitHead": "94d2a48b1350437dbb7f851b712636264931c243"
 }
