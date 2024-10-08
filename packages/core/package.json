@@ -46,5 +46,11 @@
     "gitHead": "8e527c4b649ad71e9cadb9b5b479116d356a073c",
     "files": [
         "dist"
-    ]
+    ],
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.js"
+        }
+    }
 }
