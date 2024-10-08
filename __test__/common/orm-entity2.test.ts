@@ -5,19 +5,19 @@ import {
     Module,
     ModuleOptions,
     OnModuleInit,
-} from "@stingerloom/common";
+} from "@stingerloom/core/common";
 import {
     Column,
     Entity,
     InjectEntityManager,
     PrimaryGeneratedColumn,
-} from "@stingerloom/orm/decorators";
-import configService from "@stingerloom/common/ConfigService";
-import { EntityManager } from "@stingerloom/orm/core/EntityManager";
+} from "@stingerloom/core/orm/decorators";
+import configService from "@stingerloom/core/common/ConfigService";
+import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import { DataSourceOptions } from "typeorm";
 import axios from "axios";
-import { ServerBootstrapApplication } from "@stingerloom/bootstrap/ServerBootstrapApplication";
+import { ServerBootstrapApplication } from "@stingerloom/core/bootstrap/ServerBootstrapApplication";
 
 describe("테스트", () => {
     let application: TestServerApplication;

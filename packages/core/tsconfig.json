@@ -7,13 +7,10 @@
         "declarationDir": "./types",
         "paths": {
             "@stingerloom/core": ["../core"],
-            "@stingerloom/core/*": ["../core/*"],
-            "@stingerloom/orm": ["../orm"],
-            "@stingerloom/orm/*": ["../orm/*"]
+            "@stingerloom/core/*": ["../core/*"]
         },
         "composite": true /* Enable project references */
     },
     "include": ["*.ts", "**/*.ts"],
-    "exclude": ["dist", "node_modules", "types", "dist/**/*.ts"],
-    "references": [{ "path": "../orm" }]
+    "exclude": ["dist", "node_modules", "types", "dist/**/*.ts"]
 }

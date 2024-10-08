@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ENTITY_TOKEN } from "@stingerloom/orm/decorators/Entity";
+import { ENTITY_TOKEN } from "@stingerloom/core/orm/decorators/Entity";
 import { CONTROLLER_TOKEN } from "./RouterMapper";
 import {
     AFTER_TRANSACTION_TOKEN,
@@ -15,7 +15,7 @@ import {
 } from "./decorators";
 
 import { INJECTABLE_TOKEN } from "./decorators/Injectable";
-import { ENTITY_METADATA_TOKEN } from "@stingerloom/orm/decorators";
+import { ENTITY_METADATA_TOKEN } from "@stingerloom/core/orm/decorators";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type Type = Function | string | symbol | undefined;

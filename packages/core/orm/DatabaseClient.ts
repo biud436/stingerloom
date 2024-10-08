@@ -3,8 +3,8 @@
 
 import { DatabaseNotConnectedError } from "@stingerloom/core/error/DatabaseNotConnectedError";
 import { MySqlConnector } from "./dialects";
-import { DatabaseClientOptions } from "./types/DatabaseClientOptions";
-import { IConnector } from "./types/IConnector";
+import { DatabaseClientOptions } from "./core/DatabaseClientOptions";
+import { IConnector } from "./core/IConnector";
 import { NotSupportedDatabaseTypeError } from "@stingerloom/core/error/NotSupportedDatabaseTypeError";
 import { Exception } from "@stingerloom/core/error";
 

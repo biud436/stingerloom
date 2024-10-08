@@ -7,7 +7,7 @@ import { InstanceScanner } from "@stingerloom/core/IoC";
 import Database from "../Database";
 import { DataSource } from "typeorm";
 import { BadRequestException } from "@stingerloom/core/error";
-import { EntityManager } from "@stingerloom/orm/core";
+import { EntityManager } from "@stingerloom/core/orm/core";
 
 /**
  * 기본 파라미터를 특정 타입으로 변환하는 기능을 가지는 함수입니다.

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Sql } from "sql-template-tag";
 import { DatabaseClient } from "../DatabaseClient";
-import { IConnector } from "../types/IConnector";
+import { IConnector } from "../core/IConnector";
 import { MySqlDataSource } from "./mysql/MySqlDataSource";
 import { IDataSource } from "./IDataSource";
 import { Logger } from "@stingerloom/core/common";

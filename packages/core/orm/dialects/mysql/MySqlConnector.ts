@@ -2,12 +2,12 @@
 import mysql, { Pool, PoolConnection } from "mysql2";
 import sql, { Sql } from "sql-template-tag";
 import { Logger } from "@stingerloom/core/common/Logger";
-import { Connection } from "../../types/Connection";
+import { Connection } from "../../core/Connection";
 import { TRANSACTION_ISOLATION_LEVEL } from "../IsolationLevel";
 import { ConnectionNotFound } from "./ConnectionNotFound";
 import { PoolNotFound } from "./PoolNotFound";
-import { DatabaseClientOptions } from "../../types/DatabaseClientOptions";
-import { IConnector } from "../../types/IConnector";
+import { DatabaseClientOptions } from "../../core/DatabaseClientOptions";
+import { IConnector } from "../../core/IConnector";
 export type Entity = any;
 export type IDatabaseType = "mysql" | "mariadb" | "postgres" | "sqlite";
 

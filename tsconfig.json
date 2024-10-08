@@ -32,8 +32,6 @@
         "paths": {
             "@stingerloom/core": ["packages/core"],
             "@stingerloom/core/*": ["packages/core/*"],
-            "@stingerloom/orm": ["packages/orm"],
-            "@stingerloom/orm/*": ["packages/orm/*"],
             "@stingerloom/compiler": ["packages/compiler"],
             "@stingerloom/compiler/*": ["packages/compiler/*"],
             "@stingerloom/cli": ["cli/"],

@@ -20,7 +20,7 @@ import {
 import { RouterExecutionContext } from "@stingerloom/core/router/RouterExecutionContext";
 import chalk from "chalk";
 import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
-import { EntityManager } from "@stingerloom/orm/core/EntityManager";
+import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
 import { InjectableScanner, InstanceScanner } from "./scanners";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");

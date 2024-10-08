@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import sql, { join, raw } from "sql-template-tag";
-import { IConnector } from "../../types/IConnector";
+import { IConnector } from "../../core/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
 import { ColumnOption, ColumnType } from "../../decorators";
 import { ColumnMetadata } from "../../scanner/ColumnScanner";

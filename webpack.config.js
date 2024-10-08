@@ -18,7 +18,6 @@ module.exports = {
         extensions: [".ts", ".js"],
         alias: {
             "@stingerloom/core": path.resolve(__dirname, "packages/core"),
-            "@stingerloom/orm": path.resolve(__dirname, "packages/orm"),
             "@stingerloom/compiler": path.resolve(
                 __dirname,
                 "packages/compiler",

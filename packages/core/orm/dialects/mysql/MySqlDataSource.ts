@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Connection } from "../../types/Connection";
-import { IConnector } from "../../types/IConnector";
+import { Connection } from "../../core/Connection";
+import { IConnector } from "../../core/IConnector";
 import { IDataSource } from "../IDataSource";
 import { TRANSACTION_ISOLATION_LEVEL } from "../IsolationLevel";
 import { MySqlConnectionError } from "./MySqlConnectionError";

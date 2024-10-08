@@ -1,7 +1,7 @@
 import { ControllerScanner } from "@stingerloom/core/IoC/scanners/ControllerScanner";
 import { ExceptionScanner } from "@stingerloom/core/IoC/scanners/ExceptionScanner";
 import { InjectableScanner } from "@stingerloom/core/IoC/scanners/InjectableScanner";
-import { EntityScanner } from "@stingerloom/orm/scanner";
+import { EntityScanner } from "@stingerloom/core/orm/scanner";
 
 export function createUniqueControllerKey(
     name: string,

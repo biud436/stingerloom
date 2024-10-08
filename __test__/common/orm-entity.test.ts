@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { ServerBootstrapApplication } from "@stingerloom/bootstrap";
+import { ServerBootstrapApplication } from "@stingerloom/core/bootstrap";
 import {
     Controller,
     Get,
     Module,
     ModuleOptions,
     OnModuleInit,
-} from "@stingerloom/common";
+} from "@stingerloom/core/common";
 import { DataSourceOptions } from "typeorm";
-import configService from "@stingerloom/common/ConfigService";
+import configService from "@stingerloom/core/common/ConfigService";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import axios from "axios";
-import { Entity } from "@stingerloom/orm/decorators/Entity";
+import { Entity } from "@stingerloom/core/orm/decorators/Entity";
 import {
     Column,
     InjectEntityManager,
     PrimaryGeneratedColumn,
-} from "@stingerloom/orm/decorators";
-import { Index } from "@stingerloom/orm/decorators/Indexer";
-import { EntityManager } from "@stingerloom/orm/core";
+} from "@stingerloom/core/orm/decorators";
+import { Index } from "@stingerloom/core/orm/decorators/Indexer";
+import { EntityManager } from "@stingerloom/core/orm/core";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;

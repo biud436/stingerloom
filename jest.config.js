@@ -31,7 +31,6 @@ module.exports = {
     moduleNameMapper: {
         "^@stingerloom/(.*)$": "<rootDir>/packages/$1",
         "^@stingerloom/compiler/(.*)$": "<rootDir>/packages/compiler/$1",
-        "^@stingerloom/bootstrap/(.*)$": "<rootDir>/packages/bootstrap/$1",
     },
 
     // The test environment that will be used for testing
