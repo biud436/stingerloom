@@ -16,11 +16,17 @@ To generate a new project, you can use the following command:
 npx create-stingerloom@latest --name <my-app>
 ```
 
-and then you can run the following command to start the server:
+and then you can run the following command to install the dependencies:
 
 ```bash
 cd <my-app>
 yarn install
+```
+
+to start the server, you can run the following command:
+
+```bash
+yarn start:dev
 ```
 
 # 개요
