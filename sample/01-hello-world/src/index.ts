@@ -1,14 +1,10 @@
 import 'reflect-metadata';
-import { Module, MODULE_OPTIONS_TOKEN, ModuleOptions } from '@stingerloom/core';
+import { MODULE_OPTIONS_TOKEN, ModuleOptions } from '@stingerloom/core';
 import { ServerBootstrapApplication } from '@stingerloom/core/bootstrap';
 
 import databaseOption from './config/database';
 import { AppModule } from './app/AppModule';
 
-@Module({
-    controllers: [],
-    providers: [],
-})
 export class CustomServerBootstrapApplication extends ServerBootstrapApplication {
     override beforeStart(): void {
         const appModuleOption = Reflect.getMetadata(
