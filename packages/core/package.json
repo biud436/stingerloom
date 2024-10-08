@@ -41,7 +41,8 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "publishConfig": {
-        "access": "public"
+        "access": "public",
+        "directory": "dist"
     },
     "gitHead": "8e527c4b649ad71e9cadb9b5b479116d356a073c",
     "files": [
