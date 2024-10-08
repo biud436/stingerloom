@@ -1,0 +1,21 @@
+x-logging: &default-logging
+  options:
+    max-size: '1m'
+    max-file: '3'
+  driver: 'json-file'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_container
+    environment:
+      - MYSQL_ROOT_PASSWORD=test1234
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=test1234
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./data:/var/lib/mysql
+    logging: *default-logging
+    
