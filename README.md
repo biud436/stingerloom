@@ -13,7 +13,14 @@ StingerLoom is a Server Framework for Node.js. StingerLoom is built on top of th
 To generate a new project, you can use the following command:
 
 ```bash
-npx create-stingerloom@latest --name my-app
+npx create-stingerloom@latest --name <my-app>
+```
+
+and then you can run the following command to start the server:
+
+```bash
+cd <my-app>
+yarn install
 ```
 
 # 개요
