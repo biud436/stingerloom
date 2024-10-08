@@ -1,8 +1,6 @@
 # Introduction
 
-This server framework was started to better understand the mechanics and technology behind a server framework called Nest.js.
-
-StingerLoom supports features such as router mapping and the ORM required to access DI and databases by StingerLoom Containers.
+StingerLoom is a Server Framework for Node.js. StingerLoom is built on top of the Fastify framework and provides a set of tools and utilities to help you build your server applications.
 
 ---
 
