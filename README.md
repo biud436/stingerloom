@@ -8,15 +8,13 @@ StingerLoom is a Server Framework for Node.js. StingerLoom is built on top of th
 <img src="https://github.com/user-attachments/assets/77a2f5e0-69b5-43d2-bc43-ab9bde52cc5b">
 </p>
 
-## 개발 일지
+## Installations
 
-이 프레임워크를 만들면서 제가 고민했던 내용들을 아래 링크에 정리해두었습니다.
+To generate a new project, you can use the following command:
 
--   [MySQL 용 ORM 만들기 - Node.js 서버 프레임워크 개발기 5편](https://blog.naver.com/biud436/223410953258)
--   [트랜잭션의 전파 - Node.js 서버 프레임워크 개발기 4편](https://blog.naver.com/biud436/223226954673)
--   [인증과 트랜잭션의 처리 - Node.js 서버 프레임워크 개발기 3편](https://blog.naver.com/biud436/223198108682)
--   [기본적인 서버 코어 만들기 - Node.js 서버 프레임워크 개발기 2편](https://blog.naver.com/biud436/223192980484)
--   [라우터 함수 자동으로 만들기 - Node.js 서버 프레임워크 개발기 1편](https://blog.naver.com/biud436/223163267550)
+```bash
+npx create-stingerloom@latest --name my-app
+```
 
 # 개요
 
@@ -981,43 +979,6 @@ class MyNodeService {
 리포지토리 패턴을 통해 데이터베이스에 접근할 수 있습니다.
 
 [▲ 목차로 돌아가기](https://github.com/biud436/stingerloom#%EC%82%AC%EC%9A%A9%EB%B2%95)
-
-## Installations
-
-before starting this application, you must install dependencies as below in your terminal.
-
-```
-
-yarn install
-
-```
-
-or
-
-```bash
-npm install
-```
-
-and then next you have to create a new file named `.env` due to database configuration in the root directory. First up, you copy the `.env.example` file and then rename it to `.env` and then you change the value of the variable in the `.env` file.
-
-```bash
-# .env.example
-SERVER_PORT=3002
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=test
-DB_USER=<your_db_user>
-DB_PASSWORD=<your_db_password>
-SESSION_SECRET=<your_session_secret>
-COOKIE_SECRET=<your_cookie_secret>
-ROOT_PATH=<your_root_path>
-```
-
-and then next you can start this application with this command.
-
-```bash
-yarn start
-```
 
 ## Cli
 
