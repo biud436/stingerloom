@@ -4,6 +4,8 @@
         "baseUrl": ".",
         "outDir": "./dist",
         "rootDir": "./",
+        "declaration": true,
+        "preserveConstEnums": true,
         "paths": {
             "@stingerloom/core": ["../core"],
             "@stingerloom/core/*": ["../core/*"]
@@ -11,5 +13,5 @@
         "composite": true /* Enable project references */
     },
     "include": ["*.ts", "**/*.ts"],
-    "exclude": ["dist", "node_modules", "types", "dist/**/*.ts"]
+    "exclude": ["dist", "node_modules", "types"]
 }

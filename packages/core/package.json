@@ -33,7 +33,7 @@
         "directory": "packages/core"
     },
     "scripts": {
-        "build:tsc": "rimraf dist && tsc -b",
+        "build:tsc": "rimraf dist && tsc",
         "build:webpack": "webpack",
         "build": "npm run build:tsc",
         "prepublish": "npm run build"
