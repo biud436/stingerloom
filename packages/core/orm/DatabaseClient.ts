@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { DatabaseNotConnectedError } from "@stingerloom/core/error/DatabaseNotConnectedError";
-import { MySqlConnector } from "./dialects";
+import { MySqlConnector } from "./dialects/mysql/MySqlConnector";
 import { DatabaseClientOptions } from "./core/DatabaseClientOptions";
 import { IConnector } from "./core/IConnector";
 import { NotSupportedDatabaseTypeError } from "@stingerloom/core/error/NotSupportedDatabaseTypeError";
