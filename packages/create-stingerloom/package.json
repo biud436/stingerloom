@@ -12,14 +12,14 @@
         "start": "ts-node src/index.ts"
     },
     "dependencies": {
-        "rimraf": "^3.0.0"
+        "rimraf": "^3.0.0",
+        "yargs": "^17.7.2"
     },
     "devDependencies": {
         "@types/node": "^20.4.8",
         "@types/yargs": "^17.0.33",
         "ts-node": "^10.9.2",
-        "typescript": "^5.6.2",
-        "yargs": "^17.7.2"
+        "typescript": "^5.6.2"
     },
     "files": [
         "dist"

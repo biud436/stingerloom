@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-var-requires */
 
 import { execSync } from "child_process";
 import * as path from "path";
 import * as fs from "fs";
-
-const yargs = require("yargs");
-const { hideBin } = require("yargs/helpers");
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
 const SAMPLE_REPO_URL = "https://github.com/biud436/stingerloom.git";
 const SAMPLE_PATH = "sample/01-hello-world";
