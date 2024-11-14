@@ -2,29 +2,30 @@ import { TRANSACTION_ISOLATION_LEVEL } from "./IsolationLevel";
 
 export interface ITxEngine {
     /**
-     * 트랜잭션을 시작합니다.
+     * Starts a transaction with an optional isolation level.
+     * @param level The isolation level for the transaction. If not provided, the default isolation level will be used.
      */
     startTransaction(level?: TRANSACTION_ISOLATION_LEVEL): Promise<void>;
 
     /**
-     * 트랜잭션을 롤백합니다.
+     * Rolls back the current transaction, undoing all changes made during the transaction.
      */
     rollback(): Promise<void>;
 
     /**
-     * 트랜잭션을 커밋합니다.
+     * Commits the current transaction, making all changes made during the transaction permanent.
      */
     commit(): Promise<void>;
 
     /**
-     * savepoint를 생성합니다.
-     * @param name 저장점 이름
+     * Creates a savepoint within the current transaction. Savepoints allow you to roll back part of a transaction without affecting the entire transaction.
+     * @param name The name of the savepoint.
      */
     savepoint(name: string): Promise<void>;
 
     /**
-     * savepoint로 롤백합니다.
-     * @param name 저장점 이름
+     * Rolls back to a previously created savepoint, undoing all changes made after the savepoint was created.
+     * @param name The name of the savepoint.
      */
     rollbackTo(name: string): Promise<void>;
 }

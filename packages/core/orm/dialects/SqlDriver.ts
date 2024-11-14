@@ -5,55 +5,64 @@ import { MysqlSchemaInterface } from "./mysql/BaseSchema";
 
 export interface ISqlDriver<T = any> {
     /**
-     * 테이블이 존재하는지 확인합니다.
+     * Checks if the specified table exists in the database.
+     *
+     * @param name - The name of the table to check.
+     * @returns A promise that resolves to a result indicating the existence of the table.
      */
     hasTable(name: string): Promise<T>;
 
     /**
-     * 테이블에 기본키를 추가합니다.
+     * Adds a primary key to the specified table.
      *
-     * @param tableName
-     * @param columnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to set as the primary key.
+     * @returns A promise that resolves when the operation is complete.
      */
     addPrimaryKey(tableName: string, columnName: string): Promise<T>;
 
     /**
-     * 테이블에 자동 증가를 추가합니다.
+     * Adds an auto increment constraint to the specified column in the table.
      *
-     * @param tableName
-     * @param columnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to set as auto increment.
+     * @returns A promise that resolves when the operation is complete.
      */
     addAutoIncrement(tableName: string, columnName: string): Promise<T>;
 
     /**
-     * 테이블의 기본키를 제거합니다.
+     * Removes the primary key from the specified table.
      *
-     * @param tableName
+     * @param tableName - The name of the table to modify.
+     * @returns A promise that resolves when the operation is complete.
      */
     dropPrimaryKey(tableName: string): Promise<T>;
 
     /**
-     * 테이블에 유니크 키를 추가합니다.
+     * Adds a unique key to the specified column in the table.
      *
-     * @param tableName
-     * @param columnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to set as unique.
+     * @returns A promise that resolves when the operation is complete.
      */
     addUniqueKey(tableName: string, columnName: string): Promise<T>;
 
     /**
-     * 테이블의 유니크 키를 제거합니다.
+     * Removes the unique key from the specified column in the table.
      *
-     * @param tableName
-     * @param columnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to remove the unique constraint from.
+     * @returns A promise that resolves when the operation is complete.
      */
     dropUniqueKey(tableName: string, columnName: string): Promise<T>;
 
     /**
-     * 테이블에 컬럼을 추가합니다.
+     * Adds a new column to the specified table.
      *
-     * @param tableName
-     * @param columnName
-     * @param columnType
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the new column.
+     * @param columnType - The data type of the new column.
+     * @returns A promise that resolves when the operation is complete.
      */
     addColumn(
         tableName: string,
@@ -62,20 +71,22 @@ export interface ISqlDriver<T = any> {
     ): Promise<T>;
 
     /**
-     * 테이블의 컬럼을 제거합니다.
+     * Removes a column from the specified table.
      *
-     * @param tableName
-     * @param columnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to remove.
+     * @returns A promise that resolves when the operation is complete.
      */
     dropColumn(tableName: string, columnName: string): Promise<T>;
 
     /**
-     * 외래키를 추가합니다.
+     * Adds a foreign key constraint to the specified column in the table.
      *
-     * @param tableName
-     * @param columnName
-     * @param foreignTableName
-     * @param foreignColumnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to set as a foreign key.
+     * @param foreignTableName - The name of the referenced table.
+     * @param foreignColumnName - The name of the referenced column.
+     * @returns A promise that resolves when the operation is complete.
      */
     addForeignKey(
         tableName: string,
@@ -84,6 +95,14 @@ export interface ISqlDriver<T = any> {
         foreignColumnName: string,
     ): Promise<T>;
 
+    /**
+     * Generates a name for a foreign key constraint based on the source and target tables and columns.
+     *
+     * @param sourceTable - The name of the source table.
+     * @param targetTable - The name of the target table.
+     * @param sourceColumn - The name of the source column.
+     * @returns The generated foreign key name.
+     */
     generateForeignKeyName(
         sourceTable: string,
         targetTable: string,
@@ -91,19 +110,21 @@ export interface ISqlDriver<T = any> {
     ): string;
 
     /**
-     * 외래키를 제거합니다.
+     * Removes a foreign key constraint from the specified column in the table.
      *
-     * @param tableName
-     * @param columnName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to remove the foreign key constraint from.
+     * @returns A promise that resolves when the operation is complete.
      */
     dropForeignKey(tableName: string, columnName: string): Promise<T>;
 
     /**
-     * 인덱스를 추가합니다.
+     * Adds an index to the specified column in the table.
      *
-     * @param tableName
-     * @param columnName
-     * @param indexName
+     * @param tableName - The name of the table to modify.
+     * @param columnName - The name of the column to index.
+     * @param indexName - The name of the index.
+     * @returns A promise that resolves when the operation is complete.
      */
     addIndex(
         tableName: string,
@@ -111,49 +132,62 @@ export interface ISqlDriver<T = any> {
         indexName: string,
     ): Promise<T>;
 
+    /**
+     * Checks if the specified index exists in the table.
+     *
+     * @param tableName - The name of the table to check.
+     * @param indexName - The name of the index to check.
+     * @returns A promise that resolves to a result indicating the existence of the index.
+     */
     hasIndex(tableName: string, indexName: string): Promise<T>;
 
     /**
-     * 인덱스를 제거합니다.
+     * Removes an index from the specified table.
      *
-     * @param tableName
-     * @param indexName
+     * @param tableName - The name of the table to modify.
+     * @param indexName - The name of the index to remove.
+     * @returns A promise that resolves when the operation is complete.
      */
     dropIndex(tableName: string, indexName: string): Promise<T>;
 
     /**
-     * 스키마를 가져옵니다.
+     * Retrieves the schema information for the specified table.
      *
-     * @param tableName
+     * @param tableName - The name of the table to retrieve the schema for.
+     * @returns A promise that resolves to an array of schema information.
      */
     getSchemas(tableName: string): Promise<MysqlSchemaInterface[]>;
 
     /**
-     * 인덱스를 가져옵니다.
+     * Retrieves the indexes for the specified table.
      *
-     * @param tableName
+     * @param tableName - The name of the table to retrieve the indexes for.
+     * @returns A promise that resolves to an array of index information.
      */
     getIndexes(tableName: string): Promise<MysqlSchemaInterface[]>;
 
     /**
-     * 외래키를 가져옵니다.
+     * Retrieves the foreign keys for the specified table.
      *
-     * @param tableName
+     * @param tableName - The name of the table to retrieve the foreign keys for.
+     * @returns A promise that resolves to an array of foreign key information.
      */
     getForeignKeys(tableName: string): Promise<MysqlSchemaInterface[]>;
 
     /**
-     * 기본키를 가져옵니다.
+     * Retrieves the primary keys for the specified table.
      *
-     * @param tableName
+     * @param tableName - The name of the table to retrieve the primary keys for.
+     * @returns A promise that resolves to an array of primary key information.
      */
     getPrimaryKeys(tableName: string): Promise<MysqlSchemaInterface[]>;
 
     /**
-     * 테이블을 생성합니다.
+     * Creates a new table with the specified columns.
      *
-     * @param tableName
-     * @param columns
+     * @param tableName - The name of the new table.
+     * @param columns - An array of column metadata for the new table.
+     * @returns A promise that resolves when the operation is complete.
      */
     createTable(
         tableName: string,
@@ -161,19 +195,32 @@ export interface ISqlDriver<T = any> {
     ): Promise<T>;
 
     /**
-     * TS 타입으로부터 데이터베이스 컬럼 타입을 추론합니다.
+     * Infers the database column type from the TypeScript type.
+     *
+     * @param type - The TypeScript type to infer from.
+     * @returns The inferred database column type.
      */
     getColumnType(type: any): string;
 
     /**
-     * ColumnType을 데이터베이스 컬럼 타입으로 변환합니다.
+     * Converts a ColumnType to a database column type.
+     *
+     * @param type - The ColumnType to convert.
+     * @returns The corresponding database column type.
      */
     castType(type: ColumnType): string;
 
     /**
-     * 비관적 잠금을 위한 SQL을 반환합니다.
+     * Returns the SQL statement for pessimistic locking with no wait.
+     *
+     * @returns The SQL statement for pessimistic locking.
      */
     getForUpdateNoWait(): string;
 
+    /**
+     * Checks if the driver is for a MySQL family database.
+     *
+     * @returns True if the driver is for a MySQL family database, otherwise false.
+     */
     isMySqlFamily(): boolean;
 }

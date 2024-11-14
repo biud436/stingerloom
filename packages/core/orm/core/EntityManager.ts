@@ -70,7 +70,7 @@ export class EntityManager implements IEntityManager {
                 this.dataSource = new MySqlDataSource(connector);
                 break;
             default:
-                throw new Error("지원하지 않는 데이터베이스 타입입니다.");
+                throw new Error("Unsupported database type.");
         }
     }
 
@@ -104,13 +104,11 @@ export class EntityManager implements IEntityManager {
             }
 
             if (!ReflectManager.isEntity(TargetEntity)) {
-                throw new Error(`${tableName}은 Entity가 아닙니다.`);
+                throw new Error(`${tableName} is not an Entity.`);
             }
 
             // 동기화 옵션이 켜져있을 경우에만 동작합니다.
             if (synchronize) {
-                console.log("동기화 옵션이 켜져있습니다");
-
                 // DB에 테이블이 존재하지 않으면 새로운 테이블을 생성합니다.
                 const hasTable = await this.driver?.hasTable(tableName);
                 if (!hasTable || hasTable.length === 0) {
@@ -152,29 +150,28 @@ export class EntityManager implements IEntityManager {
                 if (!mappingEntity) {
                     throw new EntityNotFound(mappingEntity);
                 }
-
-                // 메타데이터를 검색합니다.
+                // Search for metadata.
                 const mappingTableMetadata = entityScanner.scan(mappingEntity);
                 if (!mappingTableMetadata) {
                     throw new Error(
-                        "매핑할 엔티티의 메타데이터가 존재하지 않습니다.",
+                        "Metadata for the mapping entity does not exist.",
                     );
                 }
 
                 if (!joinColumn) {
-                    throw new Error("JoinColumn이 존재하지 않습니다.");
+                    throw new Error("JoinColumn does not exist.");
                 }
 
-                // 매핑할 테이블의 기본키를 가져옵니다.
+                // Get the primary key of the mapping table.
                 const mappingTablePrimaryKey =
                     mappingTableMetadata.columns.find(
                         (e) => e.options?.primary,
                     )?.name;
 
-                // 기본키가 없으면 에러를 발생시킵니다.
+                // Throw an error if the primary key does not exist.
                 if (!mappingTablePrimaryKey) {
                     throw new Error(
-                        "매핑 엔티티의 기본키가 존재하지 않습니다.",
+                        "Primary key for the mapping entity does not exist.",
                     );
                 }
 
@@ -236,7 +233,7 @@ export class EntityManager implements IEntityManager {
     }
 
     /**
-     * findOne 메서드는 하나의 엔티티를 조회합니다.
+     * find out a single entity from the database.
      *
      * @param entity
      * @param findOption
@@ -252,6 +249,13 @@ export class EntityManager implements IEntityManager {
         });
     }
 
+    /**
+     * Find out entities from the database.
+     *
+     * @param entity
+     * @param findOption
+     * @returns
+     */
     async find<T>(
         entity: ClazzType<T>,
         findOption: FindOption<T>,
@@ -273,7 +277,7 @@ export class EntityManager implements IEntityManager {
             ) as EntityMetadata;
 
             if (!metadata) {
-                throw new Error("Entity 메타데이터가 존재하지 않습니다.");
+                throw new Error("Entity metadata does not exist.");
             }
 
             let selectMap: Sql[] = [];
@@ -396,8 +400,6 @@ export class EntityManager implements IEntityManager {
             await transactionHolder.rollback();
         } finally {
             await transactionHolder.close();
-
-            console.log("연결이 종료되었습니다.");
         }
     }
 
@@ -425,7 +427,7 @@ export class EntityManager implements IEntityManager {
         ) as EntityMetadata;
 
         if (!metadata) {
-            throw new Error("Entity 메타데이터가 존재하지 않습니다.");
+            throw new Error("Entity metadata does not exist.");
         }
 
         const transactionHolder = new TransactionHolder();
@@ -434,7 +436,6 @@ export class EntityManager implements IEntityManager {
             await transactionHolder.connect();
             await transactionHolder.startTransaction();
 
-            // TODO: dialects에서 구현해야할 필요가 있습니다.
             await transactionHolder.query("SET autocommit = 0");
 
             const columns = metadata.columns.map((column) => {
@@ -451,7 +452,7 @@ export class EntityManager implements IEntityManager {
 
             const pkValue = (item as any)[pk.name!];
 
-            // 기본키(PK)가 존재하지 않으면 새로운 엔티티를 생성합니다.
+            // If the primary key (PK) does not exist, create a new entity.
             if (!pkValue) {
                 const packet = (await transactionHolder.query<T>(
                     sql`
@@ -476,7 +477,7 @@ export class EntityManager implements IEntityManager {
                 return packet as T;
             }
 
-            // 기본키가 존재하면 업데이트 쿼리를 실행합니다.
+            // If the primary key (PK) exists, execute the update query.
             const updateMap = metadata.columns.map((column: ColumnMetadata) => {
                 return sql`${raw(column.name!)} = ${(item as any)[column.name!]}`;
             });
@@ -491,7 +492,7 @@ export class EntityManager implements IEntityManager {
 
             await transactionHolder.commit();
 
-            // 업데이트된 엔티티를 다시 조회하여 반환합니다.
+            // Retrieve and return the updated entity.
             const result = await this.findOne(entity, {
                 where: {
                     [pk.name!]: pkValue,

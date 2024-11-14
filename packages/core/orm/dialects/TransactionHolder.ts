@@ -10,19 +10,30 @@ import { DatabaseNotConnectedError } from "@stingerloom/core/error/DatabaseNotCo
 import { IQueryEngine } from "./IQueryEngine";
 import { TRANSACTION_ISOLATION_LEVEL } from "./IsolationLevel";
 
+/**
+ * The `TransactionHolder` class extends the `IQueryEngine` and is responsible for managing
+ * database transactions and connections. It provides methods to connect to the database,
+ * execute queries, and handle transactions.
+ */
 export class TransactionHolder extends IQueryEngine {
     private connection?: IConnector;
     private dataSource?: IDataSource;
     private readonly logger: Logger = new Logger(TransactionHolder.name);
 
+    /**
+     * Constructs a new instance of the `TransactionHolder` class.
+     */
     constructor() {
         super();
     }
 
+    /**
+     * Establishes a connection to the database and initializes the data source.
+     *
+     * @throws {DatabaseConnectionFailedError} If the connection to the database fails.
+     */
     public async connect() {
         try {
-            // @Transactional을 사용한다면 TransactionManager를 통해,
-            // 데이터 소스(DataSource)를 같은 컨텍스트 내에서 공유할 수 있도록 해야 합니다.
             this.connection =
                 await DatabaseClient.getInstance().getConnection();
             this.dataSource = new MySqlDataSource(this.connection);
@@ -32,6 +43,13 @@ export class TransactionHolder extends IQueryEngine {
         }
     }
 
+    /**
+     * Executes a SQL query on the connected database.
+     *
+     * @param sql - The SQL query string or `Sql` object to be executed.
+     * @returns The result of the query.
+     * @throws {DatabaseNotConnectedError} If there is no active database connection.
+     */
     public async query(sql: string): Promise<any>;
     public async query<T = any>(sql: Sql): Promise<T>;
     public async query<T = any>(sql: string | Sql): Promise<T> {
@@ -43,6 +61,13 @@ export class TransactionHolder extends IQueryEngine {
         return queryResult;
     }
 
+    /**
+     * Starts a new transaction with the specified isolation level.
+     *
+     * @param level - The isolation level for the transaction. Defaults to "READ COMMITTED".
+     * @returns A promise that resolves when the transaction is started.
+     * @throws {DatabaseNotConnectedError} If there is no active database connection.
+     */
     public async startTransaction(
         level: TRANSACTION_ISOLATION_LEVEL = "READ COMMITTED",
     ) {
@@ -53,22 +78,49 @@ export class TransactionHolder extends IQueryEngine {
         return this.dataSource?.startTransaction(level);
     }
 
+    /**
+     * Rolls back the current transaction.
+     *
+     * @returns A promise that resolves when the transaction is rolled back.
+     */
     public async rollback() {
         return this.dataSource?.rollback();
     }
 
+    /**
+     * Commits the current transaction.
+     *
+     * @returns A promise that resolves when the transaction is committed.
+     */
     public async commit() {
         return this.dataSource?.commit();
     }
 
+    /**
+     * Creates a savepoint with the given name in the current transaction.
+     *
+     * @param name - The name of the savepoint.
+     * @returns A promise that resolves when the savepoint is created.
+     */
     public async savepoint(name: string) {
         return this.dataSource?.savepoint(name);
     }
 
+    /**
+     * Rolls back the current transaction to the specified savepoint.
+     *
+     * @param name - The name of the savepoint to roll back to.
+     * @returns A promise that resolves when the transaction is rolled back to the savepoint.
+     */
     public async rollbackTo(name: string) {
         return this.dataSource?.rollbackTo(name);
     }
 
+    /**
+     * Closes the current database connection.
+     *
+     * @throws {DatabaseNotConnectedError} If there is no active database connection.
+     */
     public async close() {
         if (!this.connection) {
             throw new DatabaseNotConnectedError();
