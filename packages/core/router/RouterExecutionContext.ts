@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Logger } from "../common/Logger";
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { ContainerMetadata } from "../IoC/scanners/MetadataScanner";
-import { ClazzType, HttpMethod, ValidationHandler } from "../common";
+import {
+    ClazzType,
+    HttpContext,
+    HttpHandler,
+    HttpMethod,
+    HttpRouteRegistry,
+    HttpServer,
+    ValidationHandler,
+} from "../common";
 import { ValidationError } from "class-validator";
 import { classToPlain } from "class-transformer";
 import path from "path";
@@ -10,11 +17,6 @@ import { GuardConsumer } from "./GuardConsumer";
 import { RouteParameterTransformer } from "./RouteParameterTransformer";
 import { HeaderConsumer } from "./HeaderConsumer";
 import { RenderConsumer } from "./RenderConsumer";
-
-type FastifyFPHandler = (
-    _request: FastifyRequest,
-    _reply: FastifyReply,
-) => void;
 
 /**
  * @class RouterExecutionContext
@@ -25,9 +27,11 @@ type FastifyFPHandler = (
 export class RouterExecutionContext {
     private readonly logger = new Logger(RouterExecutionContext.name);
     private readonly guardConsumer: GuardConsumer;
+    private readonly routeRegistry: HttpRouteRegistry;
 
-    constructor(private readonly app: FastifyInstance) {
+    constructor(private readonly server: HttpServer) {
         this.guardConsumer = new GuardConsumer();
+        this.routeRegistry = this.server.getRouteRegistry();
     }
 
     public async create(
@@ -43,18 +47,12 @@ export class RouterExecutionContext {
 
         metadata.routers.forEach(
             ({ method, path: routerPath, router, parameters }) => {
-                const targetMethod = method.toLowerCase();
-
-                const handler = this.app[targetMethod as HttpMethod].bind(
-                    this.app,
-                );
-
-                const routerProxy: FastifyFPHandler = async (
-                    _request,
-                    _reply,
+                const routeHandler: HttpHandler = async (
+                    context: HttpContext,
                 ) => {
-                    const req = _request as FastifyRequest;
-                    const res = _reply as FastifyReply;
+                    const { request, response } = context;
+                    const req = request;
+                    const res = response;
                     const bodyValidationActions: Promise<ValidationError[]>[] =
                         [];
                     const routerName = (
@@ -107,10 +105,15 @@ export class RouterExecutionContext {
                     controllerPath,
                     routerPath,
                 );
-                handler(registerPath, routerProxy);
+
+                this.routeRegistry.register({
+                    path: registerPath,
+                    method: method as HttpMethod,
+                    handler: routeHandler,
+                });
 
                 this.logger.info(
-                    `{${registerPath}, ${targetMethod.toUpperCase()}} 에 route가 등록됨`,
+                    `{${registerPath}, ${method.toUpperCase()}} 에 route가 등록됨`,
                 );
             },
         );

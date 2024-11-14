@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClazzType, HEADER_TOKEN, HeaderMetadata } from "../common";
-import { FastifyReply } from "fastify";
+import {
+    ClazzType,
+    HEADER_TOKEN,
+    HeaderMetadata,
+    HttpResponse,
+} from "../common";
 
 /**
  * @class HeaderConsumer
@@ -10,7 +14,7 @@ import { FastifyReply } from "fastify";
 export class HeaderConsumer {
     constructor(private readonly targetController: ClazzType<unknown>) {}
 
-    public execute(res: FastifyReply, routerName: string) {
+    public execute(res: HttpResponse, routerName: string) {
         const { targetController } = this;
 
         // Header Consumer
@@ -22,7 +26,7 @@ export class HeaderConsumer {
 
         if (parameters) {
             parameters.forEach((parameter: HeaderMetadata) => {
-                res.header(parameter.key, parameter.value);
+                res.setHeader(parameter.key, parameter.value);
             });
         }
     }

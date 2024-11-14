@@ -20,3 +20,4 @@ export * from "./OnModuleInit";
 export * from "./OnApplicationShutdown";
 export * from "./Module";
 export * from "./http";
+export * from "./GlobalExceptionHandler";

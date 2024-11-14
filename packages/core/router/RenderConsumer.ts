@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ClazzType, RENDER_PATH_TOKEN, RENDER_TOKEN } from "../common";
-import { FastifyReply } from "fastify";
+import {
+    ClazzType,
+    HttpResponse,
+    RENDER_PATH_TOKEN,
+    RENDER_TOKEN,
+} from "../common";
 
 /**
  * @class RenderConsumer
@@ -35,7 +39,7 @@ export class RenderConsumer {
      * @param result
      * @returns
      */
-    public execute(res: FastifyReply, routerName: string, result: unknown) {
+    public execute(res: HttpResponse, routerName: string, result: unknown) {
         const { targetController } = this;
 
         if (this.isRender(routerName)) {

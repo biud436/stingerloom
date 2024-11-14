@@ -2,13 +2,13 @@
 import {
     ClazzType,
     Guard,
+    HttpRequest,
     Logger,
     ServerContext,
     USE_GUARD_OPTION_TOKEN,
 } from "../common";
 import Container from "typedi";
 import { InstanceScanner } from "../IoC";
-import { FastifyRequest } from "fastify";
 import { UnauthorizedException } from "../error";
 
 /**
@@ -20,7 +20,7 @@ export class GuardConsumer {
     private readonly logger = new Logger(GuardConsumer.name);
 
     public async create(
-        req: FastifyRequest,
+        req: HttpRequest,
         targetController: ClazzType<any>,
         routerName: string,
     ) {

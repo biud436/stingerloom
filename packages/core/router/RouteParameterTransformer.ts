@@ -3,6 +3,8 @@ import {
     ClazzType,
     CustomParamDecoratorMetadata,
     HTTP_PARAM_DECORATOR_TOKEN,
+    HttpRequest,
+    HttpResponse,
     HttpRouterParameter,
     ServerContext,
     createSessionProxy,
@@ -11,15 +13,14 @@ import {
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { ValidationError } from "class-validator/types/validation/ValidationError";
-import { FastifyReply, FastifyRequest } from "fastify";
 
 export class RouteParameterTransformer {
     constructor(private readonly targetController: ClazzType<any>) {}
 
     async transform(
         routerName: string,
-        req: FastifyRequest,
-        res: FastifyReply,
+        req: HttpRequest,
+        res: HttpResponse,
         parameters: HttpRouterParameter[],
         bodyValidationActions: Promise<ValidationError[]>[],
     ) {
@@ -42,8 +43,8 @@ export class RouteParameterTransformer {
 
     async handle(
         routerName: string,
-        req: FastifyRequest,
-        res: FastifyReply,
+        req: HttpRequest,
+        res: HttpResponse,
         parameters: HttpRouterParameter[],
         bodyValidationActions: Promise<ValidationError[]>[],
         param: HttpRouterParameter,

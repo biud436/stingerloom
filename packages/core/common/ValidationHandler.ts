@@ -1,5 +1,5 @@
 import { ValidationError } from "class-validator";
-import { FastifyReply } from "fastify";
+import { HttpResponse } from "./http";
 
 const BAD_REQUEST_CODE = 400;
 
@@ -7,7 +7,7 @@ export class ValidationHandler {
     result!: ValidationError[][];
 
     constructor(
-        private readonly res: FastifyReply,
+        private readonly res: HttpResponse,
         private readonly actions: Promise<ValidationError[]>[],
     ) {}
 

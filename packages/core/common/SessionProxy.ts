@@ -1,5 +1,5 @@
-import { FastifyRequest } from "fastify";
 import * as fastifySession from "@fastify/session";
+import { HttpRequest } from "./http";
 
 /**
  * 세션을 프록시로 만듭니다.
@@ -7,7 +7,7 @@ import * as fastifySession from "@fastify/session";
  * @param req
  * @returns
  */
-export function createSessionProxy(req: FastifyRequest) {
+export function createSessionProxy(req: HttpRequest) {
     return new Proxy(req.session, {
         get: (target, prop) => {
             return Reflect.get(target, prop);

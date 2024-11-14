@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FastifyInstance } from "fastify";
 import { ClazzType } from "../common/RouterMapper";
 import Container from "typedi";
 import { ControllerScanner } from "./scanners/ControllerScanner";
@@ -7,11 +6,8 @@ import {
     ContainerMetadata,
     InjectableMetadata,
 } from "./scanners/MetadataScanner";
-import { ExceptionScanner } from "./scanners/ExceptionScanner";
-import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 import { ReflectManager } from "@stingerloom/core/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/core/common/allocators";
-import { AdviceType } from "./AdviceType";
 import {
     HttpServer,
     Logger,
@@ -25,6 +21,7 @@ import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
 import { InjectableScanner, InstanceScanner } from "./scanners";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
+
 /**
  * @class ContainerManager
  */
@@ -42,9 +39,7 @@ export class ContainerManager {
 
     constructor(server: HttpServer) {
         this.server = server;
-        this.routerExecutionContext = new RouterExecutionContext(
-            this.server.getInstance(),
-        );
+        this.routerExecutionContext = new RouterExecutionContext(this.server);
         this.initEntityManager();
     }
 
@@ -214,60 +209,64 @@ export class ContainerManager {
      * 예외 처리를 스캔하고 예외를 캐치합니다.
      */
     private async registerExceptions() {
-        // Exception 스캐너 생성
-        const exceptionScanner = Container.get(ExceptionScanner);
+        // // Exception 스캐너 생성
+        const routerRegistery = this.server.getRouteRegistry();
 
-        const instanceScanner = Container.get(InstanceScanner);
-        (<FastifyInstance>this.server?.getInstance()).setErrorHandler(
-            (err, _request, _reply) => {
-                let errorData = {
-                    status: HttpStatus.INTERNAL_SERVER_ERROR,
-                } as any;
+        routerRegistery.registerExceptionHandler();
 
-                console.warn("오류", err);
+        // const exceptionScanner = Container.get(ExceptionScanner);
+        // const instanceScanner = Container.get(InstanceScanner);
 
-                for (const {
-                    target,
-                    exception,
-                    handlers,
-                } of exceptionScanner.makeExceptions()) {
-                    if (err.name === exception.name) {
-                        const ExceptionFilter = target as ClazzType<any>;
+        // (<FastifyInstance>this.server?.getInstance()).setErrorHandler(
+        //     (err, _request, _reply) => {
+        //         let errorData = {
+        //             status: HttpStatus.INTERNAL_SERVER_ERROR,
+        //         } as any;
 
-                        // Advice 처리
-                        handlers.forEach((catcher) => {
-                            const { advice } = catcher;
-                            const context =
-                                instanceScanner.wrap(ExceptionFilter);
+        //         console.warn("오류", err);
 
-                            switch (advice) {
-                                case AdviceType.THROWING:
-                                    errorData = (catcher.handler as any).call(
-                                        context,
-                                        err,
-                                    );
-                                    break;
-                                case AdviceType.BEFORE_THROWING:
-                                case AdviceType.AFTER_THROWING:
-                                    (catcher.handler as any).call(context);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                    }
-                }
+        //         for (const {
+        //             target,
+        //             exception,
+        //             handlers,
+        //         } of exceptionScanner.makeExceptions()) {
+        //             if (err.name === exception.name) {
+        //                 const ExceptionFilter = target as ClazzType<any>;
 
-                if (err) {
-                    errorData = err;
+        //                 // Advice 처리
+        //                 handlers.forEach((catcher) => {
+        //                     const { advice } = catcher;
+        //                     const context =
+        //                         instanceScanner.wrap(ExceptionFilter);
 
-                    if (!errorData.status) {
-                        errorData.status = err.code || 500;
-                    }
-                }
-                _reply.status(errorData?.status || 500).send(errorData);
-            },
-        );
+        //                     switch (advice) {
+        //                         case AdviceType.THROWING:
+        //                             errorData = (catcher.handler as any).call(
+        //                                 context,
+        //                                 err,
+        //                             );
+        //                             break;
+        //                         case AdviceType.BEFORE_THROWING:
+        //                         case AdviceType.AFTER_THROWING:
+        //                             (catcher.handler as any).call(context);
+        //                             break;
+        //                         default:
+        //                             break;
+        //                     }
+        //                 });
+        //             }
+        //         }
+
+        //         if (err) {
+        //             errorData = err;
+
+        //             if (!errorData.status) {
+        //                 errorData.status = err.code || 500;
+        //             }
+        //         }
+        //         _reply.status(errorData?.status || 500).send(errorData);
+        //     },
+        // );
     }
 
     async printLazyInjectedExplorer() {

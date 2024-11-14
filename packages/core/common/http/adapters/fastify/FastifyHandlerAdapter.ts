@@ -17,7 +17,7 @@ export class FastifyHandlerAdapter {
                 response: new FastifyResponseAdapter(reply),
             };
 
-            await handler(context);
+            return await handler(context);
         };
     }
 }

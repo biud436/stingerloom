@@ -7,3 +7,4 @@ export * from "./RouteHandler";
 export * from "./ServerOptions";
 export * from "./HttpContext";
 export * from "./HttpRouteRegistry";
+export * from "./HttpError";

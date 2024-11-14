@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpRouteRegistry } from "./HttpRouteRegistry";
 import { ServerOptions } from "./ServerOptions";
 
 /**
@@ -20,4 +21,9 @@ export interface HttpServer {
      * 실제 서버 인스턴스를 반환합니다.
      */
     getInstance(): any;
+
+    /**
+     * HttpRouteRegistry를 반환합니다.
+     */
+    getRouteRegistry(): HttpRouteRegistry;
 }
