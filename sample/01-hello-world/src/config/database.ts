@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import configService from '@stingerloom/core/common/ConfigService';
+import { DatabaseClientOptions } from '@stingerloom/core/orm/core/DatabaseClientOptions';
 import 'dotenv/config';
 
-const option: any = {
+const option: DatabaseClientOptions = {
     type: 'mariadb',
     host: configService.get<string>('DB_HOST'),
     port: configService.get<number>('DB_PORT'),
