@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
+import "reflect-metadata";
 import Container, { Service } from "typedi";
 import "dotenv/config";
 
