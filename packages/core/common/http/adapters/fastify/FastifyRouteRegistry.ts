@@ -1,9 +1,9 @@
-import { HttpRoute } from "../../interfaces";
+import { HttpRoute, HttpRouteRegistry } from "../../interfaces";
 
 import { FastifyInstance } from "fastify";
 import { FastifyHandlerAdapter } from "./FastifyHandlerAdapter";
 
-export class FastifyRouteRegistry {
+export class FastifyRouteRegistry implements HttpRouteRegistry {
     constructor(private app: FastifyInstance) {}
 
     register(route: HttpRoute): void {
