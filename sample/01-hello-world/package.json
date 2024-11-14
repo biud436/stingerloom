@@ -11,7 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@stingerloom/core": "^1.0.15",
+    "@stingerloom/core": "^1.1.0",
     "dotenv": "^16.4.5",
     "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
