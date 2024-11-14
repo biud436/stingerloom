@@ -295,7 +295,6 @@ export class EntityManager implements IEntityManager {
             for (const key in orderBy) {
                 const value = orderBy[key];
                 if (value) {
-                    // orderByMap.push(sql`${raw(key)} ${value}`);
                     orderByMap.push({
                         sql: key,
                         order: value,
