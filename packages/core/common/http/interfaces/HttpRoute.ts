@@ -1,7 +1,6 @@
-import { HttpMethod } from "common/HttpMethod";
 import { Middleware } from "./Middleware";
 import { RouteHandler } from "./RouteHandler";
-
+import { HttpMethod } from "../../HttpMethod";
 /**
  * HTTP 라우트의 구조를 정의하는 인터페이스
  * 각 엔드포인트의 설정을 담당

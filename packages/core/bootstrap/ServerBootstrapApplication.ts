@@ -73,7 +73,7 @@ export class ServerBootstrapApplication extends EventEmitter {
      * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.
      */
     private async registerControllers(): Promise<this> {
-        this.containerManager = new ContainerManager(this.server.getInstance());
+        this.containerManager = new ContainerManager(this.server);
 
         await this.containerManager.register();
 

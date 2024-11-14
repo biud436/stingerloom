@@ -13,6 +13,7 @@ import { ReflectManager } from "@stingerloom/core/common/ReflectManager";
 import { transformBasicParameter } from "@stingerloom/core/common/allocators";
 import { AdviceType } from "./AdviceType";
 import {
+    HttpServer,
     Logger,
     OnApplicationShutdown,
     TransactionManager,
@@ -30,7 +31,7 @@ const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
 export class ContainerManager {
     private _controllers: ClazzType<any>[] = [];
     private _injectables: ClazzType<any>[] = [];
-    private app!: FastifyInstance;
+    private server!: HttpServer;
     private entityManager!: EntityManager;
 
     private readonly logger = new Logger(ContainerManager.name);
@@ -39,9 +40,11 @@ export class ContainerManager {
         ...args: unknown[]
     ) => void)[] = [];
 
-    constructor(app: FastifyInstance) {
-        this.app = app;
-        this.routerExecutionContext = new RouterExecutionContext(this.app);
+    constructor(server: HttpServer) {
+        this.server = server;
+        this.routerExecutionContext = new RouterExecutionContext(
+            this.server.getInstance(),
+        );
         this.initEntityManager();
     }
 
@@ -215,53 +218,56 @@ export class ContainerManager {
         const exceptionScanner = Container.get(ExceptionScanner);
 
         const instanceScanner = Container.get(InstanceScanner);
-        this.app.setErrorHandler((err, _request, _reply) => {
-            let errorData = {
-                status: HttpStatus.INTERNAL_SERVER_ERROR,
-            } as any;
+        (<FastifyInstance>this.server?.getInstance()).setErrorHandler(
+            (err, _request, _reply) => {
+                let errorData = {
+                    status: HttpStatus.INTERNAL_SERVER_ERROR,
+                } as any;
 
-            console.warn("오류", err);
+                console.warn("오류", err);
 
-            for (const {
-                target,
-                exception,
-                handlers,
-            } of exceptionScanner.makeExceptions()) {
-                if (err.name === exception.name) {
-                    const ExceptionFilter = target as ClazzType<any>;
+                for (const {
+                    target,
+                    exception,
+                    handlers,
+                } of exceptionScanner.makeExceptions()) {
+                    if (err.name === exception.name) {
+                        const ExceptionFilter = target as ClazzType<any>;
 
-                    // Advice 처리
-                    handlers.forEach((catcher) => {
-                        const { advice } = catcher;
-                        const context = instanceScanner.wrap(ExceptionFilter);
+                        // Advice 처리
+                        handlers.forEach((catcher) => {
+                            const { advice } = catcher;
+                            const context =
+                                instanceScanner.wrap(ExceptionFilter);
 
-                        switch (advice) {
-                            case AdviceType.THROWING:
-                                errorData = (catcher.handler as any).call(
-                                    context,
-                                    err,
-                                );
-                                break;
-                            case AdviceType.BEFORE_THROWING:
-                            case AdviceType.AFTER_THROWING:
-                                (catcher.handler as any).call(context);
-                                break;
-                            default:
-                                break;
-                        }
-                    });
+                            switch (advice) {
+                                case AdviceType.THROWING:
+                                    errorData = (catcher.handler as any).call(
+                                        context,
+                                        err,
+                                    );
+                                    break;
+                                case AdviceType.BEFORE_THROWING:
+                                case AdviceType.AFTER_THROWING:
+                                    (catcher.handler as any).call(context);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                    }
                 }
-            }
 
-            if (err) {
-                errorData = err;
+                if (err) {
+                    errorData = err;
 
-                if (!errorData.status) {
-                    errorData.status = err.code || 500;
+                    if (!errorData.status) {
+                        errorData.status = err.code || 500;
+                    }
                 }
-            }
-            _reply.status(errorData?.status || 500).send(errorData);
-        });
+                _reply.status(errorData?.status || 500).send(errorData);
+            },
+        );
     }
 
     async printLazyInjectedExplorer() {
