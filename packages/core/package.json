@@ -4,20 +4,25 @@
     "author": "biud436 <biud436@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "@fastify/cookie": "^11.0.1",
+        "@fastify/cookie": "^9.2.0",
+        "@fastify/formbody": "^7.4.0",
+        "@fastify/passport": "^2.4.0",
         "@fastify/session": "^10.7.0",
+        "@fastify/view": "^8.2.0",
         "chalk": "^4",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
         "dotenv": "^16.3.1",
         "fastify": "^4.24.3",
+        "handlebars": "^4.7.8",
         "http-status": "^1.7.3",
         "mysql2": "^3.9.3",
         "reflect-metadata": "^0.1.13",
         "sql-template-tag": "^4",
         "typedi": "^0.10.0",
         "typeorm": "^0.3.17",
-        "typeorm-naming-strategies": "^4.1.0"
+        "typeorm-naming-strategies": "^4.1.0",
+        "uuid": "^9.0.1"
     },
     "devDependencies": {
         "@types/mysql": "^2.15.26",
