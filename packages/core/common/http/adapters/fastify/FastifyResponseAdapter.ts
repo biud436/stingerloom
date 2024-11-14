@@ -2,6 +2,10 @@
 import { FastifyReply } from "fastify";
 import { HttpResponse } from "../../interfaces";
 
+type FastifyReplyWithView = FastifyReply & {
+    view?: (path: string, data: any) => void;
+};
+
 /**
  * Fastify의 응답 객체를 프레임워크의 HttpResponse로 변환하는 어댑터
  */
@@ -27,7 +31,7 @@ export class FastifyResponseAdapter implements HttpResponse {
     }
 
     view(path: string, data: any): void {
-        const res = this.fastifyReply as any;
+        const res = this.fastifyReply as FastifyReplyWithView;
 
         if (res.view) {
             res.view(path, data);
