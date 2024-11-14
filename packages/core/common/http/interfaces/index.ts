@@ -5,3 +5,4 @@ export * from "./HttpServer";
 export * from "./Middleware";
 export * from "./RouteHandler";
 export * from "./ServerOptions";
+export * from "./HttpContext";

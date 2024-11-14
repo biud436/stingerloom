@@ -31,4 +31,9 @@ export interface HttpResponse {
      * @returns this 메서드 체이닝을 위해 자기 자신을 반환
      */
     setHeader(name: string, value: string): this;
+
+    /**
+     * 뷰 템플릿을 렌더링합니다.
+     */
+    view(path: string, data: any): void;
 }

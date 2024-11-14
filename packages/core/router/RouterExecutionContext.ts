@@ -100,10 +100,10 @@ export class RouterExecutionContext {
                               routerName,
                               result instanceof Promise ? await result : result,
                           )
-                        : classToPlain(result);
+                        : this.transformResponse(result);
                 };
 
-                const registerPath = path.posix.join(
+                const registerPath = this.normalizePath(
                     controllerPath,
                     routerPath,
                 );
@@ -114,5 +114,13 @@ export class RouterExecutionContext {
                 );
             },
         );
+    }
+
+    private normalizePath(controllerPath: string, routePath: string): string {
+        return path.posix.join(controllerPath, routePath);
+    }
+
+    private transformResponse(result: any): any {
+        return classToPlain(result);
     }
 }

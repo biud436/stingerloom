@@ -12,4 +12,16 @@ export interface HttpRequest {
     query: Record<string, string>;
     /** HTTP 헤더 */
     headers: Record<string, string>;
+    /**
+     * 세션 데이터
+     */
+    session?: any;
+    /**
+     * 클라이언트 IP 주소
+     */
+    ip?: string;
+    /**
+     * cookie 데이터
+     */
+    cookies?: Record<string, string>;
 }
