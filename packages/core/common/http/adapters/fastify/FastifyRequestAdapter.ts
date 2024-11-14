@@ -16,8 +16,8 @@ export class FastifyRequestAdapter implements HttpRequest {
         return this.fastifyRequest.params as Record<string, string>;
     }
 
-    get query(): Record<string, unknown> {
-        return this.fastifyRequest.query as Record<string, unknown>;
+    get query(): Record<string, string> {
+        return this.fastifyRequest.query as Record<string, string>;
     }
 
     get headers(): Record<string, string> {
