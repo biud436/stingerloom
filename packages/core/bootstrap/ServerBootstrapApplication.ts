@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FastifyInstance, FastifyListenOptions, fastify } from "fastify";
 import "dotenv/config";
 import "reflect-metadata";
 
 import { ContainerManager } from "@stingerloom/core/IoC/ContainerManager";
 import { ParameterListManager } from "@stingerloom/core/common/ParameterListManager";
-import { Logger, ModuleOptions } from "@stingerloom/core/common";
+import {
+    FastifyServerFactory,
+    HttpServer,
+    Logger,
+    ModuleOptions,
+    ServerFactory,
+    ServerOptions,
+} from "@stingerloom/core/common";
 import Database from "@stingerloom/core/common/Database";
 import Container from "typedi";
 import { InstanceScanner } from "@stingerloom/core/IoC";
@@ -22,15 +28,15 @@ ParameterListManager.initAllocator();
  * 컨트롤러를 스캔하고 라우터를 동적으로 등록하여 서버를 구동시키는 역할을 합니다.
  */
 export class ServerBootstrapApplication extends EventEmitter {
-    protected app!: FastifyInstance;
+    protected server!: HttpServer;
     private containerManager!: ContainerManager;
     protected moduleOptions!: ModuleOptions;
     private logger = new Logger(ServerBootstrapApplication.name);
 
-    constructor() {
+    constructor(serverFactory: ServerFactory = new FastifyServerFactory()) {
         super();
 
-        this.app = fastify();
+        this.server = serverFactory.createServer();
     }
 
     /**
@@ -67,7 +73,7 @@ export class ServerBootstrapApplication extends EventEmitter {
      * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.
      */
     private async registerControllers(): Promise<this> {
-        this.containerManager = new ContainerManager(this.app);
+        this.containerManager = new ContainerManager(this.server.getInstance());
 
         await this.containerManager.register();
 
@@ -109,17 +115,13 @@ export class ServerBootstrapApplication extends EventEmitter {
         return this;
     }
 
-    private createServer(
-        options: FastifyListenOptions = {
+    private async createServer(
+        options: ServerOptions = {
             port: +(process.env.SERVER_PORT || 3000),
         },
-    ): void {
-        this.app.listen(options, (err) => {
-            if (err) {
-                console.error(err);
-            }
-            this.emit("start");
-        });
+    ): Promise<void> {
+        await this.server.start(options);
+        this.emit("start");
     }
 
     /**
@@ -138,7 +140,7 @@ export class ServerBootstrapApplication extends EventEmitter {
      * 서버를 종료합니다.
      */
     public async stop(): Promise<void> {
-        this.app.close();
+        await this.server.stop();
 
         this.emit("stop");
 
