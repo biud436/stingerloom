@@ -8,9 +8,7 @@ import {
     ModuleOptions,
     OnModuleInit,
 } from "@stingerloom/core/common";
-import { DataSourceOptions } from "typeorm";
 import configService from "@stingerloom/core/common/ConfigService";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 import axios from "axios";
 import { Entity } from "@stingerloom/core/orm/decorators/Entity";
 import {
