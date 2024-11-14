@@ -2,9 +2,7 @@
     "name": "create-stingerloom",
     "version": "1.1.0",
     "description": "CLI tool to create a stingerloom sample project",
-    "bin": {
-        "create-stingerloom": "./dist/index.js"
-    },
+    "bin": "./dist/index.js",
     "scripts": {
         "build:tsc": "rimraf dist && tsc",
         "build": "npm run build:tsc",

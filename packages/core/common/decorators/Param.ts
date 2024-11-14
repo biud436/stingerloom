@@ -1,10 +1,9 @@
-import { FastifyRequest } from "fastify";
 import { createCustomParamDecorator } from "./decoratorFactory";
 import { BadRequestException } from "../../error";
 
 export const Param = (rawName: string) =>
     createCustomParamDecorator((data, context) => {
-        const request = context.req as FastifyRequest;
+        const request = context.req;
         const params = request?.params as Record<string, unknown>;
 
         const [name, defaultValue] = rawName.split("|").map((x) => x.trim());
@@ -29,7 +28,7 @@ export const Param = (rawName: string) =>
             if (type === String) {
                 return result === ""
                     ? defaultValue
-                    : String(result) ?? String(defaultValue);
+                    : (String(result) ?? String(defaultValue));
             }
 
             if (type === Boolean) {

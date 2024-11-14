@@ -1,7 +1,6 @@
-import { FastifyRequest } from "fastify";
 import { createCustomParamDecorator } from "./decoratorFactory";
 
 export const Ip = createCustomParamDecorator((data, context) => {
-    const request = context.req as FastifyRequest;
+    const request = context.req;
     return request.ip;
 });
