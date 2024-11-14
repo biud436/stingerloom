@@ -1,19 +1,18 @@
-import { ServerBootstrapApplication } from "@stingerloom/bootstrap";
+import axios from "axios";
+import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
+import configService from "@stingerloom/core/common/ConfigService";
 import {
     Controller,
     Get,
     Module,
     ModuleOptions,
     Param,
-} from "@stingerloom/common";
-import { DataSourceOptions } from "typeorm";
-import configService from "@stingerloom/common/ConfigService";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import axios from "axios";
+    ServerBootstrapApplication,
+} from "@stingerloom/core";
 
 describe("파라미터 테스트", () => {
     let application: TestServerApplication;
-    const option: DataSourceOptions = {
+    const option: DatabaseClientOptions = {
         type: "mariadb",
         host: configService.get<string>("DB_HOST"),
         port: configService.get<number>("DB_PORT"),
@@ -21,7 +20,6 @@ describe("파라미터 테스트", () => {
         password: configService.get<string>("DB_PASSWORD"),
         username: configService.get<string>("DB_USER"),
         entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        namingStrategy: new SnakeNamingStrategy(),
         synchronize: true,
         logging: true,
     };

@@ -1,19 +1,18 @@
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import configService from "@stingerloom/common/ConfigService";
+import axios from "axios";
+import configService from "@stingerloom/core/common/ConfigService";
+import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
 import {
     Controller,
     Get,
     Injectable,
     Module,
     ModuleOptions,
-} from "@stingerloom/common";
-import axios from "axios";
-import { DataSourceOptions } from "typeorm";
-import { ServerBootstrapApplication } from "@stingerloom/bootstrap";
+    ServerBootstrapApplication,
+} from "@stingerloom/core";
 
 describe("CircularDependency 테스트", () => {
     let application: TestServerApplication;
-    const option: DataSourceOptions = {
+    const option: DatabaseClientOptions = {
         type: "mariadb",
         host: configService.get<string>("DB_HOST"),
         port: configService.get<number>("DB_PORT"),
@@ -21,7 +20,6 @@ describe("CircularDependency 테스트", () => {
         password: configService.get<string>("DB_PASSWORD"),
         username: configService.get<string>("DB_USER"),
         entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        namingStrategy: new SnakeNamingStrategy(),
         synchronize: true,
         logging: true,
     };

@@ -20,10 +20,11 @@ import {
 } from "@stingerloom/core/orm/decorators";
 import { Index } from "@stingerloom/core/orm/decorators/Indexer";
 import { EntityManager } from "@stingerloom/core/orm/core";
+import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;
-    const option: DataSourceOptions = {
+    const option: DatabaseClientOptions = {
         type: "mariadb",
         host: configService.get<string>("DB_HOST"),
         port: configService.get<number>("DB_PORT"),
@@ -31,7 +32,6 @@ describe("커스텀 ORM 테스트", () => {
         password: configService.get<string>("DB_PASSWORD"),
         username: configService.get<string>("DB_USER"),
         entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        namingStrategy: new SnakeNamingStrategy(),
         synchronize: true,
         logging: true,
     };

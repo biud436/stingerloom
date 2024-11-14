@@ -14,16 +14,15 @@ import {
 } from "@stingerloom/core/orm/decorators";
 import configService from "@stingerloom/core/common/ConfigService";
 import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import { DataSourceOptions } from "typeorm";
 import axios from "axios";
 import { ServerBootstrapApplication } from "@stingerloom/core/bootstrap/ServerBootstrapApplication";
+import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
 
 describe("테스트", () => {
     let application: TestServerApplication;
 
     // TODO: typeorm의 의존성을 제거해야 함
-    const option: DataSourceOptions = {
+    const option: DatabaseClientOptions = {
         type: "mariadb",
         host: configService.get<string>("DB_HOST"),
         port: configService.get<number>("DB_PORT"),
@@ -31,7 +30,6 @@ describe("테스트", () => {
         password: configService.get<string>("DB_PASSWORD"),
         username: configService.get<string>("DB_USER"),
         entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        namingStrategy: new SnakeNamingStrategy(),
         synchronize: true,
         logging: true,
     };
