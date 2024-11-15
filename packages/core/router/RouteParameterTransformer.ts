@@ -56,7 +56,7 @@ export class RouteParameterTransformer {
             return req;
         }
 
-        // 세션 요청
+        // if true, returns session proxy object.
         if (param.isSession) {
             return createSessionProxy(req);
         }

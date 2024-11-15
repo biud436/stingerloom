@@ -35,6 +35,7 @@ export class EntityManager implements IEntityManager {
     private readonly logger = new Logger(EntityManager.name);
     private driver?: ISqlDriver;
     private dataSource?: IDataSource;
+    private dirtyEntities: Set<InstanceType<ClazzType<any>>> = new Set();
 
     public async register() {
         await this.connect();
@@ -80,6 +81,21 @@ export class EntityManager implements IEntityManager {
 
     getNameStrategy<T>(clazz: ClazzType<T>): string {
         return clazz.name;
+    }
+
+    /**
+     * 변경 감지를 위한 프록시 객체를 생성합니다.
+     */
+    private createProxy<T>(entity: T): T {
+        return new Proxy(entity as any, {
+            set: (target: any, prop: string, value: any) => {
+                target[prop] = value;
+
+                // Set 자료구조에 변경된 엔티티를 추가합니다.
+                this.dirtyEntities.add(target);
+                return true;
+            },
+        });
     }
 
     private async registerEntities() {
