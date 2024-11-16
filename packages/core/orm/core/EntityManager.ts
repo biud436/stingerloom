@@ -28,7 +28,7 @@ export type EntityResult<T> =
     | InstanceType<ClazzType<T>>
     | InstanceType<ClazzType<T>>[]
     | undefined;
-export type QueryResult<T = any> = { results: T[] };
+export type QueryResult<T = any> = { results: T[]; fields?: any[] };
 
 export class EntityManager implements IEntityManager {
     private _entities: ClazzType<any>[] = [];
