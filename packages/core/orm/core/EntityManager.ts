@@ -23,12 +23,8 @@ import { BaseRepository } from "./BaseRepository";
 import { IEntityManager } from "./IEntityManager";
 import { ResultSetHeader } from "mysql2";
 import { EntityNotFound } from "../dialects/EntityNotFound";
-
-export type EntityResult<T> =
-    | InstanceType<ClazzType<T>>
-    | InstanceType<ClazzType<T>>[]
-    | undefined;
-export type QueryResult<T = any> = { results: T[]; fields?: any[] };
+import { QueryResult } from "../types/QueryResult";
+import { EntityResult } from "../types/EntityResult";
 
 export class EntityManager implements IEntityManager {
     private _entities: ClazzType<any>[] = [];

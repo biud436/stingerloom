@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { plainToClass, ClassConstructor } from "class-transformer";
-import type { QueryResult } from "./EntityManager";
+import type { QueryResult } from "../types/QueryResult";
+import { IResultTransformer } from "./IResultTransformer";
 
-export class ResultTransformer {
+export class ResultTransformer implements IResultTransformer {
     /**
      * SQL 결과를 단일 엔티티로 변환합니다.
      */
-    static toEntity<T>(
+    toEntity<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T | undefined {
@@ -20,7 +21,7 @@ export class ResultTransformer {
     /**
      * SQL 결과를 엔티티 배열로 변환합니다.
      */
-    static toEntities<T>(
+    toEntities<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T[] {
@@ -37,7 +38,7 @@ export class ResultTransformer {
      * 결과가 하나면 단일 엔티티를,
      * 결과가 여러 개면 엔티티 배열을 반환합니다.
      */
-    static transform<T>(
+    transform<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T | T[] | undefined {
@@ -52,7 +53,10 @@ export class ResultTransformer {
         return result.results.map((item) => plainToClass(entityClass, item));
     }
 
-    static transformNested<T>(
+    /**
+     * SQL 결과를 엔티티 또는 엔티티 배열로 변환합니다.
+     */
+    transformNested<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
         relations: { [key: string]: ClassConstructor<any> },

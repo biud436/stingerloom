@@ -1,10 +1,10 @@
 import { Conditions } from "@stingerloom/core/orm/core/Conditions";
-import { RawQueryBuilder } from "@stingerloom/core/orm/core/RawQueryBuilder";
+import { RawQueryBuilderFactory } from "@stingerloom/core/orm/core/RawQueryBuilderFactory";
 
 describe("RawQueryBuilder", () => {
     describe("select", () => {
         it("SELECT * 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .build();
@@ -14,7 +14,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("특정 컬럼들을 SELECT 해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["id", "name", "email"])
                 .from("users")
                 .build();
@@ -26,7 +26,7 @@ describe("RawQueryBuilder", () => {
 
     describe("where", () => {
         it("단일 WHERE 조건으로 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .where([Conditions.equals("id", 1)])
@@ -37,7 +37,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("다중 WHERE 조건으로 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .where([
@@ -53,7 +53,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("빈 WHERE 조건을 처리해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .where([])
@@ -66,7 +66,7 @@ describe("RawQueryBuilder", () => {
 
     describe("orderBy", () => {
         it("단일 ORDER BY 절로 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .orderBy([{ column: "created_at", direction: "DESC" }])
@@ -79,7 +79,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("다중 ORDER BY 절로 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .orderBy([
@@ -97,7 +97,7 @@ describe("RawQueryBuilder", () => {
 
     describe("limit", () => {
         it("단순 LIMIT 절로 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .limit(10)
@@ -108,7 +108,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("OFFSET과 LIMIT이 포함된 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select("*")
                 .from("users")
                 .limit([5, 10])
@@ -121,7 +121,7 @@ describe("RawQueryBuilder", () => {
 
     describe("join", () => {
         it("INNER JOIN이 포함된 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["u.id", "u.name", "p.title"])
                 .from("users", "u")
                 .join(
@@ -139,7 +139,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("다중 JOIN이 포함된 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["u.id", "u.name", "p.title", "c.content"])
                 .from("users", "u")
                 .join(
@@ -217,7 +217,7 @@ describe("RawQueryBuilder", () => {
 
     describe("복잡한 쿼리", () => {
         it("다중 조건과 조인이 포함된 복잡한 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["u.id", "u.name", "p.title"])
                 .from("users", "u")
                 .join(
@@ -254,7 +254,7 @@ describe("RawQueryBuilder", () => {
 
     describe("데이터베이스별 LIMIT 구문", () => {
         it("MySQL LIMIT 구문을 올바르게 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .setDatabaseType("mysql")
                 .select("*")
                 .from("users")
@@ -266,7 +266,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("PostgreSQL LIMIT 구문을 올바르게 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .setDatabaseType("postgresql")
                 .select("*")
                 .from("users")
@@ -280,7 +280,7 @@ describe("RawQueryBuilder", () => {
 
     describe("GROUP BY와 HAVING 절", () => {
         it("GROUP BY와 HAVING 절이 포함된 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select([
                     "department",
                     Conditions.count("id").sql + " as employee_count",
@@ -304,7 +304,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("집계 함수를 포함한 복잡한 쿼리를 생성해야 함", () => {
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select([
                     "u.department",
                     "p.year",
@@ -341,7 +341,7 @@ describe("RawQueryBuilder", () => {
 
     describe("서브쿼리", () => {
         it("FROM 절에 서브쿼리를 포함한 쿼리를 생성해야 함", () => {
-            const subquery = RawQueryBuilder.subquery()
+            const subquery = RawQueryBuilderFactory.subquery()
                 .select([
                     "department",
                     Conditions.count("id").sql + " as emp_count",
@@ -351,7 +351,7 @@ describe("RawQueryBuilder", () => {
                 .having([Conditions.gt(Conditions.count("id"), 5)])
                 .as("d"); // 여기서 바로 'd'를 별칭으로 사용
 
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["d.department", "d.emp_count"])
                 .from(subquery.sql) // 별칭이 이미 포함되어 있으므로 from에서는 별칭 생략
                 .where([Conditions.gt("d.emp_count", 10)])
@@ -373,7 +373,7 @@ describe("RawQueryBuilder", () => {
         });
 
         it("EXISTS를 사용한 서브쿼리를 생성해야 함", () => {
-            const subquery = RawQueryBuilder.subquery()
+            const subquery = RawQueryBuilderFactory.subquery()
                 .select(["1"])
                 .from("orders")
                 .where([
@@ -382,7 +382,7 @@ describe("RawQueryBuilder", () => {
                 ])
                 .asExists();
 
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["c.name", "c.email"])
                 .from("customers", "c")
                 .where([Conditions.exists(subquery)])
@@ -401,19 +401,19 @@ describe("RawQueryBuilder", () => {
         });
 
         it("복잡한 중첩 서브쿼리를 생성해야 함", () => {
-            const avgSalarySubquery = RawQueryBuilder.subquery()
+            const avgSalarySubquery = RawQueryBuilderFactory.subquery()
                 .select([Conditions.avg("salary").sql])
                 .from("employees")
                 .asInQuery();
 
-            const deptWithHighPaidSubquery = RawQueryBuilder.subquery()
+            const deptWithHighPaidSubquery = RawQueryBuilderFactory.subquery()
                 .select(["department_id"])
                 .from("employees")
                 .where([Conditions.gt("salary", avgSalarySubquery)])
                 .groupBy(["department_id"])
                 .as("hpd"); // 여기서 바로 'hpd'를 별칭으로 사용
 
-            const query = RawQueryBuilder.create()
+            const query = RawQueryBuilderFactory.create()
                 .select(["d.name", "d.location"])
                 .from("departments", "d")
                 .join(

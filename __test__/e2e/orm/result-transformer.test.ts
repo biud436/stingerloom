@@ -1,7 +1,7 @@
 import { Expose, Type } from "class-transformer";
 import { Column, Entity } from "@stingerloom/core/orm/decorators";
-import { ResultTransformer } from "@stingerloom/core/orm/core/ResultTransformer";
-import { QueryResult } from "@stingerloom/core/orm/core";
+import { QueryResult } from "@stingerloom/core/orm/types";
+import { ResultTransformerFactory } from "@stingerloom/core/orm/core";
 
 describe("ResultTransformer", () => {
     @Entity()
@@ -59,8 +59,10 @@ describe("ResultTransformer", () => {
         posts?: Post[];
     }
 
+    const resultTransformer = ResultTransformerFactory.create();
+
     describe("toEntity", () => {
-        it("단일 사용자를 변환할 수 있어야 합니다", () => {
+        it("User로 변환할 수 있어야 합니다", () => {
             const mockResult: QueryResult = {
                 results: [
                     {
@@ -71,7 +73,7 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const user = ResultTransformer.toEntity(User, mockResult);
+            const user = resultTransformer.toEntity(User, mockResult);
 
             expect(user).toBeDefined();
             expect(user).toBeInstanceOf(User);
@@ -85,14 +87,14 @@ describe("ResultTransformer", () => {
                 results: [],
             };
 
-            const user = ResultTransformer.toEntity(User, mockResult);
+            const user = resultTransformer.toEntity(User, mockResult);
 
             expect(user).toBeUndefined();
         });
     });
 
     describe("toEntities", () => {
-        it("여러 사용자를 변환할 수 있어야 합니다", () => {
+        it("User 배열로 변환할 수 있어야 합니다.", () => {
             const mockResult: QueryResult = {
                 results: [
                     { id: 1, name: "홍길동", email: "hong@example.com" },
@@ -100,7 +102,7 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const users = ResultTransformer.toEntities(User, mockResult);
+            const users = resultTransformer.toEntities(User, mockResult);
 
             expect(users).toHaveLength(2);
             expect(users[0]).toBeInstanceOf(User);
@@ -114,14 +116,14 @@ describe("ResultTransformer", () => {
                 results: [],
             };
 
-            const users = ResultTransformer.toEntities(User, mockResult);
+            const users = resultTransformer.toEntities(User, mockResult);
 
             expect(users).toEqual([]);
         });
     });
 
     describe("transform", () => {
-        it("단일 결과일 경우 엔티티를 반환해야 합니다", () => {
+        it("결과가 1개일 경우 User를 반환해야 합니다", () => {
             const mockResult: QueryResult = {
                 results: [
                     {
@@ -132,13 +134,13 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const result = ResultTransformer.transform(User, mockResult);
+            const result = resultTransformer.transform(User, mockResult);
 
             expect(result).toBeInstanceOf(User);
             expect((result as User).name).toBe("홍길동");
         });
 
-        it("다중 결과일 경우 엔티티 배열을 반환해야 합니다", () => {
+        it("다중 결과일 경우 User 배열을 반환해야 합니다", () => {
             const mockResult: QueryResult = {
                 results: [
                     { id: 1, name: "홍길동", email: "hong@example.com" },
@@ -146,7 +148,7 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const result = ResultTransformer.transform(User, mockResult);
+            const result = resultTransformer.transform(User, mockResult);
 
             expect(Array.isArray(result)).toBeTruthy();
             expect((result as User[]).length).toBe(2);
@@ -171,7 +173,7 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const result = ResultTransformer.transformNested(User, mockResult, {
+            const result = resultTransformer.transformNested(User, mockResult, {
                 posts: Post,
             });
 
@@ -189,6 +191,10 @@ describe("ResultTransformer", () => {
             expect(post?.id).toBe(1);
             expect(post?.title).toBe("첫 번째 글");
             expect(post?.content).toBe("내용입니다");
+
+            // comments 배열 검증 (중첩의 중첩인 경우에는 comments가 배열로 변환되어야 하는데 실패함)
+            expect(post?.comments).not.toBeDefined();
+            expect(Array.isArray(post?.comments)).toBeFalsy();
         });
 
         it("중첩 관계가 없는 경우에도 정상 동작해야 합니다", () => {
@@ -202,7 +208,7 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const result = ResultTransformer.transformNested(
+            const result = resultTransformer.transformNested(
                 User,
                 mockResult,
                 {},
@@ -233,7 +239,7 @@ describe("ResultTransformer", () => {
                 ],
             };
 
-            const result = ResultTransformer.transformNested(User, mockResult, {
+            const result = resultTransformer.transformNested(User, mockResult, {
                 posts: Post,
                 comments: PostComment,
             });

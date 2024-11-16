@@ -2,7 +2,7 @@
 import { ClazzType } from "@stingerloom/core/common";
 import { FindOption } from "../dialects/FindOption";
 import { BaseRepository } from "./BaseRepository";
-import { EntityResult } from "./EntityManager";
+import { EntityResult } from "../types/EntityResult";
 
 export abstract class IEntityManager {
     abstract register(): Promise<void>;

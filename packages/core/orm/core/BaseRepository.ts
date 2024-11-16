@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClazzType } from "@stingerloom/core/common";
 import { FindOption } from "../dialects/FindOption";
-import { EntityManager, EntityResult } from "./EntityManager";
+import { EntityManager } from "./EntityManager";
+import { EntityResult } from "../types/EntityResult";
 
 /**
  * BaseRepository class provides basic CRUD operations for an entity.
