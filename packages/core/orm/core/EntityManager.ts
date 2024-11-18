@@ -18,13 +18,15 @@ import {
     MANY_TO_ONE_TOKEN,
     ManyToOneMetadata,
 } from "../decorators";
-import { plainToClass } from "class-transformer";
 import { BaseRepository } from "./BaseRepository";
 import { IEntityManager } from "./IEntityManager";
 import { ResultSetHeader } from "mysql2";
 import { EntityNotFound } from "../dialects/EntityNotFound";
 import { QueryResult } from "../types/QueryResult";
 import { EntityResult } from "../types/EntityResult";
+import { RawQueryBuilderFactory } from "./RawQueryBuilderFactory";
+import { Conditions } from "./Conditions";
+import { ResultTransformerFactory } from "./ResultTransformerFactory";
 
 export class EntityManager implements IEntityManager {
     private _entities: ClazzType<any>[] = [];
@@ -276,13 +278,15 @@ export class EntityManager implements IEntityManager {
         const { limit } = findOption;
 
         const transactionHolder = new TransactionHolder();
+        const resultTransformer = ResultTransformerFactory.create();
 
         try {
+            // 트랜잭션을 시작합니다.
             await transactionHolder.connect();
             await transactionHolder.startTransaction();
-
             await transactionHolder.query("SET autocommit = 0");
 
+            // 메타데이터를 가져옵니다.
             const metadata = Reflect.getMetadata(
                 ENTITY_TOKEN,
                 entity,
@@ -292,59 +296,49 @@ export class EntityManager implements IEntityManager {
                 throw new Error("Entity metadata does not exist.");
             }
 
-            let selectMap: Sql[] = [];
+            // factory class로부터 QueryBuilder를 생성합니다.
+            const qb = RawQueryBuilderFactory.create();
+
+            // Query Map
+            const selectMap: string[] = [];
+            const whereMap: Sql[] = [];
+            const orderByMap: Array<{
+                column: string;
+                direction: "ASC" | "DESC";
+            }> = [];
+
             if (!select) {
-                selectMap = metadata.columns.map(
-                    (column: ColumnMetadata) => sql`${raw(column.name!)}`,
+                selectMap.push(
+                    ...metadata.columns.map((column) => column.name!),
                 );
             }
 
-            const whereMap = [];
             for (const key in where) {
                 const value = where[key];
                 if (value) {
-                    whereMap.push(sql`${raw(key)} = ${value}`);
+                    whereMap.push(...[Conditions.equals(key, value)]);
                 }
             }
 
-            const orderByMap = [];
             for (const key in orderBy) {
                 const value = orderBy[key];
                 if (value) {
-                    orderByMap.push({
-                        sql: key,
-                        order: value,
-                    });
+                    orderByMap.push(
+                        ...[
+                            {
+                                column: key,
+                                direction: value,
+                            },
+                        ],
+                    );
                 }
             }
 
-            // limit 또는 take가 존재할 경우, limit를 설정합니다.
-            let isLimit = false;
-            if (limit) {
-                isLimit = true;
-            }
-
-            // SELECT 쿼리
-            const selectFromQuery = sql`
-                    SELECT ${join(selectMap, ", ")}
-                    FROM ${raw(`${metadata.name!} as \`${metadata.name}\``)}
-                `;
-
-            // WHERE 쿼리
-            const whereQuery = sql`WHERE ${where ? join(whereMap, " AND ") : "1=1"}`;
-
-            const orderByQuery = sql`${
-                orderBy
-                    ? sql`ORDER BY ${join(
-                          orderByMap.map((item) =>
-                              raw(`${item.sql} ${item.order}`),
-                          ),
-                          ", ",
-                      )}`
-                    : sql``
-            }`;
-
-            let limitQuery = sql``;
+            // Query를 구성합니다.
+            qb.select(selectMap)
+                .from(metadata.name!)
+                .where(whereMap)
+                .orderBy(orderByMap);
 
             // LIMIT 쿼리가 튜플일 경우
             if (Array.isArray(limit)) {
@@ -367,50 +361,39 @@ export class EntityManager implements IEntityManager {
                 }
 
                 if (this.isMySqlFamily()) {
-                    limitQuery = sql`LIMIT ${offset}, ${count}`;
-                } else {
-                    limitQuery = sql`LIMIT ${count} OFFSET ${offset}`;
+                    qb.setDatabaseType("mysql");
                 }
+
+                qb.limit([offset, count]);
             } else {
-                limitQuery = sql`${isLimit ? sql`LIMIT ${limit}` : sql``}`;
+                qb.limit(limit as number);
             }
 
-            // 최종 쿼리
-            const resultQuery = sql`${join(
-                // prettier-ignore
-                [
-                    selectFromQuery, 
-                    whereQuery, 
-                    orderByQuery,
-                    limitQuery,
-                ],
-                " ",
-            )}`;
+            // 최종 SQL을 생성합니다.
+            const resultQuery = qb.build();
 
-            const { results } = (await transactionHolder.query<T>(
+            const queryResult = (await transactionHolder.query<T>(
                 resultQuery,
             )) as QueryResult;
 
+            // 트랜잭션을 커밋합니다.
             await transactionHolder.commit();
 
+            const { results } = queryResult;
             if (!results || results.length === 0) {
                 return undefined;
             }
 
             if (results.length > 1) {
-                const targetEntities = results.map((result) => {
-                    return plainToClass(entity, result || {});
-                });
-
-                return targetEntities;
+                return resultTransformer.toEntities(entity, queryResult);
             } else {
-                const tagetEntity = plainToClass(entity, results?.[0] || {});
-
-                return tagetEntity;
+                return resultTransformer.toEntity(entity, queryResult);
             }
         } catch (e: unknown) {
+            // 트랜잭션 롤백
             await transactionHolder.rollback();
         } finally {
+            // 트랜잭션 종료
             await transactionHolder.close();
         }
     }
