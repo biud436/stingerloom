@@ -4,6 +4,12 @@ import { IRawQueryBuilder } from "./IRawQueryBuilder";
 export type DatabaseType = "mysql" | "postgresql";
 export type SubqueryType = "SELECT" | "FROM" | "WHERE" | "HAVING";
 
+/**
+ * @class RawQueryBuilder
+ *
+ * RawQueryBuilder에는 별칭 지정 기능과 Type Safe하게 자동 완성을 지원하는 기능이 없습니다.
+ * 따라서 직접적으로 사용하기보단 타입이 지원되는 래퍼 클래스를 통해 사용하는 것이 좋습니다.
+ */
 export class RawQueryBuilder implements IRawQueryBuilder {
     private fragments: Sql[] = [];
     private dbType: DatabaseType = "mysql"; // 기본값
