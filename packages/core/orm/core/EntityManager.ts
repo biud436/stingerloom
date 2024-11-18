@@ -316,21 +316,17 @@ export class EntityManager implements IEntityManager {
             for (const key in where) {
                 const value = where[key];
                 if (value) {
-                    whereMap.push(...[Conditions.equals(key, value)]);
+                    whereMap.push(Conditions.equals(key, value));
                 }
             }
 
             for (const key in orderBy) {
                 const value = orderBy[key];
                 if (value) {
-                    orderByMap.push(
-                        ...[
-                            {
-                                column: key,
-                                direction: value,
-                            },
-                        ],
-                    );
+                    orderByMap.push({
+                        column: key,
+                        direction: value,
+                    });
                 }
             }
 
