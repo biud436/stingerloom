@@ -79,6 +79,9 @@ describe("커스텀 ORM 테스트", () => {
                 where: {
                     id: 1,
                 },
+                orderBy: {
+                    id: "ASC",
+                },
             });
 
             console.log("node", node);
