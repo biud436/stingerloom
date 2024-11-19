@@ -33,3 +33,4 @@ export * from "./Param";
 export * from "./Ip";
 export * from "./Hostname";
 export * from "./Cookie";
+export * from "./Inject";

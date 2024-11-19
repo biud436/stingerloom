@@ -8,7 +8,7 @@ export class ModuleOptions<T = any> {
     controllers!: ClazzType<T>[];
     providers!: (ClazzType<T> | Function)[];
     exports?: ClazzType<T>[];
-    configuration!: ReturnType<() => DBConnectionOption>;
+    configuration?: ReturnType<() => DBConnectionOption>;
 
     static of<T>(options: ModuleOptions): ModuleOptions<T> {
         return Object.assign(new ModuleOptions(), options);

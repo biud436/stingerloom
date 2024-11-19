@@ -213,60 +213,6 @@ export class ContainerManager {
         const routerRegistery = this.server.getRouteRegistry();
 
         routerRegistery.registerExceptionHandler();
-
-        // const exceptionScanner = Container.get(ExceptionScanner);
-        // const instanceScanner = Container.get(InstanceScanner);
-
-        // (<FastifyInstance>this.server?.getInstance()).setErrorHandler(
-        //     (err, _request, _reply) => {
-        //         let errorData = {
-        //             status: HttpStatus.INTERNAL_SERVER_ERROR,
-        //         } as any;
-
-        //         console.warn("오류", err);
-
-        //         for (const {
-        //             target,
-        //             exception,
-        //             handlers,
-        //         } of exceptionScanner.makeExceptions()) {
-        //             if (err.name === exception.name) {
-        //                 const ExceptionFilter = target as ClazzType<any>;
-
-        //                 // Advice 처리
-        //                 handlers.forEach((catcher) => {
-        //                     const { advice } = catcher;
-        //                     const context =
-        //                         instanceScanner.wrap(ExceptionFilter);
-
-        //                     switch (advice) {
-        //                         case AdviceType.THROWING:
-        //                             errorData = (catcher.handler as any).call(
-        //                                 context,
-        //                                 err,
-        //                             );
-        //                             break;
-        //                         case AdviceType.BEFORE_THROWING:
-        //                         case AdviceType.AFTER_THROWING:
-        //                             (catcher.handler as any).call(context);
-        //                             break;
-        //                         default:
-        //                             break;
-        //                     }
-        //                 });
-        //             }
-        //         }
-
-        //         if (err) {
-        //             errorData = err;
-
-        //             if (!errorData.status) {
-        //                 errorData.status = err.code || 500;
-        //             }
-        //         }
-        //         _reply.status(errorData?.status || 500).send(errorData);
-        //     },
-        // );
     }
 
     async printLazyInjectedExplorer() {

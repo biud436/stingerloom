@@ -1,8 +1,6 @@
 import axios from "axios";
 import { IsNumber, IsString } from "class-validator";
 import { Transform } from "class-transformer";
-import configService from "@stingerloom/core/common/ConfigService";
-import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
 import {
     Controller,
     Get,
@@ -14,18 +12,6 @@ import {
 
 describe("Query 테스트", () => {
     let application: TestServerApplication;
-    const option: DatabaseClientOptions = {
-        type: "mariadb",
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("DB_PORT"),
-        database: configService.get<string>("DB_NAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        username: configService.get<string>("DB_USER"),
-        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        synchronize: true,
-        logging: true,
-    };
-
     class Point {
         private x: number;
         private y: number;
@@ -88,7 +74,6 @@ describe("Query 테스트", () => {
             this.moduleOptions = ModuleOptions.merge({
                 controllers: [],
                 providers: [],
-                configuration: option,
             });
         }
     }

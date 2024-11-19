@@ -5,6 +5,7 @@ import "reflect-metadata";
 import { ContainerManager } from "@stingerloom/core/IoC/ContainerManager";
 import { ParameterListManager } from "@stingerloom/core/common/ParameterListManager";
 import {
+    EventService,
     FastifyServerFactory,
     HttpServer,
     Logger,
@@ -50,7 +51,8 @@ export class ServerBootstrapApplication extends EventEmitter {
         this.handleGuards()
             .applyMiddlewares();
 
-        await this.connectDatabase();
+        await this.prepare();
+
         await this.registerControllers();
 
         this.createServer();
@@ -61,11 +63,12 @@ export class ServerBootstrapApplication extends EventEmitter {
      * 자식 클래스에서 이 함수를 오버라이딩하여 사용할 수 있습니다.
      */
     protected beforeStart() {}
+    protected async prepare() {}
 
     private mergeModuleOptions(): void {
         this.moduleOptions = ModuleOptions.merge(this.moduleOptions, {
             controllers: [],
-            providers: [DiscoveryService],
+            providers: [EventService, DiscoveryService],
         });
     }
 
@@ -88,7 +91,9 @@ export class ServerBootstrapApplication extends EventEmitter {
         const instanceScanner = Container.get(InstanceScanner);
         const database = instanceScanner.get<Database>(Database);
 
-        await database.onApplicationShutdown();
+        if (database) {
+            await database.onApplicationShutdown();
+        }
     }
 
     /**
@@ -144,26 +149,15 @@ export class ServerBootstrapApplication extends EventEmitter {
 
         this.emit("stop");
 
+        const eventService = this.get<EventService>(EventService);
+        if (eventService) {
+            eventService.emit("stop");
+        }
+
         await this.onApplicationShutdown();
     }
 
     public async close(): Promise<void> {
         await this.stop();
-    }
-
-    private async connectDatabase(): Promise<void> {
-        if (!this.moduleOptions) {
-            throw new Error("Database configuration is undefined.");
-        }
-
-        if (!this.moduleOptions.configuration) {
-            return;
-        }
-
-        const database = new Database(this.moduleOptions.configuration);
-        const instanceScanner = Container.get(InstanceScanner);
-        instanceScanner.set(Database, database);
-
-        await database.start();
     }
 }

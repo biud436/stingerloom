@@ -21,3 +21,4 @@ export * from "./OnApplicationShutdown";
 export * from "./Module";
 export * from "./http";
 export * from "./GlobalExceptionHandler";
+export * from "./EventService";

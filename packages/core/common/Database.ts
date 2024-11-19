@@ -11,6 +11,9 @@ class Database implements OnApplicationShutdown {
     private dataSource: DataSource;
 
     constructor(options: ModuleOptions["configuration"]) {
+        if (!options) {
+            throw new Error("데이터베이스 설정이 필요합니다.");
+        }
         this.dataSource = databaseFactory.create(options);
     }
 

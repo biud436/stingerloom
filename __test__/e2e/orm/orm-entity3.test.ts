@@ -18,23 +18,10 @@ import configService from "@stingerloom/core/common/ConfigService";
 import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
 import axios from "axios";
 import { ServerBootstrapApplication } from "@stingerloom/core/bootstrap/ServerBootstrapApplication";
-import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
+import { DatabaseModule } from "@stingerloom/core/orm/DatabaseModule";
 
 describe("ORM Entity 외래키 생성 테스트", () => {
     let application: TestServerApplication;
-
-    // TODO: typeorm의 의존성을 제거해야 함
-    const option: DatabaseClientOptions = {
-        type: "mariadb",
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("DB_PORT"),
-        database: configService.get<string>("DB_NAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        username: configService.get<string>("DB_USER"),
-        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        synchronize: true,
-        logging: true,
-    };
 
     /**
      * 상품 엔티티
@@ -130,9 +117,24 @@ describe("ORM Entity 외래키 생성 테스트", () => {
     class TestServerApplication extends ServerBootstrapApplication {
         override beforeStart(): void {
             this.moduleOptions = ModuleOptions.merge({
+                imports: [
+                    DatabaseModule.forRoot({
+                        type: "mariadb",
+                        host: configService.get<string>("DB_HOST"),
+                        port: configService.get<number>("DB_PORT"),
+                        database: configService.get<string>("DB_NAME"),
+                        password: configService.get<string>("DB_PASSWORD"),
+                        username: configService.get<string>("DB_USER"),
+                        entities: [
+                            __dirname + "/entity/*.ts",
+                            __dirname + "/entity/map/*.ts",
+                        ],
+                        synchronize: true,
+                        logging: true,
+                    }),
+                ],
                 controllers: [],
                 providers: [],
-                configuration: option,
             });
         }
     }

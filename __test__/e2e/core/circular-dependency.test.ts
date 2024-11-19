@@ -1,6 +1,4 @@
 import axios from "axios";
-import configService from "@stingerloom/core/common/ConfigService";
-import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
 import {
     Controller,
     Get,
@@ -12,17 +10,6 @@ import {
 
 describe("CircularDependency 테스트", () => {
     let application: TestServerApplication;
-    const option: DatabaseClientOptions = {
-        type: "mariadb",
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("DB_PORT"),
-        database: configService.get<string>("DB_NAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        username: configService.get<string>("DB_USER"),
-        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        synchronize: true,
-        logging: true,
-    };
 
     @Injectable()
     class AppService {
@@ -73,7 +60,6 @@ describe("CircularDependency 테스트", () => {
             this.moduleOptions = ModuleOptions.merge({
                 controllers: [],
                 providers: [],
-                configuration: option,
             });
         }
     }

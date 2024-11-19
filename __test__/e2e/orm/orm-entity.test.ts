@@ -18,21 +18,10 @@ import {
 } from "@stingerloom/core/orm/decorators";
 import { Index } from "@stingerloom/core/orm/decorators/Indexer";
 import { EntityManager } from "@stingerloom/core/orm/core";
-import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
+import { DatabaseModule } from "@stingerloom/core/orm/DatabaseModule";
 
 describe("커스텀 ORM 테스트", () => {
     let application: TestServerApplication;
-    const option: DatabaseClientOptions = {
-        type: "mariadb",
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("DB_PORT"),
-        database: configService.get<string>("DB_NAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        username: configService.get<string>("DB_USER"),
-        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        synchronize: true,
-        logging: true,
-    };
 
     @Entity()
     class MyNode {
@@ -114,9 +103,24 @@ describe("커스텀 ORM 테스트", () => {
     class TestServerApplication extends ServerBootstrapApplication {
         override beforeStart(): void {
             this.moduleOptions = ModuleOptions.merge({
+                imports: [
+                    DatabaseModule.forRoot({
+                        type: "mariadb",
+                        host: configService.get<string>("DB_HOST"),
+                        port: configService.get<number>("DB_PORT"),
+                        database: configService.get<string>("DB_NAME"),
+                        password: configService.get<string>("DB_PASSWORD"),
+                        username: configService.get<string>("DB_USER"),
+                        entities: [
+                            __dirname + "/entity/*.ts",
+                            __dirname + "/entity/map/*.ts",
+                        ],
+                        synchronize: true,
+                        logging: true,
+                    }),
+                ],
                 controllers: [],
                 providers: [],
-                configuration: option,
             });
         }
     }

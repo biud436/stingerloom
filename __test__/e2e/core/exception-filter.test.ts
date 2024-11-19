@@ -13,23 +13,10 @@ import {
     ModuleOptions,
     ServerBootstrapApplication,
 } from "@stingerloom/core";
-import configService from "@stingerloom/core/common/ConfigService";
-import { DatabaseClientOptions } from "@stingerloom/core/orm/core/DatabaseClientOptions";
 import axios from "axios";
 
 describe("서버 세팅 및 시작 테스트", () => {
     let application: TestServerApplication;
-    const option: DatabaseClientOptions = {
-        type: "mariadb",
-        host: configService.get<string>("DB_HOST"),
-        port: configService.get<number>("DB_PORT"),
-        database: configService.get<string>("DB_NAME"),
-        password: configService.get<string>("DB_PASSWORD"),
-        username: configService.get<string>("DB_USER"),
-        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
-        synchronize: true,
-        logging: true,
-    };
 
     @ExceptionFilter(InternalServerException)
     class InternalErrorFilter implements Filter {
@@ -81,7 +68,6 @@ describe("서버 세팅 및 시작 테스트", () => {
             this.moduleOptions = ModuleOptions.merge({
                 controllers: [],
                 providers: [],
-                configuration: option,
             });
         }
     }
