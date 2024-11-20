@@ -34,7 +34,7 @@ export class DatabaseService implements OnModuleInit {
 
         this.database = database;
 
-        this.eventService.on("stop", this.destroy);
+        this.eventService.on("stop", () => this.destroy());
     }
 
     async destroy(): Promise<void> {

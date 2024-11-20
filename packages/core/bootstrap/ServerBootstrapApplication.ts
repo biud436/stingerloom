@@ -13,7 +13,6 @@ import {
     ServerFactory,
     ServerOptions,
 } from "@stingerloom/core/common";
-import Database from "@stingerloom/core/common/Database";
 import Container from "typedi";
 import { InstanceScanner } from "@stingerloom/core/IoC";
 import { DiscoveryService } from "@stingerloom/core/services";
@@ -87,13 +86,6 @@ export class ServerBootstrapApplication extends EventEmitter {
         this.logger.info("Application is shutting down...");
 
         await this.containerManager.propagateShutdown();
-
-        const instanceScanner = Container.get(InstanceScanner);
-        const database = instanceScanner.get<Database>(Database);
-
-        if (database) {
-            await database.onApplicationShutdown();
-        }
     }
 
     /**
