@@ -11,7 +11,7 @@ export type SubqueryType = "SELECT" | "FROM" | "WHERE" | "HAVING";
  * 따라서 직접적으로 사용하기보단 타입이 지원되는 래퍼 클래스를 통해 사용하는 것이 좋습니다.
  */
 export class RawQueryBuilder implements IRawQueryBuilder {
-    private fragments: Sql[] = [];
+    private sqlQuerySegments: Sql[] = [];
     private dbType: DatabaseType = "mysql"; // 기본값
     private isSubquery: boolean = false;
 
@@ -44,10 +44,10 @@ export class RawQueryBuilder implements IRawQueryBuilder {
      */
     select(columns: string[] | "*"): RawQueryBuilder {
         if (columns === "*") {
-            this.fragments.push(sql`SELECT *`);
+            this.sqlQuerySegments.push(sql`SELECT *`);
         } else {
             const columnSqls = columns.map((col) => sql`${raw(col)}`);
-            this.fragments.push(sql`SELECT ${join(columnSqls, ", ")}`);
+            this.sqlQuerySegments.push(sql`SELECT ${join(columnSqls, ", ")}`);
         }
         return this;
     }
@@ -58,13 +58,15 @@ export class RawQueryBuilder implements IRawQueryBuilder {
     from(table: string | Sql, alias?: string): RawQueryBuilder {
         if (alias) {
             if (typeof table === "string") {
-                this.fragments.push(sql`FROM ${raw(table)} AS ${raw(alias)}`);
+                this.sqlQuerySegments.push(
+                    sql`FROM ${raw(table)} AS ${raw(alias)}`,
+                );
             } else {
                 // 서브쿼리의 경우 이미 AS가 포함되어 있으므로 별칭만 추가
-                this.fragments.push(sql`FROM ${table} ${raw(alias)}`);
+                this.sqlQuerySegments.push(sql`FROM ${table} ${raw(alias)}`);
             }
         } else {
-            this.fragments.push(
+            this.sqlQuerySegments.push(
                 sql`FROM ${typeof table === "string" ? raw(table) : table}`,
             );
         }
@@ -76,9 +78,9 @@ export class RawQueryBuilder implements IRawQueryBuilder {
      */
     where(conditions: Sql[]): RawQueryBuilder {
         if (conditions.length === 0) {
-            this.fragments.push(sql`WHERE 1=1`);
+            this.sqlQuerySegments.push(sql`WHERE 1=1`);
         } else {
-            this.fragments.push(sql`WHERE ${join(conditions, " AND ")}`);
+            this.sqlQuerySegments.push(sql`WHERE ${join(conditions, " AND ")}`);
         }
         return this;
     }
@@ -94,7 +96,7 @@ export class RawQueryBuilder implements IRawQueryBuilder {
         const orderSqls = orders.map(
             ({ column, direction }) => sql`${raw(column)} ${raw(direction)}`,
         );
-        this.fragments.push(sql`ORDER BY ${join(orderSqls, ", ")}`);
+        this.sqlQuerySegments.push(sql`ORDER BY ${join(orderSqls, ", ")}`);
         return this;
     }
 
@@ -105,12 +107,14 @@ export class RawQueryBuilder implements IRawQueryBuilder {
         if (Array.isArray(limit)) {
             const [offset, count] = limit;
             if (this.dbType === "mysql") {
-                this.fragments.push(sql`LIMIT ${offset}, ${count}`);
+                this.sqlQuerySegments.push(sql`LIMIT ${offset}, ${count}`);
             } else {
-                this.fragments.push(sql`LIMIT ${count} OFFSET ${offset}`);
+                this.sqlQuerySegments.push(
+                    sql`LIMIT ${count} OFFSET ${offset}`,
+                );
             }
         } else {
-            this.fragments.push(sql`LIMIT ${limit}`);
+            this.sqlQuerySegments.push(sql`LIMIT ${limit}`);
         }
         return this;
     }
@@ -126,11 +130,11 @@ export class RawQueryBuilder implements IRawQueryBuilder {
     ): RawQueryBuilder {
         if (typeof table === "string") {
             if (table.includes(` AS ${alias}`)) {
-                this.fragments.push(
+                this.sqlQuerySegments.push(
                     sql`${raw(type)} JOIN ${raw(table)} ON ${condition}`,
                 );
             } else {
-                this.fragments.push(
+                this.sqlQuerySegments.push(
                     sql`${raw(type)} JOIN ${raw(table)} AS ${raw(alias)} ON ${condition}`,
                 );
             }
@@ -138,11 +142,11 @@ export class RawQueryBuilder implements IRawQueryBuilder {
             // 서브쿼리의 경우, AS가 이미 포함되어 있는지 확인
             const tableStr = table.sql;
             if (tableStr.includes(` AS ${alias}`)) {
-                this.fragments.push(
+                this.sqlQuerySegments.push(
                     sql`${raw(type)} JOIN ${table} ON ${condition}`,
                 );
             } else {
-                this.fragments.push(
+                this.sqlQuerySegments.push(
                     sql`${raw(type)} JOIN ${table} AS ${raw(alias)} ON ${condition}`,
                 );
             }
@@ -156,7 +160,7 @@ export class RawQueryBuilder implements IRawQueryBuilder {
     groupBy(columns: string[]): RawQueryBuilder {
         if (columns.length === 0) return this;
         const columnSqls = columns.map((col) => sql`${raw(col)}`);
-        this.fragments.push(sql`GROUP BY ${join(columnSqls, ", ")}`);
+        this.sqlQuerySegments.push(sql`GROUP BY ${join(columnSqls, ", ")}`);
         return this;
     }
 
@@ -165,7 +169,7 @@ export class RawQueryBuilder implements IRawQueryBuilder {
      */
     having(conditions: Sql[]): RawQueryBuilder {
         if (conditions.length === 0) return this;
-        this.fragments.push(sql`HAVING ${join(conditions, " AND ")}`);
+        this.sqlQuerySegments.push(sql`HAVING ${join(conditions, " AND ")}`);
         return this;
     }
 
@@ -173,7 +177,7 @@ export class RawQueryBuilder implements IRawQueryBuilder {
      * 임의의 SQL 조각을 추가합니다.
      */
     appendSql(sqlFragment: Sql): RawQueryBuilder {
-        this.fragments.push(sqlFragment);
+        this.sqlQuerySegments.push(sqlFragment);
         return this;
     }
 
@@ -205,6 +209,6 @@ export class RawQueryBuilder implements IRawQueryBuilder {
      * 최종 SQL을 생성합니다.
      */
     build(): Sql {
-        return join(this.fragments, " ");
+        return join(this.sqlQuerySegments, " ");
     }
 }
