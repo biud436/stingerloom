@@ -7,7 +7,7 @@ export class ProcessFactory {
         const env = detectEnvironment();
         switch (env) {
             case Environment.Node:
-                return new NodeProcessAdapter(process);
+                return new NodeProcessAdapter();
             default:
                 throw new Error(`Unsupported runtime environment: ${env}`);
         }
