@@ -13,7 +13,13 @@ interface DenoRuntime {
 }
 
 export class DenoProcessAdapter implements ProcessAdapterInterface {
-    constructor(private denoProcess: DenoRuntime) {}
+    constructor(private denoProcess: DenoRuntime) {
+        if (typeof globalThis !== "undefined" && !("Deno" in globalThis)) {
+            throw new Error(
+                "Deno global object not found. Are you running in a Deno environment?",
+            );
+        }
+    }
 
     platform(): string {
         return this.denoProcess.build.os;
