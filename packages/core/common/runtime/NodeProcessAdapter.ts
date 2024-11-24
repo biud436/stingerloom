@@ -1,7 +1,7 @@
 import { ProcessAdapterInterface } from "./ProcessAdapterInterface";
 
 export class NodeProcessAdapter implements ProcessAdapterInterface {
-    private nodeProcess: typeof process = process;
+    constructor(private nodeProcess: NodeJS.Process) {}
 
     platform(): string {
         return this.nodeProcess.platform;
