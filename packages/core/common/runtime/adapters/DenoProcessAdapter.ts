@@ -1,16 +1,5 @@
-import { ProcessAdapterInterface } from "./ProcessAdapterInterface";
-
-interface DenoRuntime {
-    build: {
-        os: string;
-    };
-    exit(code?: number): void;
-    cwd(): string;
-    env: {
-        entries(): IterableIterator<[string, string]>;
-    };
-    pid: number;
-}
+import { ProcessAdapterInterface } from "../interfaces";
+import { DenoRuntime } from "../types/DenoRuntime";
 
 export class DenoProcessAdapter implements ProcessAdapterInterface {
     constructor(private denoProcess: DenoRuntime) {

@@ -1,4 +1,4 @@
-import { ProcessAdapterInterface } from "./ProcessAdapterInterface";
+import { ProcessAdapterInterface } from "../interfaces/ProcessAdapterInterface";
 
 export class BunProcessAdapter implements ProcessAdapterInterface {
     constructor(private bunProcess: NodeJS.Process) {}

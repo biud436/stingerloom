@@ -1,4 +1,4 @@
-import { ProcessAdapterInterface } from "./ProcessAdapterInterface";
+import { ProcessAdapterInterface } from "../interfaces/ProcessAdapterInterface";
 
 export class NodeProcessAdapter implements ProcessAdapterInterface {
     constructor(private nodeProcess: NodeJS.Process) {}

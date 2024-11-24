@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BunProcessAdapter } from "./BunProcessAdapter";
-import { DenoProcessAdapter } from "./DenoProcessAdapter";
-import { detectEnvironment, Environment } from "./environment";
-import { NodeProcessAdapter } from "./NodeProcessAdapter";
-import { ProcessAdapterInterface } from "./ProcessAdapterInterface";
+import {
+    BunProcessAdapter,
+    DenoProcessAdapter,
+    NodeProcessAdapter,
+} from "./adapters";
+import { detectEnvironment, Environment } from "./utils/environment";
+import { ProcessAdapterInterface } from "./interfaces/ProcessAdapterInterface";
 
 /**
  * Factory class for creating process adapters based on the detected runtime environment.
