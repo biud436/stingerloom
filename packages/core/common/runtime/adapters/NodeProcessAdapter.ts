@@ -1,4 +1,5 @@
 import { ProcessAdapterInterface } from "../interfaces/ProcessAdapterInterface";
+import { StingerLoomEnvironment } from "../types";
 
 export class NodeProcessAdapter implements ProcessAdapterInterface {
     constructor(private nodeProcess: NodeJS.Process) {}
@@ -23,7 +24,7 @@ export class NodeProcessAdapter implements ProcessAdapterInterface {
         return this.nodeProcess.pid;
     }
 
-    runtime(): "node" {
-        return "node";
+    runtime(): StingerLoomEnvironment {
+        return StingerLoomEnvironment.Node;
     }
 }

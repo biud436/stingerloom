@@ -1,3 +1,5 @@
+import { StingerLoomEnvironment } from "../types";
+
 /**
  * Interface representing a process adapter.
  * This interface abstracts the underlying runtime environment (Node.js, Deno, Bun)
@@ -36,5 +38,5 @@ export interface ProcessAdapterInterface {
      * Gets the runtime environment in which the process is running.
      * @returns {"node" | "deno" | "bun"} The runtime environment.
      */
-    runtime(): "node" | "deno" | "bun";
+    runtime(): StingerLoomEnvironment;
 }

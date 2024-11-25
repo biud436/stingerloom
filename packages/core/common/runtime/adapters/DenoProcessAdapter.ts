@@ -1,9 +1,11 @@
 import { ProcessAdapterInterface } from "../interfaces";
+import { StingerLoomEnvironment } from "../types";
 import { DenoRuntime } from "../types/DenoRuntime";
+import { isDeno } from "../utils";
 
 export class DenoProcessAdapter implements ProcessAdapterInterface {
     constructor(private denoProcess: DenoRuntime) {
-        if (typeof globalThis !== "undefined" && !("Deno" in globalThis)) {
+        if (isDeno()) {
             throw new Error(
                 "Deno global object not found. Are you running in a Deno environment?",
             );
@@ -34,7 +36,7 @@ export class DenoProcessAdapter implements ProcessAdapterInterface {
         return this.denoProcess.pid;
     }
 
-    runtime(): "node" | "deno" | "bun" {
-        return "deno";
+    runtime(): StingerLoomEnvironment {
+        return StingerLoomEnvironment.Deno;
     }
 }

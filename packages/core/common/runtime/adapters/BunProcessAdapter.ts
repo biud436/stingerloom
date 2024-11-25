@@ -1,4 +1,5 @@
 import { ProcessAdapterInterface } from "../interfaces/ProcessAdapterInterface";
+import { StingerLoomEnvironment } from "../types";
 
 export class BunProcessAdapter implements ProcessAdapterInterface {
     constructor(private bunProcess: NodeJS.Process) {}
@@ -23,7 +24,7 @@ export class BunProcessAdapter implements ProcessAdapterInterface {
         return this.bunProcess.pid;
     }
 
-    runtime(): "node" | "deno" | "bun" {
-        return "bun";
+    runtime(): StingerLoomEnvironment {
+        return StingerLoomEnvironment.Bun;
     }
 }
