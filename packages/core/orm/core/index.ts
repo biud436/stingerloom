@@ -4,4 +4,4 @@ export * from "./Conditions";
 export * from "./SelectUtils";
 export * from "./ResultTransformerFactory";
 export * from "./RawQueryBuilderFactory";
-export * from "./IInsertQueryBuilder";
+export * from "./BaseInsertQueryBuilder";
