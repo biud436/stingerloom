@@ -19,7 +19,7 @@ import {
     ManyToOneMetadata,
 } from "../decorators";
 import { BaseRepository } from "./BaseRepository";
-import { IEntityManager } from "./IEntityManager";
+import { BaseEntityManager } from "./BaseEntityManager";
 import { ResultSetHeader } from "mysql2";
 import { EntityNotFound } from "../dialects/EntityNotFound";
 import { QueryResult } from "../types/QueryResult";
@@ -28,7 +28,7 @@ import { RawQueryBuilderFactory } from "./RawQueryBuilderFactory";
 import { Conditions } from "./Conditions";
 import { ResultTransformerFactory } from "./ResultTransformerFactory";
 
-export class EntityManager implements IEntityManager {
+export class EntityManager implements BaseEntityManager {
     private _entities: ClazzType<any>[] = [];
     private readonly logger = new Logger(EntityManager.name);
     private driver?: ISqlDriver;

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { plainToClass, ClassConstructor } from "class-transformer";
 import type { QueryResult } from "../types/QueryResult";
-import { IResultTransformer } from "./IResultTransformer";
+import { BaseResultTransformer } from "./BaseResultTransformer";
 
-export class ResultTransformer implements IResultTransformer {
+export class ResultTransformer implements BaseResultTransformer {
     /**
      * SQL 결과를 단일 엔티티로 변환합니다.
      */

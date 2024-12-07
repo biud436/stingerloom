@@ -2,7 +2,7 @@
 import { ClassConstructor } from "class-transformer";
 import type { QueryResult } from "orm/types";
 
-export interface IResultTransformer {
+export interface BaseResultTransformer {
     /**
      * SQL 결과를 단일 엔티티로 변환합니다.
      */
