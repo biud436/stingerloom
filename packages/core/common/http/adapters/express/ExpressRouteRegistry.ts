@@ -41,10 +41,10 @@ export class ExpressRouteRegistry implements HttpRouteRegistry {
                 if (!res.headersSent) {
                     // result가 존재하면 전송
                     if (result !== undefined) {
-                        res.status(statusCode).send(result);
+                        res.status(statusCode).json(result);
                     } else {
                         // result가 없으면 기본 200 응답
-                        res.status(statusCode).send();
+                        res.status(statusCode).json();
                     }
                 }
             } catch (error) {

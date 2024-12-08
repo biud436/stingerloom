@@ -3,6 +3,7 @@ import {
     BadRequestException,
     Controller,
     Get,
+    Ip,
     Module,
     ModuleOptions,
     ServerBootstrapApplication,
@@ -26,6 +27,11 @@ describe("서버 세팅 및 시작 테스트", () => {
             throw new BadRequestException("test");
 
             return "this is test";
+        }
+
+        @Get("/ips")
+        ips(@Ip() ip: string) {
+            return ip;
         }
     }
 
@@ -57,17 +63,23 @@ describe("서버 세팅 및 시작 테스트", () => {
         await application.stop();
     });
 
-    it("/를 호출한다", async () => {
+    it("에코 테스트가 성공하는가?", async () => {
         const res = await axios.get(`http://localhost:${PORT}`);
 
         expect(res.data).toBe("Hello World");
     });
 
-    it("/test를 호출한다", async () => {
+    it("400번 오류가 제대로 검출되는가?", async () => {
         try {
             await axios.get(`http://localhost:${PORT}/test`);
         } catch (error: any) {
             expect(error.response.status).toBe(400);
         }
+    });
+
+    it("IP가 제대로 반환되는가?", async () => {
+        const res = await axios.get(`http://localhost:${PORT}/ips`);
+
+        expect(res.data).toBe("::1");
     });
 });
