@@ -47,7 +47,9 @@ describe("서버 세팅 및 시작 테스트", () => {
             done();
         });
 
-        application.start();
+        application.start({
+            port: 3003,
+        });
     });
 
     afterAll(async () => {
@@ -55,14 +57,14 @@ describe("서버 세팅 및 시작 테스트", () => {
     });
 
     it("/를 호출한다", async () => {
-        const res = await axios.get("http://localhost:3002");
+        const res = await axios.get("http://localhost:3003");
 
         expect(res.data).toBe("Hello World");
     });
 
     it("/test를 호출한다", async () => {
         try {
-            await axios.get("http://localhost:3002/test");
+            await axios.get("http://localhost:3003/test");
         } catch (error: any) {
             expect(error.response.status).toBe(400);
         }

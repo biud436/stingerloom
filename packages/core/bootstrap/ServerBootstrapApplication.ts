@@ -43,7 +43,7 @@ export class ServerBootstrapApplication extends EventEmitter {
     /**
      * 서버를 시작합니다.
      */
-    public async start(): Promise<void> {
+    public async start(options?: ServerOptions): Promise<void> {
         this.beforeStart();
         this.mergeModuleOptions();
 
@@ -55,7 +55,7 @@ export class ServerBootstrapApplication extends EventEmitter {
 
         await this.registerControllers();
 
-        this.createServer();
+        this.createServer(options);
     }
 
     /**
