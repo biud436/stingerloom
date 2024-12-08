@@ -11,6 +11,7 @@ import { ExpressHandlerAdapter } from "./ExpressHandlerAdapter";
 import { ExceptionHandler, HttpMethod } from "../../../";
 import { ExpressRequestAdapter } from "./ExpressRequestAdapter";
 import { ExpressResponseAdapter } from "./ExpressResponseAdapter";
+import httpStatus from "http-status";
 
 export class ExpressRouteRegistry implements HttpRouteRegistry {
     private router = express.Router();
@@ -24,7 +25,9 @@ export class ExpressRouteRegistry implements HttpRouteRegistry {
         const handler = ExpressHandlerAdapter.adapt(route.handler);
         const targetMethod = route.method.toLowerCase() as HttpMethod;
 
-        const statusCode = targetMethod === "post" ? 201 : 200;
+        // TODO: 적절한 상태 코드를 설정해야 합니다.
+        const statusCode =
+            targetMethod === "post" ? httpStatus.CREATED : httpStatus.OK;
 
         const routerProxy = async (
             req: Request,
