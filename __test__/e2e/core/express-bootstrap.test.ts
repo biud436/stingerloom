@@ -1,20 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+    BadRequestException,
     Controller,
     Get,
     Module,
     ModuleOptions,
     ServerBootstrapApplication,
 } from "@stingerloom/core";
+import { ExpressServerFactory } from "@stingerloom/core/common/http/adapters/express";
 import axios from "axios";
 
-describe("데이터베이스에 연결되지 않았을 때", () => {
+describe("서버 세팅 및 시작 테스트", () => {
     let application: TestServerApplication;
 
     @Controller("/")
     class AppController {
         @Get("/")
-        public async index(): Promise<string> {
-            return "Hello, Stingerloom!";
+        index() {
+            return "Hello World";
+        }
+
+        @Get("/test")
+        test() {
+            throw new BadRequestException("test");
+
+            return "this is test";
         }
     }
 
@@ -32,7 +42,7 @@ describe("데이터베이스에 연결되지 않았을 때", () => {
     }
 
     beforeAll((done) => {
-        application = new TestServerApplication();
+        application = new TestServerApplication(new ExpressServerFactory());
         application.on("start", () => {
             done();
         });
@@ -44,13 +54,17 @@ describe("데이터베이스에 연결되지 않았을 때", () => {
         await application.stop();
     });
 
-    it("정의되어있는가?", () => {
-        expect(application).toBeDefined();
-    });
-
-    it("GET /를 호출한다", async () => {
+    it("/를 호출한다", async () => {
         const res = await axios.get("http://localhost:3002");
 
-        expect(res.data).toBe("Hello, Stingerloom!");
+        expect(res.data).toBe("Hello World");
+    });
+
+    it("/test를 호출한다", async () => {
+        try {
+            await axios.get("http://localhost:3002/test");
+        } catch (error: any) {
+            expect(error.response.status).toBe(400);
+        }
     });
 });
