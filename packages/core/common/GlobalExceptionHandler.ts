@@ -18,8 +18,6 @@ export class GlobalExceptionHandler implements ExceptionHandler {
             ...error,
         };
 
-        console.warn("오류", error);
-
         // 등록된 예외 처리기 실행
         const handledError = await this.executeExceptionFilters(error);
         if (handledError) {

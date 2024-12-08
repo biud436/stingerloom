@@ -12,7 +12,10 @@
         "chalk": "^4",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
+        "cookie-parser": "^1.4.7",
         "dotenv": "^16.3.1",
+        "express": "^4.21.2",
+        "express-session": "^1.18.1",
         "fastify": "^4.24.3",
         "handlebars": "^4.7.8",
         "http-status": "^1.7.3",
@@ -25,6 +28,9 @@
         "uuid": "^9.0.1"
     },
     "devDependencies": {
+        "@types/cookie-parser": "^1",
+        "@types/express": "^4",
+        "@types/express-session": "^1",
         "@types/mysql": "^2.15.26",
         "@types/node": "^20.4.8",
         "rimraf": "^6.0.1",

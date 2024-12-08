@@ -1,4 +1,4 @@
-import { FastifyServerAdapter } from "./FastifyServerAdater";
+import { FastifyServerAdapter } from "./FastifyServerAdapter";
 import { ServerFactory } from "../../ServerFactory";
 import { HttpServer } from "../../interfaces";
 

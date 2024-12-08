@@ -1,4 +1,4 @@
-export * from "./FastifyServerAdater";
+export * from "./FastifyServerAdapter";
 export * from "./FastifyServerFactory";
 export * from "./FastifyHandlerAdapter";
 export * from "./FastifyRequestAdapter";
