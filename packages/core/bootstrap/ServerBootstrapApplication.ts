@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "dotenv/config";
 import "reflect-metadata";
@@ -48,7 +49,7 @@ export class ServerBootstrapApplication extends EventEmitter {
 
         // prettier-ignore
         this.handleGuards()
-            .applyMiddlewares();
+            .applyMiddlewares(this.server);
 
         await this.prepare();
 
@@ -108,7 +109,7 @@ export class ServerBootstrapApplication extends EventEmitter {
         return this;
     }
 
-    protected applyMiddlewares(): this {
+    protected applyMiddlewares(server: HttpServer): this {
         return this;
     }
 
