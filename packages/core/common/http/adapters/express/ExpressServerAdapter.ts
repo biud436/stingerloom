@@ -13,14 +13,23 @@ export class ExpressServerAdapter implements HttpServer {
 
     constructor() {
         this.app = express();
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(cookieParser());
+
+        this.registerMiddleware();
 
         this.routeRegistry = new ExpressRouteRegistry(
             this.app,
             new GlobalExceptionHandler(),
         );
+    }
+
+    /**
+     * 미들웨어를 등록합니다.
+     * TODO: applyMiddlewares 함수와 통합해야 합니다.
+     */
+    public registerMiddleware(): void {
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use(cookieParser());
     }
 
     async start(options: ServerOptions): Promise<void> {
