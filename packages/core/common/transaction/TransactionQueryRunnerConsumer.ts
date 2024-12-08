@@ -17,6 +17,7 @@ import { ClazzType } from "../RouterMapper";
 import { isArrayOk } from "@stingerloom/core/utils";
 import { isPromise } from "util/types";
 import { Exception } from "@stingerloom/core/error/Exception";
+import httpStatus from "http-status";
 
 export class TransactionQueryRunnerConsumer {
     private LOGGER = new Logger();
@@ -104,7 +105,7 @@ export class TransactionQueryRunnerConsumer {
                 if (!this.transactionScanner.isGlobalLock()) {
                     throw new Exception(
                         "기존에 시작된 트랜잭션이 없는데 REQUIRES_NEW가 지정되었습니다",
-                        500,
+                        httpStatus.INTERNAL_SERVER_ERROR,
                     );
                 }
 

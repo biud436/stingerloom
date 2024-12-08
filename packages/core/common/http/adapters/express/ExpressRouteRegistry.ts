@@ -73,8 +73,12 @@ export class ExpressRouteRegistry implements HttpRouteRegistry {
                             name: error.name || "Error",
                             message: error.message || "Internal Server Error",
                             stack: error.stack || "",
-                            code: +error.code || 500,
-                            status: error.status || 500,
+                            code:
+                                +error.status ||
+                                httpStatus.INTERNAL_SERVER_ERROR,
+                            status:
+                                error.status ||
+                                httpStatus.INTERNAL_SERVER_ERROR,
                         } as HttpError,
                         context,
                     );
