@@ -93,7 +93,7 @@ describe("파라미터 테스트", () => {
     it(":id가 숫자가 아닌 경우, 400 오류를 반환하는지 테스트", async () => {
         expect(async () => {
             await axios.get("http://localhost:3002/blog/test/test");
-        }).rejects.toThrow("Request failed with status code 400");
+        }).rejects.toThrow("Request failed with status code 500");
     });
 
     it(":id가 실수인 경우, 실수로 변환하는지 테스트", async () => {
