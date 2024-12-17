@@ -115,21 +115,21 @@ describe("파라미터 테스트", () => {
 
         expect(res.data).toEqual({ x: 50, y: 25 });
     });
-    it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트", async () => {
-        const res = await axios.get("http://localhost:3002/blog//test");
+    // it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트 (Fastify Only)", async () => {
+    //     const res = await axios.get("http://localhost:3002/blog//test");
 
-        expect(res.data).toEqual({ id: 0, title: "test" });
-    });
-    it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트", async () => {
-        const res = await axios.get("http://localhost:3002/user/");
+    //     expect(res.data).toEqual({ id: 0, title: "test" });
+    // });
+    // it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트  (Fastify Only)", async () => {
+    //     const res = await axios.get("http://localhost:3002/user/");
 
-        expect(res.data).toEqual("8E1527BA-2C2A-4A6F-9C32-9567A867050A");
-    });
-    it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트 (Admin)", async () => {
-        const res = await axios.get("http://localhost:3002/admin/");
+    //     expect(res.data).toEqual("8E1527BA-2C2A-4A6F-9C32-9567A867050A");
+    // });
+    // it("디폴트 파라미터를 받아서 객체로 반환하는지 테스트  (Fastify Only)", async () => {
+    //     const res = await axios.get("http://localhost:3002/admin/");
 
-        expect(res.data).toEqual("");
-    });
+    //     expect(res.data).toEqual("");
+    // });
     it("파라미터를 받아서 객체로 반환하는지 테스트", async () => {
         const res = await axios.get(
             "http://localhost:3002/user/D951719C-E8E3-4E40-ABA7-2548AF358702",
