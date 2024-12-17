@@ -22,3 +22,4 @@ export * from "./Module";
 export * from "./http";
 export * from "./GlobalExceptionHandler";
 export * from "./EventService";
+export * from "./ModuleDependencyResolver";

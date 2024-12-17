@@ -4,7 +4,8 @@ import { ClazzType } from "./RouterMapper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class ModuleOptions<T = any> {
-    imports?: Omit<ModuleOptions, "configuration">[];
+    // imports?: Omit<ModuleOptions, "configuration">[];
+    imports?: (ClazzType | Omit<ModuleOptions, "configuration">)[];
     controllers!: ClazzType<T>[];
     providers!: (ClazzType<T> | Function)[];
     exports?: ClazzType<T>[];
@@ -26,6 +27,14 @@ export class ModuleOptions<T = any> {
             providers: [
                 ...options.providers,
                 ...others.flatMap((o) => o.providers),
+            ],
+            imports: [
+                ...(options.imports || []),
+                ...others.flatMap((o) => o.imports || []),
+            ],
+            exports: [
+                ...(options.exports || []),
+                ...others.flatMap((o) => o.exports || []),
             ],
             configuration: options.configuration,
         };

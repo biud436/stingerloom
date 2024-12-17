@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { ModuleOptions } from "./ModuleOptions";
 
 export const MODULE_TOKEN = "MODULE_TOKEN";
