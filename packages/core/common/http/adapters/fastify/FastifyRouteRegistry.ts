@@ -14,6 +14,7 @@ import {
     FastifyResponseAdapter,
     HttpMethod,
 } from "../../../";
+import { Exception } from "@stingerloom/core/error";
 
 export class FastifyRouteRegistry implements HttpRouteRegistry {
     constructor(
@@ -43,7 +44,9 @@ export class FastifyRouteRegistry implements HttpRouteRegistry {
                         message: error.message,
                         stack: error.stack,
                         code: +error.code,
-                        status: error.statusCode,
+                        status:
+                            (error as unknown as Exception).status ||
+                            error.statusCode,
                     } as HttpError,
                     context,
                 );
