@@ -25,7 +25,7 @@ export class FastifyRequestAdapter implements HttpRequest {
     }
 
     get session(): any {
-        return this.fastifyRequest.session;
+        return (this.fastifyRequest as any).session;
     }
 
     get ip(): string {
@@ -33,7 +33,7 @@ export class FastifyRequestAdapter implements HttpRequest {
     }
 
     get cookies(): Record<string, unknown> {
-        return this.fastifyRequest.cookies as Record<string, unknown>;
+        return (this.fastifyRequest as any).cookies as Record<string, unknown>;
     }
 
     get hostname(): string {
