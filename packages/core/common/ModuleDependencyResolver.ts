@@ -34,7 +34,7 @@ export class ModuleDependencyResolver {
 
         if (this.tempMarked.has(moduleClass)) {
             throw new CircularDependencyError(
-                `순환 의존성이 발견되었습니다: ${moduleClass.name}`,
+                `Circular dependency detected: ${moduleClass.name}`,
             );
         }
 
@@ -69,7 +69,7 @@ export class ModuleDependencyResolver {
             const e = error as Error;
             if (e.name === "TypeError") {
                 throw new CircularDependencyError(
-                    `순환 의존성이 발견되었습니다 ${moduleClass}`,
+                    `Circular dependency detected: ${moduleClass.name}`,
                 );
             }
             throw error;

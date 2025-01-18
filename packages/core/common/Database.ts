@@ -12,7 +12,7 @@ class Database implements OnApplicationShutdown {
 
     constructor(options: ModuleOptions["configuration"]) {
         if (!options) {
-            throw new Error("데이터베이스 설정이 필요합니다.");
+            throw new Error("Database configuration is required.");
         }
         this.dataSource = databaseFactory.create(options);
     }
@@ -31,7 +31,7 @@ class Database implements OnApplicationShutdown {
      */
     async onApplicationShutdown(): Promise<void> {
         if (this.dataSource.isInitialized) {
-            this.logger.warn("데이터베이스 연결을 종료합니다.");
+            this.logger.warn("Closing database connection.");
             await this.dataSource.destroy();
         }
     }
