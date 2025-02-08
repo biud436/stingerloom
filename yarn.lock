@@ -2598,7 +2598,7 @@ __metadata:
     sql-template-tag: "npm:^4"
     ts-loader: "npm:^9.5.1"
     typedi: "npm:^0.10.0"
-    typeorm: "npm:^0.3.17"
+    typeorm: "npm:^0.3.20"
     typeorm-naming-strategies: "npm:^4.1.0"
     typescript: "npm:^5.6.2"
     uuid: "npm:^9.0.1"
@@ -12011,7 +12011,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:^0.3.17":
+"typeorm@npm:^0.3.17, typeorm@npm:^0.3.20":
   version: 0.3.20
   resolution: "typeorm@npm:0.3.20"
   dependencies:
