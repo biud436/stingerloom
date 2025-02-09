@@ -24,7 +24,7 @@ export class RawTransactionScanner extends MetadataScanner {
     private txQueryRunner?: QueryRunner | undefined;
     private txEntityManager?: EntityManager | undefined;
 
-    private contextQueue = new EntityManagerContextQueue();
+    private transactionContextQueue = new EntityManagerContextQueue();
 
     /**
      * 논리 트랜잭션의 횟수
@@ -147,7 +147,7 @@ export class RawTransactionScanner extends MetadataScanner {
         propagation,
         entityManager,
     }: TxContext) {
-        this.contextQueue.enqueue({
+        this.transactionContextQueue.enqueue({
             queryRunner,
             transactionIsolationLevel,
             propagation,
