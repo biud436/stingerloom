@@ -54,7 +54,12 @@ export function ManyToOne<T extends EntityLike>(
     option?: ManyToOneOption,
 ): PropertyDecorator {
     return (target, propertyKey) => {
-        const injectParam = ReflectManager.getType<any>(target, propertyKey);
+        const mappedEntity = getMappingEntity();
+
+        const injectParam = ReflectManager.getType<any>(
+            mappedEntity.prototype,
+            propertyKey,
+        );
 
         const columnName = propertyKey.toString();
         const metadata = <ManyToOneMetadata<T>>{
@@ -66,6 +71,8 @@ export function ManyToOne<T extends EntityLike>(
             getMappingProperty,
             option,
         };
+
+        console.log("ManyToOne's target", target.constructor.name);
 
         const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, target);
 
