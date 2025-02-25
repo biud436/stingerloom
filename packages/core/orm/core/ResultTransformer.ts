@@ -10,7 +10,7 @@ import {
 } from "../decorators";
 
 export class ResultTransformer implements BaseResultTransformer {
-    private static SEPERATOR = "_";
+    private static PropertySeperator = "_";
 
     /**
      * 쿼리 결과가 없는 경우를 확인합니다.
@@ -37,7 +37,9 @@ export class ResultTransformer implements BaseResultTransformer {
         const enties = Object.entries(row);
 
         for (const [key, value] of enties) {
-            const isUnderScored = key.includes(ResultTransformer.SEPERATOR);
+            const isUnderScored = key.includes(
+                ResultTransformer.PropertySeperator,
+            );
             if (!isUnderScored) {
                 baseEntity[key] = value;
             }
@@ -51,16 +53,20 @@ export class ResultTransformer implements BaseResultTransformer {
             console.log("baseCls:", baseCls);
             console.log("entityCls:", entityClass);
             console.log("propertyCls:", propertyCls);
-            console.log("key:", key.split(ResultTransformer.SEPERATOR)[1]);
+            console.log(
+                "key:",
+                key.split(ResultTransformer.PropertySeperator)[1],
+            );
 
             const isManyToOneColumn = propertyCls?.find(
                 (e) =>
-                    e.columnName === key.split(ResultTransformer.SEPERATOR)[1],
+                    e.columnName ===
+                    key.split(ResultTransformer.PropertySeperator)[1],
             );
 
             if (isManyToOneColumn) {
                 console.log(
-                    `${key.split(ResultTransformer.SEPERATOR)[1]}는 ManyToOne 컬럼입니다`,
+                    `${key.split(ResultTransformer.PropertySeperator)[1]}는 ManyToOne 컬럼입니다`,
                 );
             }
         }
@@ -173,7 +179,7 @@ export class ResultTransformer implements BaseResultTransformer {
 
                 // 현재 관계에 해당하는 데이터 추출
                 const relationData = {} as any;
-                const propertyName = `${entityKey}${ResultTransformer.SEPERATOR}`;
+                const propertyName = `${entityKey}${ResultTransformer.PropertySeperator}`;
                 Object.entries(row)
                     .filter(([key]) => key.startsWith(propertyName))
                     .forEach(([key, value]) => {
