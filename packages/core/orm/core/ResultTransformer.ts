@@ -4,37 +4,91 @@ import type { QueryResult } from "../types/QueryResult";
 import { BaseResultTransformer } from "./BaseResultTransformer";
 import { deserializeEntity } from "./DeserializeEntity";
 import { MANY_TO_ONE_TOKEN } from "../decorators";
-// import { ENTITY_TOKEN } from "../decorators";
 
 export class ResultTransformer implements BaseResultTransformer {
     /**
+     * 쿼리 결과가 없는 경우를 확인합니다.
+     *
+     * @param queryResult
+     * @returns
+     */
+    protected hasNoResults(queryResult: QueryResult<any> | undefined): boolean {
+        return !queryResult?.results || queryResult.results.length === 0;
+    }
+
+    /**
+     * 엔티티에서 주종 관계가 아닌 필드를 추출합니다.
+     *
+     * @param entityClass
+     * @param row
+     * @param baseEntity
+     */
+    protected extractBaseEntity<T>(
+        entityClass: ClassConstructor<T>,
+        row: any,
+        baseEntity: any,
+    ) {
+        const enties = Object.entries(row);
+
+        for (const [key, value] of enties) {
+            const isUnderScored = key.includes("_");
+            if (!isUnderScored) {
+                baseEntity[key] = value;
+            }
+
+            console.log("test metadata:", Reflect.get(entityClass, key));
+
+            console.log(
+                "test metadata2:",
+                Reflect.getMetadata(MANY_TO_ONE_TOKEN, entityClass),
+            );
+        }
+    }
+
+    /**
+     * 빈 엔티티를 생성합니다.
+     */
+    protected buildNullEntity() {
+        return undefined;
+    }
+
+    /**
+     * 빈 엔티티 컬렉션을 생성합니다.
+     */
+    protected buildEmptyEntities<T>(): T[] {
+        return [] as T[];
+    }
+
+    /**
      * SQL 결과를 단일 엔티티로 변환합니다.
      */
-    toEntity<T>(
+    public toEntity<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T | undefined {
-        if (!result?.results || result.results.length === 0) {
-            return undefined;
+        if (this.hasNoResults(result)) {
+            return this.buildNullEntity();
         }
 
-        return deserializeEntity(entityClass, result.results[0]);
+        const r = result!;
+
+        return deserializeEntity(entityClass, r.results[0]);
     }
 
     /**
      * SQL 결과를 엔티티 배열로 변환합니다.
      */
-    toEntities<T>(
+    public toEntities<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T[] {
-        if (!result?.results || result.results.length === 0) {
-            return [];
+        if (this.hasNoResults(result)) {
+            return this.buildEmptyEntities<T>();
         }
 
-        return result.results.map((item) =>
-            deserializeEntity(entityClass, item),
-        );
+        const r = result!;
+
+        return r.results.map((item) => deserializeEntity(entityClass, item));
     }
 
     /**
@@ -43,59 +97,43 @@ export class ResultTransformer implements BaseResultTransformer {
      * 결과가 하나면 단일 엔티티를,
      * 결과가 여러 개면 엔티티 배열을 반환합니다.
      */
-    transform<T>(
+    public transform<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T | T[] | undefined {
-        if (!result?.results || result.results.length === 0) {
-            return undefined;
+        if (this.hasNoResults(result)) {
+            return this.buildNullEntity();
         }
 
-        if (result.results.length === 1) {
-            return deserializeEntity(entityClass, result.results[0]);
+        const r = result!;
+
+        const isSingleEntity = r.results.length === 1;
+        if (isSingleEntity) {
+            return deserializeEntity(entityClass, r.results[0]);
         }
 
-        return result.results.map((item) =>
-            deserializeEntity(entityClass, item),
-        );
+        return r.results.map((item) => deserializeEntity(entityClass, item));
     }
 
     /**
      * SQL 결과를 엔티티 또는 엔티티 배열로 변환합니다.
      */
-    transformNested<T>(
+    public transformNested<T>(
         entityClass: ClassConstructor<T>,
         queryResult: QueryResult<any> | undefined,
         relations: { [key: string]: ClassConstructor<any> },
     ): T | T[] | undefined {
-        if (!queryResult?.results || queryResult.results.length === 0) {
-            return undefined;
+        if (this.hasNoResults(queryResult)) {
+            return this.buildNullEntity();
         }
 
-        const transformedResults = queryResult.results.map<any>((row) => {
+        const r = queryResult!;
+
+        const transformedResults = r.results.map<any>((row) => {
             const baseEntity = {} as any;
             const nestedEntities: { [key: string]: any } = {};
 
-            // const entityMetadata = Reflect.getMetadata(
-            //     ENTITY_TOKEN,
-            //     entityClass,
-            // );
-
-            // 기본 엔티티 속성 추출
-            Object.entries(row).forEach(([key, value]) => {
-                const isUnderScored = key.includes("_");
-                if (!isUnderScored) {
-                    baseEntity[key] = value;
-                }
-                console.log("test metadata:", Reflect.get(entityClass, key));
-
-                console.log(
-                    "test metadata2:",
-                    Reflect.getMetadata(MANY_TO_ONE_TOKEN, entityClass),
-                );
-
-                // console.log("entityMetadata", entityMetadata);
-            });
+            this.extractBaseEntity(entityClass, row, baseEntity);
 
             const relationPathItem = new Set<{
                 path: string;
@@ -103,7 +141,8 @@ export class ResultTransformer implements BaseResultTransformer {
             }>();
 
             // 중첩된 관계 처리
-            Object.entries(relations).forEach(([path, relationClass]) => {
+            const relationEntries = Object.entries(relations);
+            for (const [path, relationClass] of relationEntries) {
                 // 중첩된 관계 정보 저장
                 relationPathItem.add({ path, entity: relationClass });
 
@@ -132,7 +171,7 @@ export class ResultTransformer implements BaseResultTransformer {
                         deserializeEntity(relationClass, relationData),
                     );
                 }
-            });
+            }
 
             // 최종 엔티티에 중첩 관계 추가
             const finalEntity = deserializeEntity(entityClass, {

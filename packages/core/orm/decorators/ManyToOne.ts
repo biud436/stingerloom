@@ -72,8 +72,6 @@ export function ManyToOne<T extends EntityLike>(
             option,
         };
 
-        console.log("ManyToOne's target", target.constructor.name);
-
         const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, target);
 
         Reflect.defineMetadata(
