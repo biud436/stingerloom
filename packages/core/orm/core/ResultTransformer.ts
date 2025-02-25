@@ -27,7 +27,7 @@ export class ResultTransformer implements BaseResultTransformer {
     }
 
     /**
-     * 엔티티에서 주종 관계가 아닌 필드를 추출합니다.
+     * 엔티티에서 외래키 필드가 아닌 속성을 모두 추출합니다.
      *
      * @param entityClass
      * @param row

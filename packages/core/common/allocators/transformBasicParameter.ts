@@ -4,7 +4,7 @@ import Container from "typedi";
 
 import { ReflectManager } from "../ReflectManager";
 import { InstanceScanner } from "@stingerloom/core/IoC";
-import Database from "../Database";
+import Database from "../database/DatabaseV1";
 import { DataSource } from "typeorm";
 import { BadRequestException } from "@stingerloom/core/error";
 import { EntityManager } from "@stingerloom/core/orm/core";

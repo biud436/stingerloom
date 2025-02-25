@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import {
     EventService,
     Injectable,
@@ -6,16 +7,37 @@ import {
 } from "@stingerloom/core";
 import { DATABASE_OPTION_TOKEN, DatabaseModule } from "./DatabaseModule";
 import { DatabaseClientOptions } from "./core/DatabaseClientOptions";
-import Database from "../../core/common/Database";
+import Database from "../common/database/DatabaseV1";
 import Container from "typedi";
+import { EntityManager } from "./core";
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
     private database?: Database;
+    private entityManager!: EntityManager;
 
     constructor(private readonly eventService: EventService) {}
 
     async onModuleInit(): Promise<void> {
+        await this.initEntityManager();
+        await this.registerEntities();
+
+        this.eventService.on("stop", () => this.destroy());
+    }
+
+    async destroy(): Promise<void> {
+        if (this.database) {
+            console.log("destroy");
+            await this.database.onApplicationShutdown();
+        }
+
+        await this.propagateShutdown();
+    }
+
+    /**
+     * @deprecated
+     */
+    private async initializeTypeOrm() {
         const options = Reflect.getMetadata(
             DATABASE_OPTION_TOKEN,
             DatabaseModule,
@@ -33,14 +55,21 @@ export class DatabaseService implements OnModuleInit {
         await database.start();
 
         this.database = database;
-
-        this.eventService.on("stop", () => this.destroy());
     }
 
-    async destroy(): Promise<void> {
-        if (this.database) {
-            console.log("destroy");
-            await this.database.onApplicationShutdown();
-        }
+    private async initEntityManager() {
+        this.entityManager = new EntityManager();
+
+        const instanceScanner = Container.get(InstanceScanner);
+        instanceScanner.set(EntityManager, this.entityManager);
+    }
+
+    private async registerEntities() {
+        console.log("registerEntities");
+        await this.entityManager.register();
+    }
+
+    private async propagateShutdown() {
+        await this.entityManager.propagateShutdown();
     }
 }
