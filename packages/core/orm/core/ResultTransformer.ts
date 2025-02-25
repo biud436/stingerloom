@@ -1,146 +1,253 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClassConstructor } from "class-transformer";
 import type { QueryResult } from "../types/QueryResult";
 import { BaseResultTransformer } from "./BaseResultTransformer";
 import { deserializeEntity } from "./DeserializeEntity";
-import { MANY_TO_ONE_TOKEN } from "../decorators";
-// import { ENTITY_TOKEN } from "../decorators";
+import {
+    ENTITY_TOKEN,
+    MANY_TO_ONE_TOKEN,
+    ManyToOneMetadata,
+} from "../decorators";
+import { ClazzType } from "@stingerloom/core/common";
+
+export type ForeignObject<T = any> = { [key: string]: T };
 
 export class ResultTransformer implements BaseResultTransformer {
+    private static PropertySeperator = "_";
+
+    /**
+     * 쿼리 결과가 없는 경우를 확인합니다.
+     *
+     * @param queryResult
+     * @returns
+     */
+    private hasNoResults(queryResult: QueryResult<any> | undefined): boolean {
+        return !queryResult?.results || queryResult.results.length === 0;
+    }
+
+    /**
+     * 엔티티에서 주종 관계가 아닌 필드를 추출합니다.
+     *
+     * @param entityClass
+     * @param row
+     * @param baseEntity
+     */
+    private extractBaseEntity<T>(
+        entityClass: ClassConstructor<T>,
+        row: any,
+        baseEntity: any,
+    ) {
+        const enties = Object.entries(row);
+
+        for (const [key, value] of enties) {
+            const isUnderScored = key.includes(
+                ResultTransformer.PropertySeperator,
+            );
+            if (!isUnderScored) {
+                baseEntity[key] = value;
+            }
+        }
+    }
+
+    /**
+     * 빈 엔티티를 생성합니다.
+     */
+    private buildNullEntity() {
+        return undefined;
+    }
+
+    /**
+     * 빈 엔티티 컬렉션을 생성합니다.
+     */
+    private buildEmptyEntities<T>(): T[] {
+        return [] as T[];
+    }
+
+    /**
+     * 외래키 오브젝트를 생성합니다.
+     */
+    private buildForeignObject<T = any>(): ForeignObject<T> {
+        return {};
+    }
+
+    /**
+     * SQL 측 컬럼명을 만듭니다.
+     */
+    private makeColumnNameWithSeperator(columnName: string): string {
+        return `${columnName}${ResultTransformer.PropertySeperator}`;
+    }
+
     /**
      * SQL 결과를 단일 엔티티로 변환합니다.
      */
-    toEntity<T>(
+    public toEntity<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T | undefined {
-        if (!result?.results || result.results.length === 0) {
-            return undefined;
+        if (this.hasNoResults(result)) {
+            return this.buildNullEntity();
         }
 
-        return deserializeEntity(entityClass, result.results[0]);
+        const r = result!;
+
+        return deserializeEntity(entityClass, r.results[0]);
     }
 
     /**
      * SQL 결과를 엔티티 배열로 변환합니다.
      */
-    toEntities<T>(
+    public toEntities<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T[] {
-        if (!result?.results || result.results.length === 0) {
-            return [];
+        if (this.hasNoResults(result)) {
+            return this.buildEmptyEntities<T>();
         }
 
-        return result.results.map((item) =>
-            deserializeEntity(entityClass, item),
-        );
+        const r = result!;
+
+        return r.results.map((item) => deserializeEntity(entityClass, item));
     }
 
     /**
-     * SQL 결과를 엔티티 또는 엔티티 배열로 변환합니다.
-     * 결과가 없으면 undefined를 반환하고,
-     * 결과가 하나면 단일 엔티티를,
-     * 결과가 여러 개면 엔티티 배열을 반환합니다.
+     * Transform SQL result to entity or entity array.
+     *
+     * @param entityClass
+     * @param result
+     * @returns
      */
-    transform<T>(
+    public transform<T>(
         entityClass: ClassConstructor<T>,
         result: QueryResult<any> | undefined,
     ): T | T[] | undefined {
-        if (!result?.results || result.results.length === 0) {
-            return undefined;
+        if (this.hasNoResults(result)) {
+            return this.buildNullEntity();
         }
 
-        if (result.results.length === 1) {
-            return deserializeEntity(entityClass, result.results[0]);
+        const r = result!;
+
+        const isSingleEntity = r.results.length === 1;
+        if (isSingleEntity) {
+            return deserializeEntity(entityClass, r.results[0]);
         }
 
-        return result.results.map((item) =>
-            deserializeEntity(entityClass, item),
-        );
+        return r.results.map((item) => deserializeEntity(entityClass, item));
+    }
+
+    /**
+     * 외래키 오브젝트에 내용을 채워넣습니다.
+     *
+     * @param entityClass 엔티티 클래스
+     * @param baseEntity 기본 엔티티
+     * @param row SQL 결과
+     */
+    private fillPropertiesToForeignObject<T>(
+        entityClass: ClassConstructor<T>,
+        baseEntity: ForeignObject<any>,
+        row: any,
+    ) {
+        // 외래키 메타데이터를 가져옵니다.
+        const manyToOneMappingMetadata = Reflect.getMetadata(
+            MANY_TO_ONE_TOKEN,
+            entityClass,
+        ) as ManyToOneMetadata<T>[];
+        const foreignKeys = manyToOneMappingMetadata?.map((e) => e.columnName);
+
+        if (foreignKeys) {
+            for (const foreignKey of foreignKeys) {
+                if (!baseEntity[foreignKey]) {
+                    baseEntity[foreignKey] = this.buildForeignObject();
+                }
+            }
+
+            for (const {
+                getMappingEntity,
+                columnName,
+            } of manyToOneMappingMetadata) {
+                const ForeignClass = getMappingEntity() as ClazzType<T>;
+
+                const rows = Object.entries(row);
+
+                const foreignObject = this.buildForeignObject();
+
+                // ! 3. 외래키 오브젝트에 키/값을 채워넣는다.
+                for (const [key, value] of rows) {
+                    const prefix = this.makeColumnNameWithSeperator(columnName);
+
+                    if (key.startsWith(prefix)) {
+                        const keyWithoutPrefix = key.replace(prefix, "");
+
+                        foreignObject[keyWithoutPrefix] = value;
+                    }
+                }
+
+                // 재귀적으로 순회하여 다중 레벨의 중첩 관계도 변환합니다.
+                const relatedManyToOneMappings = Reflect.getMetadata(
+                    MANY_TO_ONE_TOKEN,
+                    ForeignClass,
+                ) as ManyToOneMetadata<any>[];
+
+                if (relatedManyToOneMappings) {
+                    this.fillPropertiesToForeignObject(
+                        ForeignClass,
+                        foreignObject,
+                        row,
+                    );
+                }
+
+                // ! 4. 코어 엔티티에 외래키 오브젝트를 추가한다.
+                baseEntity[columnName] = deserializeEntity(
+                    ForeignClass,
+                    foreignObject,
+                );
+            }
+        }
+
+        const finalEntity = deserializeEntity(entityClass, {
+            ...baseEntity,
+        });
+
+        return finalEntity;
     }
 
     /**
      * SQL 결과를 엔티티 또는 엔티티 배열로 변환합니다.
      */
-    transformNested<T>(
+    public transformNested<T>(
         entityClass: ClassConstructor<T>,
         queryResult: QueryResult<any> | undefined,
-        relations: { [key: string]: ClassConstructor<any> },
+        relations?: { [key: string]: ClassConstructor<any> },
     ): T | T[] | undefined {
-        if (!queryResult?.results || queryResult.results.length === 0) {
-            return undefined;
+        if (this.hasNoResults(queryResult)) {
+            return this.buildNullEntity();
         }
 
-        const transformedResults = queryResult.results.map<any>((row) => {
-            const baseEntity = {} as any;
-            const nestedEntities: { [key: string]: any } = {};
+        const r = queryResult!;
 
-            // const entityMetadata = Reflect.getMetadata(
-            //     ENTITY_TOKEN,
-            //     entityClass,
-            // );
+        const transformedResults = r.results.map<any>((row) => {
+            const baseEntity: { [key: string]: any } = {};
 
-            // 기본 엔티티 속성 추출
-            Object.entries(row).forEach(([key, value]) => {
-                const isUnderScored = key.includes("_");
-                if (!isUnderScored) {
-                    baseEntity[key] = value;
-                }
-                console.log("test metadata:", Reflect.get(entityClass, key));
-
-                console.log(
-                    "test metadata2:",
-                    Reflect.getMetadata(MANY_TO_ONE_TOKEN, entityClass),
-                );
-
-                // console.log("entityMetadata", entityMetadata);
-            });
-
-            const relationPathItem = new Set<{
-                path: string;
-                entity: ClassConstructor<any>;
-            }>();
-
-            // 중첩된 관계 처리
-            Object.entries(relations).forEach(([path, relationClass]) => {
-                // 중첩된 관계 정보 저장
-                relationPathItem.add({ path, entity: relationClass });
-
-                const pathSegments = path.split(".");
-                const entityKey = pathSegments[0];
-
-                // 현재 관계에 해당하는 데이터 추출
-                const relationData = {} as any;
-                const propertyName = `${entityKey}_`;
-                Object.entries(row)
-                    .filter(([key]) => key.startsWith(propertyName))
-                    .forEach(([key, value]) => {
-                        const formattedPropertyName = key.replace(
-                            propertyName,
-                            "",
-                        );
-                        relationData[formattedPropertyName] = value;
-                    });
-
-                const hasRelationData = Object.keys(relationData).length > 0;
-                if (hasRelationData) {
-                    if (!nestedEntities[entityKey]) {
-                        nestedEntities[entityKey] = [];
-                    }
-                    nestedEntities[entityKey].push(
-                        deserializeEntity(relationClass, relationData),
-                    );
-                }
-            });
-
-            // 최종 엔티티에 중첩 관계 추가
-            const finalEntity = deserializeEntity(entityClass, {
-                ...baseEntity,
-                ...nestedEntities,
-            });
-
+            // * ---------------------------------------------
+            // * 기본 로직 구성 *
+            // * ---------------------------------------------
+            // 1. 코어 엔티티에서 기본적인 속성을 추출한다.
+            // 2. 엔티티에 필요한 외래키 오브젝트를 만든다.
+            // 3. 외래키 오브젝트에 키/값을 채워넣는다.
+            // 4. 코어 엔티티에 외래키 오브젝트를 추가한다.
             //
+            // (5. 외래키가 없을 때까지 2-4를 재귀적으로 반복한다)
+            // * ---------------------------------------------
+
+            // ! 1. 코어 엔티티에서 기본적인 속성을 추출한다.
+            this.extractBaseEntity(entityClass, row, baseEntity);
+
+            // ! 2. 엔티티에 필요한 외래키 오브젝트를 만든다.
+            const finalEntity = this.fillPropertiesToForeignObject(
+                entityClass,
+                baseEntity,
+                row,
+            );
 
             return finalEntity;
         });

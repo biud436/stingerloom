@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { ClazzType, ReflectManager } from "@stingerloom/core/common";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -50,20 +51,19 @@ export type ManyToOneMetadata<T> = {
  */
 export function ManyToOne<T extends EntityLike>(
     getMappingEntity: RetrieveEntity<T>,
-    getMappingProperty: SetRelatedEntity<EntityLike>,
+    getMappingProperty: SetRelatedEntity<T>,
     option?: ManyToOneOption,
 ): PropertyDecorator {
     return (target, propertyKey) => {
-        const mappedEntity = getMappingEntity();
+        // const mappedEntity = getMappingEntity();
 
-        const injectParam = ReflectManager.getType<any>(
-            mappedEntity.prototype,
-            propertyKey,
-        );
+        const cls = target.constructor;
+
+        const injectParam = ReflectManager.getType<any>(cls, propertyKey);
 
         const columnName = propertyKey.toString();
         const metadata = <ManyToOneMetadata<T>>{
-            target,
+            target: cls,
             type: injectParam,
             columnName, // 조인 컬럼이 필요... 이건 productId가 되어야 하는데, product가 되어버림...
             joinColumn: option?.joinColumn,
@@ -72,14 +72,16 @@ export function ManyToOne<T extends EntityLike>(
             option,
         };
 
-        console.log("ManyToOne's target", target.constructor.name);
+        // console.log("target:", target.constructor);
+        // console.log("entityTarget:", entityTarget);
+        // console.log("propertyTarget", mappedEntity);
 
-        const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, target);
+        const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, cls);
 
         Reflect.defineMetadata(
             MANY_TO_ONE_TOKEN,
             [...(columns || []), metadata],
-            target,
+            cls,
         );
 
         // 스캐너가 따로 있어야 할까?

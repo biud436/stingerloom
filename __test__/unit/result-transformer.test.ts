@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import { Expose, Type } from "class-transformer";
+import { Expose } from "class-transformer";
 import { Column, Entity, ManyToOne } from "@stingerloom/core/orm/decorators";
 import { QueryResult } from "@stingerloom/core/orm/types";
 import { ResultTransformerFactory } from "@stingerloom/core/orm/core";
@@ -19,6 +19,9 @@ describe("ResultTransformer", () => {
         @Column()
         @Expose()
         created_at!: Date;
+
+        @Expose()
+        posts?: Post[];
     }
 
     @Entity()
@@ -36,9 +39,12 @@ describe("ResultTransformer", () => {
         content!: string;
 
         @Expose()
-        @Type(() => PostComment)
         @Column()
-        comments?: PostComment[];
+        @ManyToOne(() => PostComment, (entity) => entity.posts)
+        comment?: PostComment;
+
+        @Expose()
+        users?: User[];
     }
 
     @Entity()
@@ -57,8 +63,8 @@ describe("ResultTransformer", () => {
 
         @Column()
         @Expose()
-        @Type(() => Post)
-        posts?: Post[];
+        @ManyToOne(() => Post, (entity) => entity.users)
+        post?: Post;
     }
 
     const resultTransformer = ResultTransformerFactory.create();
@@ -165,12 +171,12 @@ describe("ResultTransformer", () => {
                         id: 1,
                         name: "홍길동",
                         email: "hong@example.com",
-                        posts_id: 1,
-                        posts_title: "첫 번째 글",
-                        posts_content: "내용입니다",
-                        posts_comments_id: 1,
-                        posts_comments_content: "댓글입니다",
-                        posts_comments_created_at: "2024-03-16T00:00:00Z",
+                        post_id: 1,
+                        post_title: "첫 번째 글",
+                        post_content: "내용입니다",
+                        post_comment_id: 1,
+                        post_comment_content: "댓글입니다",
+                        post_comment_created_at: "2024-03-16T00:00:00Z",
                     },
                 ],
             };
@@ -182,21 +188,19 @@ describe("ResultTransformer", () => {
             expect(result).toBeInstanceOf(User);
             const user = result as User;
 
-            // posts 배열 검증
-            expect(user.posts).toBeDefined();
-            expect(Array.isArray(user.posts)).toBeTruthy();
-            expect(user?.posts?.length).toBeGreaterThan(0);
+            console.log(user);
 
             // post 객체 검증
-            const post = user?.posts?.[0];
+            const post = user?.post;
+
             expect(post).toBeInstanceOf(Post);
             expect(post?.id).toBe(1);
             expect(post?.title).toBe("첫 번째 글");
             expect(post?.content).toBe("내용입니다");
 
             // comments 배열 검증 (중첩의 중첩인 경우에는 comments가 배열로 변환되어야 하는데 실패함)
-            expect(post?.comments).not.toBeDefined();
-            expect(Array.isArray(post?.comments)).toBeFalsy();
+            expect(post?.comment).toBeDefined();
+            expect(Array.isArray(post?.comment)).toBeFalsy();
         });
 
         it("중첩 관계가 없는 경우에도 정상 동작해야 합니다", () => {
@@ -221,7 +225,6 @@ describe("ResultTransformer", () => {
             expect(user.id).toBe(1);
             expect(user.name).toBe("홍길동");
             expect(user.email).toBe("hong@example.com");
-            expect(user.posts).toBeUndefined();
         });
 
         it("다중 레벨의 중첩 관계를 변환할 수 있어야 합니다", () => {
@@ -231,30 +234,28 @@ describe("ResultTransformer", () => {
                         id: 1,
                         name: "홍길동",
                         email: "hong@example.com",
-                        posts_id: 1,
-                        posts_title: "첫 번째 글",
-                        posts_content: "내용입니다",
-                        comments_id: 1,
-                        comments_content: "댓글입니다",
-                        comments_created_at: "2024-03-16T00:00:00Z",
+                        post_id: 1,
+                        post_title: "첫 번째 글",
+                        post_content: "내용입니다",
+                        comment_id: 1,
+                        comment_content: "댓글입니다",
+                        comment_created_at: "2024-03-16T00:00:00Z",
                     },
                 ],
             };
 
             const result = resultTransformer.transformNested(User, mockResult, {
-                posts: Post,
-                comments: PostComment,
+                post: Post,
+                comment: PostComment,
             });
-
-            console.log(result);
 
             expect(result).toBeInstanceOf(User);
             const user = result as User;
-            expect(user.posts).toBeDefined();
-            expect(user.posts?.[0]).toBeInstanceOf(Post);
-            if (user.posts?.[0].comments) {
-                expect(user.posts[0].comments[0]).toBeInstanceOf(PostComment);
-            }
+            expect(user.post).toBeDefined();
+            expect(user.post).toBeInstanceOf(Post);
+            // if (user.post?.comment) {
+            expect(user.post?.comment).toBeInstanceOf(PostComment);
+            // }
         });
 
         it("단일 행에 다수의 중첩된 관계 데이터 포함", () => {
@@ -263,6 +264,7 @@ describe("ResultTransformer", () => {
                     {
                         id: 1,
                         name: "Alice",
+                        email: "alice@stingerloom.com",
                         // 'address' 관계 데이터 (키 접두사 "address_" 사용)
                         address_street: "123 Main St",
                         address_city: "Anytown",
@@ -310,11 +312,11 @@ describe("ResultTransformer", () => {
                 email!: string;
 
                 @Expose()
-                @ManyToOne(() => Address, (entity) => entity.users)
+                @ManyToOne(() => Address, (entity) => entity.users, {})
                 address!: Address;
 
-                @Expose()
-                @ManyToOne(() => Order, (entity) => entity.users)
+                // @Expose()
+                @ManyToOne(() => Order, (entity) => entity.users, {})
                 order!: Order;
             }
 
@@ -327,10 +329,8 @@ describe("ResultTransformer", () => {
                 },
             ) as GoodUser;
 
-            console.log(result);
-
             expect(result).toBeInstanceOf(GoodUser);
-            expect((result?.address as any)[0]).toBeInstanceOf(Address);
+            expect(result?.address).toBeInstanceOf(Address);
         });
     });
 });
