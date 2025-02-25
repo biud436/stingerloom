@@ -51,7 +51,7 @@ export type ManyToOneMetadata<T> = {
  */
 export function ManyToOne<T extends EntityLike>(
     getMappingEntity: RetrieveEntity<T>,
-    getMappingProperty: SetRelatedEntity<EntityLike>,
+    getMappingProperty: SetRelatedEntity<T>,
     option?: ManyToOneOption,
 ): PropertyDecorator {
     return (target, propertyKey) => {

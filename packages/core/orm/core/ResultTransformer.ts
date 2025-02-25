@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ClassConstructor } from "class-transformer";
 import type { QueryResult } from "../types/QueryResult";
@@ -8,6 +9,9 @@ import {
     MANY_TO_ONE_TOKEN,
     ManyToOneMetadata,
 } from "../decorators";
+import { ClazzType } from "@stingerloom/core/common";
+
+export type ForeignObject<T = any> = { [key: string]: T };
 
 export class ResultTransformer implements BaseResultTransformer {
     private static PropertySeperator = "_";
@@ -18,7 +22,7 @@ export class ResultTransformer implements BaseResultTransformer {
      * @param queryResult
      * @returns
      */
-    protected hasNoResults(queryResult: QueryResult<any> | undefined): boolean {
+    private hasNoResults(queryResult: QueryResult<any> | undefined): boolean {
         return !queryResult?.results || queryResult.results.length === 0;
     }
 
@@ -29,7 +33,7 @@ export class ResultTransformer implements BaseResultTransformer {
      * @param row
      * @param baseEntity
      */
-    protected extractBaseEntity<T>(
+    private extractBaseEntity<T>(
         entityClass: ClassConstructor<T>,
         row: any,
         baseEntity: any,
@@ -43,47 +47,35 @@ export class ResultTransformer implements BaseResultTransformer {
             if (!isUnderScored) {
                 baseEntity[key] = value;
             }
-
-            const baseCls = Reflect.getMetadata(ENTITY_TOKEN, entityClass);
-            const propertyCls = Reflect.getMetadata(
-                MANY_TO_ONE_TOKEN,
-                entityClass,
-            ) as ManyToOneMetadata<T>[];
-
-            console.log("baseCls:", baseCls);
-            console.log("entityCls:", entityClass);
-            console.log("propertyCls:", propertyCls);
-            console.log(
-                "key:",
-                key.split(ResultTransformer.PropertySeperator)[1],
-            );
-
-            const isManyToOneColumn = propertyCls?.find(
-                (e) =>
-                    e.columnName ===
-                    key.split(ResultTransformer.PropertySeperator)[1],
-            );
-
-            if (isManyToOneColumn) {
-                console.log(
-                    `${key.split(ResultTransformer.PropertySeperator)[1]}는 ManyToOne 컬럼입니다`,
-                );
-            }
         }
     }
 
     /**
      * 빈 엔티티를 생성합니다.
      */
-    protected buildNullEntity() {
+    private buildNullEntity() {
         return undefined;
     }
 
     /**
      * 빈 엔티티 컬렉션을 생성합니다.
      */
-    protected buildEmptyEntities<T>(): T[] {
+    private buildEmptyEntities<T>(): T[] {
         return [] as T[];
+    }
+
+    /**
+     * 외래키 오브젝트를 생성합니다.
+     */
+    private buildForeignObject<T = any>(): ForeignObject<T> {
+        return {};
+    }
+
+    /**
+     * SQL 측 컬럼명을 만듭니다.
+     */
+    private makeColumnNameWithSeperator(columnName: string): string {
+        return `${columnName}${ResultTransformer.PropertySeperator}`;
     }
 
     /**
@@ -144,12 +136,88 @@ export class ResultTransformer implements BaseResultTransformer {
     }
 
     /**
+     * 외래키 오브젝트에 내용을 채워넣습니다.
+     *
+     * @param entityClass 엔티티 클래스
+     * @param baseEntity 기본 엔티티
+     * @param row SQL 결과
+     */
+    private fillPropertiesToForeignObject<T>(
+        entityClass: ClassConstructor<T>,
+        baseEntity: ForeignObject<any>,
+        row: any,
+    ) {
+        // 외래키 메타데이터를 가져옵니다.
+        const manyToOneMappingMetadata = Reflect.getMetadata(
+            MANY_TO_ONE_TOKEN,
+            entityClass,
+        ) as ManyToOneMetadata<T>[];
+        const foreignKeys = manyToOneMappingMetadata?.map((e) => e.columnName);
+
+        if (foreignKeys) {
+            for (const foreignKey of foreignKeys) {
+                if (!baseEntity[foreignKey]) {
+                    baseEntity[foreignKey] = this.buildForeignObject();
+                }
+            }
+
+            for (const {
+                getMappingEntity,
+                columnName,
+            } of manyToOneMappingMetadata) {
+                const ForeignClass = getMappingEntity() as ClazzType<T>;
+
+                const rows = Object.entries(row);
+
+                const foreignObject = this.buildForeignObject();
+
+                // ! 3. 외래키 오브젝트에 키/값을 채워넣는다.
+                for (const [key, value] of rows) {
+                    const prefix = this.makeColumnNameWithSeperator(columnName);
+
+                    if (key.startsWith(prefix)) {
+                        const keyWithoutPrefix = key.replace(prefix, "");
+
+                        foreignObject[keyWithoutPrefix] = value;
+                    }
+                }
+
+                // 재귀적으로 순회하여 다중 레벨의 중첩 관계도 변환합니다.
+                const relatedManyToOneMappings = Reflect.getMetadata(
+                    MANY_TO_ONE_TOKEN,
+                    ForeignClass,
+                ) as ManyToOneMetadata<any>[];
+
+                if (relatedManyToOneMappings) {
+                    this.fillPropertiesToForeignObject(
+                        ForeignClass,
+                        foreignObject,
+                        row,
+                    );
+                }
+
+                // ! 4. 코어 엔티티에 외래키 오브젝트를 추가한다.
+                baseEntity[columnName] = deserializeEntity(
+                    ForeignClass,
+                    foreignObject,
+                );
+            }
+        }
+
+        const finalEntity = deserializeEntity(entityClass, {
+            ...baseEntity,
+        });
+
+        return finalEntity;
+    }
+
+    /**
      * SQL 결과를 엔티티 또는 엔티티 배열로 변환합니다.
      */
     public transformNested<T>(
         entityClass: ClassConstructor<T>,
         queryResult: QueryResult<any> | undefined,
-        relations: { [key: string]: ClassConstructor<any> },
+        relations?: { [key: string]: ClassConstructor<any> },
     ): T | T[] | undefined {
         if (this.hasNoResults(queryResult)) {
             return this.buildNullEntity();
@@ -158,58 +226,28 @@ export class ResultTransformer implements BaseResultTransformer {
         const r = queryResult!;
 
         const transformedResults = r.results.map<any>((row) => {
-            const baseEntity = {} as any;
-            const nestedEntities: { [key: string]: any } = {};
+            const baseEntity: { [key: string]: any } = {};
 
+            // * ---------------------------------------------
+            // * 기본 로직 구성 *
+            // * ---------------------------------------------
+            // 1. 코어 엔티티에서 기본적인 속성을 추출한다.
+            // 2. 엔티티에 필요한 외래키 오브젝트를 만든다.
+            // 3. 외래키 오브젝트에 키/값을 채워넣는다.
+            // 4. 코어 엔티티에 외래키 오브젝트를 추가한다.
+            //
+            // (5. 외래키가 없을 때까지 2-4를 재귀적으로 반복한다)
+            // * ---------------------------------------------
+
+            // ! 1. 코어 엔티티에서 기본적인 속성을 추출한다.
             this.extractBaseEntity(entityClass, row, baseEntity);
 
-            const relationPathItem = new Set<{
-                path: string;
-                entity: ClassConstructor<any>;
-            }>();
-
-            // 중첩된 관계 처리
-            const relationEntries = Object.entries(relations);
-            for (const [path, relationClass] of relationEntries) {
-                // 중첩된 관계 정보 저장
-                relationPathItem.add({ path, entity: relationClass });
-
-                const pathSegments = path.split(".");
-                const entityKey = pathSegments[0];
-
-                // 현재 관계에 해당하는 데이터 추출
-                const relationData = {} as any;
-                const propertyName = `${entityKey}${ResultTransformer.PropertySeperator}`;
-                Object.entries(row)
-                    .filter(([key]) => key.startsWith(propertyName))
-                    .forEach(([key, value]) => {
-                        const formattedPropertyName = key.replace(
-                            propertyName,
-                            "",
-                        );
-                        relationData[formattedPropertyName] = value;
-                    });
-
-                const relationKeys = Object.keys(relationData);
-
-                const hasRelationData = relationKeys.length > 0;
-                if (hasRelationData) {
-                    if (!nestedEntities[entityKey]) {
-                        nestedEntities[entityKey] = [];
-                    }
-                    nestedEntities[entityKey].push(
-                        deserializeEntity(relationClass, relationData),
-                    );
-                }
-            }
-
-            // 최종 엔티티에 중첩 관계 추가
-            const finalEntity = deserializeEntity(entityClass, {
-                ...baseEntity,
-                ...nestedEntities,
-            });
-
-            //
+            // ! 2. 엔티티에 필요한 외래키 오브젝트를 만든다.
+            const finalEntity = this.fillPropertiesToForeignObject(
+                entityClass,
+                baseEntity,
+                row,
+            );
 
             return finalEntity;
         });
