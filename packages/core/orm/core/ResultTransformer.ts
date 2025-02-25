@@ -190,7 +190,9 @@ export class ResultTransformer implements BaseResultTransformer {
                         relationData[formattedPropertyName] = value;
                     });
 
-                const hasRelationData = Object.keys(relationData).length > 0;
+                const relationKeys = Object.keys(relationData);
+
+                const hasRelationData = relationKeys.length > 0;
                 if (hasRelationData) {
                     if (!nestedEntities[entityKey]) {
                         nestedEntities[entityKey] = [];
