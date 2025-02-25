@@ -17,7 +17,7 @@ import {
 import { RouterExecutionContext } from "@stingerloom/core/router/RouterExecutionContext";
 import chalk from "chalk";
 import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
-import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
+// import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
 import { InjectableScanner, InstanceScanner } from "./scanners";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
@@ -29,7 +29,7 @@ export class ContainerManager {
     private _controllers: ClazzType<any>[] = [];
     private _injectables: ClazzType<any>[] = [];
     private server!: HttpServer;
-    private entityManager!: EntityManager;
+    // private entityManager!: EntityManager;
 
     private readonly logger = new Logger(ContainerManager.name);
     private readonly routerExecutionContext;
@@ -40,15 +40,15 @@ export class ContainerManager {
     constructor(server: HttpServer) {
         this.server = server;
         this.routerExecutionContext = new RouterExecutionContext(this.server);
-        this.initEntityManager();
+        // this.initEntityManager();
     }
 
-    initEntityManager() {
-        this.entityManager = new EntityManager();
+    // initEntityManager() {
+    //     this.entityManager = new EntityManager();
 
-        const instanceScanner = Container.get(InstanceScanner);
-        instanceScanner.set(EntityManager, this.entityManager);
-    }
+    //     const instanceScanner = Container.get(InstanceScanner);
+    //     instanceScanner.set(EntityManager, this.entityManager);
+    // }
 
     public async register() {
         await this.registerEntities();
@@ -66,7 +66,7 @@ export class ContainerManager {
             this._controllers,
         );
 
-        await this.entityManager.propagateShutdown();
+        // await this.entityManager.propagateShutdown();
 
         for (const consumer of consumers) {
             const handler = consumer as OnApplicationShutdown;
@@ -80,7 +80,7 @@ export class ContainerManager {
 
     private async registerEntities() {
         console.log("registerEntities");
-        await this.entityManager.register();
+        // await this.entityManager.register();
     }
 
     /**

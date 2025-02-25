@@ -2,7 +2,7 @@
 import { InstanceScanner } from "@stingerloom/core/IoC";
 import { ClazzType } from "../RouterMapper";
 import { ReflectManager } from "../ReflectManager";
-import Database from "../Database";
+import Database from "../database/DatabaseV1";
 import {
     AFTER_TRANSACTION_TOKEN,
     BEFORE_TRANSACTION_TOKEN,

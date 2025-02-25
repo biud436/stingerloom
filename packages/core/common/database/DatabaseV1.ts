@@ -2,9 +2,9 @@ import { DataSource } from "typeorm";
 
 import { databaseFactory } from "@stingerloom/core/factory/database/DatabaseFactory";
 
-import { ModuleOptions } from "./ModuleOptions";
-import { OnApplicationShutdown } from "./OnApplicationShutdown";
-import { Logger } from "./Logger";
+import { ModuleOptions } from "../ModuleOptions";
+import { OnApplicationShutdown } from "../OnApplicationShutdown";
+import { Logger } from "../Logger";
 
 class Database implements OnApplicationShutdown {
     private readonly logger: Logger = new Logger(Database.name);

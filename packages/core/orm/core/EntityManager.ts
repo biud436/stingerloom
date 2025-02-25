@@ -3,7 +3,7 @@ import { ClazzType, Logger, ReflectManager } from "@stingerloom/core/common";
 import { ColumnMetadata, EntityMetadata, EntityScanner } from "../scanner";
 import Container from "typedi";
 import { DatabaseClient } from "../DatabaseClient";
-import configService from "@stingerloom/core/common/ConfigService";
+// import configService from "@stingerloom/core/common/ConfigService";
 import { MySqlDriver } from "../dialects/mysql/MySqlDriver";
 import { ISqlDriver } from "../dialects/SqlDriver";
 import { INDEX_TOKEN, IndexMetadata } from "../decorators/Indexer";
@@ -27,6 +27,8 @@ import { EntityResult } from "../types/EntityResult";
 import { RawQueryBuilderFactory } from "./RawQueryBuilderFactory";
 import { Conditions } from "./Conditions";
 import { ResultTransformerFactory } from "./ResultTransformerFactory";
+import { DatabaseClientOptions } from "./DatabaseClientOptions";
+import { DATABASE_OPTION_TOKEN, DatabaseModule } from "../DatabaseModule";
 
 export class EntityManager implements BaseEntityManager {
     private _entities: ClazzType<any>[] = [];
@@ -51,17 +53,16 @@ export class EntityManager implements BaseEntityManager {
     public async connect() {
         const client = this.client;
 
-        const connector = await client.connect({
-            host: configService.get<string>("DB_HOST"),
-            port: configService.get<number>("DB_PORT"),
-            database: configService.get<string>("DB_NAME"),
-            password: configService.get<string>("DB_PASSWORD"),
-            username: configService.get<string>("DB_USER"),
-            type: "mysql",
-            entities: [],
-            logging: true,
-            synchronize: true,
-        });
+        const options = Reflect.getMetadata(
+            DATABASE_OPTION_TOKEN,
+            DatabaseModule,
+        ) as DatabaseClientOptions;
+
+        if (!options) {
+            throw new Error("Database options does not exist.");
+        }
+
+        const connector = await client.connect(options);
 
         switch (client.type as IDatabaseType) {
             case "mysql":
