@@ -310,11 +310,11 @@ describe("ResultTransformer", () => {
                 email!: string;
 
                 @Expose()
-                @ManyToOne(() => Address, (entity) => entity.users)
+                @ManyToOne(() => Address, (entity) => entity.users, {})
                 address!: Address;
 
-                @Expose()
-                @ManyToOne(() => Order, (entity) => entity.users)
+                // @Expose()
+                @ManyToOne(() => Order, (entity) => entity.users, {})
                 order!: Order;
             }
 

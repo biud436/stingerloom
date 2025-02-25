@@ -3,9 +3,15 @@ import { ClassConstructor } from "class-transformer";
 import type { QueryResult } from "../types/QueryResult";
 import { BaseResultTransformer } from "./BaseResultTransformer";
 import { deserializeEntity } from "./DeserializeEntity";
-import { MANY_TO_ONE_TOKEN } from "../decorators";
+import {
+    ENTITY_TOKEN,
+    MANY_TO_ONE_TOKEN,
+    ManyToOneMetadata,
+} from "../decorators";
 
 export class ResultTransformer implements BaseResultTransformer {
+    private static SEPERATOR = "_";
+
     /**
      * 쿼리 결과가 없는 경우를 확인합니다.
      *
@@ -31,17 +37,32 @@ export class ResultTransformer implements BaseResultTransformer {
         const enties = Object.entries(row);
 
         for (const [key, value] of enties) {
-            const isUnderScored = key.includes("_");
+            const isUnderScored = key.includes(ResultTransformer.SEPERATOR);
             if (!isUnderScored) {
                 baseEntity[key] = value;
             }
 
-            console.log("test metadata:", Reflect.get(entityClass, key));
+            const baseCls = Reflect.getMetadata(ENTITY_TOKEN, entityClass);
+            const propertyCls = Reflect.getMetadata(
+                MANY_TO_ONE_TOKEN,
+                entityClass,
+            ) as ManyToOneMetadata<T>[];
 
-            console.log(
-                "test metadata2:",
-                Reflect.getMetadata(MANY_TO_ONE_TOKEN, entityClass),
+            console.log("baseCls:", baseCls);
+            console.log("entityCls:", entityClass);
+            console.log("propertyCls:", propertyCls);
+            console.log("key:", key.split(ResultTransformer.SEPERATOR)[1]);
+
+            const isManyToOneColumn = propertyCls?.find(
+                (e) =>
+                    e.columnName === key.split(ResultTransformer.SEPERATOR)[1],
             );
+
+            if (isManyToOneColumn) {
+                console.log(
+                    `${key.split(ResultTransformer.SEPERATOR)[1]}는 ManyToOne 컬럼입니다`,
+                );
+            }
         }
     }
 
@@ -92,10 +113,11 @@ export class ResultTransformer implements BaseResultTransformer {
     }
 
     /**
-     * SQL 결과를 엔티티 또는 엔티티 배열로 변환합니다.
-     * 결과가 없으면 undefined를 반환하고,
-     * 결과가 하나면 단일 엔티티를,
-     * 결과가 여러 개면 엔티티 배열을 반환합니다.
+     * Transform SQL result to entity or entity array.
+     *
+     * @param entityClass
+     * @param result
+     * @returns
      */
     public transform<T>(
         entityClass: ClassConstructor<T>,
@@ -151,7 +173,7 @@ export class ResultTransformer implements BaseResultTransformer {
 
                 // 현재 관계에 해당하는 데이터 추출
                 const relationData = {} as any;
-                const propertyName = `${entityKey}_`;
+                const propertyName = `${entityKey}${ResultTransformer.SEPERATOR}`;
                 Object.entries(row)
                     .filter(([key]) => key.startsWith(propertyName))
                     .forEach(([key, value]) => {
