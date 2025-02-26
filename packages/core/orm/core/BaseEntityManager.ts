@@ -3,6 +3,7 @@ import { ClazzType } from "@stingerloom/core/common";
 import { FindOption } from "../dialects/FindOption";
 import { BaseRepository } from "./BaseRepository";
 import { EntityResult } from "../types/EntityResult";
+import { DatabaseClientOptions } from "./DatabaseClientOptions";
 
 export abstract class BaseEntityManager {
     /**
@@ -13,12 +14,16 @@ export abstract class BaseEntityManager {
      * 이 메서드는 애플리케이션이 시작될 때 한 번만 호출되어야 합니다.
      * RDBMS의 경우, 동기화를 위해 DDL 명령이 수행될 수 있으므로 주의가 필요합니다.
      */
-    abstract register(): Promise<void>;
+    abstract register(
+        databaseClientOptions: DatabaseClientOptions,
+    ): Promise<void>;
     /**
      * 데이터베이스에 연결합니다.
      * 가용할 데이터베이스 드라이버에 연결하고 데이터소스를 만듭니다.
      */
-    abstract connect(): Promise<void>;
+    abstract connect(
+        databaseClientOptions: DatabaseClientOptions,
+    ): Promise<void>;
     /**
      * 소멸자로 주로 메모리 해제 작업을 수행합니다.
      * 서버가 어떠한 이유로 인해 종료될 때 호출됩니다.

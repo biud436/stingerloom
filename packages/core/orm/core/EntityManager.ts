@@ -27,7 +27,8 @@ import { EntityResult } from "../types/EntityResult";
 import { RawQueryBuilderFactory } from "./RawQueryBuilderFactory";
 import { Conditions } from "./Conditions";
 import { ResultTransformerFactory } from "./ResultTransformerFactory";
-import configService from "@stingerloom/core/common/ConfigService";
+// import configService from "@stingerloom/core/common/ConfigService";
+import { DatabaseClientOptions } from "./DatabaseClientOptions";
 // import { DatabaseClientOptions } from "./DatabaseClientOptions";
 // import { DATABASE_OPTION_TOKEN, DatabaseModule } from "../DatabaseModule";
 
@@ -38,8 +39,8 @@ export class EntityManager implements BaseEntityManager {
     private dataSource?: IDataSource;
     private dirtyEntities: Set<InstanceType<ClazzType<any>>> = new Set();
 
-    public async register() {
-        await this.connect();
+    public async register(databaseClientOptions: DatabaseClientOptions) {
+        await this.connect(databaseClientOptions);
         await this.registerEntities();
     }
 
@@ -51,32 +52,9 @@ export class EntityManager implements BaseEntityManager {
         return this.client.getConnection();
     }
 
-    public async connect() {
+    public async connect(databaseClientOptions: DatabaseClientOptions) {
         const client = this.client;
-
-        // const options = () =>
-        //     Reflect.getMetadata(
-        //         DATABASE_OPTION_TOKEN,
-        //         DatabaseModule,
-        //     ) as DatabaseClientOptions;
-
-        // if (!options()) {
-        //     throw new Error("Database options does not exist.");
-        // }
-
-        // const connector = await client.connect(options);
-
-        const connector = await client.connect({
-            host: configService.get<string>("DB_HOST"),
-            port: configService.get<number>("DB_PORT"),
-            database: configService.get<string>("DB_NAME"),
-            password: configService.get<string>("DB_PASSWORD"),
-            username: configService.get<string>("DB_USER"),
-            type: "mysql",
-            entities: [],
-            logging: true,
-            synchronize: true,
-        });
+        const connector = await client.connect(databaseClientOptions);
 
         switch (client.type as IDatabaseType) {
             case "mysql":

@@ -65,8 +65,16 @@ export class DatabaseService implements OnModuleInit {
     }
 
     private async registerEntities() {
-        console.log("registerEntities");
-        await this.entityManager.register();
+        const options = Reflect.getMetadata(
+            DATABASE_OPTION_TOKEN,
+            DatabaseModule,
+        ) as DatabaseClientOptions;
+
+        if (!options) {
+            throw new Error("Database configuration is required.");
+        }
+
+        await this.entityManager.register(options);
     }
 
     private async propagateShutdown() {
