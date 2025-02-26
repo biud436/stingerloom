@@ -27,10 +27,7 @@ import { EntityResult } from "../types/EntityResult";
 import { RawQueryBuilderFactory } from "./RawQueryBuilderFactory";
 import { Conditions } from "./Conditions";
 import { ResultTransformerFactory } from "./ResultTransformerFactory";
-// import configService from "@stingerloom/core/common/ConfigService";
 import { DatabaseClientOptions } from "./DatabaseClientOptions";
-// import { DatabaseClientOptions } from "./DatabaseClientOptions";
-// import { DATABASE_OPTION_TOKEN, DatabaseModule } from "../DatabaseModule";
 
 export class EntityManager implements BaseEntityManager {
     private _entities: ClazzType<any>[] = [];
