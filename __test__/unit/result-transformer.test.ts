@@ -5,6 +5,19 @@ import { Column, Entity, ManyToOne } from "@stingerloom/core/orm/decorators";
 import { QueryResult } from "@stingerloom/core/orm/types";
 import { ResultTransformerFactory } from "@stingerloom/core/orm/core";
 
+/**
+ * 컬럼 별칭 전략:*
+ * 점 표기법 (Sequelize): Posts.Comments.id
+ * 언더스코어 경로 (TypeORM): user_posts_comments_id
+ * 숫자 식별자 (Hibernate): id1_0_0_
+ * 테이블 별칭과 컬럼명 결합 (SQLAlchemy): comments_1_id
+ *
+ * 로딩 전략:
+ *
+ * 단일 대형 조인 쿼리 (Hibernate, SQLAlchemy, Entity Framework)
+ * 여러 개별 쿼리 (Django, Prisma)
+ **/
+
 describe("ResultTransformer", () => {
     @Entity()
     class PostComment {
