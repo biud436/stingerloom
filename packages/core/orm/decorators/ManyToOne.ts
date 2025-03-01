@@ -55,8 +55,6 @@ export function ManyToOne<T extends EntityLike>(
     option?: ManyToOneOption,
 ): PropertyDecorator {
     return (target, propertyKey) => {
-        // const mappedEntity = getMappingEntity();
-
         const cls = target.constructor;
 
         const injectParam = ReflectManager.getType<any>(cls, propertyKey);
@@ -65,16 +63,12 @@ export function ManyToOne<T extends EntityLike>(
         const metadata = <ManyToOneMetadata<T>>{
             target: cls,
             type: injectParam,
-            columnName, // 조인 컬럼이 필요... 이건 productId가 되어야 하는데, product가 되어버림...
+            columnName,
             joinColumn: option?.joinColumn,
             getMappingEntity,
             getMappingProperty,
             option,
         };
-
-        // console.log("target:", target.constructor);
-        // console.log("entityTarget:", entityTarget);
-        // console.log("propertyTarget", mappedEntity);
 
         const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, cls);
 
@@ -83,7 +77,5 @@ export function ManyToOne<T extends EntityLike>(
             [...(columns || []), metadata],
             cls,
         );
-
-        // 스캐너가 따로 있어야 할까?
     };
 }
