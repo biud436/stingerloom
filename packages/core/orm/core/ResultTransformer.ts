@@ -228,21 +228,8 @@ export class ResultTransformer implements BaseResultTransformer {
         const transformedResults = r.results.map<any>((row) => {
             const baseEntity: { [key: string]: any } = {};
 
-            // * ---------------------------------------------
-            // * 기본 로직 구성 *
-            // * ---------------------------------------------
-            // 1. 코어 엔티티에서 기본적인 속성을 추출한다.
-            // 2. 엔티티에 필요한 외래키 오브젝트를 만든다.
-            // 3. 외래키 오브젝트에 키/값을 채워넣는다.
-            // 4. 코어 엔티티에 외래키 오브젝트를 추가한다.
-            //
-            // (5. 외래키가 없을 때까지 2-4를 재귀적으로 반복한다)
-            // * ---------------------------------------------
-
-            // ! 1. 코어 엔티티에서 기본적인 속성을 추출한다.
             this.extractBaseEntity(entityClass, row, baseEntity);
 
-            // ! 2. 엔티티에 필요한 외래키 오브젝트를 만든다.
             const finalEntity = this.fillPropertiesToForeignObject(
                 entityClass,
                 baseEntity,
