@@ -1,5 +1,7 @@
 import "reflect-metadata";
 import { ClazzType, ReflectManager } from "@stingerloom/core/common";
+import Container from "typedi";
+import { ManyToOneScanner } from "../scanner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const MANY_TO_ONE_TOKEN = Symbol.for("MANY_TO_ONE");
@@ -61,6 +63,8 @@ export function ManyToOne<T extends EntityLike>(
 
         const injectParam = ReflectManager.getType<any>(cls, propertyKey);
 
+        const scanner = Container.get(ManyToOneScanner);
+
         const columnName = propertyKey.toString();
         const metadata = <ManyToOneMetadata<T>>{
             target: cls,
@@ -72,10 +76,6 @@ export function ManyToOne<T extends EntityLike>(
             option,
         };
 
-        // console.log("target:", target.constructor);
-        // console.log("entityTarget:", entityTarget);
-        // console.log("propertyTarget", mappedEntity);
-
         const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, cls);
 
         Reflect.defineMetadata(
@@ -84,6 +84,7 @@ export function ManyToOne<T extends EntityLike>(
             cls,
         );
 
-        // 스캐너가 따로 있어야 할까?
+        const uniqueKey = scanner.createUniqueKey();
+        scanner.set<ManyToOneMetadata<T>>(uniqueKey, metadata);
     };
 }
