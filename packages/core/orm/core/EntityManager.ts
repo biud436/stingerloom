@@ -116,7 +116,6 @@ export class EntityManager implements BaseEntityManager {
                 // DB에 테이블이 존재하지 않으면 새로운 테이블을 생성합니다.
                 const hasTable = await this.driver?.hasTable(tableName);
                 if (!hasTable || hasTable.length === 0) {
-                    // TODO: TargetEntity.name에 직접 접근하지 말고, 전략에 따라 접근해야 합니다.
                     await this.driver?.createTable(tableName, metadata.columns);
                 }
 

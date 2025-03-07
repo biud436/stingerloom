@@ -97,8 +97,6 @@ describe("ORM Entity 외래키 생성 테스트", () => {
                 take: 1,
             });
 
-            console.log((products as any).id);
-
             const orderRepository = this.entityManager.getRepository(Order);
 
             const order = new Order();
