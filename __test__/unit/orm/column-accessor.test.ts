@@ -35,6 +35,15 @@ describe("Column Accessor", () => {
         @Expose()
         title!: string;
 
+        @Column({
+            type: "int",
+            name: "user_id",
+            length: 11,
+            nullable: false,
+        })
+        @Expose()
+        userId!: number;
+
         @ManyToOne(() => User, (entity) => entity.posts, {
             joinColumn: "user_id",
         })
@@ -75,13 +84,14 @@ describe("Column Accessor", () => {
     it("Post의 user 컬럼과 User 타입인지 확인한다. 또한 조인 컬럼이 user_id인지 확인한다.", () => {
         const metadata = entityScanner.scan(Post) as EntityMetadata<Post>;
 
-        const { manyToOnes } = metadata;
+        const { manyToOnes, columns } = metadata;
 
+        const userIdColumn = columns.find((c) => c.name === "user_id");
         const userColumn = manyToOnes?.find((c) => c.columnName === "user");
 
         expect(userColumn).toBeDefined();
 
         expect(userColumn?.getMappingEntity()).toBe(User);
-        expect(userColumn?.joinColumn).toBe("user_id");
+        expect(userColumn?.joinColumn).toBe(userIdColumn?.name);
     });
 });
