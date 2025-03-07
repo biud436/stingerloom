@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "typedi";
-import { ColumnScanner, EntityScanner } from "../scanner";
+import { ColumnScanner, EntityScanner, ManyToOneScanner } from "../scanner";
 import { createEntityKey } from "@stingerloom/core/utils";
+import { ColumnOption } from "./Column";
+import { ClazzType } from "@stingerloom/core/common";
+import { ManyToOneMetadata } from "./ManyToOne";
 
 export interface EntityOption {
     name?: string;
@@ -9,14 +12,23 @@ export interface EntityOption {
 
 export const ENTITY_TOKEN = Symbol.for("ENTITY");
 
-function camelToSnakeCase(str: string): string {
+export function camelToSnakeCase(str: string): string {
     return str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
 }
+
+export type EntityMetadata<T = any> = {
+    target: ClazzType<T>;
+    name: string;
+    columns: ColumnOption[];
+    manyToOnes?: ManyToOneMetadata<unknown>[];
+    options?: EntityOption;
+};
 
 export function Entity(options?: EntityOption): ClassDecorator {
     return function (target) {
         const scanner = Container.get(EntityScanner);
         const columnScanner = Container.get(ColumnScanner);
+        const manyToOneScanner = Container.get(ManyToOneScanner);
 
         const nameKey = camelToSnakeCase(target.name);
         const name = createEntityKey(nameKey, scanner);
@@ -24,6 +36,7 @@ export function Entity(options?: EntityOption): ClassDecorator {
         const metadata = {
             target,
             columns: columnScanner.allMetadata(),
+            manyToOnes: manyToOneScanner.allMetadata(),
             options,
             name: nameKey,
         };
