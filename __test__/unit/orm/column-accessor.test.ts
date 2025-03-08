@@ -94,4 +94,16 @@ describe("Column Accessor", () => {
         expect(userColumn?.getMappingEntity()).toBe(User);
         expect(userColumn?.joinColumn).toBe(userIdColumn?.name);
     });
+
+    it("User의 posts 컬럼과 Post 타입인지 확인한다.", () => {
+        const metadata = entityScanner.scan(User) as EntityMetadata<User>;
+
+        const { columns } = metadata;
+
+        const postsColumn = columns.find((c) => c.name === "posts");
+
+        expect(postsColumn).toBeDefined();
+
+        expect(postsColumn?.type).toBe(Array);
+    });
 });
