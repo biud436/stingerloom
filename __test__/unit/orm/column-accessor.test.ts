@@ -105,5 +105,7 @@ describe("Column Accessor", () => {
         expect(postsColumn).toBeDefined();
 
         expect(postsColumn?.type).toBe(Array);
+
+        expect(postsColumn?.length).toBe(undefined);
     });
 });
