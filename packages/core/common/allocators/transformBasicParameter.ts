@@ -18,41 +18,37 @@ import { EntityManager } from "@stingerloom/core/orm/core";
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 export const transformBasicParameter = (
-    target: any,
-    injector?: any,
-    index?: number,
+  target: any,
+  injector?: any,
+  index?: number,
 ) => {
-    const instanceScanner = Container.get(InstanceScanner);
+  const instanceScanner = Container.get(InstanceScanner);
 
-    if (ReflectManager.isRepository(target)) {
-        const database = instanceScanner.get(Database) as Database;
-        const entity = ReflectManager.getRepositoryEntity(
-            target,
-            injector,
-            index,
-        );
+  if (ReflectManager.isRepository(target)) {
+    const database = instanceScanner.get(Database) as Database;
+    const entity = ReflectManager.getRepositoryEntity(target, injector, index);
 
-        const repository = database.getRepository(entity);
+    const repository = database.getRepository(entity);
 
-        return repository;
-    } else if (target === DataSource) {
-        const database = instanceScanner.get(Database) as Database;
-        return database.getDataSource();
-    } else if (ReflectManager.isEntityManager(target)) {
-        const entityManager = instanceScanner.get(EntityManager);
-        return entityManager;
-    } else if (ReflectManager.isInjectable(target)) {
-        const injectable = instanceScanner.get(target);
+    return repository;
+  } else if (target === DataSource) {
+    const database = instanceScanner.get(Database) as Database;
+    return database.getDataSource();
+  } else if (ReflectManager.isEntityManager(target)) {
+    const entityManager = instanceScanner.get(EntityManager);
+    return entityManager;
+  } else if (ReflectManager.isInjectable(target)) {
+    const injectable = instanceScanner.get(target);
 
-        // 순황 의존성 참조가 발생하는 경우 에러를 발생시킵니다.
-        if (!injectable) {
-            throw new BadRequestException(
-                `Cannot create an instance of ${target.name}. Please check for circular dependencies or double-check the module loading order.`,
-            );
-        }
-
-        return injectable;
+    // 순황 의존성 참조가 발생하는 경우 에러를 발생시킵니다.
+    if (!injectable) {
+      throw new BadRequestException(
+        `Cannot create an instance of ${target.name}. Please check for circular dependencies or double-check the module loading order.`,
+      );
     }
 
-    return target;
+    return injectable;
+  }
+
+  return target;
 };

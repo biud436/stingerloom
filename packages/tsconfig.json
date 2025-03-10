@@ -1,14 +1,14 @@
 {
-    "files": [],
-    "references": [
-        {
-            "path": "./compiler/tsconfig.json"
-        },
-        {
-            "path": "./core/tsconfig.json"
-        },
-        {
-            "path": "./create-stingerloom/tsconfig.json"
-        }
-    ]
+  "files": [],
+  "references": [
+    {
+      "path": "./compiler/tsconfig.json"
+    },
+    {
+      "path": "./core/tsconfig.json"
+    },
+    {
+      "path": "./create-stingerloom/tsconfig.json"
+    }
+  ]
 }

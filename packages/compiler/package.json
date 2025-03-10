@@ -1,29 +1,29 @@
 {
-    "name": "@stingerloom/compiler",
-    "version": "1.0.15",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "typescript": "^5.5.4"
-    },
-    "devDependencies": {
-        "@types/node": "^20.4.8"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/biud436/stingerloom",
-        "directory": "packages/compiler"
-    },
-    "scripts": {
-        "build:tsc": "rimraf dist && tsc",
-        "build:webpack": "webpack",
-        "build": "npm run build:tsc",
-        "prepublish": "npm run build"
-    },
-    "main": "index.js",
-    "types": "index.d.ts",
-    "publishConfig": {
-        "access": "public"
-    },
-    "gitHead": "8e527c4b649ad71e9cadb9b5b479116d356a073c"
+  "name": "@stingerloom/compiler",
+  "version": "1.0.15",
+  "author": "biud436 <biud436@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/biud436/stingerloom",
+    "directory": "packages/compiler"
+  },
+  "scripts": {
+    "build:tsc": "rimraf dist && tsc",
+    "build:webpack": "webpack",
+    "build": "npm run build:tsc",
+    "prepublish": "npm run build"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "8e527c4b649ad71e9cadb9b5b479116d356a073c"
 }

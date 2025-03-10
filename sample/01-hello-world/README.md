@@ -8,27 +8,27 @@ This sample project demonstrates how to build a simple web server using the Stin
 2. Open a terminal and navigate to the project root directory.
 3. Run the following command to install the required dependencies:
 
-    ```sh
-    npm install
-    ```
+   ```sh
+   npm install
+   ```
 
-    or
+   or
 
-    ```sh
-    yarn install
-    ```
+   ```sh
+   yarn install
+   ```
 
 4. Run the following command to launch the project:
 
-    ```sh
-    npm run start:dev
-    ```
+   ```sh
+   npm run start:dev
+   ```
 
-    or
+   or
 
-    ```sh
-    yarn start:dev
-    ```
+   ```sh
+   yarn start:dev
+   ```
 
 ## Running docker-compose.yml
 
@@ -36,28 +36,28 @@ This sample project demonstrates how to build a simple web server using the Stin
 2. Open a terminal and navigate to the directory containing the `docker-compose.yml` file.
 3. Run the following command to start Docker Compose:
 
-    ```sh
-    docker compose up -d
-    ```
+   ```sh
+   docker compose up -d
+   ```
 
 ## Creating the .env File
 
 1. In the project root directory, create a `.env` file by referring to the `.env.example` file.
 2. Define the environment variables and their values in the following format:
 
-    ```env
-    VARIABLE_NAME=value
-    ```
+   ```env
+   VARIABLE_NAME=value
+   ```
 
-    For example:
+   For example:
 
-    ```env
-     SERVER_PORT=3002
-     DB_HOST=localhost
-     DB_PORT=3306
-     DB_NAME=test
-     DB_USER=root
-     DB_PASSWORD=test1234
-     SESSION_SECRET=1234567890
-     COOKIE_SECRET=1234567890
-    ```
+   ```env
+    SERVER_PORT=3002
+    DB_HOST=localhost
+    DB_PORT=3306
+    DB_NAME=test
+    DB_USER=root
+    DB_PASSWORD=test1234
+    SESSION_SECRET=1234567890
+    COOKIE_SECRET=1234567890
+   ```

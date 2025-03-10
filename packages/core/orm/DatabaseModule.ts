@@ -5,16 +5,16 @@ import { DatabaseService } from "./DatabaseService";
 export const DATABASE_OPTION_TOKEN = Symbol.for("DATABASE_OPTION_TOKEN");
 
 @Module({
-    controllers: [],
-    providers: [],
+  controllers: [],
+  providers: [],
 })
 export class DatabaseModule {
-    static forRoot(options: DatabaseClientOptions) {
-        Reflect.defineMetadata(DATABASE_OPTION_TOKEN, options, DatabaseModule);
+  static forRoot(options: DatabaseClientOptions) {
+    Reflect.defineMetadata(DATABASE_OPTION_TOKEN, options, DatabaseModule);
 
-        return <DynamicModuleOption>{
-            controllers: [],
-            providers: [DatabaseService],
-        };
-    }
+    return <DynamicModuleOption>{
+      controllers: [],
+      providers: [DatabaseService],
+    };
+  }
 }

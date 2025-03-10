@@ -1,3 +1,3 @@
 export interface Filter<T = unknown> {
-    catch: (error: unknown) => T;
+  catch: (error: unknown) => T;
 }

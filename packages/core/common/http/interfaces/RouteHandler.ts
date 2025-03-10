@@ -7,6 +7,6 @@ import { HttpResponse } from "./HttpResponse";
  * 요청을 받아서 응답을 생성하는 함수
  */
 export type RouteHandler = (
-    request: HttpRequest,
-    response: HttpResponse,
+  request: HttpRequest,
+  response: HttpResponse,
 ) => Promise<any>;

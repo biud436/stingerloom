@@ -7,12 +7,12 @@ import { HttpHandler } from "../types";
  */
 
 export interface HttpRoute {
-    /** 라우트의 URL 경로 */
-    path: string;
-    /** HTTP 메서드 (GET, POST 등) */
-    method: HttpMethod;
-    /** 요청을 처리할 핸들러 함수 */
-    handler: HttpHandler;
-    /** 미들웨어 함수들의 배열 (옵션) */
-    middleware?: Middleware[];
+  /** 라우트의 URL 경로 */
+  path: string;
+  /** HTTP 메서드 (GET, POST 등) */
+  method: HttpMethod;
+  /** 요청을 처리할 핸들러 함수 */
+  handler: HttpHandler;
+  /** 미들웨어 함수들의 배열 (옵션) */
+  middleware?: Middleware[];
 }

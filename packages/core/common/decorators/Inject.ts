@@ -4,9 +4,9 @@ import { ClazzType } from "../RouterMapper";
 
 export const INJECT_TOKEN = Symbol.for("inject");
 export interface InjectMetadata {
-    token?: string;
-    target: ClazzType<any>;
-    prototype: any;
+  token?: string;
+  target: ClazzType<any>;
+  prototype: any;
 }
 
 /**
@@ -17,23 +17,23 @@ export interface InjectMetadata {
  * @returns
  */
 export function Inject(token?: string): ParameterDecorator {
-    return (target, _propertyKey, index) => {
-        const params = ReflectManager.getParamTypes(target) || [];
-        const injectParam = params[index] as ClazzType<any>;
+  return (target, _propertyKey, index) => {
+    const params = ReflectManager.getParamTypes(target) || [];
+    const injectParam = params[index] as ClazzType<any>;
 
-        // Create a new inject metadata.
-        const metadata = <InjectMetadata>{
-            token,
-            target,
-            prototype: injectParam.prototype,
-        };
-
-        const storage = Reflect.getMetadata(token, injectParam.prototype);
-
-        Reflect.defineMetadata(
-            token,
-            [...(storage || []), metadata],
-            injectParam.prototype,
-        );
+    // Create a new inject metadata.
+    const metadata = <InjectMetadata>{
+      token,
+      target,
+      prototype: injectParam.prototype,
     };
+
+    const storage = Reflect.getMetadata(token, injectParam.prototype);
+
+    Reflect.defineMetadata(
+      token,
+      [...(storage || []), metadata],
+      injectParam.prototype,
+    );
+  };
 }

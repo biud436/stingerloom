@@ -1,7 +1,7 @@
 export type HttpMethod =
-    | "get"
-    | "post"
-    | "patch"
-    | "put"
-    | "delete"
-    | "options";
+  | "get"
+  | "post"
+  | "patch"
+  | "put"
+  | "delete"
+  | "options";

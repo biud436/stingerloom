@@ -1,17 +1,17 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": ".",
-        "rootDir": "./",
-        "declaration": true,
-        "preserveConstEnums": true,
-        "paths": {
-            "@stingerloom/core": ["../core"],
-            "@stingerloom/core/*": ["../core/*"]
-        },
-        "composite": true /* Enable project references */
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": ".",
+    "rootDir": "./",
+    "declaration": true,
+    "preserveConstEnums": true,
+    "paths": {
+      "@stingerloom/core": ["../core"],
+      "@stingerloom/core/*": ["../core/*"]
     },
-    "include": ["*.ts", "**/*.ts"],
-    "exclude": ["dist", "node_modules", "types"]
+    "composite": true /* Enable project references */
+  },
+  "include": ["*.ts", "**/*.ts"],
+  "exclude": ["dist", "node_modules", "types"]
 }

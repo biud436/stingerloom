@@ -6,7 +6,7 @@ import { Injectable } from "@stingerloom/common";
 
 @Injectable()
 export class <%=Name%>Service {
-    public async get<%=Name%>() {
-        return "hello";
-    }
+  public async get<%=Name%>() {
+    return "hello";
+  }
 }

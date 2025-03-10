@@ -11,7 +11,7 @@ import { OnModuleInit } from "./OnModuleInit";
  */
 @Injectable()
 export class EventService extends EventEmitter implements OnModuleInit {
-    async onModuleInit(): Promise<void> {
-        this.emit("init");
-    }
+  async onModuleInit(): Promise<void> {
+    this.emit("init");
+  }
 }

@@ -8,36 +8,36 @@ import { Response } from "express";
  * 메서드 체이닝을 사용하여 상태를 갱신하도록 해야 합니다.
  */
 export class ExpressResponseAdapter implements HttpResponse {
-    constructor(private expressResponse: Response) {}
+  constructor(private expressResponse: Response) {}
 
-    private chaining(response: Response): this {
-        this.expressResponse = response;
-        return this;
-    }
+  private chaining(response: Response): this {
+    this.expressResponse = response;
+    return this;
+  }
 
-    status(code: number): this {
-        this.chaining(this.expressResponse.status(code));
-        return this;
-    }
+  status(code: number): this {
+    this.chaining(this.expressResponse.status(code));
+    return this;
+  }
 
-    send(body: any): void {
-        // send()는 체이닝의 끝점이므로 void 반환 타입 적절
-        this.expressResponse.send(body);
-    }
+  send(body: any): void {
+    // send()는 체이닝의 끝점이므로 void 반환 타입 적절
+    this.expressResponse.send(body);
+  }
 
-    json(body: any): void {
-        // json()도 체이닝의 끝점
-        this.expressResponse.json(body);
-    }
+  json(body: any): void {
+    // json()도 체이닝의 끝점
+    this.expressResponse.json(body);
+  }
 
-    setHeader(name: string, value: string | number | string[]): this {
-        this.chaining(this.expressResponse.setHeader(name, value));
-        return this;
-    }
+  setHeader(name: string, value: string | number | string[]): this {
+    this.chaining(this.expressResponse.setHeader(name, value));
+    return this;
+  }
 
-    view(path: string, data?: Record<string, any>): void {
-        if (typeof this.expressResponse.render === "function") {
-            this.expressResponse.render(path, data);
-        }
+  view(path: string, data?: Record<string, any>): void {
+    if (typeof this.expressResponse.render === "function") {
+      this.expressResponse.render(path, data);
     }
+  }
 }

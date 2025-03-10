@@ -1,59 +1,59 @@
 {
-    "name": "@stingerloom/core",
-    "version": "1.1.0",
-    "author": "biud436 <biud436@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "@fastify/cookie": "^11.0.2",
-        "@fastify/formbody": "^7.4.0",
-        "@fastify/passport": "^2.4.0",
-        "@fastify/session": "^11.0.2",
-        "@fastify/view": "^8.2.0",
-        "chalk": "^4",
-        "class-transformer": "^0.5.1",
-        "class-validator": "^0.14.0",
-        "cookie-parser": "^1.4.7",
-        "dotenv": "^16.3.1",
-        "express": "^4.21.2",
-        "express-session": "^1.18.1",
-        "fastify": "^5.2.1",
-        "handlebars": "^4.7.8",
-        "http-status": "^2.0.0",
-        "mysql2": "^3.9.3",
-        "reflect-metadata": "^0.2.2",
-        "sql-template-tag": "^4",
-        "typedi": "^0.10.0",
-        "typeorm": "^0.3.20",
-        "typeorm-naming-strategies": "^4.1.0",
-        "uuid": "^9.0.1"
-    },
-    "devDependencies": {
-        "@types/cookie-parser": "^1",
-        "@types/express": "^4",
-        "@types/express-session": "^1",
-        "@types/mysql": "^2.15.26",
-        "@types/node": "^20.4.8",
-        "rimraf": "^6.0.1",
-        "ts-loader": "^9.5.1",
-        "typescript": "^5.6.2",
-        "webpack": "^5.95.0",
-        "webpack-cli": "^5.1.4"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/biud436/stingerloom",
-        "directory": "packages/core"
-    },
-    "scripts": {
-        "build:tsc": "rimraf dist && tsc",
-        "build:webpack": "webpack",
-        "build": "npm run build:tsc",
-        "prepublishOnly": "npm run build"
-    },
-    "main": "index.js",
-    "types": "index.d.ts",
-    "publishConfig": {
-        "access": "public"
-    },
-    "gitHead": "94d2a48b1350437dbb7f851b712636264931c243"
+  "name": "@stingerloom/core",
+  "version": "1.1.0",
+  "author": "biud436 <biud436@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/passport": "^2.4.0",
+    "@fastify/session": "^11.0.2",
+    "@fastify/view": "^8.2.0",
+    "chalk": "^4",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.3.1",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "fastify": "^5.2.1",
+    "handlebars": "^4.7.8",
+    "http-status": "^2.0.0",
+    "mysql2": "^3.9.3",
+    "reflect-metadata": "^0.2.2",
+    "sql-template-tag": "^4",
+    "typedi": "^0.10.0",
+    "typeorm": "^0.3.20",
+    "typeorm-naming-strategies": "^4.1.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1",
+    "@types/express": "^4",
+    "@types/express-session": "^1",
+    "@types/mysql": "^2.15.26",
+    "@types/node": "^20.4.8",
+    "rimraf": "^6.0.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.6.2",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/biud436/stingerloom",
+    "directory": "packages/core"
+  },
+  "scripts": {
+    "build:tsc": "rimraf dist && tsc",
+    "build:webpack": "webpack",
+    "build": "npm run build:tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "94d2a48b1350437dbb7f851b712636264931c243"
 }

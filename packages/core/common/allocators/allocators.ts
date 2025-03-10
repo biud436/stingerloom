@@ -3,5 +3,5 @@ import { getDefaultAllocator } from "./getDefaultAllocator";
 import { ParameterAllocator } from "../ParameterListManager";
 
 export const allocators: [string, ParameterAllocator][] = [
-    ["default", getDefaultAllocator],
+  ["default", getDefaultAllocator],
 ];

@@ -5,27 +5,27 @@ import { ClazzType } from "@stingerloom/core/common";
 import { Service } from "typedi";
 
 export type EntityMetadata = {
-    target: ClazzType<any>;
-    name?: string;
-    columns: any[];
-    indexes?: any[];
+  target: ClazzType<any>;
+  name?: string;
+  columns: any[];
+  indexes?: any[];
 };
 
 @Service()
 export class EntityScanner extends MetadataScanner {
-    public *makeEntities(): IterableIterator<EntityMetadata> {
-        for (const [_, value] of this.mapper) {
-            yield value;
-        }
+  public *makeEntities(): IterableIterator<EntityMetadata> {
+    for (const [_, value] of this.mapper) {
+      yield value;
+    }
+  }
+
+  public scan(target: ClazzType<unknown>): EntityMetadata | null {
+    for (const [_, value] of this.mapper) {
+      if (value.target === target) {
+        return value;
+      }
     }
 
-    public scan(target: ClazzType<unknown>): EntityMetadata | null {
-        for (const [_, value] of this.mapper) {
-            if (value.target === target) {
-                return value;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

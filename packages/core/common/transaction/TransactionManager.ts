@@ -4,14 +4,14 @@ import { ClazzType } from "../RouterMapper";
 import { ReflectManager } from "../ReflectManager";
 import Database from "../database/DatabaseV1";
 import {
-    AFTER_TRANSACTION_TOKEN,
-    BEFORE_TRANSACTION_TOKEN,
-    DEFAULT_ISOLATION_LEVEL,
-    TRANSACTION_COMMIT_TOKEN,
-    TRANSACTION_ENTITY_MANAGER,
-    TRANSACTION_ISOLATE_LEVEL,
-    TRANSACTION_ROLLBACK_TOKEN,
-    TransactionIsolationLevel,
+  AFTER_TRANSACTION_TOKEN,
+  BEFORE_TRANSACTION_TOKEN,
+  DEFAULT_ISOLATION_LEVEL,
+  TRANSACTION_COMMIT_TOKEN,
+  TRANSACTION_ENTITY_MANAGER,
+  TRANSACTION_ISOLATE_LEVEL,
+  TRANSACTION_ROLLBACK_TOKEN,
+  TransactionIsolationLevel,
 } from "../decorators";
 
 import { InternalServerException } from "@stingerloom/core/error";
@@ -28,25 +28,25 @@ export const TRANSACTION_MANAGER_SYMBOL = Symbol("TRANSACTION_MANAGER");
  * @class TransactionManager
  */
 export class TransactionManager {
-    private static LOGGER = new Logger(TransactionManager.name);
-    private static txManagerConsumer = new TransactionEntityManagerConsumer();
-    private static txQueryRunnerConsumer = new TransactionQueryRunnerConsumer();
+  private static LOGGER = new Logger(TransactionManager.name);
+  private static txManagerConsumer = new TransactionEntityManagerConsumer();
+  private static txQueryRunnerConsumer = new TransactionQueryRunnerConsumer();
 
-    public static async checkTransactionalZone(
-        TargetInjectable: ClazzType<any>,
-        targetInjectable: InstanceType<any>,
-        instanceScanner: InstanceScanner,
-    ) {
-        if (ReflectManager.isTransactionalZone(TargetInjectable)) {
-            const store = this.createStore(targetInjectable);
-            const methods = store.methods;
+  public static async checkTransactionalZone(
+    TargetInjectable: ClazzType<any>,
+    targetInjectable: InstanceType<any>,
+    instanceScanner: InstanceScanner,
+  ) {
+    if (ReflectManager.isTransactionalZone(TargetInjectable)) {
+      const store = this.createStore(targetInjectable);
+      const methods = store.methods;
 
-            // 모든 메소드를 순회합니다.
-            for (const method of methods) {
-                const database = instanceScanner.get(Database) as Database;
+      // 모든 메소드를 순회합니다.
+      for (const method of methods) {
+        const database = instanceScanner.get(Database) as Database;
 
-                // prettier-ignore
-                if (ReflectManager.isTransactionalZoneMethod(targetInjectable, method)) {
+        // prettier-ignore
+        if (ReflectManager.isTransactionalZoneMethod(targetInjectable, method)) {
                     const wrapTransaction = () => {
 
                         const originalMethod = targetInjectable[method as any];
@@ -119,39 +119,39 @@ export class TransactionManager {
                         );
                     }
                 }
-            }
-        }
+      }
     }
+  }
 
-    private static getPrototypeMethods() {
-        return (obj: any): string[] => {
-            const properties = new Set<string>();
-            let currentObj = obj;
-            do {
-                Object.getOwnPropertyNames(currentObj).map((item) =>
-                    properties.add(item),
-                );
+  private static getPrototypeMethods() {
+    return (obj: any): string[] => {
+      const properties = new Set<string>();
+      let currentObj = obj;
+      do {
+        Object.getOwnPropertyNames(currentObj).map((item) =>
+          properties.add(item),
+        );
 
-                currentObj = Object.getPrototypeOf(currentObj);
-            } while (
-                Object.getPrototypeOf(currentObj) &&
-                Object.getPrototypeOf(currentObj) !== null
-            );
+        currentObj = Object.getPrototypeOf(currentObj);
+      } while (
+        Object.getPrototypeOf(currentObj) &&
+        Object.getPrototypeOf(currentObj) !== null
+      );
 
-            return [...properties.keys()].filter(
-                (item) => typeof obj[item as any] === "function",
-            );
-        };
-    }
+      return [...properties.keys()].filter(
+        (item) => typeof obj[item as any] === "function",
+      );
+    };
+  }
 
-    private static createStore(
-        targetInjectable: InstanceType<any>,
-    ): TransactionStore {
-        const store: ITransactionStore = {};
-        const getPrototypeMethods = TransactionManager.getPrototypeMethods();
+  private static createStore(
+    targetInjectable: InstanceType<any>,
+  ): TransactionStore {
+    const store: ITransactionStore = {};
+    const getPrototypeMethods = TransactionManager.getPrototypeMethods();
 
-        // prettier-ignore
-        for (const method of getPrototypeMethods(targetInjectable)) {
+    // prettier-ignore
+    for (const method of getPrototypeMethods(targetInjectable)) {
             if (ReflectManager.isBeforeTransactionMethod(targetInjectable, method)) {
                 store[BEFORE_TRANSACTION_TOKEN] = method;
             } else if (ReflectManager.isAfterTransactionMethod(targetInjectable, method)) {
@@ -163,46 +163,43 @@ export class TransactionManager {
             }
         }
 
-        return new TransactionStore(
-            store,
-            getPrototypeMethods(targetInjectable),
-            uuidv4(),
-        );
-    }
+    return new TransactionStore(
+      store,
+      getPrototypeMethods(targetInjectable),
+      uuidv4(),
+    );
+  }
 
-    /**
-     * 트랜잭션 엔티티 매니저가 필요한 지 여부를 확인합니다.
-     *
-     * @param targetInjectable
-     * @param method
-     * @returns
-     */
-    private static getTxManager(
-        targetInjectable: any,
-        method: string,
-    ): boolean {
-        return Reflect.getMetadata(
-            TRANSACTION_ENTITY_MANAGER,
-            targetInjectable,
-            method as any,
-        ) as boolean;
-    }
+  /**
+   * 트랜잭션 엔티티 매니저가 필요한 지 여부를 확인합니다.
+   *
+   * @param targetInjectable
+   * @param method
+   * @returns
+   */
+  private static getTxManager(targetInjectable: any, method: string): boolean {
+    return Reflect.getMetadata(
+      TRANSACTION_ENTITY_MANAGER,
+      targetInjectable,
+      method as any,
+    ) as boolean;
+  }
 
-    /**
-     * 트랜잭션 격리 수준을 가져옵니다.
-     *
-     * @param targetInjectable
-     * @param method
-     * @returns
-     */
-    private static getTransactionIsolationLevel(
-        targetInjectable: any,
-        method: string,
-    ): TransactionIsolationLevel {
-        return (Reflect.getMetadata(
-            TRANSACTION_ISOLATE_LEVEL,
-            targetInjectable,
-            method as any,
-        ) || DEFAULT_ISOLATION_LEVEL) as TransactionIsolationLevel;
-    }
+  /**
+   * 트랜잭션 격리 수준을 가져옵니다.
+   *
+   * @param targetInjectable
+   * @param method
+   * @returns
+   */
+  private static getTransactionIsolationLevel(
+    targetInjectable: any,
+    method: string,
+  ): TransactionIsolationLevel {
+    return (Reflect.getMetadata(
+      TRANSACTION_ISOLATE_LEVEL,
+      targetInjectable,
+      method as any,
+    ) || DEFAULT_ISOLATION_LEVEL) as TransactionIsolationLevel;
+  }
 }

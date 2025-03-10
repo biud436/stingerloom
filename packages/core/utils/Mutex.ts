@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export class Mutex<T> {
-    private mutex = Promise.resolve();
+  private mutex = Promise.resolve();
 
-    lock(): PromiseLike<() => void> {
-        let begin: (unlock: () => void) => void = (unlock) => {};
+  lock(): PromiseLike<() => void> {
+    let begin: (unlock: () => void) => void = (unlock) => {};
 
-        this.mutex = this.mutex.then(() => {
-            return new Promise(begin);
-        });
+    this.mutex = this.mutex.then(() => {
+      return new Promise(begin);
+    });
 
-        return new Promise((res) => {
-            begin = res;
-        });
+    return new Promise((res) => {
+      begin = res;
+    });
+  }
+
+  async dispatch(fn: (() => T) | (() => PromiseLike<T>)): Promise<T> {
+    const unlock = await this.lock();
+
+    try {
+      return await Promise.resolve(fn());
+    } finally {
+      unlock();
     }
-
-    async dispatch(fn: (() => T) | (() => PromiseLike<T>)): Promise<T> {
-        const unlock = await this.lock();
-
-        try {
-            return await Promise.resolve(fn());
-        } finally {
-            unlock();
-        }
-    }
+  }
 }

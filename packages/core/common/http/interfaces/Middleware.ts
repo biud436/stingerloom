@@ -7,7 +7,7 @@ import { HttpResponse } from "./HttpResponse";
  */
 
 export type Middleware = (
-    request: HttpRequest,
-    response: HttpResponse,
-    next: () => Promise<void>,
+  request: HttpRequest,
+  response: HttpResponse,
+  next: () => Promise<void>,
 ) => Promise<void>;

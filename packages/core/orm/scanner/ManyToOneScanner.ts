@@ -6,19 +6,19 @@ import { ClazzType } from "@stingerloom/core/common";
 
 @Service()
 export class ManyToOneScanner extends MetadataScanner {
-    public *makeManyTones(): IterableIterator<ManyToOneMetadata<unknown>> {
-        for (const [_, value] of this.mapper) {
-            yield value;
-        }
+  public *makeManyTones(): IterableIterator<ManyToOneMetadata<unknown>> {
+    for (const [_, value] of this.mapper) {
+      yield value;
+    }
+  }
+
+  public scan(target: ClazzType<unknown>): ManyToOneMetadata<unknown> | null {
+    for (const [_, value] of this.mapper) {
+      if (value.target === target) {
+        return value;
+      }
     }
 
-    public scan(target: ClazzType<unknown>): ManyToOneMetadata<unknown> | null {
-        for (const [_, value] of this.mapper) {
-            if (value.target === target) {
-                return value;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

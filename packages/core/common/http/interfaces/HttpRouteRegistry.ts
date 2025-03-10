@@ -1,6 +1,6 @@
 import { HttpRoute } from "./HttpRoute";
 
 export interface HttpRouteRegistry {
-    register(route: HttpRoute): void;
-    registerExceptionHandler(): void;
+  register(route: HttpRoute): void;
+  registerExceptionHandler(): void;
 }

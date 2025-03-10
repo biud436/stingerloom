@@ -5,9 +5,9 @@ import { ClazzType } from "../RouterMapper";
 export const AUTO_WIRED_TOKEN = Symbol.for("auto_wired");
 
 export interface AutoWiredMetadata {
-    target: ClazzType<any>;
-    name: string;
-    type: any;
+  target: ClazzType<any>;
+  name: string;
+  type: any;
 }
 
 /**
@@ -22,22 +22,22 @@ export interface AutoWiredMetadata {
  * 또한 Controller나 Injectable로 마킹한 클래스에서만 사용할 수 있습니다.
  */
 export function Autowired(): PropertyDecorator {
-    return (target, propertyKey) => {
-        const injectParam = ReflectManager.getType<any>(target, propertyKey);
+  return (target, propertyKey) => {
+    const injectParam = ReflectManager.getType<any>(target, propertyKey);
 
-        // Create a new inject metadata.
-        const metadata = <AutoWiredMetadata>{
-            target,
-            name: propertyKey,
-            type: injectParam,
-        };
-
-        const parameters = Reflect.getMetadata(AUTO_WIRED_TOKEN, target);
-
-        Reflect.defineMetadata(
-            AUTO_WIRED_TOKEN,
-            [...(parameters || []), metadata],
-            target,
-        );
+    // Create a new inject metadata.
+    const metadata = <AutoWiredMetadata>{
+      target,
+      name: propertyKey,
+      type: injectParam,
     };
+
+    const parameters = Reflect.getMetadata(AUTO_WIRED_TOKEN, target);
+
+    Reflect.defineMetadata(
+      AUTO_WIRED_TOKEN,
+      [...(parameters || []), metadata],
+      target,
+    );
+  };
 }

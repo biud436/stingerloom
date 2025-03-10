@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export class CustomColumn<T> {
-    protected value!: T;
+  protected value!: T;
 
-    setValue(value: T): void {
-        this.value = value;
-    }
+  setValue(value: T): void {
+    this.value = value;
+  }
 
-    getValue(): T {
-        return this.value;
-    }
+  getValue(): T {
+    return this.value;
+  }
 }

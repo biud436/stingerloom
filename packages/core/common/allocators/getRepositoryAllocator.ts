@@ -10,9 +10,9 @@ import { REPOSITORY_TOKEN } from "../decorators/InjectRepository";
  * @param parameters
  */
 export const getRepositoryAllocator: ParameterAllocator = (
-    param,
-    parameters,
+  param,
+  parameters,
 ) => {
-    const repository = Reflect.getMetadata(REPOSITORY_TOKEN, param.prototype);
-    parameters.push(repository);
+  const repository = Reflect.getMetadata(REPOSITORY_TOKEN, param.prototype);
+  parameters.push(repository);
 };

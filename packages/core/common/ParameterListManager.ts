@@ -3,8 +3,8 @@ import { allocators } from "./allocators/allocators";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type ParameterAllocator = (
-    param: any,
-    parameters: DynamicClassWrapper<any>[],
+  param: any,
+  parameters: DynamicClassWrapper<any>[],
 ) => void;
 
 /**
@@ -17,57 +17,57 @@ export type ParameterAllocator = (
  * 이 클래스는 이러한 매개변수 할당 함수(할당기)를 관리하는 클래스입니다.
  */
 export class ParameterListManager {
-    private commandList: Map<string, ParameterAllocator> = new Map();
+  private commandList: Map<string, ParameterAllocator> = new Map();
 
-    private static instance: ParameterListManager;
-    public static DEFAULT = "default";
-    private isReady = false;
+  private static instance: ParameterListManager;
+  public static DEFAULT = "default";
+  private isReady = false;
 
-    private constructor() {}
+  private constructor() {}
 
-    private addCommand(name: string, allocator: ParameterAllocator) {
-        this.commandList.set(name, allocator);
+  private addCommand(name: string, allocator: ParameterAllocator) {
+    this.commandList.set(name, allocator);
+  }
+
+  private getCommand(name: string): ParameterAllocator | undefined {
+    if (!this.commandList.has(name)) {
+      return this.commandList.get(ParameterListManager.DEFAULT);
     }
 
-    private getCommand(name: string): ParameterAllocator | undefined {
-        if (!this.commandList.has(name)) {
-            return this.commandList.get(ParameterListManager.DEFAULT);
-        }
+    return this.commandList.get(name);
+  }
 
-        return this.commandList.get(name);
+  public static getInstance(): ParameterListManager {
+    if (!ParameterListManager.instance) {
+      ParameterListManager.instance = new ParameterListManager();
     }
 
-    public static getInstance(): ParameterListManager {
-        if (!ParameterListManager.instance) {
-            ParameterListManager.instance = new ParameterListManager();
-        }
+    return ParameterListManager.instance;
+  }
 
-        return ParameterListManager.instance;
+  /**
+   * Parameter Allocator를 취득합니다.
+   *
+   * @param name
+   * @returns
+   */
+  public static invoke(name: string): ParameterAllocator | undefined {
+    const manager = ParameterListManager.getInstance();
+    if (!manager.isReady) {
+      ParameterListManager.initAllocator();
+      manager.isReady = true;
     }
+    return manager.getCommand(name);
+  }
 
-    /**
-     * Parameter Allocator를 취득합니다.
-     *
-     * @param name
-     * @returns
-     */
-    public static invoke(name: string): ParameterAllocator | undefined {
-        const manager = ParameterListManager.getInstance();
-        if (!manager.isReady) {
-            ParameterListManager.initAllocator();
-            manager.isReady = true;
-        }
-        return manager.getCommand(name);
-    }
+  /**
+   * 매개변수 할당기를 커맨드로 등록합니다.
+   */
+  public static initAllocator() {
+    const manager = ParameterListManager.getInstance();
 
-    /**
-     * 매개변수 할당기를 커맨드로 등록합니다.
-     */
-    public static initAllocator() {
-        const manager = ParameterListManager.getInstance();
-
-        allocators.forEach(([name, allocator]) => {
-            manager.addCommand(name, allocator);
-        });
-    }
+    allocators.forEach(([name, allocator]) => {
+      manager.addCommand(name, allocator);
+    });
+  }
 }

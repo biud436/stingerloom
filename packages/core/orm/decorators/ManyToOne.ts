@@ -10,36 +10,36 @@ export const JOIN_COLUMN_TOKEN = Symbol.for("JOIN_COLUMN");
 export type EntityLike<T = any> = ClazzType<T>;
 export type RetrieveEntity<T> = () => T;
 export type SetRelatedEntity<T extends EntityLike> = (
-    entity: InstanceType<T>,
+  entity: InstanceType<T>,
 ) => void;
 
 export type ManyToOneOption = {
-    /**
-     * 데이터베이스에서 컬럼의 값을 가져올 때, 오브젝트에 매핑되는 컬럼의 타입을 변환할 수 있는 함수입니다.
-     */
-    transform?: <T = any>(raw: unknown) => T;
-    joinColumn?: string;
+  /**
+   * 데이터베이스에서 컬럼의 값을 가져올 때, 오브젝트에 매핑되는 컬럼의 타입을 변환할 수 있는 함수입니다.
+   */
+  transform?: <T = any>(raw: unknown) => T;
+  joinColumn?: string;
 };
 
 export type ManyToOneMetadata<T> = {
-    target: ClazzType<unknown>;
-    type: EntityLike;
+  target: ClazzType<unknown>;
+  type: EntityLike;
 
-    columnName: string;
+  columnName: string;
 
-    joinColumn?: string;
+  joinColumn?: string;
 
-    /**
-     * 연관관계의 엔티티를 가져오는 함수입니다
-     */
-    getMappingEntity: RetrieveEntity<T>;
+  /**
+   * 연관관계의 엔티티를 가져오는 함수입니다
+   */
+  getMappingEntity: RetrieveEntity<T>;
 
-    /**
-     * 매핑할 엔티티를 가져오는 함수입니다
-     */
-    getMappingProperty: SetRelatedEntity<EntityLike>;
+  /**
+   * 매핑할 엔티티를 가져오는 함수입니다
+   */
+  getMappingProperty: SetRelatedEntity<EntityLike>;
 
-    option?: ManyToOneOption;
+  option?: ManyToOneOption;
 };
 
 /**
@@ -52,37 +52,37 @@ export type ManyToOneMetadata<T> = {
  * user: User;
  */
 export function ManyToOne<T extends EntityLike>(
-    getMappingEntity: RetrieveEntity<T>,
-    getMappingProperty: SetRelatedEntity<T>,
-    option?: ManyToOneOption,
+  getMappingEntity: RetrieveEntity<T>,
+  getMappingProperty: SetRelatedEntity<T>,
+  option?: ManyToOneOption,
 ): PropertyDecorator {
-    return (target, propertyKey) => {
-        const cls = target.constructor;
+  return (target, propertyKey) => {
+    const cls = target.constructor;
 
-        const injectParam = ReflectManager.getType<any>(cls, propertyKey);
+    const injectParam = ReflectManager.getType<any>(cls, propertyKey);
 
-        const scanner = Container.get(ManyToOneScanner);
+    const scanner = Container.get(ManyToOneScanner);
 
-        const columnName = propertyKey.toString();
-        const metadata = <ManyToOneMetadata<T>>{
-            target: cls,
-            type: injectParam,
-            columnName,
-            joinColumn: option?.joinColumn,
-            getMappingEntity,
-            getMappingProperty,
-            option,
-        };
-
-        const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, cls);
-
-        Reflect.defineMetadata(
-            MANY_TO_ONE_TOKEN,
-            [...(columns || []), metadata],
-            cls,
-        );
-
-        const uniqueKey = scanner.createUniqueKey();
-        scanner.set<ManyToOneMetadata<T>>(uniqueKey, metadata);
+    const columnName = propertyKey.toString();
+    const metadata = <ManyToOneMetadata<T>>{
+      target: cls,
+      type: injectParam,
+      columnName,
+      joinColumn: option?.joinColumn,
+      getMappingEntity,
+      getMappingProperty,
+      option,
     };
+
+    const columns = Reflect.getMetadata(MANY_TO_ONE_TOKEN, cls);
+
+    Reflect.defineMetadata(
+      MANY_TO_ONE_TOKEN,
+      [...(columns || []), metadata],
+      cls,
+    );
+
+    const uniqueKey = scanner.createUniqueKey();
+    scanner.set<ManyToOneMetadata<T>>(uniqueKey, metadata);
+  };
 }

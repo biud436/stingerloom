@@ -5,16 +5,16 @@ import { ExpressRequestAdapter } from "./ExpressRequestAdapter";
 import { ExpressResponseAdapter } from "./ExpressResponseAdapter";
 
 export class ExpressHandlerAdapter {
-    static adapt(
-        handler: HttpHandler,
-    ): (request: Request, response: Response) => Promise<void> {
-        return async (request: Request, response: Response) => {
-            const context: HttpContext = {
-                request: new ExpressRequestAdapter(request),
-                response: new ExpressResponseAdapter(response),
-            };
+  static adapt(
+    handler: HttpHandler,
+  ): (request: Request, response: Response) => Promise<void> {
+    return async (request: Request, response: Response) => {
+      const context: HttpContext = {
+        request: new ExpressRequestAdapter(request),
+        response: new ExpressResponseAdapter(response),
+      };
 
-            return await handler(context);
-        };
-    }
+      return await handler(context);
+    };
+  }
 }

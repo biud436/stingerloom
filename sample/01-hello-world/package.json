@@ -1,26 +1,26 @@
 {
-  "name": "stingerloom-sample",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "scripts": {
-    "start:dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "tsc:init": "tsc --init"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@stingerloom/core": "^1.1.0",
-    "dotenv": "^16.4.5",
-    "reflect-metadata": "^0.2.2",
-    "ts-node": "^10.9.2",
-    "tsc": "^2.0.4",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.2"
-  },
-  "devDependencies": {
-    "@types/node": "^22.7.5",
-    "prettier": "^3.3.3"
-  }
+    "name": "stingerloom-sample",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "scripts": {
+        "start:dev": "ts-node -r tsconfig-paths/register src/index.ts",
+        "tsc:init": "tsc --init"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "@stingerloom/core": "^1.1.0",
+        "dotenv": "^16.4.5",
+        "reflect-metadata": "^0.2.2",
+        "ts-node": "^10.9.2",
+        "tsc": "^2.0.4",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.6.2"
+    },
+    "devDependencies": {
+        "@types/node": "^22.7.5",
+        "prettier": "^3.3.3"
+    }
 }

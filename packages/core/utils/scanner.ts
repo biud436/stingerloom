@@ -4,26 +4,26 @@ import { InjectableScanner } from "@stingerloom/core/IoC/scanners/InjectableScan
 import { EntityScanner } from "@stingerloom/core/orm/scanner";
 
 export function createUniqueControllerKey(
-    name: string,
-    scanner: ControllerScanner,
+  name: string,
+  scanner: ControllerScanner,
 ) {
-    return `${name}_${scanner.createUniqueKey()}`;
+  return `${name}_${scanner.createUniqueKey()}`;
 }
 
 export function createUniqueInjectableKey(
-    name: string,
-    scanner: InjectableScanner,
+  name: string,
+  scanner: InjectableScanner,
 ) {
-    return `${name}_${scanner.createUniqueKey()}`;
+  return `${name}_${scanner.createUniqueKey()}`;
 }
 
 export function createUniqueExceptionKey(
-    name: string,
-    scanner: ExceptionScanner,
+  name: string,
+  scanner: ExceptionScanner,
 ) {
-    return `${name}_${scanner.createUniqueKey()}`;
+  return `${name}_${scanner.createUniqueKey()}`;
 }
 
 export function createEntityKey(name: string, scanner: EntityScanner) {
-    return `${name}_${scanner.createUniqueKey()}`;
+  return `${name}_${scanner.createUniqueKey()}`;
 }

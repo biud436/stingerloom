@@ -1,3 +1,3 @@
 export type IOrderBy<T> = {
-    [K in keyof T]: "ASC" | "DESC";
+  [K in keyof T]: "ASC" | "DESC";
 };

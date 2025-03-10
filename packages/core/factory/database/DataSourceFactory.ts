@@ -9,7 +9,7 @@ import { DataSourceProxy } from "./DataSourceProxy";
  * 결국 이 클래스는 각 ORM에 대한 서비스를 중개하는 역할을 해야 합니다.
  */
 export class DataSourceFactory {
-    public static create(options: DataSourceOptions): DataSource {
-        return new DataSourceProxy(options).create();
-    }
+  public static create(options: DataSourceOptions): DataSource {
+    return new DataSourceProxy(options).create();
+  }
 }

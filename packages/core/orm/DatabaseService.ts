@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import {
-    EventService,
-    Injectable,
-    InstanceScanner,
-    OnModuleInit,
+  EventService,
+  Injectable,
+  InstanceScanner,
+  OnModuleInit,
 } from "@stingerloom/core";
 import { DATABASE_OPTION_TOKEN, DatabaseModule } from "./DatabaseModule";
 import { DatabaseClientOptions } from "./core/DatabaseClientOptions";
@@ -13,71 +13,71 @@ import { EntityManager } from "./core";
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
-    private database?: Database;
-    private entityManager!: EntityManager;
+  private database?: Database;
+  private entityManager!: EntityManager;
 
-    constructor(private readonly eventService: EventService) {}
+  constructor(private readonly eventService: EventService) {}
 
-    async onModuleInit(): Promise<void> {
-        await this.initEntityManager();
-        await this.registerEntities();
+  async onModuleInit(): Promise<void> {
+    await this.initEntityManager();
+    await this.registerEntities();
 
-        this.eventService.on("stop", () => this.destroy());
+    this.eventService.on("stop", () => this.destroy());
+  }
+
+  async destroy(): Promise<void> {
+    if (this.database) {
+      console.log("destroy");
+      await this.database.onApplicationShutdown();
     }
 
-    async destroy(): Promise<void> {
-        if (this.database) {
-            console.log("destroy");
-            await this.database.onApplicationShutdown();
-        }
+    await this.propagateShutdown();
+  }
 
-        await this.propagateShutdown();
+  /**
+   * @deprecated
+   */
+  private async initializeTypeOrm() {
+    const options = Reflect.getMetadata(
+      DATABASE_OPTION_TOKEN,
+      DatabaseModule,
+    ) as DatabaseClientOptions;
+
+    if (!options) {
+      // TODO: module 상태에 onStart가 필요할 듯.
+      return;
     }
 
-    /**
-     * @deprecated
-     */
-    private async initializeTypeOrm() {
-        const options = Reflect.getMetadata(
-            DATABASE_OPTION_TOKEN,
-            DatabaseModule,
-        ) as DatabaseClientOptions;
+    const database = new Database(options);
+    const instanceScanner = Container.get(InstanceScanner);
+    instanceScanner.set(Database, database);
 
-        if (!options) {
-            // TODO: module 상태에 onStart가 필요할 듯.
-            return;
-        }
+    await database.start();
 
-        const database = new Database(options);
-        const instanceScanner = Container.get(InstanceScanner);
-        instanceScanner.set(Database, database);
+    this.database = database;
+  }
 
-        await database.start();
+  private async initEntityManager() {
+    this.entityManager = new EntityManager();
 
-        this.database = database;
+    const instanceScanner = Container.get(InstanceScanner);
+    instanceScanner.set(EntityManager, this.entityManager);
+  }
+
+  private async registerEntities() {
+    const options = Reflect.getMetadata(
+      DATABASE_OPTION_TOKEN,
+      DatabaseModule,
+    ) as DatabaseClientOptions;
+
+    if (!options) {
+      throw new Error("Database configuration is required.");
     }
 
-    private async initEntityManager() {
-        this.entityManager = new EntityManager();
+    await this.entityManager.register(options);
+  }
 
-        const instanceScanner = Container.get(InstanceScanner);
-        instanceScanner.set(EntityManager, this.entityManager);
-    }
-
-    private async registerEntities() {
-        const options = Reflect.getMetadata(
-            DATABASE_OPTION_TOKEN,
-            DatabaseModule,
-        ) as DatabaseClientOptions;
-
-        if (!options) {
-            throw new Error("Database configuration is required.");
-        }
-
-        await this.entityManager.register(options);
-    }
-
-    private async propagateShutdown() {
-        await this.entityManager.propagateShutdown();
-    }
+  private async propagateShutdown() {
+    await this.entityManager.propagateShutdown();
+  }
 }

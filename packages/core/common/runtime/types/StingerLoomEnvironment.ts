@@ -7,9 +7,9 @@
  * @property {string} Bun - Represents the Bun runtime environment.
  */
 export enum StingerLoomEnvironment {
-    Node = "Node",
-    Deno = "Deno",
-    Bun = "Bun",
+  Node = "Node",
+  Deno = "Deno",
+  Bun = "Bun",
 }
 
 export type StingerLoomEnvironmentKeys = keyof typeof StingerLoomEnvironment;

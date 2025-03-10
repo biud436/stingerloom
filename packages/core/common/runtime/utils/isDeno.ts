@@ -1,3 +1,3 @@
 export function isDeno() {
-    return typeof globalThis !== "undefined" && "Deno" in globalThis;
+  return typeof globalThis !== "undefined" && "Deno" in globalThis;
 }

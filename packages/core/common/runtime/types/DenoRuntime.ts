@@ -3,44 +3,44 @@
  * This interface provides various properties and methods to interact with the Deno runtime.
  */
 export interface DenoRuntime {
+  /**
+   * Object containing build information about the Deno runtime.
+   */
+  build: {
     /**
-     * Object containing build information about the Deno runtime.
+     * The operating system on which the Deno runtime is running.
      */
-    build: {
-        /**
-         * The operating system on which the Deno runtime is running.
-         */
-        os: string;
-    };
+    os: string;
+  };
 
+  /**
+   * Exits the Deno process with the specified exit code.
+   *
+   * @param code - The exit code to use when exiting the process. If not provided, defaults to 0.
+   */
+  exit(code?: number): void;
+
+  /**
+   * Returns the current working directory of the Deno process.
+   *
+   * @returns The current working directory as a string.
+   */
+  cwd(): string;
+
+  /**
+   * Object representing the environment variables of the Deno process.
+   */
+  env: {
     /**
-     * Exits the Deno process with the specified exit code.
+     * Returns an iterator of key-value pairs representing the environment variables.
      *
-     * @param code - The exit code to use when exiting the process. If not provided, defaults to 0.
+     * @returns An iterable iterator of tuples, where each tuple contains a string key and a string value.
      */
-    exit(code?: number): void;
+    entries(): IterableIterator<[string, string]>;
+  };
 
-    /**
-     * Returns the current working directory of the Deno process.
-     *
-     * @returns The current working directory as a string.
-     */
-    cwd(): string;
-
-    /**
-     * Object representing the environment variables of the Deno process.
-     */
-    env: {
-        /**
-         * Returns an iterator of key-value pairs representing the environment variables.
-         *
-         * @returns An iterable iterator of tuples, where each tuple contains a string key and a string value.
-         */
-        entries(): IterableIterator<[string, string]>;
-    };
-
-    /**
-     * The process ID of the Deno process.
-     */
-    pid: number;
+  /**
+   * The process ID of the Deno process.
+   */
+  pid: number;
 }

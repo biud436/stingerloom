@@ -1,11 +1,11 @@
 {
-    "extends": "../../tsconfig.base.json",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": ".",
-        "rootDir": "./",
-        "composite": true /* Enable project references */
-    },
-    "include": ["*.ts", "**/*.ts"],
-    "exclude": ["dist", "node_modules", "types"]
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": ".",
+    "rootDir": "./",
+    "composite": true /* Enable project references */
+  },
+  "include": ["*.ts", "**/*.ts"],
+  "exclude": ["dist", "node_modules", "types"]
 }

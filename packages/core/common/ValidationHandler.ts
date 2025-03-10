@@ -4,32 +4,32 @@ import { HttpResponse } from "./http";
 const BAD_REQUEST_CODE = 400;
 
 export class ValidationHandler {
-    result!: ValidationError[][];
+  result!: ValidationError[][];
 
-    constructor(
-        private readonly res: HttpResponse,
-        private readonly actions: Promise<ValidationError[]>[],
-    ) {}
+  constructor(
+    private readonly res: HttpResponse,
+    private readonly actions: Promise<ValidationError[]>[],
+  ) {}
 
-    async isError() {
-        const { actions } = this;
-        const bodyValidationResults = await Promise.all(actions);
+  async isError() {
+    const { actions } = this;
+    const bodyValidationResults = await Promise.all(actions);
 
-        this.result = bodyValidationResults;
+    this.result = bodyValidationResults;
 
-        return bodyValidationResults.some((result) => result.length > 0);
-    }
+    return bodyValidationResults.some((result) => result.length > 0);
+  }
 
-    getResponse() {
-        const { res, result: bodyValidationResults } = this;
+  getResponse() {
+    const { res, result: bodyValidationResults } = this;
 
-        res.status(BAD_REQUEST_CODE);
+    res.status(BAD_REQUEST_CODE);
 
-        return {
-            status: BAD_REQUEST_CODE,
-            message: bodyValidationResults.map((result) =>
-                result.map((err) => err.toString()),
-            ),
-        };
-    }
+    return {
+      status: BAD_REQUEST_CODE,
+      message: bodyValidationResults.map((result) =>
+        result.map((err) => err.toString()),
+      ),
+    };
+  }
 }

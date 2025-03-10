@@ -8,23 +8,23 @@ import { HttpRequest } from "./http";
  * @returns
  */
 export function createSessionProxy(req: HttpRequest) {
-    return new Proxy(req.session, {
-        get: (target, prop) => {
-            return Reflect.get(target, prop);
-        },
-        set: (target, prop, value) => {
-            Reflect.set(target, prop, value);
-            req.session.save();
-            return true;
-        },
-    });
+  return new Proxy(req.session, {
+    get: (target, prop) => {
+      return Reflect.get(target, prop);
+    },
+    set: (target, prop, value) => {
+      Reflect.set(target, prop, value);
+      req.session.save();
+      return true;
+    },
+  });
 }
 
 /**
  * 세션 객체입니다.
  */
 export interface SessionObject extends fastifySession.FastifySessionObject {
-    authenticated: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    user: any;
+  authenticated: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  user: any;
 }

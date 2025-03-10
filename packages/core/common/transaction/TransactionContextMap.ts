@@ -3,8 +3,8 @@
 import { ClazzType } from "../RouterMapper";
 
 export interface TransactionContextValue<T> {
-    type: ClazzType<T>;
-    value: T;
+  type: ClazzType<T>;
+  value: T;
 }
 
 /**
@@ -12,38 +12,35 @@ export interface TransactionContextValue<T> {
  * @author biud436
  */
 export class TransactionContextMap {
-    public context: Map<string, TransactionContextValue<unknown>> = new Map();
+  public context: Map<string, TransactionContextValue<unknown>> = new Map();
 
-    public reserve<T>(key: string, value: TransactionContextValue<T>): this {
-        return this.set(key, value);
-    }
+  public reserve<T>(key: string, value: TransactionContextValue<T>): this {
+    return this.set(key, value);
+  }
 
-    public set<T>(key: string, value: TransactionContextValue<T>): this {
-        this.context.set(key, value);
+  public set<T>(key: string, value: TransactionContextValue<T>): this {
+    this.context.set(key, value);
 
-        return this;
-    }
+    return this;
+  }
 
-    public get<T>(key: string): TransactionContextValue<T> {
-        return this.context.get(key) as TransactionContextValue<T>;
-    }
+  public get<T>(key: string): TransactionContextValue<T> {
+    return this.context.get(key) as TransactionContextValue<T>;
+  }
 
-    public clear(): this {
-        this.context.clear();
+  public clear(): this {
+    this.context.clear();
 
-        return this;
-    }
+    return this;
+  }
 
-    public toArray() {
-        return Array.from(this.context.values());
-    }
+  public toArray() {
+    return Array.from(this.context.values());
+  }
 
-    public forEach(
-        callback: (
-            value: TransactionContextValue<unknown>,
-            key: string,
-        ) => void,
-    ) {
-        this.context.forEach(callback);
-    }
+  public forEach(
+    callback: (value: TransactionContextValue<unknown>, key: string) => void,
+  ) {
+    this.context.forEach(callback);
+  }
 }

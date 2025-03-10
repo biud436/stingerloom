@@ -9,10 +9,10 @@ import { Get } from "@stingerloom/common/decorators/Get";
 @Controller("/<%=name%>")
 export class <%=Name%>Controller {
 
-    constructor(private readonly <%=name%>Service: <%=Name%>Service) {}
+  constructor(private readonly <%=name%>Service: <%=Name%>Service) {}
 
-    @Get()
-    public async get<%=Name%>() {
-        return await this.<%=name%>Service.get<%=Name%>();
-    }
+  @Get()
+  public async get<%=Name%>() {
+    return await this.<%=name%>Service.get<%=Name%>();
+  }
 }

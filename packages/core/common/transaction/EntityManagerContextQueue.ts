@@ -1,15 +1,15 @@
 import { EntityManager, QueryRunner } from "typeorm";
 import {
-    TransactionIsolationLevel,
-    TransactionPropagation,
+  TransactionIsolationLevel,
+  TransactionPropagation,
 } from "../decorators";
 
 export interface TxContext {
-    transactionIsolationLevel: TransactionIsolationLevel;
-    isEntityManager?: boolean;
-    queryRunner?: QueryRunner;
-    entityManager?: EntityManager;
-    propagation?: TransactionPropagation;
+  transactionIsolationLevel: TransactionIsolationLevel;
+  isEntityManager?: boolean;
+  queryRunner?: QueryRunner;
+  entityManager?: EntityManager;
+  propagation?: TransactionPropagation;
 }
 
 /**
@@ -44,75 +44,75 @@ export interface TxContext {
  * Queue 구조이므로 선입선출입니다.
  */
 export class EntityManagerContextQueue {
-    #data: TxContext[] = [];
+  #data: TxContext[] = [];
 
-    /**
-     * 새로운 트랜잭션이 시작될 때 큐에 새로운 컨텍스트를 추가합니다.
-     * @param data
-     */
-    enqueue(data: Partial<TxContext>) {
-        this.#data.push(data as TxContext);
+  /**
+   * 새로운 트랜잭션이 시작될 때 큐에 새로운 컨텍스트를 추가합니다.
+   * @param data
+   */
+  enqueue(data: Partial<TxContext>) {
+    this.#data.push(data as TxContext);
+  }
+
+  /**
+   * 큐에 있는 컨텍스트를 하나 비웁니다.
+   *
+   * @returns
+   */
+  dequeue() {
+    const result = this.#data.shift();
+
+    if (this.depth === 0) {
+      this.clear();
     }
 
-    /**
-     * 큐에 있는 컨텍스트를 하나 비웁니다.
-     *
-     * @returns
-     */
-    dequeue() {
-        const result = this.#data.shift();
+    return result;
+  }
 
-        if (this.depth === 0) {
-            this.clear();
-        }
+  /**
+   * 컨텍스트가 있는지 확인합니다.
+   *
+   * @returns
+   */
+  first() {
+    return this.#data[0];
+  }
 
-        return result;
+  last() {
+    const length = this.#data.length;
+    const result = this.#data[length - 1];
+
+    return result;
+  }
+
+  /**
+   * 트랜잭션 컨텍스트의 깊이를 가져옵니다.
+   */
+  get depth() {
+    return this.#data.length;
+  }
+
+  async clear() {
+    const isExist = this.#data.length > 0;
+
+    if (!isExist) {
+      this.#data = [];
+      return;
     }
 
-    /**
-     * 컨텍스트가 있는지 확인합니다.
-     *
-     * @returns
-     */
-    first() {
-        return this.#data[0];
+    // 트랜잭션 컨텍스트의 자원을 해제합니다.
+    for (const context of this) {
+      const { queryRunner } = context;
+
+      if (!queryRunner?.isReleased) {
+        await queryRunner?.release();
+      }
     }
 
-    last() {
-        const length = this.#data.length;
-        const result = this.#data[length - 1];
+    this.#data = [];
+  }
 
-        return result;
-    }
-
-    /**
-     * 트랜잭션 컨텍스트의 깊이를 가져옵니다.
-     */
-    get depth() {
-        return this.#data.length;
-    }
-
-    async clear() {
-        const isExist = this.#data.length > 0;
-
-        if (!isExist) {
-            this.#data = [];
-            return;
-        }
-
-        // 트랜잭션 컨텍스트의 자원을 해제합니다.
-        for (const context of this) {
-            const { queryRunner } = context;
-
-            if (!queryRunner?.isReleased) {
-                await queryRunner?.release();
-            }
-        }
-
-        this.#data = [];
-    }
-
-    [Symbol.iterator]() {
-        return this.#data[Symbol.iterator]();
-    }
+  [Symbol.iterator]() {
+    return this.#data[Symbol.iterator]();
+  }
 }

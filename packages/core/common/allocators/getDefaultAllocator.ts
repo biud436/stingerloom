@@ -14,15 +14,15 @@ import { DataSource } from "typeorm";
  * @param parameters
  */
 export const getDefaultAllocator: ParameterAllocator = (param, parameters) => {
-    const TargetService = param;
+  const TargetService = param;
 
-    const instanceScanner = Container.get(InstanceScanner);
+  const instanceScanner = Container.get(InstanceScanner);
 
-    if (ReflectManager.isInjectable(TargetService)) {
-        parameters.push(TargetService);
-    } else if (ReflectManager.isDataSource(TargetService.prototype)) {
-        parameters.push(DataSource);
-    } else if (TargetService) {
-        parameters.push(instanceScanner.wrap(TargetService));
-    }
+  if (ReflectManager.isInjectable(TargetService)) {
+    parameters.push(TargetService);
+  } else if (ReflectManager.isDataSource(TargetService.prototype)) {
+    parameters.push(DataSource);
+  } else if (TargetService) {
+    parameters.push(instanceScanner.wrap(TargetService));
+  }
 };

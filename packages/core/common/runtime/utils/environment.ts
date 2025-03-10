@@ -1,8 +1,8 @@
 export enum Environment {
-    Node,
-    Deno,
-    Bun,
-    Unknown,
+  Node,
+  Deno,
+  Bun,
+  Unknown,
 }
 
 /**
@@ -29,22 +29,22 @@ export enum Environment {
  * @throws {Error} If the environment cannot be detected.
  */
 export function detectEnvironment(): Environment {
-    /** @ts-expect-error TS2304: Cannot find name 'Deno'. */
-    if (typeof Deno !== "undefined" && typeof Deno.env !== "undefined") {
-        return Environment.Deno;
-    } else if (
-        /** @ts-expect-error TS2304: Cannot find name 'Bun'. */
-        typeof Bun !== "undefined" &&
-        /** @ts-expect-error TS2304: Cannot find name 'Bun'. */
-        typeof Bun.process !== "undefined"
-    ) {
-        return Environment.Bun;
-    } else if (
-        typeof process !== "undefined" &&
-        typeof process.env !== "undefined"
-    ) {
-        return Environment.Node;
-    } else {
-        return Environment.Unknown;
-    }
+  /** @ts-expect-error TS2304: Cannot find name 'Deno'. */
+  if (typeof Deno !== "undefined" && typeof Deno.env !== "undefined") {
+    return Environment.Deno;
+  } else if (
+    /** @ts-expect-error TS2304: Cannot find name 'Bun'. */
+    typeof Bun !== "undefined" &&
+    /** @ts-expect-error TS2304: Cannot find name 'Bun'. */
+    typeof Bun.process !== "undefined"
+  ) {
+    return Environment.Bun;
+  } else if (
+    typeof process !== "undefined" &&
+    typeof process.env !== "undefined"
+  ) {
+    return Environment.Node;
+  } else {
+    return Environment.Unknown;
+  }
 }

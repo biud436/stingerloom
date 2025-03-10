@@ -9,60 +9,60 @@ import { NotSupportedDatabaseTypeError } from "@stingerloom/core/error/NotSuppor
 import { Exception } from "@stingerloom/core/error";
 
 export class DatabaseClient {
-    private static instance: DatabaseClient;
-    private connector?: IConnector;
-    private options?: DatabaseClientOptions;
-    public type?: string;
+  private static instance: DatabaseClient;
+  private connector?: IConnector;
+  private options?: DatabaseClientOptions;
+  public type?: string;
 
-    private constructor() {}
+  private constructor() {}
 
-    public static getInstance(): DatabaseClient {
-        if (!DatabaseClient.instance) {
-            DatabaseClient.instance = new DatabaseClient();
-        }
-
-        return DatabaseClient.instance;
+  public static getInstance(): DatabaseClient {
+    if (!DatabaseClient.instance) {
+      DatabaseClient.instance = new DatabaseClient();
     }
 
-    public getConnection(): IConnector {
-        if (!this.connector) {
-            throw new DatabaseNotConnectedError();
-        }
+    return DatabaseClient.instance;
+  }
 
-        return this.connector;
+  public getConnection(): IConnector {
+    if (!this.connector) {
+      throw new DatabaseNotConnectedError();
     }
 
-    public async connect(options: DatabaseClientOptions): Promise<IConnector> {
-        const { type } = options;
+    return this.connector;
+  }
 
-        this.type = type;
-        this.options = options;
+  public async connect(options: DatabaseClientOptions): Promise<IConnector> {
+    const { type } = options;
 
-        switch (type) {
-            case "mysql":
-                this.connector = new MySqlConnector();
-                await this.connector.connect(options);
-                break;
-            default:
-                throw new NotSupportedDatabaseTypeError();
-        }
+    this.type = type;
+    this.options = options;
 
-        return this.connector;
+    switch (type) {
+      case "mysql":
+        this.connector = new MySqlConnector();
+        await this.connector.connect(options);
+        break;
+      default:
+        throw new NotSupportedDatabaseTypeError();
     }
 
-    public async close(): Promise<void> {
-        if (!this.connector) {
-            return;
-        }
+    return this.connector;
+  }
 
-        await this.connector.close();
+  public async close(): Promise<void> {
+    if (!this.connector) {
+      return;
     }
 
-    public getOptions(): DatabaseClientOptions {
-        if (!this.options) {
-            throw new Exception("옵션이 존재하지 않습니다.", 500);
-        }
+    await this.connector.close();
+  }
 
-        return this.options;
+  public getOptions(): DatabaseClientOptions {
+    if (!this.options) {
+      throw new Exception("옵션이 존재하지 않습니다.", 500);
     }
+
+    return this.options;
+  }
 }

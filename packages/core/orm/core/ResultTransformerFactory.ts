@@ -8,7 +8,7 @@ import { ResultTransformer } from "./ResultTransformer";
  * 예를 들면, SQLite에서 사용할 ResultTransformer를 생성하려면 다음과 같이 할 수도 있습니다.
  */
 export class ResultTransformerFactory {
-    static create() {
-        return new ResultTransformer();
-    }
+  static create() {
+    return new ResultTransformer();
+  }
 }

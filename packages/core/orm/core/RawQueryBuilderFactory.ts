@@ -10,11 +10,11 @@ import { RawQueryBuilder } from "./RawQueryBuilder";
  * 등으로 구체적인 데이터베이스에 맞는 RawQueryBuilder를 생성할 수 있습니다.
  */
 export class RawQueryBuilderFactory {
-    static create() {
-        return RawQueryBuilder.create();
-    }
+  static create() {
+    return RawQueryBuilder.create();
+  }
 
-    static subquery() {
-        return RawQueryBuilder.subquery();
-    }
+  static subquery() {
+    return RawQueryBuilder.subquery();
+  }
 }

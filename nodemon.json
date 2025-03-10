@@ -1,5 +1,5 @@
 {
-    "verbose": true,
-    "ignore": ["*.test.js", "**/fixtures/**"],
-    "ext": "ts,js,json"
+  "verbose": true,
+  "ignore": ["*.test.js", "**/fixtures/**"],
+  "ext": "ts,js,json"
 }

@@ -8,22 +8,22 @@ import { MetadataScanner } from "./MetadataScanner";
  * T가 함수 타입이 아닌 경우에는 unknown 타입을 반환합니다.
  */
 export type DynamicReturnType<T extends (...args: unknown[]) => unknown> =
-    T extends (...args: unknown[]) => infer R ? R : unknown;
+  T extends (...args: unknown[]) => infer R ? R : unknown;
 
 export type ConfigurationMetadata<
-    T extends (...args: unknown[]) => unknown = any,
+  T extends (...args: unknown[]) => unknown = any,
 > = {
-    path: string;
-    target: unknown;
-    methods: DynamicReturnType<T>[];
+  path: string;
+  target: unknown;
+  methods: DynamicReturnType<T>[];
 };
 
 @Service()
 export class ConfigurationScanner extends MetadataScanner {
-    public *makeConfigurations(): IterableIterator<ConfigurationMetadata> {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for (const [_, value] of this.mapper) {
-            yield value;
-        }
+  public *makeConfigurations(): IterableIterator<ConfigurationMetadata> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [_, value] of this.mapper) {
+      yield value;
     }
+  }
 }
