@@ -20,8 +20,6 @@ export function Index(): PropertyDecorator {
 
     const indexes = Reflect.getMetadata(INDEX_TOKEN, target);
 
-    console.log("target", target);
-
     Reflect.defineMetadata(
       INDEX_TOKEN,
       [
