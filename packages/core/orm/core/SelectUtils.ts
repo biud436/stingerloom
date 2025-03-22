@@ -1,6 +1,8 @@
 import { ISelectOption } from "../dialects/ISelectOption";
 import { FindOption } from "../dialects/FindOption";
 
+type SelectableFields<T> = { [K in keyof T]?: boolean };
+
 class SelectUtils {
   static isArraySelect<T>(select: ISelectOption<T>): select is (keyof T)[] {
     return Array.isArray(select);
@@ -8,7 +10,7 @@ class SelectUtils {
 
   static isBooleanSelect<T>(
     select: ISelectOption<T>,
-  ): select is { [K in keyof T]?: boolean } {
+  ): select is SelectableFields<T> {
     if (!select || typeof select !== "object" || Array.isArray(select))
       return false;
 
