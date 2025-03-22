@@ -379,7 +379,9 @@ export class EntityManager implements BaseEntityManager {
   }
 
   /**
-   * 업데이트 쿼리
+   * 엔티티를 저장하거나 수정합니다.
+   *
+   * 주의해야 할 점은 트랜잭션이 자동으로 시작되, SQL 처리 후 커밋 또는 롤백을 수행한다는 점입니다.
    */
   async save<T>(
     entity: ClazzType<T>,
