@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { plainToClass } from "class-transformer";
-
-export declare type MyClassConstructor<T> = {
-  new (...args: any[]): T;
-};
+import { MyClassConstructor } from "./MyClassConstructor";
 
 export function deserializeEntity<T, V extends object>(
   cls: MyClassConstructor<T>,

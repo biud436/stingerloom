@@ -6,3 +6,4 @@ export * from "./ResultTransformerFactory";
 export * from "./RawQueryBuilderFactory";
 export * from "./BaseInsertQueryBuilder";
 export * from "./DeserializeEntity";
+export * from "./MyClassConstructor";
