@@ -1,11 +1,39 @@
 # Introduction
 
-StingerLoom is a Server Framework for Node.js. StingerLoom is built on top of the Fastify framework and provides a set of tools and utilities to help you build your server applications.
+**Stingerloom**은 Node.js를 위한 서버 프레임워크로, 기존 프레임워크의 구조와 동작 원리를 스스로 구현해보며 학습하고자 하는 목적에서 출발한 프로젝트입니다.
+
+단순한 학습을 넘어, **실제로 운영 환경에서 사용할 수 있을 수준의 완성도**를 목표로 개발되고 있습니다.
+
+## 개발 동기
+
+> “내가 만들 수 없는 기술을, 과연 진정으로 이해했다고 할 수 있을까?”
+
+NestJS처럼 널리 쓰이는 프레임워크는 매우 편리하지만, 내부의 작동 원리를 완전히 이해하고 있다고 말할 수 있을까요?
+
+**Stingerloom**은 이러한 질문에서 출발했습니다.  
+기존 프레임워크를 모방하는 데 그치지 않고, 핵심 원리를 직접 구현하면서도 **실전 투입이 가능한 품질과 구조**를 갖추는 것을 지향합니다.
+
+## 주요 특징
+
+- 미들웨어 기반의 커스텀 라우팅 시스템
+- `@Controller`, `@Get`, `@Post` 등 데코레이터 기반 구조
+- 템플릿 엔진 연동을 통한 뷰 렌더링
+- 세션 기반 인증 및 상태 유지 기능
+- 예외 필터 및 트랜잭션 처리
+- 자체 구현 ORM (QueryBuilder 포함, 현재 개발 중)
+- 테스트를 고려한 설계 및 구조화된 코드베이스
+
+## 지향하는 가치
+
+- 단순 구현이 아닌 **본질의 이해**
+- 단순 학습이 아닌 **실사용 수준의 완성도**
+- "되는 것"이 아닌, **왜 그렇게 되는가**에 집중
 
 ---
-<p align="center"> 
-<img src="https://github.com/user-attachments/assets/f8df18bb-5f70-4ec3-ac45-6137e0399817">
-</p>
+
+# 사용법
+
+사용법은 위키로 이관될 예정입니다.
 
 ## Get Started
 
@@ -31,52 +59,52 @@ yarn start:dev
 # Overview
 
 1. Key Features
-    - [Controller](https://github.com/biud436/stingerloom?tab=readme-ov-file#controller)
-    - [Injectable](https://github.com/biud436/stingerloom?tab=readme-ov-file#injectable)
-    - [Exception Handling](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
-    - [Transaction](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-database-transactions)
-    - [Template Engine](https://github.com/biud436/stingerloom?tab=readme-ov-file#template-engine)
-    - [ORM](https://github.com/biud436/stingerloom?tab=readme-ov-file#orm)
-    - [Automatic File Generation](https://github.com/biud436/stingerloom?tab=readme-ov-file#cli)
+   - [Controller](https://github.com/biud436/stingerloom?tab=readme-ov-file#controller)
+   - [Injectable](https://github.com/biud436/stingerloom?tab=readme-ov-file#injectable)
+   - [Exception Handling](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
+   - [Transaction](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-database-transactions)
+   - [Template Engine](https://github.com/biud436/stingerloom?tab=readme-ov-file#template-engine)
+   - [ORM](https://github.com/biud436/stingerloom?tab=readme-ov-file#orm)
+   - [Automatic File Generation](https://github.com/biud436/stingerloom?tab=readme-ov-file#cli)
 2. [Authentication and Authorization](https://github.com/biud436/stingerloom?tab=readme-ov-file#authorization)
-    - [Session](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-session)
-    - [Session Guard](https://github.com/biud436/stingerloom?tab=readme-ov-file#session-guard)
-    - [Custom Parameter Decorator](https://github.com/biud436/stingerloom?tab=readme-ov-file#custom-parameter-decorator)
+   - [Session](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-session)
+   - [Session Guard](https://github.com/biud436/stingerloom?tab=readme-ov-file#session-guard)
+   - [Custom Parameter Decorator](https://github.com/biud436/stingerloom?tab=readme-ov-file#custom-parameter-decorator)
 3. Supported Decorators
-    - Controller
-    - Get
-    - Post
-    - Patch
-    - Delete
-    - Put
-    - InjectRepository
-    - Req
-    - Body
-    - Header
-    - ExceptionFilter
-    - Catch
-    - BeforeCatch
-    - AfterCatch
-    - Injectable
-    - Session
-    - Transactional
-    - TransactionalZone
-    - InjectQueryRunner
-    - UseGuard
-    - View
-    - Render
-    - Autowired
-    - BeforeTransaction
-    - AfterTransaction
-    - Commit
-    - Rollback
-    - Query
-    - Param
-    - Ip
-    - Cookie
-    - Column
-    - Entity
-    - Index
+   - Controller
+   - Get
+   - Post
+   - Patch
+   - Delete
+   - Put
+   - InjectRepository
+   - Req
+   - Body
+   - Header
+   - ExceptionFilter
+   - Catch
+   - BeforeCatch
+   - AfterCatch
+   - Injectable
+   - Session
+   - Transactional
+   - TransactionalZone
+   - InjectQueryRunner
+   - UseGuard
+   - View
+   - Render
+   - Autowired
+   - BeforeTransaction
+   - AfterTransaction
+   - Commit
+   - Rollback
+   - Query
+   - Param
+   - Ip
+   - Cookie
+   - Column
+   - Entity
+   - Index
 
 ## Technologies Used
 
@@ -84,14 +112,14 @@ This server framework uses the following technologies:
 
 Additionally, since it is based on Fastify, it has a strong dependency on Fastify.
 
--   fastify
--   typeorm
--   typedi
--   reflect-metadata
--   mariadb
--   class-transformer
--   class-validator
--   http-status
+- fastify
+- typeorm
+- typedi
+- reflect-metadata
+- mariadb
+- class-transformer
+- class-validator
+- http-status
 
 The ORM used is typeorm, and class-transformer and class-validator are used for serialization/deserialization of the Body decorator.
 
@@ -101,13 +129,13 @@ Also, reflect-metadata is used for metadata collection.
 
 This framework supports the following decorators: `Controller`, `Get`, `Post`, `Patch`, `Delete`, `Put`, `InjectRepository`, `Req`, `Body`, `Header`, `ExceptionFilter`, `Catch`, `BeforeCatch`, `AfterCatch`, `Injectable`, `Session`, `Transactional`, `TransactionalZone`, `InjectQueryRunner`, `UseGuard`, `View`, `Render`, `Autowired`,`BeforeTransaction`, `AfterTransaction`,`Commit`,`Rollback` , `Query`, `Param`, `Ip`, `Cookie`, `Column`, `Entity`, `Index`.
 
--   [Controller](https://github.com/biud436/stingerloom?tab=readme-ov-file#controller)
--   [Injectable](https://github.com/biud436/stingerloom?tab=readme-ov-file#injectable)
--   [Exception Filter and Execution Context](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
--   [Handling Transactions](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-database-transactions)
--   [Authorization](https://github.com/biud436/stingerloom?tab=readme-ov-file#authorization)
--   [Custom Parameter Decorator](https://github.com/biud436/stingerloom?tab=readme-ov-file#custom-parameter-decorator)
--   [Template Engine](https://github.com/biud436/stingerloom?tab=readme-ov-file#template-engine)
+- [Controller](https://github.com/biud436/stingerloom?tab=readme-ov-file#controller)
+- [Injectable](https://github.com/biud436/stingerloom?tab=readme-ov-file#injectable)
+- [Exception Filter and Execution Context](https://github.com/biud436/stingerloom#exception-filter%EC%99%80-%EC%8B%A4%ED%96%89-%EC%BB%A8%ED%85%8D%EC%8A%A4%ED%8A%B8)
+- [Handling Transactions](https://github.com/biud436/stingerloom?tab=readme-ov-file#handling-database-transactions)
+- [Authorization](https://github.com/biud436/stingerloom?tab=readme-ov-file#authorization)
+- [Custom Parameter Decorator](https://github.com/biud436/stingerloom?tab=readme-ov-file#custom-parameter-decorator)
+- [Template Engine](https://github.com/biud436/stingerloom?tab=readme-ov-file#template-engine)
 
 ## Build and Run
 
@@ -140,43 +168,43 @@ The `@Controller` decorator collects metadata to route HTTP requests to the appr
 ```ts
 @Controller("/user")
 export class UserController {
-    @Autowired()
-    private readonly point: Point;
+  @Autowired()
+  private readonly point: Point;
 
-    @Autowired()
-    private readonly userService!: UserService;
+  @Autowired()
+  private readonly userService!: UserService;
 
-    @Get("/:id")
-    public async getUserById(
-        @Param("id|8E1527BA-2C2A-4A6F-9C32-9567A867050A") id: string,
-        @Query("name") name: string,
-    ) {
-        if (!name) {
-            throw new BadRequestException("The 'name' attribute is required.");
-        }
-
-        return await this.userService.findOneByPk(id);
+  @Get("/:id")
+  public async getUserById(
+    @Param("id|8E1527BA-2C2A-4A6F-9C32-9567A867050A") id: string,
+    @Query("name") name: string,
+  ) {
+    if (!name) {
+      throw new BadRequestException("The 'name' attribute is required.");
     }
 
-    @Get("/point")
-    async getPoint() {
-        this.point.move(5, 5);
-        return {
-            x: this.point.x,
-            y: this.point.y,
-        };
-    }
+    return await this.userService.findOneByPk(id);
+  }
 
-    @Post()
-    public async create(@Body() createUserDto: CreateUserDto) {
-        return await this.userService.create(createUserDto);
-    }
+  @Get("/point")
+  async getPoint() {
+    this.point.move(5, 5);
+    return {
+      x: this.point.x,
+      y: this.point.y,
+    };
+  }
 
-    @Header("Content-Type", "application/json")
-    @Get()
-    public async getUser(@Ip() ip: string) {
-        return await this.userService.getUser(ip);
-    }
+  @Post()
+  public async create(@Body() createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
+  }
+
+  @Header("Content-Type", "application/json")
+  @Get()
+  public async getUser(@Ip() ip: string) {
+    return await this.userService.getUser(ip);
+  }
 }
 ```
 
@@ -191,30 +219,30 @@ The `@Header()` decorator sets the response headers. This decorator can only be 
 ```ts
 @Controller("/")
 class AppController {
-    @Get("/blog/:id/:title")
-    async resolveIdAndTitle(
-        @Param("id|0") id: number,
-        @Param("title") title: string,
-    ) {
-        return { id, title };
-    }
+  @Get("/blog/:id/:title")
+  async resolveIdAndTitle(
+    @Param("id|0") id: number,
+    @Param("title") title: string,
+  ) {
+    return { id, title };
+  }
 
-    @Get("/point/:x")
-    async resolveNameAndTitle(@Param("x") point: Point) {
-        return point;
-    }
+  @Get("/point/:x")
+  async resolveNameAndTitle(@Param("x") point: Point) {
+    return point;
+  }
 
-    @Get("/user/:id")
-    async resolveUser(
-        @Param("id|8E1527BA-2C2A-4A6F-9C32-9567A867050A") id: string,
-    ) {
-        return id;
-    }
+  @Get("/user/:id")
+  async resolveUser(
+    @Param("id|8E1527BA-2C2A-4A6F-9C32-9567A867050A") id: string,
+  ) {
+    return id;
+  }
 
-    @Get("/admin/:id")
-    async resolveAdmin(@Param("id") id: string) {
-        return id;
-    }
+  @Get("/admin/:id")
+  async resolveAdmin(@Param("id") id: string) {
+    return id;
+  }
 }
 ```
 
@@ -226,23 +254,23 @@ To create a custom type, define a transformation object that processes the strin
 
 ```ts
 class Point {
-    private x: number;
-    private y: number;
+  private x: number;
+  private y: number;
 
-    constructor(args: string) {
-        const [x, y] = args.split(",");
+  constructor(args: string) {
+    const [x, y] = args.split(",");
 
-        this.x = parseInt(x, 10);
-        this.y = parseInt(y, 10);
-    }
+    this.x = parseInt(x, 10);
+    this.y = parseInt(y, 10);
+  }
 
-    getX() {
-        return this.x;
-    }
+  getX() {
+    return this.x;
+  }
 
-    getY() {
-        return this.y;
-    }
+  getY() {
+    return this.y;
+  }
 }
 ```
 
@@ -251,18 +279,18 @@ The same applies to `@Query`, where if the type is specified as `number`, the st
 ```ts
 @Controller("/")
 class AppController {
-    @Get("/blog")
-    async resolveIdAndTitle(
-        @Query("id") id: number,
-        @Query("title") title: string,
-    ) {
-        return { id, title };
-    }
+  @Get("/blog")
+  async resolveIdAndTitle(
+    @Query("id") id: number,
+    @Query("title") title: string,
+  ) {
+    return { id, title };
+  }
 
-    @Get("/point")
-    async resolveNameAndTitle(@Query("point") point: Point) {
-        return { x: point.getX(), y: point.getY() };
-    }
+  @Get("/point")
+  async resolveNameAndTitle(@Query("point") point: Point) {
+    return { x: point.getX(), y: point.getY() };
+  }
 }
 ```
 
@@ -283,18 +311,18 @@ As explained in the `@Injectable` chapter, the `Point` class does not have the `
 
 ```ts
 export class Point {
-    public x: number;
-    public y: number;
+  public x: number;
+  public y: number;
 
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-    }
+  constructor() {
+    this.x = 0;
+    this.y = 0;
+  }
 
-    public move(x: number, y: number) {
-        this.x += x;
-        this.y += y;
-    }
+  public move(x: number, y: number) {
+    this.x += x;
+    this.y += y;
+  }
 }
 ```
 
@@ -320,56 +348,54 @@ However, even without the `@Injectable` decorator, injection is still possible. 
 ```ts
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        private readonly discoveryService: DiscoveryService,
-    ) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly discoveryService: DiscoveryService,
+  ) {}
 
-    async create(createUserDto: CreateUserDto) {
-        const safedUserDto = createUserDto as Record<string, any>;
-        if (safedUserDto.role) {
-            throw new BadRequestException(
-                "The 'role' attribute cannot be entered.",
-            );
-        }
-
-        const newUser = await this.userRepository.create(createUserDto);
-        const res = await this.userRepository.save(newUser);
-
-        return ResultUtils.success("User creation successful.", res);
+  async create(createUserDto: CreateUserDto) {
+    const safedUserDto = createUserDto as Record<string, any>;
+    if (safedUserDto.role) {
+      throw new BadRequestException("The 'role' attribute cannot be entered.");
     }
 
-    async validateUser(loginUserDto: LoginUserDto): Promise<User> {
-        const { username, password } = loginUserDto;
+    const newUser = await this.userRepository.create(createUserDto);
+    const res = await this.userRepository.save(newUser);
 
-        const user = await this.userRepository
-            .createQueryBuilder("user")
-            .select()
-            .where("user.username = :username", {
-                username,
-            })
-            .getOne();
+    return ResultUtils.success("User creation successful.", res);
+  }
 
-        if (!user) {
-            throw new BadRequestException("User does not exist.");
-        }
+  async validateUser(loginUserDto: LoginUserDto): Promise<User> {
+    const { username, password } = loginUserDto;
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            throw new BadRequestException("Password does not match.");
-        }
+    const user = await this.userRepository
+      .createQueryBuilder("user")
+      .select()
+      .where("user.username = :username", {
+        username,
+      })
+      .getOne();
 
-        return user;
+    if (!user) {
+      throw new BadRequestException("User does not exist.");
     }
 
-    async getUser(ip: string) {
-        const user = await this.userRepository.find();
-        return ResultUtils.success("User retrieval successful", {
-            user,
-            ip,
-        });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException("Password does not match.");
     }
+
+    return user;
+  }
+
+  async getUser(ip: string) {
+    const user = await this.userRepository.find();
+    return ResultUtils.success("User retrieval successful", {
+      user,
+      ip,
+    });
+  }
 }
 ```
 
@@ -380,8 +406,8 @@ Constructor-based injection is recommended by default, but if desired, property-
 ```ts
 @Injectable()
 export class UserService {
-    @Autowired()
-    private readonly discoveryService!: DiscoveryService;
+  @Autowired()
+  private readonly discoveryService!: DiscoveryService;
 }
 ```
 
@@ -399,28 +425,28 @@ The method with the `@BeforeCatch` decorator is executed before the method with 
 ```ts
 @ExceptionFilter(InternalServerException)
 export class InternalErrorFilter implements Filter {
-    private readonly logger = new Logger();
+  private readonly logger = new Logger();
 
-    @BeforeCatch()
-    public beforeCatch() {
-        this.logger.info("before catch");
-    }
+  @BeforeCatch()
+  public beforeCatch() {
+    this.logger.info("before catch");
+  }
 
-    @Catch()
-    public catch(error: any) {
-        this.logger.info("[Internal Server Error] " + error.message);
+  @Catch()
+  public catch(error: any) {
+    this.logger.info("[Internal Server Error] " + error.message);
 
-        return {
-            message: error.message,
-            status: error.status,
-            result: "failure",
-        };
-    }
+    return {
+      message: error.message,
+      status: error.status,
+      result: "failure",
+    };
+  }
 
-    @AfterCatch()
-    public afterCatch() {
-        this.logger.info("after catch");
-    }
+  @AfterCatch()
+  public afterCatch() {
+    this.logger.info("after catch");
+  }
 }
 ```
 
@@ -458,48 +484,48 @@ Here is a simple example of handling transactions.
 @TransactionalZone()
 @Injectable()
 export class AuthService {
-    constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-    @Transactional()
-    async checkTransaction2() {
-        const users = await this.userService.findAll();
+  @Transactional()
+  async checkTransaction2() {
+    const users = await this.userService.findAll();
 
-        return ResultUtils.success("Transaction checked.", {
-            users: plainToClass(User, users),
-        });
-    }
+    return ResultUtils.success("Transaction checked.", {
+      users: plainToClass(User, users),
+    });
+  }
 
-    @BeforeTransaction()
-    async beforeTransaction(txId: string) {
-        // This code is executed before the transaction starts.
-    }
+  @BeforeTransaction()
+  async beforeTransaction(txId: string) {
+    // This code is executed before the transaction starts.
+  }
 
-    @AfterTransaction()
-    async afterTransaction(txId: string) {
-        // This code is executed after the transaction ends.
-    }
+  @AfterTransaction()
+  async afterTransaction(txId: string) {
+    // This code is executed after the transaction ends.
+  }
 
-    @Commit()
-    async commit(txId: string) {
-        // This code is executed after the transaction is committed.
-    }
+  @Commit()
+  async commit(txId: string) {
+    // This code is executed after the transaction is committed.
+  }
 
-    @Rollback()
-    async rollback(txId: string, error: any) {
-        // This code is executed after the transaction is rolled back.
-        // This method is only executed when an error occurs.
-    }
+  @Rollback()
+  async rollback(txId: string, error: any) {
+    // This code is executed after the transaction is rolled back.
+    // This method is only executed when an error occurs.
+  }
 
-    @Transactional({
-        rollback: () => new Exception("Transaction rolled back", 500),
-    })
-    async rollbackCheck() {
-        const user = await this.userService.findOneByPk("test");
+  @Transactional({
+    rollback: () => new Exception("Transaction rolled back", 500),
+  })
+  async rollbackCheck() {
+    const user = await this.userService.findOneByPk("test");
 
-        return ResultUtils.success("Rollback test", {
-            user,
-        });
-    }
+    return ResultUtils.success("Rollback test", {
+      user,
+    });
+  }
 }
 ```
 
@@ -511,29 +537,27 @@ Here is another example, a user registration example.
 @TransactionalZone()
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-        private readonly discoveryService: DiscoveryService,
-    ) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly discoveryService: DiscoveryService,
+  ) {}
 
-    @Transactional()
-    async create(createUserDto: CreateUserDto) {
-        const safedUserDto = createUserDto as Record<string, any>;
-        if (safedUserDto.role) {
-            throw new BadRequestException(
-                "The 'role' attribute cannot be entered.",
-            );
-        }
-
-        const newUser = this.userRepository.create(createUserDto);
-
-        const res = await this.userRepository.save(newUser);
-
-        return ResultUtils.success("User creation successful.", res);
+  @Transactional()
+  async create(createUserDto: CreateUserDto) {
+    const safedUserDto = createUserDto as Record<string, any>;
+    if (safedUserDto.role) {
+      throw new BadRequestException("The 'role' attribute cannot be entered.");
     }
 
-    // Skip...
+    const newUser = this.userRepository.create(createUserDto);
+
+    const res = await this.userRepository.save(newUser);
+
+    return ResultUtils.success("User creation successful.", res);
+  }
+
+  // Skip...
 }
 ```
 
@@ -572,30 +596,30 @@ The transaction ID is not the actual transaction ID but the transaction ID manag
 @Injectable()
 @TransactionalZone()
 export class GameMapService {
-    constructor(
-        @InjectRepository(GameMap)
-        private readonly gameMapRepository: Repository<GameMap>,
-        @InjectRepository(User)
-        private readonly userRepository: Repository<User>,
-    ) {}
+  constructor(
+    @InjectRepository(GameMap)
+    private readonly gameMapRepository: Repository<GameMap>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
-    @Transactional()
-    async createGameMap() {
-        await this.userRepository.clear();
+  @Transactional()
+  async createGameMap() {
+    await this.userRepository.clear();
 
-        const qb = this.gameMapRepository.createQueryBuilder("gameMap");
-        const maps = await qb
-            .select()
-            .leftJoinAndSelect("gameMap.users", "user")
-            .getMany();
+    const qb = this.gameMapRepository.createQueryBuilder("gameMap");
+    const maps = await qb
+      .select()
+      .leftJoinAndSelect("gameMap.users", "user")
+      .getMany();
 
-        return maps;
-    }
+    return maps;
+  }
 
-    @Commit()
-    async commitOk(txId: string) {
-        console.log("Commit OK:", txId);
-    }
+  @Commit()
+  async commitOk(txId: string) {
+    console.log("Commit OK:", txId);
+  }
 }
 ```
 
@@ -610,15 +634,15 @@ A class that inherits from SessionObject can be used as a session object.
 ```ts
 @Controller("/auth")
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-    @Post("/login")
-    async login(
-        @Session() session: SessionObject,
-        @Body() loginUserDto: LoginUserDto,
-    ) {
-        return await this.authService.login(session, loginUserDto);
-    }
+  @Post("/login")
+  async login(
+    @Session() session: SessionObject,
+    @Body() loginUserDto: LoginUserDto,
+  ) {
+    return await this.authService.login(session, loginUserDto);
+  }
 }
 ```
 
@@ -633,27 +657,27 @@ A more practical example is as follows.
 ```ts
 @Injectable()
 export class AuthService {
-    @Autowired()
-    userService!: UserService;
+  @Autowired()
+  userService!: UserService;
 
-    async login(session: SessionObject, loginUserDto: LoginUserDto) {
-        const user = await this.userService.validateUser(loginUserDto);
-        session.authenticated = true;
-        session.user = user;
+  async login(session: SessionObject, loginUserDto: LoginUserDto) {
+    const user = await this.userService.validateUser(loginUserDto);
+    session.authenticated = true;
+    session.user = user;
 
-        return ResultUtils.successWrap({
-            message: "Login successful.",
-            result: "success",
-            data: session.user,
-        });
-    }
+    return ResultUtils.successWrap({
+      message: "Login successful.",
+      result: "success",
+      data: session.user,
+    });
+  }
 
-    async checkSession(session: SessionObject) {
-        return ResultUtils.success("Session authentication successful", {
-            authenticated: session.authenticated,
-            user: session.user,
-        });
-    }
+  async checkSession(session: SessionObject) {
+    return ResultUtils.success("Session authentication successful", {
+      authenticated: session.authenticated,
+      user: session.user,
+    });
+  }
 }
 ```
 
@@ -668,20 +692,20 @@ The code is as follows.
 ```ts
 @Injectable()
 export class SessionGuard implements Guard {
-    canActivate(context: ServerContext): Promise<boolean> | boolean {
-        const req = context.req;
-        const session = req.session as SessionObject;
+  canActivate(context: ServerContext): Promise<boolean> | boolean {
+    const req = context.req;
+    const session = req.session as SessionObject;
 
-        if (!session) {
-            return false;
-        }
-
-        if (!session.authenticated) {
-            return false;
-        }
-
-        return true;
+    if (!session) {
+      return false;
     }
+
+    if (!session.authenticated) {
+      return false;
+    }
+
+    return true;
+  }
 }
 ```
 
@@ -690,13 +714,13 @@ Add the above guard to the providers and use it by attaching it to the controlle
 ```ts
 @Controller("/auth")
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-    @Get("/session-guard")
-    @UseGuard(SessionGuard)
-    async checkSessionGuard(@Session() session: SessionObject) {
-        return ResultUtils.success("Session guard passed", session);
-    }
+  @Get("/session-guard")
+  @UseGuard(SessionGuard)
+  async checkSessionGuard(@Session() session: SessionObject) {
+    return ResultUtils.success("Session guard passed", session);
+  }
 }
 ```
 
@@ -714,14 +738,14 @@ Here is an example of retrieving user information and user ID from the session.
 
 ```ts
 export const User = createCustomParamDecorator((data, context) => {
-    const req = context.req;
-    const session = req.session as SessionObject;
+  const req = context.req;
+  const session = req.session as SessionObject;
 
-    if (!session) {
-        return null;
-    }
+  if (!session) {
+    return null;
+  }
 
-    return session.user;
+  return session.user;
 });
 ```
 
@@ -729,14 +753,14 @@ You can retrieve the user ID as follows.
 
 ```ts
 export const UserId = createCustomParamDecorator((data, context) => {
-    const req = context.req;
-    const session = req.session as SessionObject;
+  const req = context.req;
+  const session = req.session as SessionObject;
 
-    if (!session) {
-        return null;
-    }
+  if (!session) {
+    return null;
+  }
 
-    return session.user.id;
+  return session.user.id;
 });
 ```
 
@@ -745,20 +769,20 @@ The final usage is as follows.
 ```ts
 @Controller("/auth")
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-    @Get("/session-guard")
-    @UseGuard(SessionGuard)
-    async checkSessionGuard(
-        @Session() session: SessionObject,
-        @User() user: any,
-        @UserId() userId: string,
-    ) {
-        return ResultUtils.success("Session guard passed", {
-            user,
-            userId,
-        });
-    }
+  @Get("/session-guard")
+  @UseGuard(SessionGuard)
+  async checkSessionGuard(
+    @Session() session: SessionObject,
+    @User() user: any,
+    @UserId() userId: string,
+  ) {
+    return ResultUtils.success("Session guard passed", {
+      user,
+      userId,
+    });
+  }
 }
 ```
 
@@ -766,18 +790,18 @@ When queried, the result is output as follows.
 
 ```json
 {
-    "message": "Session guard passed",
-    "result": "success",
-    "data": {
-        "user": {
-            "id": "4500949a-3855-42d4-a4d0-a7f0e81c4054",
-            "username": "abcd",
-            "role": "user",
-            "createdAt": "2023-08-28T09:22:37.144Z",
-            "updatedAt": "2023-08-28T09:22:37.144Z"
-        },
-        "userId": "4500949a-3855-42d4-a4d0-a7f0e81c4054"
-    }
+  "message": "Session guard passed",
+  "result": "success",
+  "data": {
+    "user": {
+      "id": "4500949a-3855-42d4-a4d0-a7f0e81c4054",
+      "username": "abcd",
+      "role": "user",
+      "createdAt": "2023-08-28T09:22:37.144Z",
+      "updatedAt": "2023-08-28T09:22:37.144Z"
+    },
+    "userId": "4500949a-3855-42d4-a4d0-a7f0e81c4054"
+  }
 }
 ```
 
@@ -829,27 +853,27 @@ In the controller, you can map to the template using the `@View` decorator.
 ```ts
 @Controller("/")
 export class AppController {
-    /**
-     * Display the login page.
-     */
-    @View("login")
-    login() {
-        return {
-            username: "Username",
-            password: "Password",
-        };
-    }
+  /**
+   * Display the login page.
+   */
+  @View("login")
+  login() {
+    return {
+      username: "Username",
+      password: "Password",
+    };
+  }
 
-    /**
-     * This page is accessible only to logged-in users.
-     */
-    @View("memberInfo")
-    @UseGuard(SessionGuard)
-    async memberInfo(@User() user: UserEntity) {
-        return {
-            username: user.username,
-        };
-    }
+  /**
+   * This page is accessible only to logged-in users.
+   */
+  @View("memberInfo")
+  @UseGuard(SessionGuard)
+  async memberInfo(@User() user: UserEntity) {
+    return {
+      username: user.username,
+    };
+  }
 }
 ```
 
@@ -858,17 +882,17 @@ If the path of the view and the route are different, you can specify the path of
 ```ts
 @Controller("/")
 export class AppController {
-    /**
-     * This page is accessible only to logged-in users.
-     */
-    @Get("/info")
-    @Render("memberInfo")
-    @UseGuard(SessionGuard)
-    async memberInfo(@User() user: UserEntity) {
-        return {
-            username: user.username,
-        };
-    }
+  /**
+   * This page is accessible only to logged-in users.
+   */
+  @Get("/info")
+  @Render("memberInfo")
+  @UseGuard(SessionGuard)
+  async memberInfo(@User() user: UserEntity) {
+    return {
+      username: user.username,
+    };
+  }
 }
 ```
 
@@ -879,25 +903,21 @@ Here is a login example using the `handlebars` template engine.
 ```hbs
 <!-- login.hbs -->
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Template Rendering Example</title>
-    </head>
-    <body>
-        <div>
-            <h2>Login</h2>
-            <form action="/auth/login" method="post">
-                <input type="text" name="username" placeholder="{{username}}" />
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="{{password}}"
-                />
-                <input type="submit" value="login" />
-            </form>
-        </div>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template Rendering Example</title>
+  </head>
+  <body>
+    <div>
+      <h2>Login</h2>
+      <form action="/auth/login" method="post">
+        <input type="text" name="username" placeholder="{{username}}" />
+        <input type="password" name="password" placeholder="{{password}}" />
+        <input type="submit" value="login" />
+      </form>
+    </div>
+  </body>
 </html>
 ```
 
@@ -906,14 +926,14 @@ Here is an example of displaying session information.
 ```hbs
 <!-- memberInfo.hbs -->
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Session Example</title>
-    </head>
-    <body>
-        <p>The logged-in user information is <strong>{{username}}</strong>.</p>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session Example</title>
+  </head>
+  <body>
+    <p>The logged-in user information is <strong>{{username}}</strong>.</p>
+  </body>
 </html>
 ```
 
@@ -932,30 +952,30 @@ You can define an entity using the `@Column`, `@Entity`, and `@Index` provided b
 ```ts
 @Entity()
 class MyNode {
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column({
-        length: 255,
-        nullable: false,
-        type: "varchar",
-    })
-    name!: string;
+  @Column({
+    length: 255,
+    nullable: false,
+    type: "varchar",
+  })
+  name!: string;
 
-    @Column({
-        length: 255,
-        nullable: false,
-        type: "varchar",
-    })
-    type!: string;
+  @Column({
+    length: 255,
+    nullable: false,
+    type: "varchar",
+  })
+  type!: string;
 
-    @Column({
-        length: 255,
-        nullable: false,
-        type: "varchar",
-    })
-    @Index()
-    description!: string;
+  @Column({
+    length: 255,
+    nullable: false,
+    type: "varchar",
+  })
+  @Index()
+  description!: string;
 }
 ```
 
