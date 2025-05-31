@@ -1013,7 +1013,7 @@ class MyNodeService {
 
 ## CLI
 
-StingerLoom은 대화형 프롬프트를 지원합니다. 대화형 프롬프트를 통해 모듈 파일을 쉽게 생성할 수 있습니다. 현재로서는 꽤 제한적이며, 추가 연구를 통해 Typescript 컴파일러를 사용하여 모듈 정보를 읽는 로직을 추가해야 한다고 생각합니다.
+StingerLoom은 CLI를 지원합니다. CLI를 통해 모듈 파일을 쉽게 생성할 수 있습니다. 현재로서는 꽤 제한적이며, 추가 연구를 통해 Typescript 컴파일러를 사용하여 모듈 정보를 읽는 로직을 추가해야 한다고 생각합니다.
 
 <p align="center">
 <img src="https://github.com/biud436/stingerloom/assets/13586185/67bd938e-d882-4119-9912-9a62b56c73a4" />
