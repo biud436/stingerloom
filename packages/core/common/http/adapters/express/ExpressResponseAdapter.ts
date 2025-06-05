@@ -31,7 +31,8 @@ export class ExpressResponseAdapter implements HttpResponse {
   }
 
   setHeader(name: string, value: string | number | string[]): this {
-    this.chaining(this.expressResponse.setHeader(name, value));
+    // express의 setHeader는 void를 반환하므로 체이닝을 사용하지 않습니다.
+    this.expressResponse.setHeader(name, value);
     return this;
   }
 
