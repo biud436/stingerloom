@@ -105,7 +105,10 @@ export class RouterExecutionContext {
   }
 
   private normalizePath(controllerPath: string, routePath: string): string {
-    return path.posix.join(controllerPath, routePath);
+    const base = controllerPath.replace(/\/$/, "");
+    const route = routePath.replace(/^\//, "");
+    const joined = path.posix.join(base, route);
+    return joined.startsWith("/") ? joined : `/${joined}`;
   }
 
   private transformResponse(result: any): any {

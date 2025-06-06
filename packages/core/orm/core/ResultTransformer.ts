@@ -14,7 +14,7 @@ import { ClazzType } from "@stingerloom/core/common";
 export type ForeignObject<T = any> = { [key: string]: T };
 
 export class ResultTransformer implements BaseResultTransformer {
-  private static PropertySeperator = "_";
+  private static PropertySeparator = "_";
 
   /**
    * 쿼리 결과가 없는 경우를 확인합니다.
@@ -41,7 +41,7 @@ export class ResultTransformer implements BaseResultTransformer {
     const enties = Object.entries(row);
 
     for (const [key, value] of enties) {
-      const isUnderScored = key.includes(ResultTransformer.PropertySeperator);
+      const isUnderScored = key.includes(ResultTransformer.PropertySeparator);
       if (!isUnderScored) {
         baseEntity[key] = value;
       }
@@ -72,8 +72,8 @@ export class ResultTransformer implements BaseResultTransformer {
   /**
    * SQL 측 컬럼명을 만듭니다.
    */
-  private makeColumnNameWithSeperator(columnName: string): string {
-    return `${columnName}${ResultTransformer.PropertySeperator}`;
+  private makeColumnNameWithSeparator(columnName: string): string {
+    return `${columnName}${ResultTransformer.PropertySeparator}`;
   }
 
   /**
@@ -168,7 +168,7 @@ export class ResultTransformer implements BaseResultTransformer {
 
         // ! 3. 외래키 오브젝트에 키/값을 채워넣는다.
         for (const [key, value] of rows) {
-          const prefix = this.makeColumnNameWithSeperator(columnName);
+          const prefix = this.makeColumnNameWithSeparator(columnName);
 
           if (key.startsWith(prefix)) {
             const keyWithoutPrefix = key.replace(prefix, "");
