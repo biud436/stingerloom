@@ -40,15 +40,7 @@ export class ContainerManager {
   constructor(server: HttpServer) {
     this.server = server;
     this.routerExecutionContext = new RouterExecutionContext(this.server);
-    // this.initEntityManager();
   }
-
-  // initEntityManager() {
-  //     this.entityManager = new EntityManager();
-
-  //     const instanceScanner = Container.get(InstanceScanner);
-  //     instanceScanner.set(EntityManager, this.entityManager);
-  // }
 
   public async register() {
     await this.registerEntities();

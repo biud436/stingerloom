@@ -16,9 +16,13 @@ export class DatabaseService implements OnModuleInit {
   private database?: Database;
   private entityManager!: EntityManager;
 
-  constructor(private readonly eventService: EventService) {}
+  constructor(private readonly eventService: EventService) {
+    console.log("DatabaseService initialized");
+  }
 
   async onModuleInit(): Promise<void> {
+    console.log("DatabaseService onModuleInit");
+
     await this.initEntityManager();
     await this.registerEntities();
 
