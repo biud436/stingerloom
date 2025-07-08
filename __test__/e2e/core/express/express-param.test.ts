@@ -2,10 +2,9 @@ import axios from "axios";
 import {
   Controller,
   DatabaseModule,
+  EntryModule,
   ExpressServerFactory,
   Get,
-  Module,
-  ModuleOptions,
   Param,
   ServerBootstrapApplication,
 } from "@stingerloom/core";
@@ -62,37 +61,34 @@ describe("파라미터 테스트", () => {
     }
   }
 
-  @Module({
+  @EntryModule({
+    imports: [
+      DatabaseModule.forRoot({
+        type: "mysql",
+        host: configService.get<string>("DB_HOST"),
+        port: configService.get<number>("DB_PORT"),
+        database: configService.get<string>("DB_NAME"),
+        password: configService.get<string>("DB_PASSWORD"),
+        username: configService.get<string>("DB_USER"),
+        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
+        synchronize: true,
+        logging: true,
+      }),
+    ],
     controllers: [AppController],
     providers: [],
   })
+  class AppModule {}
+
   class TestServerApplication extends ServerBootstrapApplication {
-    override beforeStart(): void {
-      this.moduleOptions = ModuleOptions.merge({
-        imports: [
-          DatabaseModule.forRoot({
-            type: "mysql",
-            host: configService.get<string>("DB_HOST"),
-            port: configService.get<number>("DB_PORT"),
-            database: configService.get<string>("DB_NAME"),
-            password: configService.get<string>("DB_PASSWORD"),
-            username: configService.get<string>("DB_USER"),
-            entities: [
-              __dirname + "/entity/*.ts",
-              __dirname + "/entity/map/*.ts",
-            ],
-            synchronize: true,
-            logging: true,
-          }),
-        ],
-        controllers: [],
-        providers: [],
-      });
-    }
+    override beforeStart(): void {}
   }
 
   beforeAll((done) => {
-    application = new TestServerApplication(new ExpressServerFactory());
+    application = new TestServerApplication(
+      AppModule,
+      new ExpressServerFactory(),
+    );
     application.on("start", () => {
       done();
     });

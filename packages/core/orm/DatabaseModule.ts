@@ -15,8 +15,10 @@ export class DatabaseModule {
     DatabaseService.captured[DATABASE_SERVICE_TOKEN] = true;
 
     return <DynamicModuleOption>{
+      imports: [],
       controllers: [],
       providers: [DatabaseService],
+      exports: [DatabaseService],
     };
   }
 }

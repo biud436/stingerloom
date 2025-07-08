@@ -34,3 +34,4 @@ export * from "./Ip";
 export * from "./Hostname";
 export * from "./Cookie";
 export * from "./Inject";
+export * from "./EntryModule";

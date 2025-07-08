@@ -2,9 +2,8 @@
 import "reflect-metadata";
 import {
   Controller,
+  EntryModule,
   Get,
-  Module,
-  ModuleOptions,
   OnModuleInit,
 } from "@stingerloom/core/common";
 import {
@@ -116,37 +115,31 @@ describe("ORM Entity 외래키 생성 테스트", () => {
     }
   }
 
-  @Module({
+  @EntryModule({
+    imports: [
+      DatabaseModule.forRoot({
+        type: "mariadb",
+        host: configService.get<string>("DB_HOST"),
+        port: configService.get<number>("DB_PORT"),
+        database: configService.get<string>("DB_NAME"),
+        password: configService.get<string>("DB_PASSWORD"),
+        username: configService.get<string>("DB_USER"),
+        entities: [__dirname + "/entity/*.ts", __dirname + "/entity/map/*.ts"],
+        synchronize: true,
+        logging: true,
+      }),
+    ],
     controllers: [AppController],
     providers: [],
   })
+  class AppModule {}
+
   class TestServerApplication extends ServerBootstrapApplication {
-    override beforeStart(): void {
-      this.moduleOptions = ModuleOptions.merge({
-        imports: [
-          DatabaseModule.forRoot({
-            type: "mariadb",
-            host: configService.get<string>("DB_HOST"),
-            port: configService.get<number>("DB_PORT"),
-            database: configService.get<string>("DB_NAME"),
-            password: configService.get<string>("DB_PASSWORD"),
-            username: configService.get<string>("DB_USER"),
-            entities: [
-              __dirname + "/entity/*.ts",
-              __dirname + "/entity/map/*.ts",
-            ],
-            synchronize: true,
-            logging: true,
-          }),
-        ],
-        controllers: [],
-        providers: [],
-      });
-    }
+    override beforeStart(): void {}
   }
 
   beforeAll((done) => {
-    application = new TestServerApplication();
+    application = new TestServerApplication(AppModule);
     application.on("start", () => {
       done();
     });

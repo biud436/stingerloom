@@ -6,10 +6,13 @@ import "reflect-metadata";
 import { ContainerManager } from "@stingerloom/core/IoC/ContainerManager";
 import { ParameterListManager } from "@stingerloom/core/common/ParameterListManager";
 import {
+  ClazzType,
+  DynamicModuleOption,
   EventService,
   FastifyServerFactory,
   HttpServer,
   Logger,
+  MODULE_OPTIONS_TOKEN,
   ModuleOptions,
   ServerFactory,
   ServerOptions,
@@ -32,12 +35,26 @@ export class ServerBootstrapApplication extends EventEmitter {
   protected server!: HttpServer;
   private containerManager!: ContainerManager;
   protected moduleOptions!: ModuleOptions;
+  protected entryModule: ClazzType<any>;
   private logger = new Logger(ServerBootstrapApplication.name);
 
-  constructor(serverFactory: ServerFactory = new FastifyServerFactory()) {
+  constructor(
+    moduleGetter: ClazzType,
+    serverFactory: ServerFactory = new FastifyServerFactory(),
+  ) {
     super();
 
+    this.entryModule = moduleGetter;
     this.server = serverFactory.createServer();
+  }
+
+  getAppModuleOptions(): DynamicModuleOption {
+    const options = Reflect.getMetadata(
+      MODULE_OPTIONS_TOKEN,
+      this.entryModule,
+    ) as DynamicModuleOption;
+
+    return options || {};
   }
 
   /**
@@ -66,7 +83,9 @@ export class ServerBootstrapApplication extends EventEmitter {
   protected async prepare() {}
 
   private mergeModuleOptions(): void {
-    this.moduleOptions = ModuleOptions.merge(this.moduleOptions, {
+    const appModuleOptions = this.getAppModuleOptions();
+
+    this.moduleOptions = ModuleOptions.merge(appModuleOptions, {
       controllers: [],
       providers: [EventService, DiscoveryService],
     });
@@ -76,7 +95,9 @@ export class ServerBootstrapApplication extends EventEmitter {
    * 컨트롤러를 스캔하고 라우터를 동적으로 등록합니다.
    */
   private async registerControllers(): Promise<this> {
-    this.containerManager = new ContainerManager(this.server);
+    const options = this.getAppModuleOptions();
+
+    this.containerManager = new ContainerManager(this.server, this.entryModule);
 
     await this.containerManager.register();
 
