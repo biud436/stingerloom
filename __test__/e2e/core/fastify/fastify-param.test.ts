@@ -1,12 +1,14 @@
 import axios from "axios";
 import {
   Controller,
+  DatabaseModule,
   Get,
   Module,
   ModuleOptions,
   Param,
   ServerBootstrapApplication,
 } from "@stingerloom/core";
+import configService from "@stingerloom/core/common/ConfigService";
 
 describe("파라미터 테스트", () => {
   let application: TestServerApplication;
@@ -65,6 +67,22 @@ describe("파라미터 테스트", () => {
   class TestServerApplication extends ServerBootstrapApplication {
     override beforeStart(): void {
       this.moduleOptions = ModuleOptions.merge({
+        imports: [
+          DatabaseModule.forRoot({
+            type: "mysql",
+            host: configService.get<string>("DB_HOST"),
+            port: configService.get<number>("DB_PORT"),
+            database: configService.get<string>("DB_NAME"),
+            password: configService.get<string>("DB_PASSWORD"),
+            username: configService.get<string>("DB_USER"),
+            entities: [
+              __dirname + "/entity/*.ts",
+              __dirname + "/entity/map/*.ts",
+            ],
+            synchronize: true,
+            logging: true,
+          }),
+        ],
         controllers: [],
         providers: [],
       });
