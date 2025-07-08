@@ -336,7 +336,9 @@ export class EntityManager implements BaseEntityManager {
 
         qb.limit([offset, count]);
       } else {
-        qb.limit(limit as number);
+        if (limit) {
+          qb.limit(limit as number);
+        }
       }
 
       // 최종 SQL을 생성합니다.

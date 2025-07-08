@@ -56,7 +56,6 @@ describe("ORM Entity 외래키 생성 테스트", () => {
       type: "int",
       nullable: false,
       length: 11,
-      // name: "product_id", 면 생성이 되질 않음
     })
     productId!: number;
 
@@ -71,11 +70,20 @@ describe("ORM Entity 외래키 생성 테스트", () => {
     constructor(
       @InjectEntityManager()
       private readonly entityManager: EntityManager,
-      // @InjectRepository(Order)
-      // private readonly orderRepository: BaseRepository<Order>, // ! 제대로 주입이 되질 않음
     ) {}
 
-    async onModuleInit(): Promise<void> {}
+    async onModuleInit(): Promise<void> {
+      const productRepository = this.entityManager.getRepository(Product);
+
+      const items = await productRepository.find({});
+
+      let totalPrice = 0;
+      for (const item of items) {
+        totalPrice += item.price;
+      }
+
+      console.log("총 상품 가격:", totalPrice);
+    }
 
     @Get("/hello")
     async resolvePerson() {
@@ -143,7 +151,9 @@ describe("ORM Entity 외래키 생성 테스트", () => {
       done();
     });
 
-    application.start();
+    application.start({
+      port: 3002,
+    });
   });
 
   afterAll(async () => {
