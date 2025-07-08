@@ -2591,7 +2591,7 @@ __metadata:
     express-session: "npm:^1.18.1"
     fastify: "npm:^5.2.1"
     handlebars: "npm:^4.7.8"
-    http-status: "npm:^2.0.0"
+    http-status: "npm:^2.1.0"
     mysql2: "npm:^3.9.3"
     reflect-metadata: "npm:^0.2.2"
     rimraf: "npm:^6.0.1"
@@ -6692,10 +6692,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-status@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "http-status@npm:2.0.0"
-  checksum: 10c0/56455f68ae2d18f7dd4e9debfe561f27862c37f87854bfde0dddb1781bfbc0b97b37aa5677ce4b1e367d7b90eccf3723021120948fa8f8b961135a43f10aa60c
+"http-status@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "http-status@npm:2.1.0"
+  checksum: 10c0/1580ba46fc8bf1c777beec55a4f7c0aecdeb8d42fea8761d2040327183bb398947664cde15cf76256aa036d5ccccf7c6bea971e5ec20daa474bc40ef3e578f5d
   languageName: node
   linkType: hard
 

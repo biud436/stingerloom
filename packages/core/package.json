@@ -18,7 +18,7 @@
     "express-session": "^1.18.1",
     "fastify": "^5.2.1",
     "handlebars": "^4.7.8",
-    "http-status": "^2.0.0",
+    "http-status": "^2.1.0",
     "mysql2": "^3.9.3",
     "reflect-metadata": "^0.2.2",
     "sql-template-tag": "^4",
