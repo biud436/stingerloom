@@ -39,6 +39,7 @@ export class DatabaseClient {
     this.options = options;
 
     switch (type) {
+      case "mariadb":
       case "mysql":
         this.connector = new MySqlConnector();
         await this.connector.connect(options);

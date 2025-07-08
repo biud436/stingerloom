@@ -54,6 +54,7 @@ export class EntityManager implements BaseEntityManager {
     const connector = await client.connect(databaseClientOptions);
 
     switch (client.type as IDatabaseType) {
+      case "mariadb":
       case "mysql":
         this.driver = new MySqlDriver(connector, client.type);
         this.dataSource = new MySqlDataSource(connector);
