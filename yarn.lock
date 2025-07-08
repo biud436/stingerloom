@@ -4417,6 +4417,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"class-validator@npm:^0.14.2":
+  version: 0.14.2
+  resolution: "class-validator@npm:0.14.2"
+  dependencies:
+    "@types/validator": "npm:^13.11.8"
+    libphonenumber-js: "npm:^1.11.1"
+    validator: "npm:^13.9.0"
+  checksum: 10c0/5bb67389d38fa23d342dffdd8e2dcee8235e1906e59799df5b2050278a6d89292fcaa88167f0215e3ddd684f47dcd51b004efa7be32d8aded91ee06cb317b3b8
+  languageName: node
+  linkType: hard
+
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -8114,6 +8125,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"libphonenumber-js@npm:^1.11.1":
+  version: 1.12.9
+  resolution: "libphonenumber-js@npm:1.12.9"
+  checksum: 10c0/77fb86802cdf339f472e6a65394603fec0dabe76faca8b5efb4ebcfada2c11a7b39b6773de400e8ec6528354d4b49317797673b14e921117cadbe6b76f01613d
+  languageName: node
+  linkType: hard
+
 "light-my-request@npm:^5.11.0":
   version: 5.14.0
   resolution: "light-my-request@npm:5.14.0"
@@ -11332,7 +11350,7 @@ __metadata:
     bcrypt: "npm:^5.1.1"
     chalk: "npm:^4"
     class-transformer: "npm:^0.5.1"
-    class-validator: "npm:^0.14.0"
+    class-validator: "npm:^0.14.2"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.46.0"
     fastify: "npm:^4.24.3"
