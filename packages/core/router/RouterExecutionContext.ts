@@ -107,6 +107,12 @@ export class RouterExecutionContext {
   private normalizePath(controllerPath: string, routePath: string): string {
     const base = controllerPath.replace(/\/$/, "");
     const route = routePath.replace(/^\//, "");
+
+    // 둘 다 빈 문자열인 경우 루트 반환
+    if (!base && !route) {
+      return "/";
+    }
+
     const joined = path.posix.join(base, route);
     return joined.startsWith("/") ? joined : `/${joined}`;
   }

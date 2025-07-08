@@ -2,6 +2,7 @@
 import {
   BadRequestException,
   Controller,
+  DatabaseModule,
   Get,
   Ip,
   Module,
@@ -10,6 +11,7 @@ import {
 } from "@stingerloom/core";
 import { ExpressServerFactory } from "@stingerloom/core/common/http/adapters/express";
 import axios from "axios";
+import configService from "@stingerloom/core/common/ConfigService";
 
 describe("서버 세팅 및 시작 테스트", () => {
   let application: TestServerApplication;
@@ -17,8 +19,8 @@ describe("서버 세팅 및 시작 테스트", () => {
 
   @Controller("/")
   class AppController {
-    @Get("/")
-    index() {
+    @Get("/d")
+    d() {
       return "Hello World";
     }
 
@@ -33,6 +35,11 @@ describe("서버 세팅 및 시작 테스트", () => {
     ips(@Ip() ip: string) {
       return ip;
     }
+
+    @Get("/")
+    index() {
+      return "Hello, Stingerloom!";
+    }
   }
 
   @Module({
@@ -42,6 +49,22 @@ describe("서버 세팅 및 시작 테스트", () => {
   class TestServerApplication extends ServerBootstrapApplication {
     override beforeStart(): void {
       this.moduleOptions = ModuleOptions.merge({
+        imports: [
+          DatabaseModule.forRoot({
+            type: "mysql",
+            host: configService.get<string>("DB_HOST"),
+            port: configService.get<number>("DB_PORT"),
+            database: configService.get<string>("DB_NAME"),
+            password: configService.get<string>("DB_PASSWORD"),
+            username: configService.get<string>("DB_USER"),
+            entities: [
+              __dirname + "/entity/*.ts",
+              __dirname + "/entity/map/*.ts",
+            ],
+            synchronize: true,
+            logging: true,
+          }),
+        ],
         controllers: [],
         providers: [],
       });
@@ -63,10 +86,15 @@ describe("서버 세팅 및 시작 테스트", () => {
     await application.stop();
   });
 
-  it("에코 테스트가 성공하는가?", async () => {
-    const res = await axios.get(`http://localhost:${PORT}`);
+  it("/d 에 접근", async () => {
+    const res = await axios.get(`http://localhost:${PORT}/d`);
 
     expect(res.data).toBe("Hello World");
+  });
+  it("/ 에 접근", async () => {
+    const res = await axios.get(`http://localhost:${PORT}`);
+
+    expect(res.data).toBe("Hello, Stingerloom!");
   });
 
   it("400번 오류가 제대로 검출되는가?", async () => {
