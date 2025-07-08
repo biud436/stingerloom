@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import { DynamicModuleOption, MODULE_OPTIONS_TOKEN } from "./Module";
+import { DynamicModuleOption, Module, MODULE_OPTIONS_TOKEN } from "./Module";
 import { ClazzType } from "./RouterMapper";
 
 export class ModuleNode {
@@ -19,8 +19,16 @@ export class ModuleDependencyResolver {
   private sortedModules: ClazzType[] = [];
   private visited: Set<ClazzType> = new Set();
   private tempMarked: Set<ClazzType> = new Set();
+  private root: ClazzType;
 
-  constructor(private root: ClazzType) {}
+  constructor(root: ClazzType) {
+    console.log(
+      `ModuleDependencyResolver initialized with root module: `,
+      root,
+    );
+
+    this.root = root;
+  }
 
   sort(): ClazzType[] {
     this.visit(this.root);
@@ -43,7 +51,19 @@ export class ModuleDependencyResolver {
     const moduleOptions = this.getModuleOptions(moduleClass);
     if (moduleOptions.imports) {
       for (const importedModule of moduleOptions.imports) {
-        this.visit(importedModule as ClazzType);
+        if (importedModule instanceof Function) {
+          this.visit(importedModule as ClazzType);
+        } else {
+          /**
+           * 런타임에 생성되는 동적 모듈을 처리합니다.
+           */
+          @Module({
+            ...importedModule,
+          })
+          class DynamicModule {}
+
+          this.visit(DynamicModule);
+        }
       }
     }
 
@@ -54,11 +74,10 @@ export class ModuleDependencyResolver {
 
   private getModuleOptions(moduleClass: ClazzType): DynamicModuleOption {
     try {
-      const getOptions = () => {
-        return Reflect.getMetadata(MODULE_OPTIONS_TOKEN, moduleClass);
-      };
-
-      const options: DynamicModuleOption = getOptions();
+      const options: DynamicModuleOption = Reflect.getMetadata(
+        MODULE_OPTIONS_TOKEN,
+        moduleClass,
+      );
       if (!options) {
         throw new Error(
           `ModuleOptions not found for module: ${moduleClass.name}`,

@@ -3,9 +3,8 @@ import { IsNumber, IsString } from "class-validator";
 import { Transform } from "class-transformer";
 import {
   Controller,
+  EntryModule,
   Get,
-  Module,
-  ModuleOptions,
   Query,
   ServerBootstrapApplication,
 } from "@stingerloom/core";
@@ -65,21 +64,18 @@ describe("Query 테스트", () => {
     }
   }
 
-  @Module({
+  @EntryModule({
     controllers: [AppController],
     providers: [],
   })
+  class AppModule {}
+
   class TestServerApplication extends ServerBootstrapApplication {
-    override beforeStart(): void {
-      this.moduleOptions = ModuleOptions.merge({
-        controllers: [],
-        providers: [],
-      });
-    }
+    override beforeStart(): void {}
   }
 
   beforeAll((done) => {
-    application = new TestServerApplication();
+    application = new TestServerApplication(AppModule);
     application.on("start", () => {
       done();
     });

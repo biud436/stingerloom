@@ -1,8 +1,7 @@
 import {
   Controller,
+  EntryModule,
   Get,
-  Module,
-  ModuleOptions,
   ServerBootstrapApplication,
 } from "@stingerloom/core";
 import axios from "axios";
@@ -18,21 +17,18 @@ describe("데이터베이스에 연결되지 않았을 때", () => {
     }
   }
 
-  @Module({
+  @EntryModule({
     controllers: [AppController],
     providers: [],
   })
+  class AppModule {}
+
   class TestServerApplication extends ServerBootstrapApplication {
-    override beforeStart(): void {
-      this.moduleOptions = ModuleOptions.merge({
-        controllers: [],
-        providers: [],
-      });
-    }
+    override beforeStart(): void {}
   }
 
   beforeAll((done) => {
-    application = new TestServerApplication();
+    application = new TestServerApplication(AppModule);
     application.on("start", () => {
       done();
     });

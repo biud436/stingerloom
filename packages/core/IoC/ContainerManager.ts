@@ -11,13 +11,13 @@ import { transformBasicParameter } from "@stingerloom/core/common/allocators";
 import {
   HttpServer,
   Logger,
+  ModuleDependencyResolver,
   OnApplicationShutdown,
   TransactionManager,
 } from "@stingerloom/core/common";
 import { RouterExecutionContext } from "@stingerloom/core/router/RouterExecutionContext";
 import chalk from "chalk";
 import { createAutoWiredFactory } from "./utils/createAutoWiredFactory";
-// import { EntityManager } from "@stingerloom/core/orm/core/EntityManager";
 import { InjectableScanner, InstanceScanner } from "./scanners";
 
 const LAZY_INJECTED_EXPLORER_SYMBOL = Symbol.for("LAZY_INJECTED_EXPLORER");
@@ -29,7 +29,7 @@ export class ContainerManager {
   private _controllers: ClazzType<any>[] = [];
   private _injectables: ClazzType<any>[] = [];
   private server!: HttpServer;
-  // private entityManager!: EntityManager;
+  private entryModule: ClazzType;
 
   private readonly logger = new Logger(ContainerManager.name);
   private readonly routerExecutionContext;
@@ -37,12 +37,14 @@ export class ContainerManager {
     ...args: unknown[]
   ) => void)[] = [];
 
-  constructor(server: HttpServer) {
+  constructor(server: HttpServer, moduleGetter: ClazzType) {
     this.server = server;
+    this.entryModule = moduleGetter;
     this.routerExecutionContext = new RouterExecutionContext(this.server);
   }
 
   public async register() {
+    await this.registerModules();
     await this.registerEntities();
     await this.registerInjectables();
     await this.registerControllers();
@@ -56,8 +58,6 @@ export class ContainerManager {
   public async propagateShutdown() {
     const consumers: unknown[] = this._injectables.concat(this._controllers);
 
-    // await this.entityManager.propagateShutdown();
-
     for (const consumer of consumers) {
       const handler = consumer as OnApplicationShutdown;
       if (handler.onApplicationShutdown instanceof Promise) {
@@ -68,9 +68,22 @@ export class ContainerManager {
     }
   }
 
+  private async registerModules() {
+    const AppModule = this.entryModule;
+
+    const sorter = new ModuleDependencyResolver(AppModule);
+
+    const sortedModules = sorter.sort();
+
+    this.logger.info(
+      `모듈을 의존성에 따라 정렬했습니다: ${sortedModules
+        .map((module) => module.name)
+        .join(" -> ")}`,
+    );
+  }
+
   private async registerEntities() {
     console.log("registerEntities");
-    // await this.entityManager.register();
   }
 
   /**
@@ -129,7 +142,6 @@ export class ContainerManager {
   private async registerControllers() {
     // Controller 스캐너 생성
     const controllerScanner = Container.get(ControllerScanner);
-    // const instanceScanner = Container.get(InstanceScanner);
     const contollers = controllerScanner.makeControllers();
     let controller: IteratorResult<ContainerMetadata>;
 
@@ -192,7 +204,6 @@ export class ContainerManager {
    * 예외 처리를 스캔하고 예외를 캐치합니다.
    */
   private async registerExceptions() {
-    // // Exception 스캐너 생성
     const routerRegistery = this.server.getRouteRegistry();
 
     routerRegistery.registerExceptionHandler();

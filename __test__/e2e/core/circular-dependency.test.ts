@@ -1,10 +1,9 @@
 import axios from "axios";
 import {
   Controller,
+  EntryModule,
   Get,
   Injectable,
-  Module,
-  ModuleOptions,
   ServerBootstrapApplication,
 } from "@stingerloom/core";
 
@@ -51,21 +50,18 @@ describe("CircularDependency 테스트", () => {
     }
   }
 
-  @Module({
+  @EntryModule({
     controllers: [AppController],
     providers: [AppService, CircularService],
   })
+  class AppModule {}
+
   class TestServerApplication extends ServerBootstrapApplication {
-    override beforeStart(): void {
-      this.moduleOptions = ModuleOptions.merge({
-        controllers: [],
-        providers: [],
-      });
-    }
+    override beforeStart(): void {}
   }
 
   beforeAll((done) => {
-    application = new TestServerApplication();
+    application = new TestServerApplication(AppModule);
     application.on("start", () => {
       done();
     });

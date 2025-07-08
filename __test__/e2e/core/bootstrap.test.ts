@@ -1,8 +1,7 @@
 import {
   Controller,
+  EntryModule,
   Get,
-  Module,
-  ModuleOptions,
   ServerBootstrapApplication,
 } from "@stingerloom/core";
 import axios from "axios";
@@ -23,21 +22,18 @@ describe("서버 세팅 및 시작 테스트", () => {
     }
   }
 
-  @Module({
+  @EntryModule({
     controllers: [AppController],
     providers: [],
   })
+  class AppModule {}
+
   class TestServerApplication extends ServerBootstrapApplication {
-    override beforeStart(): void {
-      this.moduleOptions = ModuleOptions.merge({
-        controllers: [],
-        providers: [],
-      });
-    }
+    override beforeStart(): void {}
   }
 
   beforeAll((done) => {
-    application = new TestServerApplication();
+    application = new TestServerApplication(AppModule);
     application.on("start", () => {
       done();
     });
