@@ -11,10 +11,14 @@ import Database from "../common/database/DatabaseV1";
 import Container from "typedi";
 import { EntityManager } from "./core";
 
+export const DATABASE_SERVICE_TOKEN = Symbol.for("DATABASE_SERVICE_TOKEN");
+
 @Injectable()
 export class DatabaseService implements OnModuleInit {
   private database?: Database;
   private entityManager!: EntityManager;
+
+  public static captured = {} as Record<typeof DATABASE_SERVICE_TOKEN, boolean>;
 
   constructor(private readonly eventService: EventService) {
     console.log("DatabaseService initialized");
@@ -22,6 +26,10 @@ export class DatabaseService implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     console.log("DatabaseService onModuleInit");
+
+    if (!DatabaseService.captured[DATABASE_SERVICE_TOKEN]) {
+      return;
+    }
 
     await this.initEntityManager();
     await this.registerEntities();
