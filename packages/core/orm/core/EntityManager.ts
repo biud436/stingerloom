@@ -174,7 +174,7 @@ export class EntityManager implements BaseEntityManager {
           throw new Error("Primary key for the mapping entity does not exist.");
         }
 
-        const mappingTableName = mappingEntity.name;
+        const { name: mappingTableName } = mappingEntity;
 
         await this.driver?.addForeignKey(
           // 현재 테이블 이름
@@ -233,10 +233,7 @@ export class EntityManager implements BaseEntityManager {
     entity: ClazzType<T>,
     findOption: FindOption<T>,
   ): Promise<EntityResult<T>> {
-    return this.find<T>(entity, {
-      ...findOption,
-      limit: 1,
-    });
+    return this.find<T>(entity, { ...findOption, limit: 1 });
   }
 
   /**
@@ -278,10 +275,8 @@ export class EntityManager implements BaseEntityManager {
       // Query Map
       const selectMap: string[] = [];
       const whereMap: Sql[] = [];
-      const orderByMap: Array<{
-        column: string;
-        direction: "ASC" | "DESC";
-      }> = [];
+      const orderByMap: Array<{ column: string; direction: "ASC" | "DESC" }> =
+        [];
 
       if (!select) {
         selectMap.push(...metadata.columns.map((column) => column.name!));
@@ -297,10 +292,7 @@ export class EntityManager implements BaseEntityManager {
       for (const key in orderBy) {
         const value = orderBy[key];
         if (value) {
-          orderByMap.push({
-            column: key,
-            direction: value,
-          });
+          orderByMap.push({ column: key, direction: value });
         }
       }
 
@@ -419,11 +411,11 @@ export class EntityManager implements BaseEntityManager {
         (column: ColumnMetadata) => column.options?.primary,
       );
 
-      const pkValue = (item as any)[pk.name!];
+      const primaryKeyValue = (item as any)[pk.name!];
 
       // If the primary key (PK) does not exist, create a new entity.
-      if (!pkValue) {
-        const packet = (await transactionHolder.query<T>(
+      if (!primaryKeyValue) {
+        const queryResult = (await transactionHolder.query<T>(
           sql`
                         INSERT INTO ${raw(this.wrap(metadata.name!))}
                         (${join(columns, ", ")})
@@ -435,15 +427,13 @@ export class EntityManager implements BaseEntityManager {
 
         if (this.isMySqlFamily()) {
           const result = await this.findOne(entity, {
-            where: {
-              [pk.name!]: packet?.results?.insertId,
-            },
+            where: { [pk.name!]: queryResult?.results?.insertId },
           } as any);
 
           return result as T;
         }
 
-        return packet as T;
+        return queryResult as T;
       }
 
       // If the primary key (PK) exists, execute the update query.
@@ -455,7 +445,7 @@ export class EntityManager implements BaseEntityManager {
         sql`
                     UPDATE ${raw(this.wrap(metadata.name!))}
                     SET ${join(updateMap, ", ")}
-                    WHERE ${raw(pk.name!)} = ${pkValue}
+                    WHERE ${raw(pk.name!)} = ${primaryKeyValue}
                 `,
       );
 
@@ -463,9 +453,7 @@ export class EntityManager implements BaseEntityManager {
 
       // Retrieve and return the updated entity.
       const result = await this.findOne(entity, {
-        where: {
-          [pk.name!]: pkValue,
-        },
+        where: { [pk.name!]: primaryKeyValue },
       } as any);
 
       return result as T;
