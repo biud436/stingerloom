@@ -348,7 +348,8 @@ export class EntityManager implements BaseEntityManager {
         return undefined;
       }
 
-      if (results.length > 1) {
+      const isEntityArray = results.length > 1;
+      if (isEntityArray) {
         return resultTransformer.toEntities(entity, queryResult);
       } else {
         return resultTransformer.toEntity(entity, queryResult);
