@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 import { ServerPlugin } from "../../../interfaces";
 import { LoomServer } from "../server/LoomServer";
 
@@ -63,7 +64,7 @@ export class LoomRateLimitPlugin implements ServerPlugin {
       windowMs: 15 * 60 * 1000, // 15분
       max: 100,
       message: "Too many requests from this IP, please try again later.",
-      statusCode: 429,
+      statusCode: HttpStatus.TOO_MANY_REQUESTS,
       standardHeaders: true,
       legacyHeaders: true,
       keyGenerator: options.keyGenerator,
