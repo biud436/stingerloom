@@ -18,5 +18,8 @@ export { LoomResponseAdapter } from "./LoomResponseAdapter";
 export { LoomRouteRegistry } from "./LoomRouteRegistry";
 export { LoomHandlerAdapter } from "./LoomHandlerAdapter";
 
+// Plugins
+export * from "./plugins";
+
 // Utilities and Types
 export { RouteTrie, TrieNode, RouteMatch } from "./utils";

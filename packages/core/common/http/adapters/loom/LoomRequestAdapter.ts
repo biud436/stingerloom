@@ -16,13 +16,21 @@ export class LoomRequestAdapter implements HttpRequest {
 
   constructor(
     private incomingMessage: http.IncomingMessage,
-    private parsedUrl: url.UrlWithParsedQuery,
+    parsedUrl: url.UrlWithParsedQuery,
     body: any,
   ) {
     this._body = body;
     this._query = parsedUrl.query || {};
     this._headers = this.parseHeaders(incomingMessage.headers);
     this._cookies = this.parseCookies();
+  }
+
+  get method(): string {
+    return this.incomingMessage.method || "GET";
+  }
+
+  get url(): string {
+    return this.incomingMessage.url || "/";
   }
 
   get body(): any {
@@ -66,6 +74,14 @@ export class LoomRequestAdapter implements HttpRequest {
 
   get hostname(): string {
     return this._headers["host"] || "localhost";
+  }
+
+  get userAgent(): string {
+    return this._headers["user-agent"] || "";
+  }
+
+  header(name: string): string | undefined {
+    return this._headers[name.toLowerCase()];
   }
 
   /**
