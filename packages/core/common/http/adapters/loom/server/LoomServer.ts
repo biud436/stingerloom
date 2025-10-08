@@ -13,6 +13,7 @@ import {
 import { LoomRouteRegistry } from "../LoomRouteRegistry";
 import { LoomRequestAdapter } from "../LoomRequestAdapter";
 import { LoomResponseAdapter } from "../LoomResponseAdapter";
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 
 /**
  * Stingerloom 프레임워크의 네이티브 HTTP 서버 구현체
@@ -151,21 +152,21 @@ export class LoomServer implements HttpServer {
         await handler(request, response);
       } else {
         // 404 Not Found
-        response.status(404).json({
+        response.status(HttpStatus.NOT_FOUND).json({
           error: "Not Found",
           message: `Cannot ${method} ${pathname}`,
-          statusCode: 404,
+          statusCode: HttpStatus.NOT_FOUND,
         });
       }
     } catch (error) {
       console.error("Request handling error:", error);
-      res.statusCode = 500;
+      res.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
       res.setHeader("Content-Type", "application/json");
       res.end(
         JSON.stringify({
           error: "Internal Server Error",
           message: "An unexpected error occurred",
-          statusCode: 500,
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         }),
       );
     }

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 import { HttpRequest, HttpResponse, HttpContext } from "../../interfaces";
 import { HttpHandler } from "../../types";
 
@@ -26,7 +27,8 @@ export class LoomHandlerAdapter {
         }
       } catch (error) {
         if (!this.isResponseSent(response)) {
-          const status = (error as any)?.status || 500;
+          const status =
+            (error as any)?.status || HttpStatus.INTERNAL_SERVER_ERROR;
 
           response.status(status).json({
             error: "Internal Server Error",
@@ -66,7 +68,8 @@ export class LoomHandlerAdapter {
         console.error("Handler function execution error:", error);
 
         if (!this.isResponseSent(response)) {
-          const status = (error as any)?.status || 500;
+          const status =
+            (error as any)?.status || HttpStatus.INTERNAL_SERVER_ERROR;
           response.status(status).json({
             error: "Internal Server Error",
             message:

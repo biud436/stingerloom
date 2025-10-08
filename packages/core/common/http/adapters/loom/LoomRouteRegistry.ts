@@ -7,6 +7,7 @@ import {
 } from "../../interfaces";
 import { HttpMethod } from "../../../HttpMethod";
 import { RouteTrie } from "./utils";
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 
 /**
  * Loom 서버의 라우트 레지스트리 구현체
@@ -91,17 +92,24 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
         const result = await route.handler({ request, response });
 
         if (result !== undefined && !(response as any)._sent) {
-          const statusCode = route.method.toLowerCase() === "post" ? 201 : 200;
+          const statusCode =
+            route.method.toLowerCase() === "post"
+              ? HttpStatus.CREATED
+              : HttpStatus.OK;
           response.status(statusCode).json(result);
         } else if (result === undefined && !(response as any)._sent) {
-          const statusCode = route.method.toLowerCase() === "post" ? 201 : 200;
+          const statusCode =
+            route.method.toLowerCase() === "post"
+              ? HttpStatus.CREATED
+              : HttpStatus.OK;
           response.status(statusCode).json({});
         }
       } catch (error) {
         console.error("Handler execution error:", error);
 
         if (!(response as any)._sent) {
-          const status = (error as any)?.status || 500;
+          const status =
+            (error as any)?.status || HttpStatus.INTERNAL_SERVER_ERROR;
           const name = (error as any)?.name || "Internal Server Error";
           response.status(status).json({
             error: name,

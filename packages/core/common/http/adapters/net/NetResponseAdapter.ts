@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as net from "net";
 import { HttpResponse } from "../../interfaces";
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 
 /**
  * TCP 소켓을 사용한 HTTP 응답 어댑터
  * 직접 HTTP 응답을 구성하여 소켓에 전송합니다.
  */
 export class NetResponseAdapter implements HttpResponse {
-  private _statusCode: number = 200;
+  private _statusCode: number = HttpStatus.OK;
   private _headers: Record<string, string> = {};
   private _isHeadersSent: boolean = false;
   private _isResponseSent: boolean = false;

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 import { HttpRoute, HttpRouteRegistry } from "../../interfaces";
 import { NetRequestAdapter } from "./NetRequestAdapter";
 import { NetResponseAdapter } from "./NetResponseAdapter";
@@ -55,7 +56,7 @@ export class NetRouteRegistry implements HttpRouteRegistry {
       } catch (error) {
         console.error("Handler execution error:", error);
         try {
-          response.status(500).json({
+          response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
             error: "Internal Server Error",
             message: error instanceof Error ? error.message : "Unknown error",
           });

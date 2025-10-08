@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as http from "http";
 import { HttpResponse } from "../../interfaces";
+import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 
 /**
  * Loom 서버의 HTTP 응답 어댑터
  * Node.js의 기본 ServerResponse를 HttpResponse 인터페이스로 변환합니다.
  */
 export class LoomResponseAdapter implements HttpResponse {
-  private _statusCode: number = 200;
+  private _statusCode: number = HttpStatus.OK;
   private _headers: Record<string, string> = {};
   private _sent: boolean = false;
 
@@ -144,7 +145,7 @@ export class LoomResponseAdapter implements HttpResponse {
   /**
    * 리다이렉트를 수행합니다.
    */
-  redirect(url: string, statusCode: number = 302): void {
+  redirect(url: string, statusCode: number = HttpStatus.FOUND): void {
     this.status(statusCode).setHeader("Location", url).send("");
   }
 }
