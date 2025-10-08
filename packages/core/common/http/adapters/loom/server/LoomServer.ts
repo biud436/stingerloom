@@ -8,6 +8,7 @@ import {
   HttpServer,
   ServerOptions,
   HttpRouteRegistry,
+  ServerPlugin,
 } from "../../../interfaces";
 import { LoomRouteRegistry } from "../LoomRouteRegistry";
 import { LoomRequestAdapter } from "../LoomRequestAdapter";
@@ -29,7 +30,7 @@ export class LoomServer implements HttpServer {
   private routeRegistry: LoomRouteRegistry;
   private middlewares: Array<(req: any, res: any, next: () => void) => void> =
     [];
-  private plugins: Map<string, any> = new Map();
+  private plugins: Map<string, ServerPlugin> = new Map();
   private serverOptions?: ServerOptions;
 
   constructor() {
@@ -270,7 +271,7 @@ export class LoomServer implements HttpServer {
   /**
    * 플러그인을 설치합니다.
    */
-  private installPlugin(plugin: any): void {
+  private installPlugin(plugin: ServerPlugin): void {
     console.log(`Installing plugin: ${plugin.name}`);
     this.plugins.set(plugin.name, plugin);
 
@@ -289,7 +290,7 @@ export class LoomServer implements HttpServer {
   /**
    * 설치된 플러그인을 가져옵니다.
    */
-  public getPlugin(name: string): any {
+  public getPlugin(name: string): ServerPlugin | undefined {
     return this.plugins.get(name);
   }
 

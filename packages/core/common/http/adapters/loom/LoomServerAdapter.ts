@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpServer } from "../../interfaces";
+import { LoomRouteRegistry } from "./LoomRouteRegistry";
 import { LoomServer } from "./server";
 
 /**
@@ -23,8 +24,8 @@ export class LoomServerAdapter implements HttpServer {
     return this.loomServer.getInstance();
   }
 
-  getRouteRegistry(): any {
-    return this.loomServer.getRouteRegistry();
+  getRouteRegistry(): LoomRouteRegistry {
+    return this.loomServer.getRouteRegistry() as LoomRouteRegistry;
   }
 
   /**
@@ -63,7 +64,7 @@ export class LoomServerAdapter implements HttpServer {
 
     routeRegistry.register({
       path,
-      method: "GET",
+      method: "get",
       handler: async (context: any) => {
         const stats = this.getStats();
         context.response.json({
@@ -77,32 +78,5 @@ export class LoomServerAdapter implements HttpServer {
     });
 
     console.log(`Health check enabled at ${path}`);
-  }
-
-  /**
-   * 기본 미들웨어들을 설정합니다.
-   */
-  useDefaultMiddleware(): void {
-    // CORS 미들웨어
-    this.useCors();
-
-    // 로깅 미들웨어
-    this.useLogging();
-  }
-
-  /**
-   * CORS 미들웨어를 추가합니다.
-   */
-  private useCors(): void {
-    // CORS 로직은 추후 구현
-    console.log("CORS middleware enabled");
-  }
-
-  /**
-   * 로깅 미들웨어를 추가합니다.
-   */
-  private useLogging(): void {
-    // 로깅 로직은 추후 구현
-    console.log("Logging middleware enabled");
   }
 }
