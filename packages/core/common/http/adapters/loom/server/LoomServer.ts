@@ -16,6 +16,16 @@ import { LoomResponseAdapter } from "../LoomResponseAdapter";
 import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 
 /**
+ * Loom 서버 전용 미들웨어 타입
+ * Node.js의 기본 IncomingMessage와 ServerResponse를 사용
+ */
+export type LoomMiddleware = (
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+  next: (error?: any) => void,
+) => void;
+
+/**
  * Stingerloom 프레임워크의 네이티브 HTTP 서버 구현체
  * Node.js의 기본 http/https 모듈을 사용하여 구현됩니다.
  *
@@ -29,8 +39,7 @@ import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 export class LoomServer implements HttpServer {
   private server?: http.Server | https.Server;
   private routeRegistry: LoomRouteRegistry;
-  private middlewares: Array<(req: any, res: any, next: () => void) => void> =
-    [];
+  private middlewares: LoomMiddleware[] = [];
   private plugins: Map<string, ServerPlugin> = new Map();
   private serverOptions?: ServerOptions;
 
@@ -284,7 +293,7 @@ export class LoomServer implements HttpServer {
   /**
    * 미들웨어를 추가합니다.
    */
-  public use(middleware: (req: any, res: any, next: () => void) => void): void {
+  public use(middleware: LoomMiddleware): void {
     this.middlewares.push(middleware);
   }
 
@@ -346,7 +355,7 @@ export class LoomServer implements HttpServer {
     req: http.IncomingMessage,
     res: http.ServerResponse,
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       let currentIndex = 0;
 
       const next = (error?: any): void => {
