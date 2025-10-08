@@ -291,6 +291,13 @@ export class LoomServer implements HttpServer {
   }
 
   /**
+   * 플러그인을 수동으로 설치합니다 (테스트용).
+   */
+  public addPlugin(plugin: ServerPlugin): void {
+    this.installPlugin(plugin);
+  }
+
+  /**
    * 미들웨어를 추가합니다.
    */
   public use(middleware: LoomMiddleware): void {

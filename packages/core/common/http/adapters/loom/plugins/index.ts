@@ -7,6 +7,12 @@
  */
 
 export { LoomCorsPlugin, type CorsOptions } from "./LoomCorsPlugin";
+export {
+  LoomMultipartPlugin,
+  type MultipartOptions,
+  type ParsedFile,
+  type MultipartParseResult,
+} from "./LoomMultipartPlugin";
 
 // 향후 추가될 플러그인들
 // export { LoomLoggingPlugin } from "./LoomLoggingPlugin";
