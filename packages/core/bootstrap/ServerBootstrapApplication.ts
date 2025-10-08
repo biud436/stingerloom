@@ -72,7 +72,7 @@ export class ServerBootstrapApplication extends EventEmitter {
 
     await this.registerControllers();
 
-    this.createServer(options);
+    await this.createServer(options);
   }
 
   /**
