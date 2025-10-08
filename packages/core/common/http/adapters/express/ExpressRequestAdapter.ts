@@ -5,6 +5,14 @@ import { HttpRequest } from "../../interfaces";
 export class ExpressRequestAdapter implements HttpRequest {
   constructor(private expressRequest: Request) {}
 
+  get method(): string {
+    return this.expressRequest.method;
+  }
+
+  get url(): string {
+    return this.expressRequest.url;
+  }
+
   get body(): any {
     return this.expressRequest.body;
   }
@@ -35,5 +43,13 @@ export class ExpressRequestAdapter implements HttpRequest {
 
   get hostname(): string {
     return this.expressRequest.hostname;
+  }
+
+  get userAgent(): string {
+    return this.expressRequest.get("User-Agent") || "";
+  }
+
+  header(name: string): string | undefined {
+    return this.expressRequest.get(name);
   }
 }

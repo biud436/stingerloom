@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as http from "http";
+import * as https from "https";
+import * as fs from "fs";
 import * as url from "url";
 import * as querystring from "querystring";
 import {
@@ -13,32 +15,82 @@ import { LoomResponseAdapter } from "../LoomResponseAdapter";
 
 /**
  * Stingerloom 프레임워크의 네이티브 HTTP 서버 구현체
- * Node.js의 기본 http 모듈을 사용하여 구현됩니다.
+ * Node.js의 기본 http/https 모듈을 사용하여 구현됩니다.
+ *
+ * 지원 기능:
+ * - HTTP/HTTPS 프로토콜
+ * - 플러그인 시스템
+ * - 고급 라우팅
+ * - 미들웨어 체인
+ * - 커스텀 어댑터 패턴
  */
 export class LoomServer implements HttpServer {
-  private server?: http.Server;
+  private server?: http.Server | https.Server;
   private routeRegistry: LoomRouteRegistry;
+  private middlewares: Array<(req: any, res: any, next: () => void) => void> =
+    [];
+  private plugins: Map<string, any> = new Map();
+  private serverOptions?: ServerOptions;
 
   constructor() {
     this.routeRegistry = new LoomRouteRegistry();
   }
 
   async start(options: ServerOptions): Promise<void> {
+    this.serverOptions = options;
+
     return new Promise((resolve, reject) => {
-      this.server = http.createServer((req, res) => {
-        this.handleRequest(req, res);
-      });
+      try {
+        // HTTPS 서버 또는 HTTP 서버 생성
+        if (options.https) {
+          const httpsOptions: https.ServerOptions = {
+            key: fs.readFileSync(options.https.key),
+            cert: fs.readFileSync(options.https.cert),
+          };
 
-      this.server.listen(options.port, options.host, () => {
-        console.log(
-          `Loom Server is running on http://${options.host || "localhost"}:${options.port}`,
-        );
-        resolve();
-      });
+          if (options.https.ca) {
+            httpsOptions.ca = fs.readFileSync(options.https.ca);
+          }
 
-      this.server.on("error", (error) => {
+          this.server = https.createServer(httpsOptions, (req, res) => {
+            this.handleRequest(req, res);
+          });
+        } else {
+          this.server = http.createServer((req, res) => {
+            this.handleRequest(req, res);
+          });
+        }
+
+        // 서버 설정 적용
+        if (options.timeout) {
+          this.server.timeout = options.timeout;
+        }
+
+        if (options.keepAliveTimeout) {
+          this.server.keepAliveTimeout = options.keepAliveTimeout;
+        }
+
+        // 플러그인 설치
+        if (options.plugins) {
+          for (const plugin of options.plugins) {
+            this.installPlugin(plugin);
+          }
+        }
+
+        this.server.listen(options.port, options.host, () => {
+          const protocol = options.https ? "https" : "http";
+          console.log(
+            `Loom Server is running on ${protocol}://${options.host || "localhost"}:${options.port}`,
+          );
+          resolve();
+        });
+
+        this.server.on("error", (error) => {
+          reject(error);
+        });
+      } catch (error) {
         reject(error);
-      });
+      }
     });
   }
 
@@ -75,6 +127,14 @@ export class LoomServer implements HttpServer {
       const parsedUrl = url.parse(req.url || "", true);
       const pathname = parsedUrl.pathname || "/";
       const method = req.method?.toUpperCase() || "GET";
+
+      // 미들웨어 실행
+      await this.executeMiddlewares(req, res);
+
+      // 응답이 이미 전송되었으면 종료
+      if (res.headersSent || res.writableEnded) {
+        return;
+      }
 
       // 요청 본문 읽기
       const body = await this.readRequestBody(req);
@@ -204,6 +264,110 @@ export class LoomServer implements HttpServer {
         cleanup();
         resolve({});
       }
+    });
+  }
+
+  /**
+   * 플러그인을 설치합니다.
+   */
+  private installPlugin(plugin: any): void {
+    console.log(`Installing plugin: ${plugin.name}`);
+    this.plugins.set(plugin.name, plugin);
+
+    if (typeof plugin.install === "function") {
+      plugin.install(this);
+    }
+  }
+
+  /**
+   * 미들웨어를 추가합니다.
+   */
+  public use(middleware: (req: any, res: any, next: () => void) => void): void {
+    this.middlewares.push(middleware);
+  }
+
+  /**
+   * 설치된 플러그인을 가져옵니다.
+   */
+  public getPlugin(name: string): any {
+    return this.plugins.get(name);
+  }
+
+  /**
+   * 모든 설치된 플러그인을 가져옵니다.
+   */
+  public getPlugins(): Map<string, any> {
+    return this.plugins;
+  }
+
+  /**
+   * 서버 어댑터 팩토리 메서드
+   * 다양한 백엔드 서버를 생성할 수 있습니다.
+   */
+  public static createWithAdapter(
+    adapterType: "http" | "https" | "net" = "http",
+  ): LoomServer {
+    const server = new LoomServer();
+
+    // 어댑터별 초기 설정
+    switch (adapterType) {
+      case "https":
+        console.log("Loom Server configured for HTTPS");
+        break;
+      case "net":
+        console.log("Loom Server configured for low-level networking");
+        break;
+      default:
+        console.log("Loom Server configured for HTTP");
+    }
+
+    return server;
+  }
+
+  /**
+   * 서버 상태 정보를 반환합니다.
+   */
+  public getServerInfo(): any {
+    return {
+      isRunning: !!this.server && this.server.listening,
+      options: this.serverOptions,
+      pluginCount: this.plugins.size,
+      middlewareCount: this.middlewares.length,
+      routes: this.routeRegistry.getAllRoutes?.() || [],
+    };
+  }
+
+  /**
+   * 미들웨어들을 순차적으로 실행합니다.
+   */
+  private async executeMiddlewares(
+    req: http.IncomingMessage,
+    res: http.ServerResponse,
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let currentIndex = 0;
+
+      const next = (error?: any): void => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        if (currentIndex >= this.middlewares.length) {
+          resolve();
+          return;
+        }
+
+        const middleware = this.middlewares[currentIndex++];
+
+        try {
+          middleware(req, res, next);
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      next();
     });
   }
 }

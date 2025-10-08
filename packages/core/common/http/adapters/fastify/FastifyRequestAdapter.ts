@@ -8,6 +8,14 @@ import { HttpRequest } from "../../interfaces";
 export class FastifyRequestAdapter implements HttpRequest {
   constructor(private fastifyRequest: FastifyRequest) {}
 
+  get method(): string {
+    return this.fastifyRequest.method;
+  }
+
+  get url(): string {
+    return this.fastifyRequest.url;
+  }
+
   get body(): any {
     return this.fastifyRequest.body;
   }
@@ -38,5 +46,14 @@ export class FastifyRequestAdapter implements HttpRequest {
 
   get hostname(): string {
     return this.fastifyRequest.hostname;
+  }
+
+  get userAgent(): string {
+    return this.fastifyRequest.headers["user-agent"] || "";
+  }
+
+  header(name: string): string | undefined {
+    const value = this.fastifyRequest.headers[name.toLowerCase()];
+    return Array.isArray(value) ? value[0] : value;
   }
 }

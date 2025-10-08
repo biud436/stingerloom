@@ -11,27 +11,24 @@ export class LoomHandlerAdapter {
    * 컨트롤러 메서드를 HttpHandler로 변환합니다.
    */
   static adapt(
-    controllerMethod: (...args: any[]) => any,
+    handleRouteRequest: (...args: any[]) => any,
     target: any,
   ): HttpHandler {
     return async (context: HttpContext): Promise<void> => {
+      const { request, response } = context;
       try {
         // 컨트롤러 메서드 실행
-        const result = await controllerMethod.call(
-          target,
-          context.request,
-          context.response,
-        );
+        const result = await handleRouteRequest.call(target, request, response);
 
         // 결과가 있고 아직 응답이 전송되지 않았다면 JSON으로 응답
-        if (result !== undefined && !this.isResponseSent(context.response)) {
-          context.response.json(result);
+        if (result !== undefined && !this.isResponseSent(response)) {
+          response.json(result);
         }
       } catch (error) {
-        if (!this.isResponseSent(context.response)) {
+        if (!this.isResponseSent(response)) {
           const status = (error as any)?.status || 500;
 
-          context.response.status(status).json({
+          response.status(status).json({
             error: "Internal Server Error",
             message:
               error instanceof Error ? error.message : "Unknown error occurred",
@@ -57,18 +54,20 @@ export class LoomHandlerAdapter {
     handlerFunction: (req: HttpRequest, res: HttpResponse) => Promise<any>,
   ): HttpHandler {
     return async (context: HttpContext): Promise<void> => {
-      try {
-        const result = await handlerFunction(context.request, context.response);
+      const { request, response } = context;
 
-        if (result !== undefined && !this.isResponseSent(context.response)) {
-          context.response.json(result);
+      try {
+        const result = await handlerFunction(request, response);
+
+        if (result !== undefined && !this.isResponseSent(response)) {
+          response.json(result);
         }
       } catch (error) {
         console.error("Handler function execution error:", error);
 
-        if (!this.isResponseSent(context.response)) {
+        if (!this.isResponseSent(response)) {
           const status = (error as any)?.status || 500;
-          context.response.status(status).json({
+          response.status(status).json({
             error: "Internal Server Error",
             message:
               error instanceof Error ? error.message : "Unknown error occurred",
