@@ -101,11 +101,13 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
         console.error("Handler execution error:", error);
 
         if (!(response as any)._sent) {
-          response.status(500).json({
-            error: "Internal Server Error",
+          const status = (error as any)?.status || 500;
+          const name = (error as any)?.name || "Internal Server Error";
+          response.status(status).json({
+            error: name,
             message:
               error instanceof Error ? error.message : "Unknown error occurred",
-            statusCode: 500,
+            statusCode: status,
           });
         }
       }

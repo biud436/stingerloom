@@ -31,7 +31,7 @@ export class LoomServer implements HttpServer {
 
       this.server.listen(options.port, options.host, () => {
         console.log(
-          `🚀 Loom Server is running on http://${options.host || "localhost"}:${options.port}`,
+          `Loom Server is running on http://${options.host || "localhost"}:${options.port}`,
         );
         resolve();
       });
@@ -49,7 +49,7 @@ export class LoomServer implements HttpServer {
           if (error) {
             reject(error);
           } else {
-            console.log("🛑 Loom Server has been stopped");
+            console.log("Loom Server has been stopped");
             resolve();
           }
         });

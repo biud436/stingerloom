@@ -28,14 +28,14 @@ export class LoomHandlerAdapter {
           context.response.json(result);
         }
       } catch (error) {
-        console.error("Handler execution error:", error);
-
         if (!this.isResponseSent(context.response)) {
-          context.response.status(500).json({
+          const status = (error as any)?.status || 500;
+
+          context.response.status(status).json({
             error: "Internal Server Error",
             message:
               error instanceof Error ? error.message : "Unknown error occurred",
-            statusCode: 500,
+            statusCode: status,
           });
         }
       }
@@ -67,11 +67,12 @@ export class LoomHandlerAdapter {
         console.error("Handler function execution error:", error);
 
         if (!this.isResponseSent(context.response)) {
-          context.response.status(500).json({
+          const status = (error as any)?.status || 500;
+          context.response.status(status).json({
             error: "Internal Server Error",
             message:
               error instanceof Error ? error.message : "Unknown error occurred",
-            statusCode: 500,
+            statusCode: status,
           });
         }
       }
