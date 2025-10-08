@@ -13,9 +13,12 @@ export {
   type ParsedFile,
   type MultipartParseResult,
 } from "./LoomMultipartPlugin";
+export {
+  LoomRateLimitPlugin,
+  type RateLimitOptions,
+} from "./LoomRateLimitPlugin";
 
 // 향후 추가될 플러그인들
 // export { LoomLoggingPlugin } from "./LoomLoggingPlugin";
-// export { LoomRateLimitPlugin } from "./LoomRateLimitPlugin";
 // export { LoomCompressionPlugin } from "./LoomCompressionPlugin";
 // export { LoomSecurityPlugin } from "./LoomSecurityPlugin";
