@@ -12,6 +12,7 @@ import {
 } from "@stingerloom/core";
 import { LoomServerFactory } from "@stingerloom/core/common/http/adapters/loom";
 import configService from "@stingerloom/core/common/ConfigService";
+import { IsNumber, IsString } from "class-validator";
 
 describe("Loom 서버 파라미터 및 Trie 라우팅 테스트", () => {
   let application: TestServerApplication;
@@ -35,6 +36,17 @@ describe("Loom 서버 파라미터 및 Trie 라우팅 테스트", () => {
     getY() {
       return this.y;
     }
+  }
+
+  class CreateUserDto {
+    @IsString()
+    name!: string;
+
+    @IsString()
+    email!: string;
+
+    @IsNumber()
+    age!: number;
   }
 
   @Controller("/")
@@ -127,7 +139,7 @@ describe("Loom 서버 파라미터 및 Trie 라우팅 테스트", () => {
     }
 
     @Post("/users")
-    async createUser(@Body() userData: Record<string, unknown>) {
+    async createUser(@Body() userData: CreateUserDto) {
       return {
         message: "User created via Loom server",
         data: userData,
@@ -326,7 +338,7 @@ describe("Loom 서버 파라미터 및 Trie 라우팅 테스트", () => {
         server: "loom",
         created: expect.any(String),
       });
-      expect(res.status).toBe(200);
+      expect(res.status).toBe(201);
     });
   });
 

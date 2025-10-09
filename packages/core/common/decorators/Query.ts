@@ -18,11 +18,14 @@ export const Query = (rawName?: string) =>
         const type = contextType();
 
         if (type === Number) {
-          const r = Number(result) ?? Number(defaultValue);
+          const numResult = result !== undefined ? Number(result) : undefined;
+          const numDefault =
+            defaultValue !== undefined ? Number(defaultValue) : undefined;
+          const r = numResult ?? numDefault;
 
-          if (!isNumber(r)) {
+          if (r !== undefined && !isNumber(r)) {
             throw new BadRequestException(
-              `the parameter named ${r} is not a number. Please check the parameter type.`,
+              `the parameter named ${name} is not a number. Please check the parameter type.`,
             );
           }
 
