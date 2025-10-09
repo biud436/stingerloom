@@ -14,6 +14,19 @@ import {
 } from "@stingerloom/core";
 import { LoomServerFactory } from "@stingerloom/core/common/http/adapters/loom";
 import configService from "@stingerloom/core/common/ConfigService";
+import { IsOptional, IsString, IsNumber } from "class-validator";
+
+class JsonTestDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsNumber()
+  value?: number;
+
+  [key: string]: unknown;
+}
 
 describe("Loom 서버 에러 처리 테스트", () => {
   let application: TestServerApplication;
@@ -59,8 +72,11 @@ describe("Loom 서버 에러 처리 테스트", () => {
     }
 
     @Post("/json")
-    jsonTest(@Body() data: Record<string, unknown>) {
-      if (!data || Object.keys(data).length === 0) {
+    jsonTest(@Body() data: JsonTestDto) {
+      // undefined 값들만 있는지 확인하여 빈 객체인지 판단
+      const hasValidData =
+        data && (data.name !== undefined || data.value !== undefined);
+      if (!hasValidData) {
         throw new BadRequestException("Empty body");
       }
       return { received: data, server: "loom" };
@@ -200,7 +216,7 @@ describe("Loom 서버 에러 처리 테스트", () => {
     const testData = { name: "test", value: 123 };
     const res = await axios.post(`http://localhost:${PORT}/json`, testData);
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201); // POST 요청은 201 Created 반환
     expect(res.data.received).toEqual(testData);
     expect(res.data.server).toBe("loom");
   }, 10000);

@@ -113,7 +113,8 @@ export class RouteTrie {
     // 2. 파라미터 매칭 시도
     if (node.paramNode) {
       if (node.paramNode.paramName) {
-        params[node.paramNode.paramName] = decodeURIComponent(segment);
+        // URL 파라미터를 원본 형태로 유지하고, 필요시 컨트롤러에서 디코딩 처리
+        params[node.paramNode.paramName] = segment;
       }
 
       const result = this.searchRecursive(
