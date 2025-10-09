@@ -132,3 +132,6 @@ dist
 # bundle
 packages/**/*.d.ts
 packages/**/*.js
+
+# 공식 문서. 아직 비공개 (추후 공개 예정)
+docs
