@@ -17,15 +17,16 @@ export const DATABASE_SERVICE_TOKEN = Symbol.for("DATABASE_SERVICE_TOKEN");
 export class DatabaseService implements OnModuleInit {
   private database?: Database;
   private entityManager!: EntityManager;
+  private readonly logger = new Logger(DatabaseService.name);
 
   public static captured = {} as Record<typeof DATABASE_SERVICE_TOKEN, boolean>;
 
   constructor(private readonly eventService: EventService) {
-    console.log("DatabaseService initialized");
+    this.logger.info("DatabaseService initialized");
   }
 
   async onModuleInit(): Promise<void> {
-    console.log("DatabaseService onModuleInit");
+    this.logger.info("DatabaseService onModuleInit");
 
     if (!DatabaseService.captured[DATABASE_SERVICE_TOKEN]) {
       return;
@@ -39,7 +40,7 @@ export class DatabaseService implements OnModuleInit {
 
   async destroy(): Promise<void> {
     if (this.database) {
-      console.log("destroy");
+      this.logger.info("Destroying database connection");
       await this.database.onApplicationShutdown();
     }
 
