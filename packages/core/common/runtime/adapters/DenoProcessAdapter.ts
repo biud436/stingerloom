@@ -3,6 +3,7 @@ import { StingerLoomEnvironment } from "../types";
 import { DenoRuntime } from "../types/DenoRuntime";
 import { isDeno } from "../utils";
 
+export type DenoEnv<T = unknown> = Record<string, T>;
 export class DenoProcessAdapter implements ProcessAdapterInterface {
   constructor(private denoProcess: DenoRuntime) {
     if (isDeno()) {
@@ -24,8 +25,8 @@ export class DenoProcessAdapter implements ProcessAdapterInterface {
     return this.denoProcess.cwd();
   }
 
-  get env(): Record<string, string> {
-    const env: Record<string, string> = {};
+  get env(): DenoEnv<string> {
+    const env: DenoEnv<string> = {};
     for (const [key, value] of this.denoProcess.env.entries()) {
       env[key] = value;
     }
