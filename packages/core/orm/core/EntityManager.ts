@@ -356,10 +356,19 @@ export class EntityManager implements BaseEntityManager {
       }
     } catch (e: unknown) {
       // 트랜잭션 롤백
-      await transactionHolder.rollback();
+      try {
+        await transactionHolder.rollback();
+      } catch (rollbackError) {
+        this.logger.error(`Failed to rollback transaction: ${rollbackError}`);
+      }
+      throw e;
     } finally {
       // 트랜잭션 종료
-      await transactionHolder.close();
+      try {
+        await transactionHolder.close();
+      } catch (closeError) {
+        this.logger.error(`Failed to close transaction: ${closeError}`);
+      }
     }
   }
 
@@ -459,12 +468,19 @@ export class EntityManager implements BaseEntityManager {
 
       return result as T;
     } catch (e: unknown) {
-      await transactionHolder.rollback();
+      try {
+        await transactionHolder.rollback();
+      } catch (rollbackError) {
+        this.logger.error(`Failed to rollback transaction: ${rollbackError}`);
+      }
+      throw e;
     } finally {
-      await transactionHolder.close();
+      try {
+        await transactionHolder.close();
+      } catch (closeError) {
+        this.logger.error(`Failed to close transaction: ${closeError}`);
+      }
     }
-
-    return {} as T;
   }
 
   getRepository<T>(entity: ClazzType<T>) {
