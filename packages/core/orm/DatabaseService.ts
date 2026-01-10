@@ -3,6 +3,7 @@ import {
   EventService,
   Injectable,
   InstanceScanner,
+  Logger,
   OnModuleInit,
 } from "@stingerloom/core";
 import { DATABASE_OPTION_TOKEN, DatabaseModule } from "./DatabaseModule";

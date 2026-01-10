@@ -359,7 +359,7 @@ export class EntityManager implements BaseEntityManager {
       try {
         await transactionHolder.rollback();
       } catch (rollbackError) {
-        this.logger.error('Failed to rollback transaction', rollbackError);
+        this.logger.error(`Failed to rollback transaction: ${rollbackError}`);
       }
       throw e;
     } finally {
@@ -367,7 +367,7 @@ export class EntityManager implements BaseEntityManager {
       try {
         await transactionHolder.close();
       } catch (closeError) {
-        this.logger.error('Failed to close transaction', closeError);
+        this.logger.error(`Failed to close transaction: ${closeError}`);
       }
     }
   }
@@ -471,14 +471,14 @@ export class EntityManager implements BaseEntityManager {
       try {
         await transactionHolder.rollback();
       } catch (rollbackError) {
-        this.logger.error('Failed to rollback transaction', rollbackError);
+        this.logger.error(`Failed to rollback transaction: ${rollbackError}`);
       }
       throw e;
     } finally {
       try {
         await transactionHolder.close();
       } catch (closeError) {
-        this.logger.error('Failed to close transaction', closeError);
+        this.logger.error(`Failed to close transaction: ${closeError}`);
       }
     }
   }
