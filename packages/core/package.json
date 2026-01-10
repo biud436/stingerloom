@@ -11,7 +11,7 @@
     "@fastify/view": "^8.2.0",
     "chalk": "^4",
     "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0",
+    "class-validator": "^0.14.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
