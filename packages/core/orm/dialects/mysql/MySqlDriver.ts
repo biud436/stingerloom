@@ -3,9 +3,9 @@ import sql, { join, raw } from "sql-template-tag";
 import { IConnector } from "../../core/IConnector";
 import { MysqlSchemaInterface } from "./BaseSchema";
 import { ColumnOption, ColumnType } from "../../decorators";
-import { ColumnMetadata } from "../../scanner/ColumnScanner";
 import { ISqlDriver } from "../SqlDriver";
 import { Exception } from "@stingerloom/core/error";
+import { SchemaOptions } from "../../types/SchemaOption";
 
 export class MySqlDriver implements ISqlDriver {
   constructor(
@@ -237,10 +237,7 @@ export class MySqlDriver implements ISqlDriver {
    * @param tableName
    * @param columns
    */
-  createTable(
-    tableName: string,
-    columns: Omit<ColumnMetadata, "target" | "type">[],
-  ) {
+  createTable(tableName: string, columns: SchemaOptions[]) {
     const columnsMap = columns.map((column) => {
       const option = column.options as ColumnOption;
 
