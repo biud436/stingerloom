@@ -18,18 +18,30 @@ export class MySqlConnector implements IConnector {
 
   async connect(options: DatabaseClientOptions): Promise<void> {
     try {
+      const {
+        host,
+        username,
+        password,
+        database,
+        port,
+        datesStrings,
+        connectionLimit,
+        charset,
+        logging,
+      } = options;
+
       const pool = mysql.createPool({
-        host: options.host,
-        user: options.username,
-        password: options.password,
-        database: options.database,
-        port: options.port,
-        dateStrings: options.datesStrings,
-        connectionLimit: options.connectionLimit ?? 10,
-        charset: options.charset ?? "utf8mb4",
+        host,
+        user: username,
+        password,
+        database,
+        port,
+        dateStrings: datesStrings,
+        connectionLimit: connectionLimit ?? 10,
+        charset: charset ?? "utf8mb4",
       });
 
-      this.isDebug = !!options.logging;
+      this.isDebug = !!logging;
 
       this.pool = pool;
     } catch (e: unknown) {
