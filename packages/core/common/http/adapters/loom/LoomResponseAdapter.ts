@@ -2,6 +2,7 @@
 import * as http from "http";
 import { HttpResponse } from "../../interfaces";
 import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
+import { Logger } from "@stingerloom/core/common/Logger";
 
 /**
  * Loom 서버의 HTTP 응답 어댑터
@@ -12,8 +13,10 @@ export class LoomResponseAdapter implements HttpResponse {
   private _headers: Record<string, string> = {};
   private _sent: boolean = false;
 
+  private readonly logger = new Logger(LoomResponseAdapter.name);
+
   constructor(private serverResponse: http.ServerResponse) {
-    console.log("LoomResponseAdapter initialized");
+    this.logger.info("LoomResponseAdapter initialized");
   }
 
   status(code: number): this {
@@ -23,7 +26,7 @@ export class LoomResponseAdapter implements HttpResponse {
 
   send(body: any): void {
     if (this._sent) {
-      console.warn("Response already sent");
+      this.logger.warn("Response already sent");
       return;
     }
 
@@ -39,7 +42,10 @@ export class LoomResponseAdapter implements HttpResponse {
     if (!this._headers["content-type"]) {
       if (typeof body === "object") {
         this.serverResponse.setHeader("Content-Type", "application/json");
-        this.serverResponse.end(JSON.stringify(body));
+
+        const serializedBody = JSON.stringify(body);
+
+        this.serverResponse.end(serializedBody);
       } else if (typeof body === "string") {
         this.serverResponse.setHeader("Content-Type", "text/plain");
         this.serverResponse.end(body);
@@ -61,11 +67,11 @@ export class LoomResponseAdapter implements HttpResponse {
 
   json(body: any): void {
     if (this._sent) {
-      console.warn("Response already sent");
+      this.logger.warn("Response already sent");
       return;
     }
 
-    console.log("Sending JSON response:", body);
+    this.logger.info("Sending JSON response:", body);
 
     this._sent = true;
     this.serverResponse.statusCode = this._statusCode;
