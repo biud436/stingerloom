@@ -163,7 +163,7 @@ export class ServerBootstrapApplication extends EventEmitter {
 
     this.emit("stop");
 
-    const eventService = this.get<EventService>(EventService);
+    const eventService = this.get(EventService);
     if (eventService) {
       eventService.emit("stop");
     }
