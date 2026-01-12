@@ -119,13 +119,16 @@ export class ServerBootstrapApplication extends EventEmitter {
     const handleErrorWather = (err: unknown) => {
       console.error(err);
     };
-    process.on("uncaughtException", handleErrorWather);
-    process.on("unhandledRejection", handleErrorWather);
 
-    // SIGTERM
-    process.on("SIGTERM", () => {
-      this.onApplicationShutdown.call(this);
-    });
+    if (process) {
+      process.on("uncaughtException", handleErrorWather);
+      process.on("unhandledRejection", handleErrorWather);
+
+      // SIGTERM
+      process.on("SIGTERM", () => {
+        this.onApplicationShutdown.call(this);
+      });
+    }
 
     return this;
   }
