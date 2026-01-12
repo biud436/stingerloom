@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Column } from "./Column";
 
-export const VERSION_TOKEN = Symbol.for("VERSION");
+export const VERSION_TOKEN = Symbol.for("STG_VERSION");
 
 /**
  * 낙관적 락을 위한 버전 컬럼을 설정합니다.

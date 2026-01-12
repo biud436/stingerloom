@@ -47,7 +47,7 @@ export interface ColumnOption {
   scale?: number;
 }
 
-export const COLUMN_TOKEN = Symbol.for("COLUMN");
+export const COLUMN_TOKEN = Symbol.for("STG_COLUMN");
 
 /**
  * 컬럼 데코레이터에서는 컬럼에 대한 메타데이터를 설정합니다.

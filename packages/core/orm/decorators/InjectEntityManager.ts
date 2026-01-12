@@ -1,4 +1,4 @@
-export const ENTITY_METADATA_TOKEN = Symbol.for("InjectEntityManager");
+export const ENTITY_METADATA_TOKEN = Symbol.for("STG_InjectEntityManager");
 
 export function InjectEntityManager(): ParameterDecorator {
   return (target, _projectKey, index) => {

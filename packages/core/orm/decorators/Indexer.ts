@@ -12,7 +12,7 @@ export interface IndexMetadata {
   type: any;
 }
 
-export const INDEX_TOKEN = Symbol.for("INDEX");
+export const INDEX_TOKEN = Symbol.for("STG_ORM_INDEX");
 
 export function Index(): PropertyDecorator {
   return (target, propertyKey) => {

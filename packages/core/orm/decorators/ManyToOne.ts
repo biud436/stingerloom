@@ -4,8 +4,8 @@ import Container from "typedi";
 import { ManyToOneScanner } from "../scanner";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const MANY_TO_ONE_TOKEN = Symbol.for("MANY_TO_ONE");
-export const JOIN_COLUMN_TOKEN = Symbol.for("JOIN_COLUMN");
+export const MANY_TO_ONE_TOKEN = Symbol.for("STG_MANY_TO_ONE");
+export const JOIN_COLUMN_TOKEN = Symbol.for("STG_JOIN_COLUMN");
 
 export type EntityLike<T = any> = ClazzType<T>;
 export type RetrieveEntity<T> = () => T;
