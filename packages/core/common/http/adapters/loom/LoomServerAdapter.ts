@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Logger } from "@stingerloom/core/common/Logger";
 import { HttpServer } from "../../interfaces";
 import { LoomRouteRegistry } from "./LoomRouteRegistry";
 import { LoomServer } from "./server";
@@ -8,15 +9,17 @@ import { LoomServer } from "./server";
  * HttpServer 인터페이스의 구현체를 래핑하여 추가 기능을 제공합니다.
  */
 export class LoomServerAdapter implements HttpServer {
+  private readonly logger = new Logger(LoomServerAdapter.name);
+
   constructor(private loomServer: LoomServer) {}
 
   async start(options: any): Promise<void> {
-    console.log("Starting Loom Server...");
+    this.logger.info("Starting Loom Server...");
     await this.loomServer.start(options);
   }
 
   async stop(): Promise<void> {
-    console.log("Stopping Loom Server...");
+    this.logger.info("Stopping Loom Server...");
     await this.loomServer.stop();
   }
 
@@ -77,6 +80,6 @@ export class LoomServerAdapter implements HttpServer {
       },
     });
 
-    console.log(`Health check enabled at ${path}`);
+    this.logger.info(`Health check enabled at ${path}`);
   }
 }

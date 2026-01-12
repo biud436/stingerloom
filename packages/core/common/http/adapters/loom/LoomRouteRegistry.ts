@@ -8,6 +8,7 @@ import {
 import { HttpMethod } from "../../../HttpMethod";
 import { RouteTrie } from "./utils";
 import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
+import { Logger } from "@stingerloom/core/common/Logger";
 
 /**
  * Loom 서버의 라우트 레지스트리 구현체
@@ -16,6 +17,7 @@ import { HttpStatus } from "@stingerloom/core/common/HttpStatus";
 export class LoomRouteRegistry implements HttpRouteRegistry {
   private routeTries: Map<string, RouteTrie> = new Map();
   private routes: HttpRoute[] = []; // 전체 라우트 목록 유지 (호환성)
+  private readonly logger = new Logger(LoomRouteRegistry.name);
 
   register(route: HttpRoute): void {
     const method = route.method.toUpperCase();
@@ -32,12 +34,12 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
     // 전체 라우트 목록에도 추가 (호환성)
     this.routes.push(route);
 
-    console.log(`📝 Registered route: ${method} ${route.path}`);
+    this.logger.info(`Registered route: ${method} ${route.path}`);
   }
 
   registerExceptionHandler(): void {
     // 예외 핸들러 등록 로직 (추후 구현)
-    console.log("Exception handler registered");
+    this.logger.info("Exception handler registered");
   }
 
   /**
@@ -91,13 +93,16 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
       try {
         const result = await route.handler({ request, response });
 
-        if (result !== undefined && !(response as any)._sent) {
+        const hasValidResult = result !== undefined && !(response as any)._sent;
+        const isResultUndefined =
+          result === undefined && !(response as any)._sent;
+        if (hasValidResult) {
           const statusCode =
             route.method.toLowerCase() === "post"
               ? HttpStatus.CREATED
               : HttpStatus.OK;
           response.status(statusCode).json(result);
-        } else if (result === undefined && !(response as any)._sent) {
+        } else if (isResultUndefined) {
           const statusCode =
             route.method.toLowerCase() === "post"
               ? HttpStatus.CREATED
@@ -105,7 +110,7 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
           response.status(statusCode).json({});
         }
       } catch (error) {
-        console.error("Handler execution error:", error);
+        this.logger.error(`Handler execution error: ${error}`);
 
         if (!(response as any)._sent) {
           const status =
@@ -140,7 +145,7 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
    */
   printTrieStructure(): void {
     for (const [method, trie] of this.routeTries.entries()) {
-      console.log(`\n${method} Routes Trie:`);
+      this.logger.info(`\n${method} Routes Trie:`);
       trie.printTrie();
     }
   }
@@ -194,8 +199,8 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
    * 라우트 정보를 출력합니다 (디버깅용)
    */
   printRoutes(): void {
-    console.log("\nRegistered Routes:");
-    console.log("====================");
+    this.logger.info("\nRegistered Routes:");
+    this.logger.info("====================");
 
     // 메서드별로 그룹화하여 출력
     const methodGroups = new Map<string, HttpRoute[]>();
@@ -210,11 +215,11 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
 
     for (const [method, routes] of methodGroups.entries()) {
       for (const route of routes) {
-        console.log(`${method.padEnd(8)} ${route.path}`);
+        this.logger.info(`${method.padEnd(8)} ${route.path}`);
       }
     }
 
-    console.log("====================");
+    this.logger.info("====================");
 
     // Trie 통계 출력
     this.printTrieStats();
@@ -224,22 +229,22 @@ export class LoomRouteRegistry implements HttpRouteRegistry {
    * Trie 통계를 출력합니다.
    */
   printTrieStats(): void {
-    console.log("\nTrie Statistics:");
-    console.log("===================");
+    this.logger.info("\nTrie Statistics:");
+    this.logger.info("===================");
 
     let totalNodes = 0;
     let totalRoutes = 0;
 
     for (const [method, trie] of this.routeTries.entries()) {
       const stats = trie.getStats();
-      console.log(
+      this.logger.info(
         `${method}: ${stats.totalRoutes} routes, ${stats.totalNodes} nodes, depth ${stats.maxDepth}`,
       );
       totalNodes += stats.totalNodes;
       totalRoutes += stats.totalRoutes;
     }
 
-    console.log(`Total: ${totalRoutes} routes, ${totalNodes} nodes`);
-    console.log("===================\n");
+    this.logger.info(`Total: ${totalRoutes} routes, ${totalNodes} nodes`);
+    this.logger.info("===================\n");
   }
 }
