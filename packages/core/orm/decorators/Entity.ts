@@ -5,16 +5,13 @@ import { createEntityKey } from "@stingerloom/core/utils";
 import { ColumnOption } from "./Column";
 import { ClazzType } from "@stingerloom/core/common";
 import { ManyToOneMetadata } from "./ManyToOne";
+import { camelToSnakeCase } from "../utils/camelToSnakeCase";
 
 export interface EntityOption {
   name?: string;
 }
 
 export const ENTITY_TOKEN = Symbol.for("STG_ENTITY");
-
-export function camelToSnakeCase(str: string): string {
-  return str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
-}
 
 export type EntityMetadata<T = any> = {
   target: ClazzType<T>;
