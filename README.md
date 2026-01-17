@@ -16,7 +16,7 @@ Modern TypeScript framework with decorators and dependency injection for Node.js
 npx create-stingerloom@latest --name <my-app>
 ```
 
-## Basic Example
+## Example
 
 ```ts
 @Controller("/hello")
@@ -26,8 +26,8 @@ export class HelloController {
     return { message: "Hello, Stingerloom" };
   }
 }
+
+
+More examples are available in the [sample](./sample/) directory.
+
 ```
-
-## Examples
-
-See the [sample](./sample/) directory for complete projects.
