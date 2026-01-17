@@ -26,8 +26,6 @@ export class HelloController {
     return { message: "Hello, Stingerloom" };
   }
 }
-
+```
 
 More examples are available in the [sample](./sample/) directory.
-
-```
