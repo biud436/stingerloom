@@ -17,17 +17,20 @@ export abstract class BaseEntityManager {
   abstract register(
     databaseClientOptions: DatabaseClientOptions,
   ): Promise<void>;
+
   /**
    * 데이터베이스에 연결합니다.
    * 가용할 데이터베이스 드라이버에 연결하고 데이터소스를 만듭니다.
    */
   abstract connect(databaseClientOptions: DatabaseClientOptions): Promise<void>;
+
   /**
    * 소멸자로 주로 메모리 해제 작업을 수행합니다.
    * 서버가 어떠한 이유로 인해 종료될 때 호출됩니다.
    * 통합 테스트 환경에서는 이 메서드가 빈번하게 호출될 수 있습니다.
    */
   abstract propagateShutdown(): Promise<void>;
+
   /**
    * 데이터베이스 쿼리를 수행하여 결과를 1건 반환합니다.
    * 쿼리는 where, order by, limit 절을 포함할 수 있습니다.
@@ -38,6 +41,7 @@ export abstract class BaseEntityManager {
     entity: ClazzType<T>,
     findOption: FindOption<T>,
   ): Promise<EntityResult<T>>;
+
   /**
    * 데이터베이스 쿼리를 수행하여 결과를 여러 건 반환합니다.
    * 쿼리는 where, order by, limit 절을 포함할 수 있습니다.
@@ -53,7 +57,7 @@ export abstract class BaseEntityManager {
    * 데이터베이스에 데이터를 저장하거나 수정합니다.
    * 수정 시에는 PK 컬럼이 존재해야하고, 없을 경우 저장 작업을 수행합니다.
    *
-   * 본 ORM에는 아직 영속성 컨텍스트 같은 1차 캐시 스토어가 없습니다.
+   * 본 ORM에는 영속성 컨텍스트 같은 1차 캐시 스토어가 없습니다.
    * 따라서 저장이나 변경 수행 시, dirty checking을 수행하지 않습니다.
    *
    * 따라서 본 메서드가 호출되면 데이터베이스에 즉시 반영됩니다.
